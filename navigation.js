@@ -23,7 +23,6 @@ window.onload = function() {
         { "name": "Event 19", "file": "2025ClubChampionshipEvent19.htm" },
         { "name": "Event 20", "file": "2025ClubChampionshipEvent20.htm" },
         { "name": "Event 21", "file": "2025ClubChampionshipEvent21.htm" },
-        { "name": "Event 21", "file": "2025ClubChampionshipEvent21.htm" },
         { "name": "Event 22", "file": "2025ClubChampionshipEvent22.htm" },
         { "name": "Event 23", "file": "2025ClubChampionshipEvent23.htm" },
         { "name": "Event 24", "file": "2025ClubChampionshipEvent24.htm" },
@@ -35,13 +34,13 @@ window.onload = function() {
         { "name": "Juniors", "file": "2025ClubChampionshipJuniors.htm" },
         { "name": "Juveniles", "file": "2025ClubChampionshipJuveniles.htm" },
         { "name": "Road Bike Men", "file": "2025ClubChampionshipRoadBikeMen.htm" },
-        { "name": "Road Bike Women", "file": "2025ClubChampionshipRoadBikeWomen.htm" },
-        { "name": "Premier League", "file": "2025ClubChampionshipLeaguePrem.htm" },
-        { "name": "League 1", "file": "2025ClubChampionshipLeague1.htm" },
-        { "name": "League 2", "file": "2025ClubChampionshipLeague2.htm" },
-        { "name": "League 3", "file": "2025ClubChampionshipLeague3.htm" },
-        { "name": "League 4", "file": "2025ClubChampionshipLeague4.htm" },
-        { "name": "Nev Brooks", "file": "2025ClubChampionshipNevBrooks.htm" }
+        { "name": "Road Bike Women", "file": "2025ClubChampionshipRoadBikeWomen.htm" }//,
+//        { "name": "Premier League", "file": "2025ClubChampionshipLeaguePrem.htm" },
+//        { "name": "League 1", "file": "2025ClubChampionshipLeague1.htm" },
+//        { "name": "League 2", "file": "2025ClubChampionshipLeague2.htm" },
+//        { "name": "League 3", "file": "2025ClubChampionshipLeague3.htm" },
+//        { "name": "League 4", "file": "2025ClubChampionshipLeague4.htm" },
+//        { "name": "Nev Brooks", "file": "2025ClubChampionshipNevBrooks.htm" }
     ];
     
     // Get current page file name from URL
