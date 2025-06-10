@@ -39,8 +39,8 @@ window.onload = function() {
         { "name": "League 1", "file": "2025ClubChampionshipLeague1.htm" },
         { "name": "League 2", "file": "2025ClubChampionshipLeague2.htm" },
         { "name": "League 3", "file": "2025ClubChampionshipLeague3.htm" },
-        { "name": "League 4", "file": "2025ClubChampionshipLeague4.htm" }, //
-//        { "name": "Nev Brooks", "file": "2025ClubChampionshipNevBrooks.htm" }
+        { "name": "League 4", "file": "2025ClubChampionshipLeague4.htm" },
+        { "name": "Nev Brooks", "file": "2025ClubChampionshipNevBrooks.htm" }
     ];
     
     // Get current page file name from URL
