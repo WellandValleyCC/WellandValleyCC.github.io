@@ -1,4 +1,4 @@
-# WellandValleyCC.github.io - Welland Valley Cycling Club — Time Trial Results Engine
+# Welland Valley Cycling Club — Time Trial Results Engine
 
 This repository powers the static website for Welland Valley CC's time trial results. It uses GitHub Actions to automate the processing of event results and generate HTML pages for public viewing.
 
@@ -45,7 +45,7 @@ Wellandvalley.github.io/
 ├── README.md                           # Project overview
 └── .gitignore                          # Ignore /data or build artifacts
 
-
+```
 
 ## 🧪 Local Development
 
