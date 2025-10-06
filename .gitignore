@@ -1,1 +1,39 @@
-ReplaceSpace.exe
+# Ignore build output
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Ignore user-specific IDE files
+.vscode/
+*.user
+*.suo
+*.csproj.user
+
+# Ignore intermediate data
+data/*.json
+data/*.log
+data/logs/
+data/standings-*.json
+
+# Ignore SQLite artifacts (optional)
+data/*.db
+
+# Ignore extracted CSVs if not versioned
+extracted_csv/
+*.csv
+
+# Ignore temp files
+*.tmp
+*.bak
+*.swp
+~$*
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Keep results and docs
+!results/
+!docs/
