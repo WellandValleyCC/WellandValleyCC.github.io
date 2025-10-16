@@ -1,28 +1,28 @@
 Surname,GivenName,ClubNumber,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran
-Abbott,John,1237,first Claim,False,False,False,True,False
-Abbott,James,1327,first Claim,False,False,True,False,False
-Adcock,David,1197,first Claim,False,False,False,False,True
-Ainsley,Emma,1353,first Claim,True,False,False,True,False
-Akoslovski,Kath,819,first Claim,True,False,False,False,False
-Alden,Steve,2,first Claim,False,False,False,False,True
-Aldridge,Ian,1370,first Claim,False,False,False,False,True
-Allen,Ian,1286,first Claim,False,False,False,False,True
-Allen,Roland,1381,first Claim,False,False,False,True,False
-Allitt,Chris,1153,first Claim,False,False,False,False,False
-Andrew,Dan,1372,first Claim,False,False,False,True,False
-Ashwell,Gary,1112,first Claim,False,False,False,False,True
-Askham,Simon,1135,first Claim,False,False,False,True,False
-Awdry,Ollie,1368,first Claim,False,True,False,False,False
-Bailey,Shaun,1328,first Claim,False,False,False,False,True
-Barnett,Dean,369,first Claim,False,False,False,False,True
-Barnett,Vic,7,honorary,False,False,False,False,True
-Barnett,George,473,honorary,False,False,False,False,True
-Barrett,Paul,1384,first Claim,False,False,False,False,True
-Baxter,Lydia,2,second Claim,True,False,False,True,False
-Baxter,Sylvia,1275,first Claim,True,True,False,False,False
-Beach,Ronald,68,honorary,False,False,False,False,True
-Bell,Peter,1035,first Claim,False,False,False,False,True
-Bennis,Laoise,1326,first Claim,True,False,False,True,False
-Birch,Dave,10,honorary,False,False,False,False,True
-Birch,Carol,477,first Claim,True,False,False,False,True
-Blake,Andy,1318,first Claim,False,False,False,False,True
+Abbott,John,1237,First Claim,False,False,False,True,False
+Abbott,James,1327,First Claim,False,False,True,False,False
+Adcock,David,1197,First Claim,False,False,False,False,True
+Ainsley,Emma,1353,First Claim,True,False,False,True,False
+Akoslovski,Kath,819,First Claim,True,False,False,False,False
+Alden,Steve,2,First Claim,False,False,False,False,True
+Aldridge,Ian,1370,First Claim,False,False,False,False,True
+Allen,Ian,1286,First Claim,False,False,False,False,True
+Allen,Roland,1381,First Claim,False,False,False,True,False
+Allitt,Chris,1153,First Claim,False,False,False,False,False
+Andrew,Dan,1372,First Claim,False,False,False,True,False
+Ashwell,Gary,1112,First Claim,False,False,False,False,True
+Askham,Simon,1135,First Claim,False,False,False,True,False
+Awdry,Ollie,1368,First Claim,False,True,False,False,False
+Bailey,Shaun,1328,First Claim,False,False,False,False,True
+Barnett,Dean,369,First Claim,False,False,False,False,True
+Barnett,Vic,7,Honorary,False,False,False,False,True
+Barnett,George,473,Honorary,False,False,False,False,True
+Barrett,Paul,1384,First Claim,False,False,False,False,True
+Baxter,Lydia,2,Second Claim,True,False,False,True,False
+Baxter,Sylvia,1275,First Claim,True,True,False,False,False
+Beach,Ronald,68,Honorary,False,False,False,False,True
+Bell,Peter,1035,First Claim,False,False,False,False,True
+Bennis,Laoise,1326,First Claim,True,False,False,True,False
+Birch,Dave,10,Honorary,False,False,False,False,True
+Birch,Carol,477,First Claim,True,False,False,False,True
+Blake,Andy,1318,First Claim,False,False,False,False,True
