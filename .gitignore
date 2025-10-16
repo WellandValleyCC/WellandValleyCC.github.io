@@ -14,7 +14,7 @@ obj/
 # Ignore intermediate data
 data/*.json
 data/*.log
-data/logs/
+#data/logs/
 data/standings-*.json
 
 # Ignore SQLite artifacts (optional)
