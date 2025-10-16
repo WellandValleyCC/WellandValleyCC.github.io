@@ -21,8 +21,7 @@ data/standings-*.json
 data/*.db
 
 # Ignore extracted CSVs if not versioned
-extracted_csv/
-*.csv
+extracted_csv/*.csv
 
 # Ignore temp files
 *.tmp
