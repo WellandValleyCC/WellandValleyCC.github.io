@@ -29,7 +29,7 @@ jobs:
         run: dotnet build processor/ClubProcessor.sln --configuration Release
 
       - name: Run tests
-        run: dotnet test processor/ClubProcessor.Tests/ClubProcessor.Tests.csproj --no-build --verbosity normal
+        run: dotnet test processor/ClubProcessor.Tests/ClubProcessor.Tests.csproj --verbosity normal
 
       - name: Detect changed file and run processor
         run: |
