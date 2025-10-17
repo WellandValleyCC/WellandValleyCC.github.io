@@ -1,0 +1,43 @@
+name: Process Club Data
+
+on:
+  push:
+    branches:
+      - main
+      - ci-pipeline-scaffold
+    paths:
+      - 'data/competitors_*.csv'
+      - 'data/*Club Events.xlsx'
+  workflow_dispatch:
+    
+jobs:
+  build-test-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore processor/ClubProcessor.sln
+
+      - name: Build solution
+        run: dotnet build processor/ClubProcessor.sln --configuration Release
+
+      - name: Run tests
+        run: dotnet test processor/ClubProcessor.Tests/ClubProcessor.Tests.csproj --verbosity normal
+
+      - name: Detect changed file and run processor
+        run: |
+          FILE=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+          if [[ "$FILE" == *competitors_* ]]; then
+            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+          elif [[ "$FILE" == *Club\ Events.xlsx ]]; then
+            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --file "$FILE"
+          fi
+
