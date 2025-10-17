@@ -1,38 +1,43 @@
-# Ignore build output
-bin/
-obj/
-*.dll
-*.exe
-*.pdb
+# Build output
+**/bin/
+**/obj/
+**/*.dll
+**/*.exe
+**/*.pdb
 
-# Ignore user-specific IDE files
+# EF Core migration snapshots (optional)
+**/Migrations/
+
+# IDE and user-specific files
 .vscode/
+*.vs/
 *.user
 *.suo
 *.csproj.user
 
-# Ignore intermediate data
+# Intermediate and extracted data
 data/*.json
 data/*.log
-#data/logs/
 data/standings-*.json
-
-# Ignore SQLite artifacts (optional)
 data/*.db
-
-# Ignore extracted CSVs if not versioned
 extracted_csv/*.csv
 
-# Ignore temp files
+# Test artifacts
+processor/ClubProcessor.Tests/test-data/
+
+# SQLite DBs anywhere
+**/*.db
+
+# Temp and backup files
 *.tmp
 *.bak
 *.swp
 ~$*
 
-# Ignore OS-specific files
+# OS-specific files
 .DS_Store
 Thumbs.db
 
-# Keep results and docs
+# Keep published artifacts
 !results/
 !docs/
