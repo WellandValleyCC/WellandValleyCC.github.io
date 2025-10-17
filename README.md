@@ -12,39 +12,44 @@ This repository powers the static website for Welland Valley CC's time trial res
 ## 📁 Folder Structure
 
 ```plaintext
-Wellandvalley.github.io/
+WellandValleyCC.github.io/
 ├── .github/
 │   └── workflows/
-│       └── process-results.yml         # GitHub Action to automate XLSX → HTML
+│       └── process-data.yml            # CI pipeline: build, test, run processor
 ├── processor/
-│   ├── TTProcessor.csproj              # C# app to generate HTML standings
-│   ├── XlsxToCsvExtractor.csproj       # C# app to extract CSVs from XLSX
-│   └── Shared/                         # Optional: shared models, helpers
-├── results/
-│   ├── 2026-04-12.xlsx                 # Raw input file for event
-│   └── 2026-04-19.xlsx
+│   ├── ClubProcessor.sln              # Solution file for modular apps
+│   ├── ClubProcessor/                 # C# app: process competitors or events
+│   ├── XlsxToCsvExtractor/            # C# app: extract CSVs from XLSX
+│   ├── Shared/                        # Shared models, helpers, extensions
+│   ├── ClubProcessor.Tests/          # xUnit test project with in-memory DB
+│   └── internal/
+│       └── ci-simulation.md          # Contributor guide for local CI testing
 ├── data/
-│   ├── club.db                         # SQLite: members + calendar
-│   ├── standings-2026.json             # Optional: machine-readable output
-│   └── logs/                           # Optional: debug logs or audit trail
-├── docs/                               # ✅ GitHub Pages root
-│   ├── index.htm                       # Main landing page
+│   ├── competitors_2025.csv          # Sample input for processor
+│   ├── Club Events.xlsx              # Sample event calendar
+│   ├── club.db                       # SQLite: members + calendar
+│   ├── standings-2026.json           # Optional: machine-readable output
+│   └── logs/                         # Optional: debug logs or audit trail
+├── results/
+│   ├── 2026-04-12.xlsx               # Raw input file for event
+│   └── 2026-04-19.xlsx
+├── docs/                             # ✅ GitHub Pages root
+│   ├── index.htm                     # Main landing page
 │   ├── events/
-│   │   ├── 2026-04-12.html             # TT event result
+│   │   ├── 2026-04-12.html           # TT event result
 │   │   └── 2026-04-19.html
 │   ├── standings/
 │   │   ├── 2026-veterans.html
 │   │   ├── 2026-women.html
 │   │   ├── 2026-roadbike.html
-│   │   └── 2025-veterans.html          # Archived standings
+│   │   └── 2025-veterans.html        # Archived standings
 │   ├── riders/
-│   │   └── mike-smith.html             # Optional: rider profile
+│   │   └── mike-smith.html           # Optional: rider profile
 │   └── assets/
 │       ├── styles.css
 │       └── script.js
-├── README.md                           # Project overview
-└── .gitignore                          # Ignore /data or build artifacts
-
+├── README.md                         # Project overview
+└── .gitignore                        # Ignore /data or build artifacts
 ```
 
 ## 🧪 Local Development
@@ -53,6 +58,8 @@ To test locally:
 - Run `XlsxToCsvExtractor` on a `.xlsx` file in `/results/`
 - Run `TTProcessor` with the extracted CSVs and `club.db`
 - Output HTML files to `/docs/` and open in browser
+
+[Local CI Simulation Guide](processor/internal/ci-simulation.md)
 
 ## 📬 Contributions
 
