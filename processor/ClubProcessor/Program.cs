@@ -6,8 +6,9 @@ class Program
 {
     static void Main(string[] args)
     {
-        string mode = null;
-        string filePath = null;
+        string? mode = null;
+        string? filePath = null;
+
 
         for (int i = 0; i < args.Length - 1; i++)
         {
