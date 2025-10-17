@@ -8,7 +8,8 @@ on:
     paths:
       - 'data/competitors_*.csv'
       - 'data/*Club Events.xlsx'
-
+  workflow_dispatch:
+    
 jobs:
   build-test-run:
     runs-on: ubuntu-latest
