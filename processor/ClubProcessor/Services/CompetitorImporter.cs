@@ -5,10 +5,16 @@ namespace ClubProcessor.Services
 {
     public class CompetitorImporter
     {
-        public static void Import(string csvPath)
+        private readonly ClubDbContext _context;
+
+        public CompetitorImporter(ClubDbContext context)
         {
-            using var context = new ClubDbContext();
-            var lines = File.ReadAllLines(csvPath).Skip(1); // Skip header
+            _context = context;
+        }
+
+        public void Import(string csvPath)
+        {
+            var lines = File.ReadAllLines(csvPath).Skip(1);
 
             foreach (var line in lines)
             {
@@ -21,10 +27,10 @@ namespace ClubProcessor.Services
                     IsFemale = parts[3].ToLower() == "true",
                     MemberNumber = parts[4]
                 };
-                context.Competitors.Add(competitor);
+                _context.Competitors.Add(competitor);
             }
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
     }
 }

@@ -1,5 +1,7 @@
 using Xunit;
+using ClubProcessor.Context;
 using ClubProcessor.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClubProcessor.Tests
 {
@@ -8,16 +10,20 @@ namespace ClubProcessor.Tests
         [Fact]
         public void Import_ShouldRunWithoutError_ForValidCsv()
         {
-            // Arrange
+            var options = new DbContextOptionsBuilder<ClubDbContext>()
+                .UseInMemoryDatabase("TestDb")
+                .Options;
+
+            using var context = new ClubDbContext(options);
+            var importer = new CompetitorImporter(context);
+
             var testCsvPath = "test-data/competitors_test.csv";
             Directory.CreateDirectory("test-data");
             File.WriteAllText(testCsvPath, "Name,Age,Category,IsFemale,MemberNumber\nAlice,30,Senior,true,123");
 
-            // Act
-            CompetitorImporter.Import(testCsvPath);
+            importer.Import(testCsvPath);
 
-            // Assert
-            Assert.True(File.Exists(testCsvPath)); // Minimal assertion for now
+            Assert.Single(context.Competitors);
         }
     }
 }

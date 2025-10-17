@@ -1,25 +1,40 @@
+using ClubProcessor.Context;
 using ClubProcessor.Services;
+using Microsoft.EntityFrameworkCore;
 
 class Program
 {
     static void Main(string[] args)
     {
-        if (args.Length < 2)
+        string mode = null;
+        string filePath = null;
+
+        for (int i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--mode") mode = args[i + 1];
+            if (args[i] == "--file") filePath = args[i + 1];
+        }
+
+        if (string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(filePath))
         {
             Console.WriteLine("Usage: ClubProcessor.exe --mode <competitors|events> --file <path>");
             return;
         }
 
-        var mode = args[0].Replace("--mode", "").Trim();
-        var filePath = args[1].Replace("--file", "").Trim();
+        var options = new DbContextOptionsBuilder<ClubDbContext>()
+            .UseSqlite("Data Source=data/results.db")
+            .Options;
+
+        using var context = new ClubDbContext(options);
 
         switch (mode.ToLower())
         {
             case "competitors":
-                CompetitorImporter.Import(filePath);
+                var importer = new CompetitorImporter(context);
+                importer.Import(filePath);
                 break;
             case "events":
-                Console.WriteLine("Event processing not yet implemented.");
+                Console.WriteLine($"[Stub] Would process event workbook: {filePath}");
                 break;
             default:
                 Console.WriteLine("Unsupported mode. Use 'competitors' or 'events'.");
