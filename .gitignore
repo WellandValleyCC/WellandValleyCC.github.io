@@ -21,6 +21,8 @@ data/*.log
 data/standings-*.json
 data/*.db
 extracted_csv/*.csv
+processor/logs/
+
 
 # Test artifacts
 processor/ClubProcessor.Tests/test-data/
