@@ -46,6 +46,11 @@ jobs:
           echo "Listing contents of workspace:"
           ls -R ${{ github.workspace }}
 
+      - name: Request OIDC token
+        run: |
+          echo "Requesting OIDC token..."
+          curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
