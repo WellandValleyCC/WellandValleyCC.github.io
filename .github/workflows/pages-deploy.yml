@@ -45,10 +45,22 @@ jobs:
       - name: Confirm artifact creation
         run: echo "Artifact github-pages should now be available for deploy"
   
-      - name: Debug artifact presence
+      - name: Debug OIDC env and request
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ACTIONS_ID_TOKEN: ${{ env.ACTIONS_ID_TOKEN }}
         run: |
-          echo "Listing contents of workspace:"
-          ls -R ${{ github.workspace }}
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: ${ACTIONS_ID_TOKEN_REQUEST_URL:+set}"
+          echo "ACTIONS_ID_TOKEN: ${ACTIONS_ID_TOKEN:+set}"
+          echo "Listing important envs (masked):"
+          env | sed -n 's/^ACTIONS_ID_TOKEN_REQUEST_URL=/ACTIONS_ID_TOKEN_REQUEST_URL=set/p'
+          env | sed -n 's/^ACTIONS_ID_TOKEN=/ACTIONS_ID_TOKEN=set/p'
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
+            echo "Attempting to request token from ACTIONS_ID_TOKEN_REQUEST_URL"
+            curl -sv --fail -H "Authorization: Bearer $ACTIONS_ID_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" || true
+          else
+            echo "ACTIONS_ID_TOKEN_REQUEST_URL not set"
+          fi
 
       - name: Request OIDC token
         run: |
