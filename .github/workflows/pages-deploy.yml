@@ -61,6 +61,34 @@ jobs:
           else
             echo "ACTIONS_ID_TOKEN_REQUEST_URL not set"
           fi
+          
+      - name: Proper OIDC token request debug
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: ${ACTIONS_ID_TOKEN_REQUEST_URL:+set}"
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
+            echo "ACTIONS_ID_TOKEN_REQUEST_URL not set"
+            exit 1
+          fi
+      
+          echo "Requesting ID token from ACTIONS_ID_TOKEN_REQUEST_URL using GITHUB_TOKEN as bearer..."
+          # Request the OIDC token from GitHub's endpoint using GITHUB_TOKEN as bearer auth
+          response=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/json" "$ACTIONS_ID_TOKEN_REQUEST_URL" || true)
+          echo "Raw response (first 512 chars):"
+          echo "${response:0:512}"
+      
+          # Attempt to extract token field (if present)
+          id_token=$(echo "$response" | python3 -c "import sys, json; d=sys.stdin.read(); print(json.loads(d).get('value','')) if d.strip() else ''" 2>/dev/null || true)
+          if [ -n "$id_token" ]; then
+            echo "OIDC token received (length): ${#id_token}"
+            # print first and last 8 chars masked for inspection
+            echo "Token sample: ${id_token:0:8}...${id_token: -8}"
+          else
+            echo "No id token returned. Response above will show error details."
+            exit 1
+          fi
 
       - name: Request OIDC token
         run: |
