@@ -3,7 +3,7 @@ name: Process Club Data
 on:
   push:
     branches:
-      - main
+      - master
       - ci-pipeline-scaffold
     paths:
       - 'data/competitors_*.csv'
