@@ -3,7 +3,7 @@ name: Custom Pages Deploy
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'docs/**'  # Only trigger when docs change
 
