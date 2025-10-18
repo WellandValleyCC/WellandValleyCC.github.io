@@ -24,12 +24,20 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
-
+        
+      - name: Confirm docs folder presence
+        run: |
+          echo "Listing docs folder:"
+          ls -la docs
+    
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-          
+
+      - name: Confirm artifact creation
+        run: echo "Artifact github-pages should now be available for deploy"
+  
       - name: Debug artifact presence
         run: |
           echo "Listing contents of workspace:"
