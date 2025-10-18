@@ -29,6 +29,11 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
+          
+      - name: Debug artifact presence
+        run: |
+          echo "Listing contents of workspace:"
+          ls -R ${{ github.workspace }}
 
       - name: Deploy to GitHub Pages
         id: deployment
