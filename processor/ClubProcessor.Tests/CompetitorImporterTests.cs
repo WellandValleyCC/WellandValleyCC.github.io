@@ -19,7 +19,10 @@ namespace ClubProcessor.Tests
 
             var testCsvPath = "test-data/competitors_test.csv";
             Directory.CreateDirectory("test-data");
-            File.WriteAllText(testCsvPath, "Name,Age,Category,IsFemale,MemberNumber\nAlice,30,Senior,true,123");
+			File.WriteAllText(
+				testCsvPath,
+				"ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
+				"9999,Doe,John,First Claim,false,false,false,true,false");
 
             importer.Import(testCsvPath);
 
