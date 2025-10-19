@@ -1,13 +1,15 @@
 import pandas as pd
 import sys
 import os
+import re
 
 def extract_sheets(xlsx_path, output_dir):
     expected_sheets = {
-        "Events": "events_2025.csv",
-        "Calendar": "calendar_2025.csv",
-        "Metadata": "metadata.csv"
+        "Events": f"events_{year}.csv",
+        "Calendar": f"calendar_{year}.csv",
+        "Metadata": f"metadata_{year}.csv"
     }
+
 
     print(f"📘 Reading workbook: {xlsx_path}")
     try:
@@ -33,6 +35,14 @@ if __name__ == "__main__":
         print("Usage: python extract_club_events.py <input_xlsx> <output_dir>")
         sys.exit(1)
 
+
     xlsx_path = sys.argv[1]
+    match = re.search(r'ClubEvents_(\d{4})\.xlsx$', os.path.basename(xlsx_path))
+    if not match:
+        print("❌ Filename must match pattern: ClubEvents_YYYY.xlsx")
+        sys.exit(1)
+
+    year = match.group(1)
+
     output_dir = sys.argv[2]
     extract_sheets(xlsx_path, output_dir)
