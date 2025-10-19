@@ -27,6 +27,7 @@ class Program
             .Options;
 
         using var context = new ClubDbContext(options);
+        context.Database.EnsureCreated();
 
         switch (mode.ToLower())
         {
