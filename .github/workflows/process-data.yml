@@ -42,7 +42,7 @@ jobs:
           
       - name: Detect changed files and extract/process
         run: |
-          CHANGED=$(git diff --name-only HEAD^ HEAD)
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           for FILE in $CHANGED; do
             if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
               echo "[INFO] Detected ClubEvents XLSX: $FILE"
