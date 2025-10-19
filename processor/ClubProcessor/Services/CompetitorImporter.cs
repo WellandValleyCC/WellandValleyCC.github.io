@@ -32,7 +32,24 @@ namespace ClubProcessor.Services
 					IsVeteran = bool.Parse(parts[8])
 				};
 
-                _context.Competitors.Add(competitor);
+                var existing = _context.Competitors.Find(competitor.ClubNumber);
+                if (existing == null)
+                {
+                    _context.Competitors.Add(competitor);
+                }
+                else
+                {
+                    // Optionally update fields if needed
+                    existing.Surname = competitor.Surname;
+                    existing.GivenName = competitor.GivenName;
+                    existing.ClaimStatus = competitor.ClaimStatus;
+                    existing.IsFemale = competitor.IsFemale;
+                    existing.IsJuvenile = competitor.IsJuvenile;
+                    existing.IsJunior = competitor.IsJunior;
+                    existing.IsSenior = competitor.IsSenior;
+                    existing.IsVeteran = competitor.IsVeteran;
+                }
+
             }
 
             _context.SaveChanges();
