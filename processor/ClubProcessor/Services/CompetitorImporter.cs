@@ -21,15 +21,15 @@ namespace ClubProcessor.Services
                 var parts = line.Split(',');
 				var competitor = new Competitor
 				{
-					ClubNumber = row[0],
-					Surname = row[1],
-					GivenName = row[2],
-					ClaimStatus = row[3],
-					IsFemale = bool.Parse(row[4]),
-					IsJuvenile = bool.Parse(row[5]),
-					IsJunior = bool.Parse(row[6]),
-					IsSenior = bool.Parse(row[7]),
-					IsVeteran = bool.Parse(row[8])
+					ClubNumber = parts[0],
+					Surname = parts[1],
+					GivenName = parts[2],
+					ClaimStatus = parts[3],
+					IsFemale = bool.Parse(parts[4]),
+					IsJuvenile = bool.Parse(parts[5]),
+					IsJunior = bool.Parse(parts[6]),
+					IsSenior = bool.Parse(parts[7]),
+					IsVeteran = bool.Parse(parts[8])
 				};
 
                 _context.Competitors.Add(competitor);
