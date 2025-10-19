@@ -19,14 +19,19 @@ namespace ClubProcessor.Services
             foreach (var line in lines)
             {
                 var parts = line.Split(',');
-                var competitor = new Competitor
-                {
-                    Name = parts[0],
-                    Age = int.Parse(parts[1]),
-                    Category = parts[2],
-                    IsFemale = parts[3].ToLower() == "true",
-                    MemberNumber = parts[4]
-                };
+				var competitor = new Competitor
+				{
+					ClubNumber = row[0],
+					Surname = row[1],
+					GivenName = row[2],
+					ClaimStatus = row[3],
+					IsFemale = bool.Parse(row[4]),
+					IsJuvenile = bool.Parse(row[5]),
+					IsJunior = bool.Parse(row[6]),
+					IsSenior = bool.Parse(row[7]),
+					IsVeteran = bool.Parse(row[8])
+				};
+
                 _context.Competitors.Add(competitor);
             }
 
