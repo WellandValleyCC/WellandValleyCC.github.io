@@ -62,11 +62,3 @@ jobs:
             echo "[INFO] Detected extracted event CSVs"
             dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder data/extracted/events/
           fi
-
-      - name: Commit extracted files and summary
-        run: |
-          git config user.name "CI Bot"
-          git config user.email "ci@wellandvalley.cc"
-          git add data/extracted/
-          git commit -m "chore: extract and publish event data from ClubEvents XLSX"
-          git push
