@@ -216,3 +216,7 @@ ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,i
 808,Traynor,Nicola,First Claim,True,False,False,False,True
 1290,Tucker,Scott,First Claim,False,False,False,True,False
 1209,Turner,Paul,Second Claim,False,False,False,False,True
+1356,Vaal,Michiel,Second Claim,False,False,False,False,True
+860,van Nierop,Millie,First Claim,True,False,False,False,False
+756,van Nierop,Josh,First Claim,False,False,False,True,False
+407,van Nierop,Hans,First Claim,False,False,False,False,True
