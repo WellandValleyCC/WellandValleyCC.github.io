@@ -7,9 +7,9 @@ on:
       - ci-pipeline-scaffold
     paths:
       - 'data/competitors_*.csv'
-      - 'data/*Club Events.xlsx'
+      - 'data/ClubEvents_*.xlsx'
   workflow_dispatch:
-    
+
 jobs:
   build-test-run:
     runs-on: ubuntu-latest
@@ -23,6 +23,14 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas openpyxl
+
       - name: Restore dependencies
         run: dotnet restore processor/ClubProcessor.sln
 
@@ -32,12 +40,33 @@ jobs:
       - name: Run tests
         run: dotnet test processor/ClubProcessor.Tests/ClubProcessor.Tests.csproj --verbosity minimal
 
-      - name: Detect changed file and run processor
+      - name: Detect changed file and extract if XLSX
         run: |
           FILE=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-          if [[ "$FILE" == *competitors_* ]]; then
-            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
-          elif [[ "$FILE" == *Club\ Events.xlsx ]]; then
-            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --file "$FILE"
+          if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
+            echo "[INFO] Detected ClubEvents XLSX: $FILE"
+            python3 scripts/extract_club_events.py "$FILE" data/extracted/
           fi
 
+      - name: Run processor if competitors CSV changed
+        run: |
+          FILE=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+          if [[ "$FILE" == data/competitors_* ]]; then
+            echo "[INFO] Detected competitors CSV: $FILE"
+            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+          fi
+
+      - name: Run processor if extracted event CSVs exist
+        run: |
+          if compgen -G "data/extracted/events/Event_*.csv" > /dev/null; then
+            echo "[INFO] Detected extracted event CSVs"
+            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder data/extracted/events/
+          fi
+
+      - name: Commit extracted files and summary
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci@wellandvalley.cc"
+          git add data/extracted/
+          git commit -m "chore: extract and publish event data from ClubEvents XLSX"
+          git push
