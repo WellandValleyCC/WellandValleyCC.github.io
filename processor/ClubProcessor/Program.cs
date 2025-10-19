@@ -32,7 +32,7 @@ class Program
         switch (mode.ToLower())
         {
             case "competitors":
-                var importer = new CompetitorImporter(context);
+                var importer = new CompetitorImporter(context, DateTime.UtcNow);
                 importer.Import(filePath);
                 break;
             case "events":
