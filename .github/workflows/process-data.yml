@@ -39,22 +39,19 @@ jobs:
 
       - name: Run tests
         run: dotnet test processor/ClubProcessor.Tests/ClubProcessor.Tests.csproj --verbosity minimal
-
-      - name: Detect changed file and extract if XLSX
+          
+      - name: Detect changed files and extract/process
         run: |
-          FILE=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-          if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
-            echo "[INFO] Detected ClubEvents XLSX: $FILE"
-            python3 scripts/extract_club_events.py "$FILE" data/extracted/
-          fi
-
-      - name: Run processor if competitors CSV changed
-        run: |
-          FILE=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-          if [[ "$FILE" == data/competitors_* ]]; then
-            echo "[INFO] Detected competitors CSV: $FILE"
-            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
-          fi
+          CHANGED=$(git diff --name-only HEAD^ HEAD)
+          for FILE in $CHANGED; do
+            if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
+              echo "[INFO] Detected ClubEvents XLSX: $FILE"
+              python3 scripts/extract_club_events.py "$FILE" data/extracted/
+            elif [[ "$FILE" == data/competitors_*.csv ]]; then
+              echo "[INFO] Detected competitors CSV: $FILE"
+              dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+            fi
+          done
 
       - name: Run processor if extracted event CSVs exist
         run: |
