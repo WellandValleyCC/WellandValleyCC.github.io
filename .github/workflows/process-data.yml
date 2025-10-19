@@ -18,6 +18,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Fetch full Git history
+        run: git fetch --unshallow
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
