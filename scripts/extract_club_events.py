@@ -52,7 +52,8 @@ def extract_club_events(xlsx_path, output_dir):
             event_num = re.search(r'\d+', sheet).group()
             print(f"[OK] Extracting event sheet: {sheet}")
             df = xl.parse(sheet)
-            event_out = os.path.join(events_dir, f"Event_{event_num}.csv")
+            df = df[df.iloc[:, 0].notna()]  # Keep rows where column A is not blank
+            event_out = os.path.join(events_dir, f"Event_{int(event_num):02}.csv")
             df.to_csv(event_out, index=False)
             print(f"[INFO] Saved to: {event_out} ({len(df)} rows)")
 
