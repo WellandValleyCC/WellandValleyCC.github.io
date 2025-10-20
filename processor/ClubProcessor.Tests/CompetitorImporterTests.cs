@@ -12,7 +12,7 @@ namespace ClubProcessor.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ClubDbContext>()
-                .UseInMemoryDatabase("TestDb")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             using var context = new ClubDbContext(options);
@@ -20,10 +20,10 @@ namespace ClubProcessor.Tests
 
             var testCsvPath = "test-data/competitors_test.csv";
             Directory.CreateDirectory("test-data");
-			File.WriteAllText(
-				testCsvPath,
-				"ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
-				"9999,Doe,John,First Claim,false,false,false,true,false");
+            File.WriteAllText(
+                testCsvPath,
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
+                "9999,Doe,John,First Claim,false,false,false,true,false");
 
             // Act
             importer.Import(testCsvPath);
@@ -37,7 +37,7 @@ namespace ClubProcessor.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ClubDbContext>()
-                .UseInMemoryDatabase("TestDb")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             using var context = new ClubDbContext(options);
@@ -69,13 +69,12 @@ namespace ClubProcessor.Tests
             Assert.Equal("Second Claim", second.ClaimStatus);
         }
 
-
         [Fact]
         public void Import_ShouldYieldOneRow_WhenClaimStatusDoesNotChange()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ClubDbContext>()
-                .UseInMemoryDatabase("TestDb")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             using var context = new ClubDbContext(options);
