@@ -117,25 +117,12 @@ namespace ClubProcessor.Tests
             var importDate = new DateTime(2025, 2, 20);
             var today = DateTime.UtcNow;
 
-            var competitor = new Competitor
-            {
-                ClubNumber = "9999",
-                Surname = template.Surname,
-                GivenName = template.GivenName,
-                ClaimStatus = "First Claim",
-                IsFemale = false,
-                IsJuvenile = false,
-                IsJunior = true,
-                IsSenior = false,
-                IsVeteran = false
-            };
-
             var csvPath = "test-data/competitor_timestamp_test.csv";
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 csvPath,
                 "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"{competitor.ClubNumber},{competitor.Surname},{competitor.GivenName},{competitor.ClaimStatus},{competitor.IsFemale},{competitor.IsJuvenile},{competitor.IsJunior},{competitor.IsSenior},{competitor.IsVeteran},{importDate:yyyy-MM-dd}");
+                $"9999,Doe,John,First Claim,false,false,true,false,false,{importDate:yyyy-MM-dd}");
 
             var options = new DbContextOptionsBuilder<ClubDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -151,6 +138,95 @@ namespace ClubProcessor.Tests
             var imported = context.Competitors.Single(c => c.ClubNumber == "9999");
             Assert.Equal(importDate, imported.CreatedUtc);
             Assert.Equal(importDate, imported.LastUpdatedUtc);
+        }
+
+        [Theory, AutoData]
+        public void Import_ShouldApplyImportDateToTimestamps_WhenChangingClaimStatus(Competitor template)
+        {
+            // Arrange
+            var earlyImportDate = new DateTime(2025, 2, 20);
+            var laterImportDate = new DateTime(2025, 3, 20);
+            var today = DateTime.UtcNow;
+            var yesterday = DateTime.UtcNow.AddDays(-1);
+
+            var testCsvPath1 = "test-data/competitors_test_1.csv";
+            Directory.CreateDirectory("test-data");
+            File.WriteAllText(
+                testCsvPath1,
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd}");
+
+            var testCsvPath2 = "test-data/competitors_test_2.csv";
+            File.WriteAllText(
+                testCsvPath2,
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"9999,Doe,John,Second Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd}");
+
+            var options = new DbContextOptionsBuilder<ClubDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new ClubDbContext(options);
+            var importerYesterday = new CompetitorImporter(context, yesterday);
+            var importerToday = new CompetitorImporter(context, today);
+
+            // Act
+            importerYesterday.Import(testCsvPath1);
+            importerToday.Import(testCsvPath2);
+
+            // Assert
+            Assert.Equal(2, context.Competitors.Count());
+            var first = context.Competitors.OrderBy(c => c.Id).First();
+            Assert.Equal("First Claim", first.ClaimStatus);
+            Assert.Equal(earlyImportDate, first.CreatedUtc);
+            Assert.Equal(earlyImportDate, first.LastUpdatedUtc);
+            var second = context.Competitors.OrderBy(c => c.Id).Skip(1).First();
+            Assert.Equal("Second Claim", second.ClaimStatus);
+            Assert.Equal(laterImportDate, second.CreatedUtc);
+            Assert.Equal(laterImportDate, second.LastUpdatedUtc);
+        }
+
+
+
+        [Theory, AutoData]
+        public void Import_ShouldApplyImportDateToTimestamps_WhenOtherPropertyIsChanged(Competitor template)
+        {
+            // Arrange
+            var earlyImportDate = new DateTime(2025, 2, 20);
+            var laterImportDate = new DateTime(2025, 3, 20);
+            var today = DateTime.UtcNow;
+            var yesterday = DateTime.UtcNow.AddDays(-1);
+
+            var testCsvPath1 = "test-data/competitors_test_1.csv";
+            Directory.CreateDirectory("test-data");
+            File.WriteAllText(
+                testCsvPath1,
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"9999,Doe,Johnathon,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd}");
+
+            var testCsvPath2 = "test-data/competitors_test_2.csv";
+            File.WriteAllText(
+                testCsvPath2,
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd}");
+
+            var options = new DbContextOptionsBuilder<ClubDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new ClubDbContext(options);
+            var importerYesterday = new CompetitorImporter(context, yesterday);
+            var importerToday = new CompetitorImporter(context, today);
+
+            // Act
+            importerYesterday.Import(testCsvPath1);
+            importerToday.Import(testCsvPath2);
+
+            // Assert
+            var imported = context.Competitors.Single(c => c.ClubNumber == "9999");
+            Assert.Equal("First Claim", imported.ClaimStatus);
+            Assert.Equal(earlyImportDate, imported.CreatedUtc);
+            Assert.Equal(laterImportDate, imported.LastUpdatedUtc);
         }
     }
 }
