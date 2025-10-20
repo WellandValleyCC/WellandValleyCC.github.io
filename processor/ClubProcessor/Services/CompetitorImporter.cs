@@ -66,7 +66,7 @@ namespace ClubProcessor.Services
                     latest.IsJunior = competitor.IsJunior;
                     latest.IsSenior = competitor.IsSenior;
                     latest.IsVeteran = competitor.IsVeteran;
-                    latest.LastUpdatedUtc = runtime;
+                    latest.LastUpdatedUtc = importDate;
                 }
             }
 
