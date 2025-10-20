@@ -1,27 +1,22 @@
 ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate
-1237,Abbott,John,First Claim,False,False,False,True,False,2025-01-22
-1327,Abbott,James,First Claim,False,False,True,False,False,2025-01-22
-1197,Adcock,David,First Claim,False,False,False,False,True,2025-01-22
-1353,Ainsley,Emma,First Claim,True,False,False,True,False,2025-01-22
-819,Akoslovski,Kath,First Claim,True,False,False,False,False,2025-01-22
-2,Alden,Steve,First Claim,False,False,False,False,True,2025-01-22
-1370,Aldridge,Ian,First Claim,False,False,False,False,True,2025-01-22
-1286,Allen,Ian,First Claim,False,False,False,False,True,2025-01-22
-1381,Allen,Roland,First Claim,False,False,False,True,False,2025-01-22
-1153,Allitt,Chris,First Claim,False,False,False,False,False,2025-01-22
-1372,Andrew,Dan,First Claim,False,False,False,True,False,2025-01-22
-1112,Ashwell,Gary,First Claim,False,False,False,False,True,2025-01-22
-1135,Askham,Simon,First Claim,False,False,False,True,False,2025-01-22
-1368,Awdry,Ollie,First Claim,False,True,False,False,False,2025-01-22
-1328,Bailey,Shaun,First Claim,False,False,False,False,True,2025-01-22
-369,Barnett,Dean,First Claim,False,False,False,False,True,2025-01-22
-7,Barnett,Vic,Honorary,False,False,False,False,True,2025-01-22
-473,Barnett,George,Honorary,False,False,False,False,True,2025-01-22
-1384,Barrett,Paul,First Claim,False,False,False,False,True,2025-01-22
-2,Baxter,Lydia,Second Claim,True,False,False,True,False,2025-01-22
-1275,Baxter,Sylvia,First Claim,True,True,False,False,False,2025-01-22
-68,Beach,Ronald,Honorary,False,False,False,False,True,2025-01-22
-1035,Bell,Peter,First Claim,False,False,False,False,True,2025-01-22
-1326,Bennis,Laoise,First Claim,True,False,False,True,False,2025-01-22
-10,Birch,Dave,Honorary,False,False,False,False,True,2025-01-22
-477,Birch,Carol,First Claim,True,False,False,False,True,2025-01-22
+1237,Abbott,John,First Claim,False,False,False,True,False,2025-01-23
+1327,Abbott,James,First Claim,False,False,True,False,False,2025-01-23
+1197,Adcock,David,First Claim,False,False,False,False,True,2025-01-23
+1353,Ainsley,Emma,First Claim,True,False,False,True,False,2025-01-23
+819,Akoslovski,Kath,First Claim,True,False,False,False,False,2025-01-23
+2,Alden,Steve,First Claim,False,False,False,False,True,2025-01-23
+1370,Aldridge,Ian,First Claim,False,False,False,False,True,2025-01-23
+1286,Allen,Ian,First Claim,False,False,False,False,True,2025-01-23
+1381,Allen,Roland,First Claim,False,False,False,True,False,2025-01-23
+1153,Allitt,Chris,First Claim,False,False,False,False,False,2025-01-23
+1372,Andrew,Dan,First Claim,False,False,False,True,False,2025-01-23
+1112,Ashwell,Gary,First Claim,False,False,False,False,True,2025-01-23
+1135,Askham,Simon,First Claim,False,False,False,True,False,2025-01-23
+1368,Awdry,Ollie,First Claim,False,True,False,False,False,2025-01-23
+1328,Bailey,Shaun,First Claim,False,False,False,False,True,2025-01-23
+369,Barnett,Dean,First Claim,False,False,False,False,True,2025-01-23
+7,Barnett,Vic,Honorary,False,False,False,False,True,2025-01-23
+473,Barnett,George,Honorary,False,False,False,False,True,2025-01-23
+1384,Barrett,Paul,First Claim,False,False,False,False,True,2025-01-23
+2,Baxter,Lydia,Second Claim,True,False,False,True,False,2025-01-23
+1275,Baxter,Sylvia,First Claim,True,True,False,False,False,2025-01-23
