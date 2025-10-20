@@ -79,6 +79,8 @@ jobs:
       
               git config user.name "github-actions"
               git config user.email "github-actions@github.com"
+              
+              git rm --cached "$dbPath" || true
       
               git add "$dbPath"
               git commit -m "Persisted competitor DB for ${year} import [ci skip]" || echo "No changes to commit"
