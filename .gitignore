@@ -12,14 +12,18 @@ obj/
 
 # 🧑‍💻 IDE and user-specific files
 .vscode/
-.vs/*.db
-.vs/**/*.db
-.vs/*.json
-.vs/**/*.json
-.vs/*.vsidx
-.vs/**/*.vsidx
-.vs/*.v2
-.vs/**/*.v2
+**/.vs/*.db
+**/.vs/**/*.db
+**/.vs/*.json
+**/.vs/**/*.json
+**/.vs/*.vsidx
+**/.vs/**/*.vsidx
+**/.vs/*.v2
+**/.vs/**/*.v2
+**/.vs/*.testlog
+**/.vs/**/*.testlog
+**/.vs/*.manifest
+**/.vs/**/*.manifest
 *.user
 *.suo
 *.csproj.user
