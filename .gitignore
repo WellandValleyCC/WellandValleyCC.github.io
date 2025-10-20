@@ -29,8 +29,10 @@ processor/logs/
 # 🧪 Test artifacts
 processor/ClubProcessor.Tests/test-data/
 
-# 🗃️ SQLite DBs anywhere
-**/*.db
+# 🗃️ SQLite DBs transient files anywhere
+**/*.db-wal
+**/*.db-shm
+
 
 # 🧹 Temp and backup files
 *.tmp
