@@ -12,16 +12,23 @@ obj/
 
 # 🧑‍💻 IDE and user-specific files
 .vscode/
-*.vs/
+.vs/*.db
+.vs/**/*.db
+.vs/*.json
+.vs/**/*.json
+.vs/*.vsidx
+.vs/**/*.vsidx
+.vs/*.v2
+.vs/**/*.v2
 *.user
 *.suo
 *.csproj.user
+
 
 # 📊 Intermediate and extracted data
 data/*.json
 data/*.log
 data/standings-*.json
-data/*.db
 data/extracted/
 extracted_csv/*.csv
 processor/logs/
