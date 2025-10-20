@@ -110,8 +110,8 @@ namespace ClubProcessor.Tests
             Assert.Equal(today, competitor.LastUpdatedUtc);
         }
 
-        [Theory, AutoData]
-        public void Import_ShouldApplyImportDateToTimestamps(Competitor template)
+        [Fact]
+        public void Import_ShouldApplyImportDateToTimestamps()
         {
             // Arrange
             var importDate = new DateTime(2025, 2, 20);
@@ -140,8 +140,8 @@ namespace ClubProcessor.Tests
             Assert.Equal(importDate, imported.LastUpdatedUtc);
         }
 
-        [Theory, AutoData]
-        public void Import_ShouldApplyImportDateToTimestamps_WhenChangingClaimStatus(Competitor template)
+        [Fact]
+        public void Import_ShouldApplyImportDateToTimestamps_WhenChangingClaimStatus()
         {
             // Arrange
             var earlyImportDate = new DateTime(2025, 2, 20);
@@ -188,8 +188,8 @@ namespace ClubProcessor.Tests
 
 
 
-        [Theory, AutoData]
-        public void Import_ShouldApplyImportDateToTimestamps_WhenOtherPropertyIsChanged(Competitor template)
+        [Fact]
+        public void Import_ShouldApplyImportDateToTimestamps_WhenOtherPropertyIsChanged()
         {
             // Arrange
             var earlyImportDate = new DateTime(2025, 2, 20);
