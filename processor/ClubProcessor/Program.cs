@@ -1,6 +1,7 @@
 using ClubProcessor.Context;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 class Program
 {
@@ -22,8 +23,18 @@ class Program
             return;
         }
 
+        // Extract year from filename
+        var filename = Path.GetFileNameWithoutExtension(filePath); // e.g. "competitors_2026"
+        var yearMatch = Regex.Match(filename, @"\d{4}");
+        var year = yearMatch.Success ? yearMatch.Value : DateTime.UtcNow.Year.ToString();
+
+
+        // Construct DB path
+        var dbPath = $"data/club_competitors_{year}.db";
+        Directory.CreateDirectory("data");
+
         var options = new DbContextOptionsBuilder<ClubDbContext>()
-            .UseSqlite("Data Source=data/results.db")
+            .UseSqlite($"Data Source={dbPath}")
             .Options;
 
         using var context = new ClubDbContext(options);
