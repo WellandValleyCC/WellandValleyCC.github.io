@@ -1,7 +1,10 @@
-using Xunit;
+using AutoFixture;
+using AutoFixture.Xunit2;
 using ClubProcessor.Context;
+using ClubProcessor.Models;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace ClubProcessor.Tests
 {
@@ -105,6 +108,49 @@ namespace ClubProcessor.Tests
             var competitor = context.Competitors.First();
             Assert.Equal(yesterday, competitor.CreatedUtc);
             Assert.Equal(today, competitor.LastUpdatedUtc);
+        }
+
+        [Theory, AutoData]
+        public void Import_ShouldApplyImportDateToTimestamps(Competitor template)
+        {
+            // Arrange
+            var importDate = new DateTime(2025, 2, 20);
+            var today = DateTime.UtcNow;
+
+            var competitor = new Competitor
+            {
+                ClubNumber = "9999",
+                Surname = template.Surname,
+                GivenName = template.GivenName,
+                ClaimStatus = "First Claim",
+                IsFemale = false,
+                IsJuvenile = false,
+                IsJunior = true,
+                IsSenior = false,
+                IsVeteran = false
+            };
+
+            var csvPath = "test-data/competitor_timestamp_test.csv";
+            Directory.CreateDirectory("test-data");
+            File.WriteAllText(
+                csvPath,
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"{competitor.ClubNumber},{competitor.Surname},{competitor.GivenName},{competitor.ClaimStatus},{competitor.IsFemale},{competitor.IsJuvenile},{competitor.IsJunior},{competitor.IsSenior},{competitor.IsVeteran},{importDate:yyyy-MM-dd}");
+
+            var options = new DbContextOptionsBuilder<ClubDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new ClubDbContext(options);
+            var importer = new CompetitorImporter(context, today);
+
+            // Act
+            importer.Import(csvPath);
+
+            // Assert
+            var imported = context.Competitors.Single(c => c.ClubNumber == "9999");
+            Assert.Equal(importDate, imported.CreatedUtc);
+            Assert.Equal(importDate, imported.LastUpdatedUtc);
         }
     }
 }
