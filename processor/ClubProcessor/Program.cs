@@ -27,11 +27,12 @@ class Program
             .Options;
 
         using var context = new ClubDbContext(options);
+        context.Database.EnsureCreated();
 
         switch (mode.ToLower())
         {
             case "competitors":
-                var importer = new CompetitorImporter(context);
+                var importer = new CompetitorImporter(context, DateTime.UtcNow);
                 importer.Import(filePath);
                 break;
             case "events":

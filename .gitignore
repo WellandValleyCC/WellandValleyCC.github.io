@@ -1,45 +1,51 @@
-# Build output
+# 🏗️ Build output (dotnet)
 **/bin/
 **/obj/
 **/*.dll
 **/*.exe
 **/*.pdb
+bin/
+obj/
 
-# EF Core migration snapshots (optional)
+# 🧬 EF Core migration snapshots (optional)
 **/Migrations/
 
-# IDE and user-specific files
+# 🧑‍💻 IDE and user-specific files
 .vscode/
 *.vs/
 *.user
 *.suo
 *.csproj.user
 
-# Intermediate and extracted data
+# 📊 Intermediate and extracted data
 data/*.json
 data/*.log
 data/standings-*.json
 data/*.db
+data/extracted/
 extracted_csv/*.csv
 processor/logs/
 
-
-# Test artifacts
+# 🧪 Test artifacts
 processor/ClubProcessor.Tests/test-data/
 
-# SQLite DBs anywhere
+# 🗃️ SQLite DBs anywhere
 **/*.db
 
-# Temp and backup files
+# 🧹 Temp and backup files
 *.tmp
 *.bak
 *.swp
 ~$*
 
-# OS-specific files
+# 🖥️ OS-specific files
 .DS_Store
 Thumbs.db
 
-# Keep published artifacts
+# 📦 Keep published artifacts
 !results/
 !docs/
+
+# 🐍 Python cache
+__pycache__/
+*.pyc
