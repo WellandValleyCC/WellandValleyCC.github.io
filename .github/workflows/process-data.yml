@@ -1,5 +1,8 @@
 name: Process Club Data
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -52,6 +55,7 @@ jobs:
               python3 scripts/extract_club_events.py "$FILE" data/extracted/
             elif [[ "$FILE" == data/competitors_*.csv ]]; then
               echo "[INFO] Detected competitors CSV: $FILE"
+              echo "$FILE" > .competitor_csv_path
               dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
             fi
           done
@@ -62,3 +66,28 @@ jobs:
             echo "[INFO] Detected extracted event CSVs"
             dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder data/extracted/events/
           fi
+          
+      - name: Commit SQLite DB to repo
+        run: |
+          if [ -f ".competitor_csv_path" ]; then
+            file=$(cat .competitor_csv_path)
+            year=$(basename "$file" | grep -oP '\d{4}')
+            dbPath="data/club_competitors_${year}.db"
+      
+            if [ -f "$dbPath" ]; then
+              echo "Committing $dbPath to repo..."
+      
+              git config user.name "github-actions"
+              git config user.email "github-actions@github.com"
+      
+              git add "$dbPath"
+              git commit -m "Persisted competitor DB for ${year} import [ci skip]" || echo "No changes to commit"
+              git push
+            else
+              echo "DB not found: $dbPath"
+            fi
+          else
+            echo "No competitor CSV processed — skipping DB commit"
+          fi
+        shell: bash
+
