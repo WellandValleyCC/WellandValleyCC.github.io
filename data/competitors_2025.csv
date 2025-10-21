@@ -1,7 +1,7 @@
 ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate
-1237,Abbott,John,Second Claim,False,False,False,True,False,2025-01-28
-1327,Abbott,James,Second Claim,False,False,True,False,False,2025-01-28
-1197,Adcock,David,Second Claim,False,False,False,False,True,2025-01-28
-1353,Ainsley,Emma,First Claim,True,False,False,True,False,2025-01-28
-819,Akoslovski,Kath,First Claim,True,False,False,False,False,2025-01-28
-2,Alden,Steve,First Claim,False,False,False,False,True,2025-01-28
+1237,Abbott,John,First Claim,False,False,False,True,False,2025-01-29
+1327,Abbott,James,First Claim,False,False,True,False,False,2025-01-29
+1197,Adcock,David,First Claim,False,False,False,False,True,2025-01-29
+1353,Ainsley,Emma,First Claim,True,False,False,True,False,2025-01-29
+819,Akoslovski,Kath,First Claim,True,False,False,False,False,2025-01-29
+2,Alden,Steve,First Claim,False,False,False,False,True,2025-01-29
