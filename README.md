@@ -225,86 +225,45 @@ git push origin pre-ghpages-site
  
 - Keep `README.md` and contribution notes updated when you change processor arguments, template locations, or publishing steps.
 
-# Processing the ClubEvents_YYYY.xlsx workbook
+# Developer notes
+   
+   
+## 🧪 Running the Event Processor
 
-## Extract the csv using the python script
+### 🐍 Step 1: Extract Event CSVs from XLSX
 
-```
-cd C:\repos\wvcc\WellandValleyCC.github.io\
+To split `ClubEvents_2026.xlsx` into per-sheet CSVs:
 
+```bash
 python scripts/extract_club_events.py data/ClubEvents_2026.xlsx data/extracted/events/
 ```
 
-### output
+This will produce:
+- `calendar_2026.csv` — event metadata
+- `competitors_2026.csv` — reference sheet
+- `Event_01.csv` to `Event_26.csv` — per-event results
 
-```
-[INFO] Reading workbook: data/ClubEvents_2026.xlsx
-[OK] Extracting calendar sheet
-C:\Users\Mike\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\openpyxl\worksheet\header_footer.py:48: UserWarning: Cannot parse header or footer so it will be ignored
-  warn("""Cannot parse header or footer so it will be ignored""")
-[INFO] Saved to: data/extracted/events/calendar_2026.csv (66 rows)
-[INFO] Extracting competitors sheet (reference only)
-[INFO] Saved to: data/extracted/events/competitors_2026.csv (217 rows)
-[OK] Extracting event sheet: Event (1)
-[INFO] Saved to: data/extracted/events/events\Event_01.csv (21 rows)
-[OK] Extracting event sheet: Event (2)
-[INFO] Saved to: data/extracted/events/events\Event_02.csv (47 rows)
-[OK] Extracting event sheet: Event (3)
-[INFO] Saved to: data/extracted/events/events\Event_03.csv (22 rows)
-[OK] Extracting event sheet: Event (4)
-[INFO] Saved to: data/extracted/events/events\Event_04.csv (21 rows)
-[OK] Extracting event sheet: Event (5)
-[INFO] Saved to: data/extracted/events/events\Event_05.csv (28 rows)
-[OK] Extracting event sheet: Event (6)
-[INFO] Saved to: data/extracted/events/events\Event_06.csv (22 rows)
-[OK] Extracting event sheet: Event (7)
-[INFO] Saved to: data/extracted/events/events\Event_07.csv (0 rows)
-[OK] Extracting event sheet: Event (8)
-[INFO] Saved to: data/extracted/events/events\Event_08.csv (17 rows)
-[OK] Extracting event sheet: Event (9)
-[INFO] Saved to: data/extracted/events/events\Event_09.csv (15 rows)
-[OK] Extracting event sheet: Event (10)
-[INFO] Saved to: data/extracted/events/events\Event_10.csv (30 rows)
-[OK] Extracting event sheet: Event (11)
-[INFO] Saved to: data/extracted/events/events\Event_11.csv (26 rows)
-[OK] Extracting event sheet: Event (12)
-[INFO] Saved to: data/extracted/events/events\Event_12.csv (22 rows)
-[OK] Extracting event sheet: Event (13)
-[INFO] Saved to: data/extracted/events/events\Event_13.csv (29 rows)
-[OK] Extracting event sheet: Event (14)
-[INFO] Saved to: data/extracted/events/events\Event_14.csv (39 rows)
-[OK] Extracting event sheet: Event (15)
-[INFO] Saved to: data/extracted/events/events\Event_15.csv (37 rows)
-[OK] Extracting event sheet: Event (16)
-[INFO] Saved to: data/extracted/events/events\Event_16.csv (32 rows)
-[OK] Extracting event sheet: Event (17)
-[INFO] Saved to: data/extracted/events/events\Event_17.csv (38 rows)
-[OK] Extracting event sheet: Event (18)
-[INFO] Saved to: data/extracted/events/events\Event_18.csv (36 rows)
-[OK] Extracting event sheet: Event (19)
-[INFO] Saved to: data/extracted/events/events\Event_19.csv (52 rows)
-[OK] Extracting event sheet: Event (20)
-[INFO] Saved to: data/extracted/events/events\Event_20.csv (28 rows)
-[OK] Extracting event sheet: Event (21)
-[INFO] Saved to: data/extracted/events/events\Event_21.csv (56 rows)
-[OK] Extracting event sheet: Event (22)
-[INFO] Saved to: data/extracted/events/events\Event_22.csv (28 rows)
-[OK] Extracting event sheet: Event (23)
-[INFO] Saved to: data/extracted/events/events\Event_23.csv (43 rows)
-[OK] Extracting event sheet: Event (24)
-[INFO] Saved to: data/extracted/events/events\Event_24.csv (27 rows)
-[OK] Extracting event sheet: Event (25)
-[INFO] Saved to: data/extracted/events/events\Event_25.csv (0 rows)
-[OK] Extracting event sheet: Event (26)
-[INFO] Saved to: data/extracted/events/events\Event_26.csv (0 rows)
-PS C:\repos\wvcc\WellandValleyCC.github.io>
+---
+
+### 🧠 Step 2: Run the Processor via CLI
+
+To ingest the extracted CSVs and populate the event database:
+
+```bash
+dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder data/extracted/events/
 ```
 
-## Processing the extracted csv using the c# processor
+This will:
+- Parse each `Event_*.csv`
+- Normalize and validate data
+- Write to `club_events_2026.db` (or configured target)
+- Emit diagnostics and metrics to console
 
-### 🧪 Debugging the Event Processor in Visual Studio
+---
 
-To run the event ingestion pipeline locally in debug mode:
+### 🧪 Step 3: Debug in Visual Studio
+
+To run the processor in debug mode:
 
 1. **Set the Startup Project**
    - In Solution Explorer, right-click `ClubProcessor.csproj`
@@ -329,3 +288,4 @@ To run the event ingestion pipeline locally in debug mode:
 4. **Run the Processor**
    - Press **F5** to launch in debug mode
    - Inspect how each CSV is processed and written to the event database
+
