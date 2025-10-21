@@ -313,6 +313,175 @@ namespace ClubProcessor.Tests
             Assert.Contains(allCompetitors, c => c.ClubNumber == "2003" && c.Surname == "Khan");
             Assert.DoesNotContain(allCompetitors, c => c.ClubNumber == "1001" || c.ClubNumber == "1002");
         }
+
+        [Fact]
+        public void CompetitorImporter_ImportWithMixOfOldAndNewCompetitors_YieldsOnlyCompetitorsFromLatestCsvFileButAllOldRowsForThemToo()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ClubDbContext>()
+                .UseSqlite("Filename=:memory:")
+                .Options;
+
+            using var context = new ClubDbContext(options);
+            context.Database.OpenConnection();
+            context.Database.EnsureCreated();
+
+            // Seed DB with 2 pre-existing competitors
+            context.Competitors.AddRange(new[]
+            {
+                // 1001, Alice Smith - first claim - one row in the SQL table
+                new Competitor
+                {
+                    ClubNumber = "1001",
+                    Surname = "Smith",
+                    GivenName = "Alice",
+                    ClaimStatus = "First Claim",
+                    IsFemale = true,
+                    IsJuvenile = false,
+                    IsJunior = false,
+                    IsSenior = true,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 01, 01),
+                    LastUpdatedUtc = new DateTime(2025, 01, 01)
+                },
+                // 1002, Bob Browm - first claim, changes to second claim - two rows in the SQL table
+                new Competitor
+                {
+                    ClubNumber = "1002",
+                    Surname = "Brown",
+                    GivenName = "Bob",
+                    ClaimStatus = "First Claim",
+                    IsFemale = false,
+                    IsJuvenile = false,
+                    IsJunior = true,
+                    IsSenior = false,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 01, 01),
+                    LastUpdatedUtc = new DateTime(2025, 01, 01)
+                },
+                new Competitor
+                {
+                    ClubNumber = "1002",
+                    Surname = "Brown",
+                    GivenName = "Bob",
+                    ClaimStatus = "Second Claim",
+                    IsFemale = false,
+                    IsJuvenile = false,
+                    IsJunior = true,
+                    IsSenior = false,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 02, 01),
+                    LastUpdatedUtc = new DateTime(2025, 02, 01)
+                },
+                // 1003, John Doe - first claim, has been modified (e.g. name spelling correction) - one row in the SQL table
+                new Competitor
+                {
+                    ClubNumber = "1003",
+                    Surname = "Doe",
+                    GivenName = "John",
+                    ClaimStatus = "First Claim",
+                    IsFemale = false,
+                    IsJuvenile = false,
+                    IsJunior = false,
+                    IsSenior = true,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 01, 25),
+                    LastUpdatedUtc = new DateTime(2025, 01, 25)
+                },
+                // 1004, Sarah Lee - first claim, then second claim, then first claim then modified - three rows in the SQL table
+                new Competitor
+                {
+                    ClubNumber = "1004",
+                    Surname = "Lee",
+                    GivenName = "Sarah",
+                    ClaimStatus = "First Claim",
+                    IsFemale = true,
+                    IsJuvenile = false,
+                    IsJunior = true,
+                    IsSenior = false,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 01, 25),
+                    LastUpdatedUtc = new DateTime(2025, 01, 25)
+                },
+                new Competitor
+                {
+                    ClubNumber = "1004",
+                    Surname = "Lee",
+                    GivenName = "Sarah",
+                    ClaimStatus = "Second Claim",
+                    IsFemale = true,
+                    IsJuvenile = false,
+                    IsJunior = true,
+                    IsSenior = false,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 02, 25),
+                    LastUpdatedUtc = new DateTime(2025, 02, 25)
+                },
+                new Competitor
+                {
+                    ClubNumber = "1004",
+                    Surname = "Lee",
+                    GivenName = "Sara",
+                    ClaimStatus = "First Claim",
+                    IsFemale = true,
+                    IsJuvenile = false,
+                    IsJunior = true,
+                    IsSenior = false,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 03, 25),
+                    LastUpdatedUtc = new DateTime(2025, 03, 25)
+                },
+                // 1005, Omar Khan - first claim - one row in the SQL table
+                new Competitor
+                {
+                    ClubNumber = "1005",
+                    Surname = "Khan",
+                    GivenName = "Omar",
+                    ClaimStatus = "First Claim",
+                    IsFemale = false,
+                    IsJuvenile = false,
+                    IsJunior = false,
+                    IsSenior = true,
+                    IsVeteran = true,
+                    CreatedUtc = new DateTime(2025, 01, 25),
+                    LastUpdatedUtc = new DateTime(2025, 01, 25)
+                }
+            });
+            context.SaveChanges();
+
+            var assembledCompetitors = context.Competitors
+                .OrderBy(c => c.ClubNumber)
+                .ToList();
+            Assert.Equal(8, assembledCompetitors.Count);
+
+
+            // Prepare CSV input with 4 existing competitors, but with isVeteran set True in all cases and all set to First Claim
+            var csv = new StringBuilder();
+            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate");
+            csv.AppendLine("1001,Smith,Alice,First Claim,True,False,False,False,True,2025-02-25");
+            csv.AppendLine("1002,Brown,Bob,First Claim,False,False,False,False,True,2025-02-25");
+            csv.AppendLine("1003,Doe,John,First Claim,False,False,False,False,True,2025-02-25");
+            csv.AppendLine("1004,Lee,Sara,First Claim,True,False,False,False,True,2025-02-25");
+
+            var csvPath = "test-data/competitor_timestamp_test.csv";
+            Directory.CreateDirectory("test-data");
+            File.WriteAllText(csvPath, csv.ToString());
+
+            using var reader = new StringReader(csv.ToString());
+
+            DateTime today = DateTime.UtcNow;
+            var importer = new CompetitorImporter(context, today);
+
+            // Act
+            importer.Import(csvPath);
+
+            // Assert
+            Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == "1001"));
+            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == "1002"));
+            Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == "1003"));
+            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == "1004"));
+            Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == "1005"));
+        }
     }
 }
 
