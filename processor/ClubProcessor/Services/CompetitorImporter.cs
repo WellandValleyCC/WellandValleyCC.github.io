@@ -16,15 +16,26 @@ namespace ClubProcessor.Services
 
         public void Import(string csvPath)
         {
+            var competitorsFromCsv = ParseCsv(csvPath);
+            ApplyImportLogic(competitorsFromCsv);
+            RemoveObsoleteCompetitors(competitorsFromCsv.Select(c => c.ClubNumber).ToHashSet());
+            context.SaveChanges();
+        }
+
+        private List<Competitor> ParseCsv(string csvPath)
+        {
             var lines = File.ReadAllLines(csvPath).Skip(1);
+            var competitors = new List<Competitor>();
 
             foreach (var line in lines)
             {
                 var parts = line.Split(',');
 
-                var importDate = parts.Count() == 10 ? DateTime.Parse(parts[9]) : runtime;
+                var importDate = parts.Length == 10
+                    ? DateTime.Parse(parts[9])
+                    : runtime;
 
-                var competitor = new Competitor
+                competitors.Add(new Competitor
                 {
                     ClubNumber = parts[0],
                     Surname = parts[1],
@@ -37,8 +48,16 @@ namespace ClubProcessor.Services
                     IsVeteran = bool.Parse(parts[8]),
                     CreatedUtc = importDate,
                     LastUpdatedUtc = importDate
-                };
+                });
+            }
 
+            return competitors;
+        }
+
+        private void ApplyImportLogic(List<Competitor> incoming)
+        {
+            foreach (var competitor in incoming)
+            {
                 var existingRecords = context.Competitors
                     .Where(c => c.ClubNumber == competitor.ClubNumber)
                     .OrderByDescending(c => c.CreatedUtc)
@@ -46,19 +65,12 @@ namespace ClubProcessor.Services
 
                 var latest = existingRecords.FirstOrDefault();
 
-                if (latest == null)
+                if (latest == null || latest.ClaimStatus != competitor.ClaimStatus)
                 {
-                    // First-ever import
-                    context.Competitors.Add(competitor);
-                }
-                else if (latest.ClaimStatus != competitor.ClaimStatus)
-                {
-                    // Claim status changed — insert new record
                     context.Competitors.Add(competitor);
                 }
                 else
                 {
-                    // Same claim status — treat as correction
                     latest.Surname = competitor.Surname;
                     latest.GivenName = competitor.GivenName;
                     latest.IsFemale = competitor.IsFemale;
@@ -66,11 +78,21 @@ namespace ClubProcessor.Services
                     latest.IsJunior = competitor.IsJunior;
                     latest.IsSenior = competitor.IsSenior;
                     latest.IsVeteran = competitor.IsVeteran;
-                    latest.LastUpdatedUtc = importDate;
+                    latest.LastUpdatedUtc = competitor.LastUpdatedUtc;
                 }
             }
+        }
 
-            context.SaveChanges();
+        private void RemoveObsoleteCompetitors(HashSet<string> validClubNumbers)
+        {
+            var obsolete = context.Competitors
+                .Where(c => !validClubNumbers.Contains(c.ClubNumber))
+                .ToList();
+
+            if (obsolete.Any())
+            {
+                context.Competitors.RemoveRange(obsolete);
+            }
         }
     }
 }
