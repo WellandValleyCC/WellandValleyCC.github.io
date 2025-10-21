@@ -4,6 +4,7 @@ using ClubProcessor.Context;
 using ClubProcessor.Models;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using Xunit;
 
 namespace ClubProcessor.Tests
@@ -228,5 +229,90 @@ namespace ClubProcessor.Tests
             Assert.Equal(earlyImportDate, imported.CreatedUtc);
             Assert.Equal(laterImportDate, imported.LastUpdatedUtc);
         }
+
+        [Fact]
+        public void CompetitorImporter_ImportWithNewSetOfCompetitors_YieldsOnlyCompetitorsFromLatestCsvFile()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ClubDbContext>()
+                .UseSqlite("Filename=:memory:")
+                .Options;
+
+            using var context = new ClubDbContext(options);
+            context.Database.OpenConnection();
+            context.Database.EnsureCreated();
+
+            // Seed DB with 2 pre-existing competitors
+            context.Competitors.AddRange(new[]
+            {
+                new Competitor
+                {
+                    ClubNumber = "1001",
+                    Surname = "Smith",
+                    GivenName = "Alice",
+                    ClaimStatus = "First Claim",
+                    IsFemale = true,
+                    IsJuvenile = false,
+                    IsJunior = false,
+                    IsSenior = true,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 01, 01),
+                    LastUpdatedUtc = new DateTime(2025, 01, 01)
+                },
+                new Competitor
+                {
+                    ClubNumber = "1002",
+                    Surname = "Brown",
+                    GivenName = "Bob",
+                    ClaimStatus = "First Claim",
+                    IsFemale = false,
+                    IsJuvenile = false,
+                    IsJunior = true,
+                    IsSenior = false,
+                    IsVeteran = false,
+                    CreatedUtc = new DateTime(2025, 01, 01),
+                    LastUpdatedUtc = new DateTime(2025, 01, 01)
+                }
+            });
+            context.SaveChanges();
+
+            var assembledCompetitors = context.Competitors
+                .OrderBy(c => c.ClubNumber)
+                .ToList();
+            Assert.Equal(2, assembledCompetitors.Count);
+            Assert.Contains(assembledCompetitors, c => c.ClubNumber == "1001" && c.Surname == "Smith");
+            Assert.Contains(assembledCompetitors, c => c.ClubNumber == "1002" && c.Surname == "Brown");
+
+            // Prepare CSV input with 3 new competitors
+            var csv = new StringBuilder();
+            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate");
+            csv.AppendLine("2001,Doe,John,First Claim,False,False,False,True,False,2025-01-25");
+            csv.AppendLine("2002,Lee,Sarah,First Claim,True,False,True,False,False,2025-01-25");
+            csv.AppendLine("2003,Khan,Omar,First Claim,False,False,False,True,True,2025-01-25");
+
+            var csvPath = "test-data/competitor_timestamp_test.csv";
+            Directory.CreateDirectory("test-data");
+            File.WriteAllText(csvPath, csv.ToString());
+
+            using var reader = new StringReader(csv.ToString());
+
+            DateTime today = DateTime.UtcNow;
+            var importer = new CompetitorImporter(context, today);
+
+            // Act
+            importer.Import(csvPath);
+
+            // Assert
+            var allCompetitors = context.Competitors
+                .OrderBy(c => c.ClubNumber)
+                .ToList();
+
+            Assert.Equal(3, allCompetitors.Count);
+            Assert.Contains(allCompetitors, c => c.ClubNumber == "2001" && c.Surname == "Doe");
+            Assert.Contains(allCompetitors, c => c.ClubNumber == "2002" && c.Surname == "Lee");
+            Assert.Contains(allCompetitors, c => c.ClubNumber == "2003" && c.Surname == "Khan");
+            Assert.DoesNotContain(allCompetitors, c => c.ClubNumber == "1001" || c.ClubNumber == "1002");
+        }
     }
 }
+
