@@ -10,6 +10,12 @@ obj/
 # 🧬 EF Core migration snapshots (optional)
 **/Migrations/
 
+# But allow these specific ones
+!processor/ClubProcessor/Migrations
+!processor/ClubProcessor/Migrations/EventDb/
+!processor/ClubProcessor/Migrations/CompetitorDb/
+
+
 # 🧑‍💻 IDE and user-specific files
 .vscode/
 **/.vs/
@@ -51,3 +57,11 @@ Thumbs.db
 # 🐍 Python cache
 __pycache__/
 *.pyc
+
+data/club_events_2026.db
+
+processor/ClubProcessor/Properties/launchSettings.json
+
+data/club_events_2025.db
+
+data/club_competitors_2026.db
