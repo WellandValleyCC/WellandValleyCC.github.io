@@ -3,11 +3,11 @@ using ClubProcessor.Models;
 
 namespace ClubProcessor.Context
 {
-    public class ClubDbContext : DbContext
+    public class CompetitorDbContext : DbContext
     {
         public DbSet<Competitor> Competitors { get; set; }
 
-        public ClubDbContext(DbContextOptions<ClubDbContext> options)
+        public CompetitorDbContext(DbContextOptions<CompetitorDbContext> options)
             : base(options)
         {
         }

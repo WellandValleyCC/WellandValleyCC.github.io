@@ -7,48 +7,80 @@ class Program
 {
     static void Main(string[] args)
     {
+        // Parse CLI arguments
         string? mode = null;
-        string? filePath = null;
-
+        string? inputPath = null;
 
         for (int i = 0; i < args.Length - 1; i++)
         {
             if (args[i] == "--mode") mode = args[i + 1];
-            if (args[i] == "--file") filePath = args[i + 1];
+            if (args[i] == "--file") inputPath = args[i + 1];
         }
 
-        if (string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(filePath))
+        if (string.IsNullOrEmpty(mode) || string.IsNullOrEmpty(inputPath))
         {
             Console.WriteLine("Usage: ClubProcessor.exe --mode <competitors|events> --file <path>");
             return;
         }
 
-        // Extract year from filename
-        var filename = Path.GetFileNameWithoutExtension(filePath); // e.g. "competitors_2026"
-        var yearMatch = Regex.Match(filename, @"\d{4}");
-        var year = yearMatch.Success ? yearMatch.Value : DateTime.UtcNow.Year.ToString();
+        // Infer year from filename or folder name
+        string year = DateTime.UtcNow.Year.ToString();
+        if (mode == "competitors" && File.Exists(inputPath))
+        {
+            var filename = Path.GetFileNameWithoutExtension(inputPath);
+            var match = Regex.Match(filename, @"\d{4}");
+            if (match.Success) year = match.Value;
+        }
+        else if (mode == "events" && Directory.Exists(inputPath))
+        {
+            var folderName = new DirectoryInfo(inputPath).Name;
+            var match = Regex.Match(folderName, @"\d{4}");
+            if (match.Success) year = match.Value;
+        }
 
-
-        // Construct DB path
-        var dbPath = $"data/club_competitors_{year}.db";
         Directory.CreateDirectory("data");
-
-        var options = new DbContextOptionsBuilder<ClubDbContext>()
-            .UseSqlite($"Data Source={dbPath}")
-            .Options;
-
-        using var context = new ClubDbContext(options);
-        context.Database.EnsureCreated();
 
         switch (mode.ToLower())
         {
             case "competitors":
-                var importer = new CompetitorImporter(context, DateTime.UtcNow);
-                importer.Import(filePath);
-                break;
+                {
+                    var dbPath = Path.Combine("data", $"club_competitors_{year}.db");
+                    var options = new DbContextOptionsBuilder<CompetitorDbContext>()
+                        .UseSqlite($"Data Source={dbPath}")
+                        .Options;
+
+                    using var context = new CompetitorDbContext(options);
+                    context.Database.EnsureCreated();
+
+                    var importer = new CompetitorImporter(context, DateTime.UtcNow);
+                    importer.Import(inputPath);
+                    break;
+                }
+
             case "events":
-                Console.WriteLine($"[Stub] Would process event workbook: {filePath}");
-                break;
+                {
+                    var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
+                    var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
+
+                    var eventOptions = new DbContextOptionsBuilder<EventDbContext>()
+                        .UseSqlite($"Data Source={eventDbPath}")
+                        .Options;
+
+                    var competitorOptions = new DbContextOptionsBuilder<CompetitorDbContext>()
+                        .UseSqlite($"Data Source={competitorDbPath}")
+                        .Options;
+
+                    using var eventContext = new EventDbContext(eventOptions);
+                    using var competitorContext = new CompetitorDbContext(competitorOptions);
+
+                    eventContext.Database.EnsureCreated();
+                    competitorContext.Database.EnsureCreated();
+
+                    var processor = new EventProcessor(eventContext, competitorContext);
+                    processor.ProcessFolder(inputPath);
+                    break;
+                }
+
             default:
                 Console.WriteLine("Unsupported mode. Use 'competitors' or 'events'.");
                 break;

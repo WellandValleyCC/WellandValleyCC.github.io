@@ -2,6 +2,7 @@ using AutoFixture;
 using AutoFixture.Xunit2;
 using ClubProcessor.Context;
 using ClubProcessor.Models;
+using ClubProcessor.Models.Enums;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
@@ -15,19 +16,19 @@ namespace ClubProcessor.Tests
         public void Import_ShouldRunWithoutError_ForValidCsv()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             var importer = new CompetitorImporter(context, DateTime.UtcNow);
 
             var testCsvPath = "test-data/competitors_test.csv";
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31");
 
             // Act
             importer.Import(testCsvPath);
@@ -40,11 +41,11 @@ namespace ClubProcessor.Tests
         public void Import_ShouldYieldTwoRows_WhenClaimStatusChanges()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             var importerYesterday = new CompetitorImporter(context, DateTime.UtcNow.AddDays(-1));
             var importerToday = new CompetitorImporter(context, DateTime.UtcNow);
 
@@ -52,14 +53,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
-                "9999,Doe,John,Second Claim,false,false,false,true,false");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                "9999,Doe,John,Second Claim,false,false,false,true,false,2025-08-31");
 
             // Act
             importerYesterday.Import(testCsvPath1);
@@ -68,21 +69,21 @@ namespace ClubProcessor.Tests
             // Assert
             Assert.Equal(2, context.Competitors.Count());
             var first = context.Competitors.OrderBy(c => c.Id).First();
-            Assert.Equal("First Claim", first.ClaimStatus);
+            Assert.Equal(ClaimStatus.FirstClaim, first.ClaimStatus);
             var second = context.Competitors.OrderBy(c => c.Id).Skip(1).First();
-            Assert.Equal("Second Claim", second.ClaimStatus);
+            Assert.Equal(ClaimStatus.SecondClaim, second.ClaimStatus);
         }
 
         [Fact]
         public void Import_ShouldYieldOneRow_WhenClaimStatusDoesNotChange()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new ClubDbContext(options);
-            var today = DateTime.UtcNow;
+            using var context = new CompetitorDbContext(options);
+            var today = DateTime.UtcNow.Date;
             var yesterday = today.AddDays(-1);
             var importerYesterday = new CompetitorImporter(context, yesterday);
             var importerToday = new CompetitorImporter(context, today);
@@ -91,14 +92,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{yesterday:yyyy-MM-dd}");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{today:yyyy-MM-dd}");
 
             // Act
             importerYesterday.Import(testCsvPath1);
@@ -125,18 +126,18 @@ namespace ClubProcessor.Tests
                 "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
                 $"9999,Doe,John,First Claim,false,false,true,false,false,{importDate:yyyy-MM-dd}");
 
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             var importer = new CompetitorImporter(context, today);
 
             // Act
             importer.Import(csvPath);
 
             // Assert
-            var imported = context.Competitors.Single(c => c.ClubNumber == "9999");
+            var imported = context.Competitors.Single(c => c.ClubNumber == 9999);
             Assert.Equal(importDate, imported.CreatedUtc);
             Assert.Equal(importDate, imported.LastUpdatedUtc);
         }
@@ -163,11 +164,11 @@ namespace ClubProcessor.Tests
                 "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
                 $"9999,Doe,John,Second Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd}");
 
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             var importerYesterday = new CompetitorImporter(context, yesterday);
             var importerToday = new CompetitorImporter(context, today);
 
@@ -178,11 +179,11 @@ namespace ClubProcessor.Tests
             // Assert
             Assert.Equal(2, context.Competitors.Count());
             var first = context.Competitors.OrderBy(c => c.Id).First();
-            Assert.Equal("First Claim", first.ClaimStatus);
+            Assert.Equal(ClaimStatus.FirstClaim, first.ClaimStatus);
             Assert.Equal(earlyImportDate, first.CreatedUtc);
             Assert.Equal(earlyImportDate, first.LastUpdatedUtc);
             var second = context.Competitors.OrderBy(c => c.Id).Skip(1).First();
-            Assert.Equal("Second Claim", second.ClaimStatus);
+            Assert.Equal(ClaimStatus.SecondClaim, second.ClaimStatus);
             Assert.Equal(laterImportDate, second.CreatedUtc);
             Assert.Equal(laterImportDate, second.LastUpdatedUtc);
         }
@@ -211,11 +212,11 @@ namespace ClubProcessor.Tests
                 "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
                 $"9999,Doe,John,First Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd}");
 
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             var importerYesterday = new CompetitorImporter(context, yesterday);
             var importerToday = new CompetitorImporter(context, today);
 
@@ -224,8 +225,8 @@ namespace ClubProcessor.Tests
             importerToday.Import(testCsvPath2);
 
             // Assert
-            var imported = context.Competitors.Single(c => c.ClubNumber == "9999");
-            Assert.Equal("First Claim", imported.ClaimStatus);
+            var imported = context.Competitors.Single(c => c.ClubNumber == 9999);
+            Assert.Equal(ClaimStatus.FirstClaim, imported.ClaimStatus);
             Assert.Equal(earlyImportDate, imported.CreatedUtc);
             Assert.Equal(laterImportDate, imported.LastUpdatedUtc);
         }
@@ -234,11 +235,11 @@ namespace ClubProcessor.Tests
         public void CompetitorImporter_ImportWithNewSetOfCompetitors_YieldsOnlyCompetitorsFromLatestCsvFile()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseSqlite("Filename=:memory:")
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             context.Database.OpenConnection();
             context.Database.EnsureCreated();
 
@@ -247,10 +248,10 @@ namespace ClubProcessor.Tests
             {
                 new Competitor
                 {
-                    ClubNumber = "1001",
+                    ClubNumber = 1001,
                     Surname = "Smith",
                     GivenName = "Alice",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
                     IsJuvenile = false,
                     IsJunior = false,
@@ -261,10 +262,10 @@ namespace ClubProcessor.Tests
                 },
                 new Competitor
                 {
-                    ClubNumber = "1002",
+                    ClubNumber = 1002,
                     Surname = "Brown",
                     GivenName = "Bob",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
                     IsJuvenile = false,
                     IsJunior = true,
@@ -280,8 +281,8 @@ namespace ClubProcessor.Tests
                 .OrderBy(c => c.ClubNumber)
                 .ToList();
             Assert.Equal(2, assembledCompetitors.Count);
-            Assert.Contains(assembledCompetitors, c => c.ClubNumber == "1001" && c.Surname == "Smith");
-            Assert.Contains(assembledCompetitors, c => c.ClubNumber == "1002" && c.Surname == "Brown");
+            Assert.Contains(assembledCompetitors, c => c.ClubNumber == 1001 && c.Surname == "Smith");
+            Assert.Contains(assembledCompetitors, c => c.ClubNumber == 1002 && c.Surname == "Brown");
 
             // Prepare CSV input with 3 new competitors
             var csv = new StringBuilder();
@@ -308,21 +309,21 @@ namespace ClubProcessor.Tests
                 .ToList();
 
             Assert.Equal(3, allCompetitors.Count);
-            Assert.Contains(allCompetitors, c => c.ClubNumber == "2001" && c.Surname == "Doe");
-            Assert.Contains(allCompetitors, c => c.ClubNumber == "2002" && c.Surname == "Lee");
-            Assert.Contains(allCompetitors, c => c.ClubNumber == "2003" && c.Surname == "Khan");
-            Assert.DoesNotContain(allCompetitors, c => c.ClubNumber == "1001" || c.ClubNumber == "1002");
+            Assert.Contains(allCompetitors, c => c.ClubNumber == 2001 && c.Surname == "Doe");
+            Assert.Contains(allCompetitors, c => c.ClubNumber == 2002 && c.Surname == "Lee");
+            Assert.Contains(allCompetitors, c => c.ClubNumber == 2003 && c.Surname == "Khan");
+            Assert.DoesNotContain(allCompetitors, c => c.ClubNumber == 1001 || c.ClubNumber == 1002);
         }
 
         [Fact]
         public void CompetitorImporter_ImportWithMixOfOldAndNewCompetitors_YieldsOnlyCompetitorsFromLatestCsvFileButAllOldRowsForThemToo()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ClubDbContext>()
+            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseSqlite("Filename=:memory:")
                 .Options;
 
-            using var context = new ClubDbContext(options);
+            using var context = new CompetitorDbContext(options);
             context.Database.OpenConnection();
             context.Database.EnsureCreated();
 
@@ -332,10 +333,10 @@ namespace ClubProcessor.Tests
                 // 1001, Alice Smith - first claim - one row in the SQL table
                 new Competitor
                 {
-                    ClubNumber = "1001",
+                    ClubNumber = 1001,
                     Surname = "Smith",
                     GivenName = "Alice",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
                     IsJuvenile = false,
                     IsJunior = false,
@@ -347,10 +348,10 @@ namespace ClubProcessor.Tests
                 // 1002, Bob Browm - first claim, changes to second claim - two rows in the SQL table
                 new Competitor
                 {
-                    ClubNumber = "1002",
+                    ClubNumber = 1002,
                     Surname = "Brown",
                     GivenName = "Bob",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
                     IsJuvenile = false,
                     IsJunior = true,
@@ -361,10 +362,10 @@ namespace ClubProcessor.Tests
                 },
                 new Competitor
                 {
-                    ClubNumber = "1002",
+                    ClubNumber = 1002,
                     Surname = "Brown",
                     GivenName = "Bob",
-                    ClaimStatus = "Second Claim",
+                    ClaimStatus = ClaimStatus.SecondClaim,
                     IsFemale = false,
                     IsJuvenile = false,
                     IsJunior = true,
@@ -376,10 +377,10 @@ namespace ClubProcessor.Tests
                 // 1003, John Doe - first claim, has been modified (e.g. name spelling correction) - one row in the SQL table
                 new Competitor
                 {
-                    ClubNumber = "1003",
+                    ClubNumber = 1003,
                     Surname = "Doe",
                     GivenName = "John",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
                     IsJuvenile = false,
                     IsJunior = false,
@@ -391,10 +392,10 @@ namespace ClubProcessor.Tests
                 // 1004, Sarah Lee - first claim, then second claim, then first claim then modified - three rows in the SQL table
                 new Competitor
                 {
-                    ClubNumber = "1004",
+                    ClubNumber = 1004,
                     Surname = "Lee",
                     GivenName = "Sarah",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
                     IsJuvenile = false,
                     IsJunior = true,
@@ -405,10 +406,10 @@ namespace ClubProcessor.Tests
                 },
                 new Competitor
                 {
-                    ClubNumber = "1004",
+                    ClubNumber = 1004,
                     Surname = "Lee",
                     GivenName = "Sarah",
-                    ClaimStatus = "Second Claim",
+                    ClaimStatus = ClaimStatus.SecondClaim,
                     IsFemale = true,
                     IsJuvenile = false,
                     IsJunior = true,
@@ -419,10 +420,10 @@ namespace ClubProcessor.Tests
                 },
                 new Competitor
                 {
-                    ClubNumber = "1004",
+                    ClubNumber = 1004,
                     Surname = "Lee",
                     GivenName = "Sara",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
                     IsJuvenile = false,
                     IsJunior = true,
@@ -434,10 +435,10 @@ namespace ClubProcessor.Tests
                 // 1005, Omar Khan - first claim - one row in the SQL table
                 new Competitor
                 {
-                    ClubNumber = "1005",
+                    ClubNumber = 1005,
                     Surname = "Khan",
                     GivenName = "Omar",
-                    ClaimStatus = "First Claim",
+                    ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
                     IsJuvenile = false,
                     IsJunior = false,
@@ -476,11 +477,11 @@ namespace ClubProcessor.Tests
             importer.Import(csvPath);
 
             // Assert
-            Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == "1001"));
-            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == "1002"));
-            Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == "1003"));
-            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == "1004"));
-            Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == "1005"));
+            Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == 1001));
+            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == 1002));
+            Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == 1003));
+            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == 1004));
+            Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == 1005));
         }
     }
 }
