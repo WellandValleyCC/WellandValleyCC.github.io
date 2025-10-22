@@ -50,7 +50,7 @@ namespace ClubProcessor.Services
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-            var rows = csv.GetRecords<dynamic>().ToList();
+            var rows = csv.GetRecords<RideCsvRow>().ToList();
             foreach (var row in rows)
             {
                 var ride = ParseRide(row, eventNumber);
