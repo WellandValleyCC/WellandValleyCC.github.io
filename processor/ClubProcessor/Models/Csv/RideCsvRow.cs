@@ -40,7 +40,7 @@ namespace ClubProcessor.Models.Csv
             }
         }
 
-        [Name("RoadBike?")]
+        [Name("Roadbike?")]
         public string? RoadBike { get; set; }
 
         [Ignore]
