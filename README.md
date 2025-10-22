@@ -224,3 +224,68 @@ git push origin pre-ghpages-site
 
  
 - Keep `README.md` and contribution notes updated when you change processor arguments, template locations, or publishing steps.
+
+# Developer notes
+   
+   
+## 🧪 Running the Event Processor
+
+### 🐍 Step 1: Extract Event CSVs from XLSX
+
+To split `ClubEvents_2026.xlsx` into per-sheet CSVs:
+
+```bash
+python scripts/extract_club_events.py data/ClubEvents_2026.xlsx data/extracted/events/
+```
+
+This will produce:
+- `calendar_2026.csv` — event metadata
+- `competitors_2026.csv` — reference sheet
+- `Event_01.csv` to `Event_26.csv` — per-event results
+
+---
+
+### 🧠 Step 2: Run the Processor via CLI
+
+To ingest the extracted CSVs and populate the event database:
+
+```bash
+dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder data/extracted/events/
+```
+
+This will:
+- Parse each `Event_*.csv`
+- Normalize and validate data
+- Write to `club_events_2026.db` (or configured target)
+- Emit diagnostics and metrics to console
+
+---
+
+### 🧪 Step 3: Debug in Visual Studio
+
+To run the processor in debug mode:
+
+1. **Set the Startup Project**
+   - In Solution Explorer, right-click `ClubProcessor.csproj`
+   - Select **Set as Startup Project**
+
+2. **Configure Debug Arguments**
+   - Right-click `ClubProcessor` → **Properties**
+   - Go to the **Debug** tab
+   - Set **Application arguments** to:
+     ```
+     --mode events --folder ../../data/extracted/events/
+     ```
+   - Adjust the path if your `.csproj` is located elsewhere
+
+3. **Set Breakpoints**
+   - Open the method that handles `--mode events`
+   - Add breakpoints in:
+     - CSV parsing logic
+     - Event object creation
+     - SQLite write operations
+
+4. **Run the Processor**
+   - Press **F5** to launch in debug mode
+   - Inspect how each CSV is processed and written to the event database
+

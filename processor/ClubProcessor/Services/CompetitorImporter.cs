@@ -1,14 +1,17 @@
-using ClubProcessor.Models;
 using ClubProcessor.Context;
+using ClubProcessor.Models;
+using ClubProcessor.Models.Csv.ClubProcessor.Models.Csv;
+using CsvHelper;
+using System.Globalization;
 
 namespace ClubProcessor.Services
 {
     public class CompetitorImporter
     {
-        private readonly ClubDbContext context;
+        private readonly CompetitorDbContext context;
         private readonly DateTime runtime;
 
-        public CompetitorImporter(ClubDbContext context, DateTime runtime)
+        public CompetitorImporter(CompetitorDbContext context, DateTime runtime)
         {
             this.context = context;
             this.runtime = runtime;
@@ -24,30 +27,27 @@ namespace ClubProcessor.Services
 
         private List<Competitor> ParseCsv(string csvPath)
         {
-            var lines = File.ReadAllLines(csvPath).Skip(1);
+            using var reader = new StreamReader(csvPath);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            var rows = csv.GetRecords<CompetitorCsvRow>().ToList();
             var competitors = new List<Competitor>();
 
-            foreach (var line in lines)
+            foreach (var row in rows)
             {
-                var parts = line.Split(',');
-
-                var importDate = parts.Length == 10
-                    ? DateTime.Parse(parts[9])
-                    : runtime;
-
                 competitors.Add(new Competitor
                 {
-                    ClubNumber = parts[0],
-                    Surname = parts[1],
-                    GivenName = parts[2],
-                    ClaimStatus = parts[3],
-                    IsFemale = bool.Parse(parts[4]),
-                    IsJuvenile = bool.Parse(parts[5]),
-                    IsJunior = bool.Parse(parts[6]),
-                    IsSenior = bool.Parse(parts[7]),
-                    IsVeteran = bool.Parse(parts[8]),
-                    CreatedUtc = importDate,
-                    LastUpdatedUtc = importDate
+                    ClubNumber = row.ClubNumber,
+                    Surname = row.Surname,
+                    GivenName = row.GivenName,
+                    ClaimStatus = row.ClaimStatus,
+                    IsFemale = row.IsFemale,
+                    IsJuvenile = row.IsJuvenile,
+                    IsJunior = row.IsJunior,
+                    IsSenior = row.IsSenior,
+                    IsVeteran = row.IsVeteran,
+                    CreatedUtc = row.ImportDate,
+                    LastUpdatedUtc = row.ImportDate
                 });
             }
 
@@ -83,7 +83,7 @@ namespace ClubProcessor.Services
             }
         }
 
-        private void RemoveObsoleteCompetitors(HashSet<string> validClubNumbers)
+        private void RemoveObsoleteCompetitors(HashSet<int> validClubNumbers)
         {
             var obsolete = context.Competitors
                 .Where(c => !validClubNumbers.Contains(c.ClubNumber))
