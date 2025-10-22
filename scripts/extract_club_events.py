@@ -18,16 +18,19 @@ def extract_club_events(xlsx_path, output_dir):
         print(f"[ERROR] Failed to open workbook: {e}")
         sys.exit(1)
 
-    # Create output folders
-    os.makedirs(output_dir, exist_ok=True)
-    events_dir = os.path.join(output_dir, "events")
+    # Create year-based output folder
+    year_dir = os.path.join(output_dir, year)
+    os.makedirs(year_dir, exist_ok=True)
+
+    # Create events subfolder
+    events_dir = os.path.join(year_dir, "events")
     os.makedirs(events_dir, exist_ok=True)
 
     # Extract calendar sheet
     if "calendar" in xl.sheet_names:
         print("[OK] Extracting calendar sheet")
         calendar_df = xl.parse("calendar")
-        calendar_out = os.path.join(output_dir, f"calendar_{year}.csv")
+        calendar_out = os.path.join(year_dir, f"calendar_{year}.csv")
         calendar_df.to_csv(calendar_out, index=False)
         print(f"[INFO] Saved to: {calendar_out} ({len(calendar_df)} rows)")
     else:
@@ -37,7 +40,7 @@ def extract_club_events(xlsx_path, output_dir):
     if "competitors" in xl.sheet_names:
         print("[INFO] Extracting competitors sheet (reference only)")
         competitors_df = xl.parse("competitors")
-        competitors_out = os.path.join(output_dir, f"competitors_{year}.csv")
+        competitors_out = os.path.join(year_dir, f"competitors_{year}.csv")
         competitors_df.to_csv(competitors_out, index=False)
         print(f"[INFO] Saved to: {competitors_out} ({len(competitors_df)} rows)")
     else:
