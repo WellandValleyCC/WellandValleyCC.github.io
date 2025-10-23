@@ -50,7 +50,7 @@ class Program
                         .Options;
 
                     using var context = new CompetitorDbContext(options);
-                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
 
                     var importer = new CompetitorImporter(context, DateTime.UtcNow);
                     importer.Import(inputPath);
@@ -73,8 +73,8 @@ class Program
                     using var eventContext = new EventDbContext(eventOptions);
                     using var competitorContext = new CompetitorDbContext(competitorOptions);
 
-                    eventContext.Database.EnsureCreated();
-                    competitorContext.Database.EnsureCreated();
+                    eventContext.Database.Migrate();
+                    competitorContext.Database.Migrate();
 
                     var processor = new EventProcessor(eventContext, competitorContext);
                     processor.ProcessFolder(inputPath);
