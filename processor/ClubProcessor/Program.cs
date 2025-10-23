@@ -50,7 +50,9 @@ class Program
                         .Options;
 
                     using var context = new CompetitorDbContext(options);
+
                     context.Database.Migrate();
+                    Console.WriteLine($"[INFO] Migration complete for: {dbPath}");
 
                     var importer = new CompetitorImporter(context, DateTime.UtcNow);
                     importer.Import(inputPath);
@@ -59,6 +61,8 @@ class Program
 
             case "events":
                 {
+                    Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
+
                     var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
                     var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
 
@@ -74,7 +78,10 @@ class Program
                     using var competitorContext = new CompetitorDbContext(competitorOptions);
 
                     eventContext.Database.Migrate();
+                    Console.WriteLine($"[INFO] Migration complete for: {eventDbPath}");
+
                     competitorContext.Database.Migrate();
+                    Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
 
                     var processor = new EventProcessor(eventContext, competitorContext);
                     processor.ProcessFolder(inputPath);
