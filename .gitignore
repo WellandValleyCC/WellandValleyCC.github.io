@@ -58,10 +58,9 @@ Thumbs.db
 __pycache__/
 *.pyc
 
-data/club_events_2026.db
-
 processor/ClubProcessor/Properties/launchSettings.json
 
-data/club_events_2025.db
+# ✅ Allow club DBs to be committed
+!data/club_events_*.db
+!data/club_competitors_*.db
 
-data/club_competitors_2026.db
