@@ -97,10 +97,18 @@ jobs:
           if [ -f ".competitor_csv_path" ]; then
             file=$(cat .competitor_csv_path)
             year=$(basename "$file" | grep -oP '\d{4}')
-            echo "dbPath=data/club_competitors_${year}.db" >> $GITHUB_ENV
-            echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
+            dbPath="data/club_competitors_${year}.db"
+      
+            if [ -f "$dbPath" ]; then
+              echo "[INFO] Found DB: $dbPath"
+              echo "dbPath=$dbPath" >> $GITHUB_ENV
+              echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
+            else
+              echo "[INFO] DB not found: $dbPath — skipping commit"
+              echo "skipCommit=true" >> $GITHUB_ENV
+            fi
           else
-            echo "[INFO] No competitor CSV processed — skipping DB commit"
+            echo "[INFO] No competitor CSV marker file — skipping commit"
             echo "skipCommit=true" >> $GITHUB_ENV
           fi
         shell: bash
@@ -117,10 +125,18 @@ jobs:
           if [ -f ".club_events_xlsx_path" ]; then
             file=$(cat .club_events_xlsx_path)
             year=$(basename "$file" | grep -oP '\d{4}')
-            echo "dbPath=data/club_events_${year}.db" >> $GITHUB_ENV
-            echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
+            dbPath="data/club_events_${year}.db"
+      
+            if [ -f "$dbPath" ]; then
+              echo "[INFO] Found DB: $dbPath"
+              echo "dbPath=$dbPath" >> $GITHUB_ENV
+              echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
+            else
+              echo "[INFO] DB not found: $dbPath — skipping commit"
+              echo "skipCommit=true" >> $GITHUB_ENV
+            fi
           else
-            echo "[INFO] No ClubEvents XLSX processed — skipping DB commit"
+            echo "[INFO] No ClubEvents XLSX marker file — skipping commit"
             echo "skipCommit=true" >> $GITHUB_ENV
           fi
         shell: bash
@@ -131,6 +147,7 @@ jobs:
         with:
           db-path: ${{ env.dbPath }}
           commit-message: ${{ env.commitMessage }}
+
 
      
       
