@@ -18,27 +18,33 @@ namespace ClubProcessor.Models.Csv
         public string? Seconds { get; set; }
 
         [Ignore]
-        public double TotalSeconds =>
-            (int.TryParse(Hours, out var h) ? h : 0) * 3600 +
-            (int.TryParse(Minutes, out var m) ? m : 0) * 60 +
-            (double.TryParse(Seconds, out var s) ? s : 0);
+        public double TotalSeconds
+        {
+            get
+            {
+                int h = double.TryParse(Hours, out var hh) ? (int)hh : 0;
+                int m = double.TryParse(Minutes, out var mm) ? (int)mm : 0;
+                double s = double.TryParse(Seconds, out var ss) ? ss : 0;
+
+                return h * 3600 + m * 60 + s;
+            }
+        }
 
         [Ignore]
         public string ActualTime
         {
             get
             {
-                int h = int.TryParse(Hours, out var hh) ? hh : 0;
-                int m = int.TryParse(Minutes, out var mm) ? mm : 0;
-                double s = double.TryParse(Seconds, out var ss) ? ss : 0;
+                var actualTime = TimeSpan.FromSeconds(TotalSeconds);
 
-                string secondsFormatted = s % 1 == 0
-                    ? $"{(int)s:D2}"          // No decimals if whole number
-                    : $"{s:00.##}";           // Up to two decimals if needed
+                string secondsFormatted = actualTime.Seconds % 1 == 0
+                    ? $"{actualTime.Seconds:D2}"
+                    : $"{actualTime.Seconds + actualTime.Milliseconds / 1000.0:00.##}";
 
-                return $"{h:D2}:{m:D2}:{secondsFormatted}";
+                return $"{actualTime.Hours:D2}:{actualTime.Minutes:D2}:{secondsFormatted}";
             }
         }
+
 
         [Name("Roadbike?")]
         public string? RoadBike { get; set; }

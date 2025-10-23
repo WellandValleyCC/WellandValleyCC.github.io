@@ -78,7 +78,22 @@ namespace ClubProcessor.Services
                 var ride = ParseRide(row, eventNumber);
                 if (ride != null)
                 {
-                    eventContext.Rides.Add(ride);
+                    var existing = eventContext.Rides
+                        .FirstOrDefault(r => r.EventNumber == ride.EventNumber && r.Name == ride.Name);
+
+                    if (existing != null)
+                    {
+                        existing.ClubNumber = ride.ClubNumber;
+                        existing.ActualTime = ride.ActualTime;
+                        existing.TotalSeconds = ride.TotalSeconds;
+                        existing.IsRoadBike = ride.IsRoadBike;
+                        existing.Eligibility = ride.Eligibility;
+                    }
+                    else
+                    {
+                        eventContext.Rides.Add(ride);
+                    }
+
                 }
             }
         }
