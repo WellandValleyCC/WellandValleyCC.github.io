@@ -103,18 +103,18 @@ jobs:
           commit-message: ${{ env.commitMessage }}
       
       - name: Commit ClubEvents SQLite DB to repo
-       if: ${{ exists('.club_events_xlsx_path') }}
-       run: |
-         file=$(cat .club_events_xlsx_path)
-         year=$(basename "$file" | grep -oP '\d{4}')
-         echo "dbPath=data/club_events_${year}.db" >> $GITHUB_ENV
-         echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
-       shell: bash
-      
--      name: Run commit-db action for ClubEvents DB
-       uses: ./.github/actions/commit-db
-       with:
-         db-path: ${{ env.dbPath }}
-         commit-message: ${{ env.commitMessage }}
+        if: ${{ exists('.club_events_xlsx_path') }}
+        run: |
+          file=$(cat .club_events_xlsx_path)
+          year=$(basename "$file" | grep -oP '\d{4}')
+          echo "dbPath=data/club_events_${year}.db" >> $GITHUB_ENV
+          echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
+        shell: bash
+       
+        name: Run commit-db action for ClubEvents DB
+        uses: ./.github/actions/commit-db
+        with:
+          db-path: ${{ env.dbPath }}
+          commit-message: ${{ env.commitMessage }}
      
       
