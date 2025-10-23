@@ -62,10 +62,12 @@ jobs:
 
       - name: Run processor if extracted event CSVs exist
         run: |
-          if compgen -G "data/extracted/events/Event_*.csv" > /dev/null; then
-            echo "[INFO] Detected extracted event CSVs"
-            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder data/extracted/events/
-          fi
+          for year_dir in data/extracted/*; do
+            if [[ -d "$year_dir/events" ]] && compgen -G "$year_dir/events/Event_*.csv" > /dev/null; then
+              echo "[INFO] Detected extracted event CSVs in: $year_dir/events"
+              dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder "$year_dir/events/"
+            fi
+          done
           
       - name: Summarise competitor metrics
         run: |
