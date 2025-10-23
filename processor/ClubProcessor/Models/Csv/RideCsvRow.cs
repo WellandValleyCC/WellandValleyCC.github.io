@@ -3,6 +3,11 @@ using CsvHelper.Configuration.Attributes;
 
 namespace ClubProcessor.Models.Csv
 {
+    /// <remarks>
+    ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
+    ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,
+    ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X             * 
+    /// </remarks>
     internal class RideCsvRow
     {
         [Name("Number/Name")]
@@ -16,6 +21,15 @@ namespace ClubProcessor.Models.Csv
 
         [Name("S")]
         public string? Seconds { get; set; }
+
+        [Name("Roadbike?")]
+        public string? RoadBike { get; set; }
+
+        [Name("DNS/DNF/DQ")]
+        public string? EligibilityRaw { get; set; }
+
+        [Name("Name")]
+        public string? Name { get; set; }
 
         [Ignore]
         public double TotalSeconds
@@ -45,16 +59,8 @@ namespace ClubProcessor.Models.Csv
             }
         }
 
-
-        [Name("Roadbike?")]
-        public string? RoadBike { get; set; }
-
         [Ignore]
         public bool IsRoadBike => string.Equals(RoadBike?.Trim(), "r", StringComparison.OrdinalIgnoreCase);
-
-
-        [Name("DNS/DNF/DQ")]
-        public string? EligibilityRaw { get; set; }
 
         [Ignore]
         public RideEligibility Eligibility
@@ -74,7 +80,5 @@ namespace ClubProcessor.Models.Csv
                 };
             }
         }
-
-        // Add more fields as needed
     }
 }

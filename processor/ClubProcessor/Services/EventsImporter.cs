@@ -98,6 +98,11 @@ namespace ClubProcessor.Services
             }
         }
 
+        /// <remarks>
+        ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
+        ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,
+        ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X             * 
+        /// </remarks>
         private Ride? ParseRide(RideCsvRow row, int eventNumber)
         {
             // TODO: Parse columns from dynamic row
@@ -112,14 +117,12 @@ namespace ClubProcessor.Services
             return new Ride
             {
                 EventNumber = eventNumber,
-                Name = name,
+                Name = row.Name,
                 ClubNumber = isClubMember ? clubNumber : null,
                 ActualTime = row.ActualTime,
                 TotalSeconds = row.TotalSeconds,
                 IsRoadBike = row.IsRoadBike,
                 Eligibility = row.Eligibility,
-
-                // Add more fields as needed
             };
         }
 
