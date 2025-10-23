@@ -95,7 +95,7 @@ jobs:
             echo "dbPath=data/club_competitors_${year}.db" >> $GITHUB_ENV
             echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
           else
-            echo "[Info] No competitor CSV processed — skipping DB commit"
+            echo "[INFO] No competitor CSV processed — skipping DB commit"
             echo "skipCommit=true" >> $GITHUB_ENV
           fi
         shell: bash
@@ -115,7 +115,7 @@ jobs:
             echo "dbPath=data/club_events_${year}.db" >> $GITHUB_ENV
             echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
           else
-            echo "[Info] No ClubEvents XLSX processed — skipping DB commit"
+            echo "[INFO] No ClubEvents XLSX processed — skipping DB commit"
             echo "skipCommit=true" >> $GITHUB_ENV
           fi
         shell: bash

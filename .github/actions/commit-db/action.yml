@@ -28,14 +28,14 @@ runs:
             else
               echo "[Info] Changes detected in $dbPath — committing update"
               git add "$dbPath"
-              git commit -m "$message" || echo "[Warning] No changes to commit"
+              git commit -m "$message" || echo "[WARN] No changes to commit"
               git push
             fi
           else
             # File is not tracked — commit it
             echo "[Info] $dbPath is new — committing for the first time"
             git add "$dbPath"
-            git commit -m "$message" || echo "[Warning] No changes to commit"
+            git commit -m "$message" || echo "[WARN] No changes to commit"
             git push
           fi
         else
