@@ -8,18 +8,18 @@ using System.Text.RegularExpressions;
 
 namespace ClubProcessor.Services
 {
-    public class EventProcessor
+    public class EventsImporter
     {
         private readonly EventDbContext eventContext;
         private readonly CompetitorDbContext competitorContext;
 
-        public EventProcessor(EventDbContext eventContext, CompetitorDbContext competitorContext)
+        public EventsImporter(EventDbContext eventContext, CompetitorDbContext competitorContext)
         {
             this.eventContext = eventContext;
             this.competitorContext = competitorContext;
         }
 
-        public void ProcessFolder(string folderPath)
+        public void ImportFromFolder(string folderPath)
         {
             var folderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
             var yearMatch = Regex.Match(folderName, @"\b(20\d{2})\b"); // Matches 2000–2099

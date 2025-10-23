@@ -83,8 +83,8 @@ class Program
                     competitorContext.Database.Migrate();
                     Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
 
-                    var processor = new EventProcessor(eventContext, competitorContext);
-                    processor.ProcessFolder(inputPath);
+                    var processor = new EventsImporter(eventContext, competitorContext);
+                    processor.ImportFromFolder(inputPath);
                     break;
                 }
 
