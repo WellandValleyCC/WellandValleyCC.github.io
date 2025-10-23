@@ -52,6 +52,7 @@ jobs:
           for FILE in $CHANGED; do
             if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
               echo "[INFO] Detected ClubEvents XLSX: $FILE"
+              echo "$FILE" > .club_events_xlsx_path
               python3 scripts/extract_club_events.py "$FILE" data/extracted/
             elif [[ "$FILE" == data/competitors_*.csv ]]; then
               echo "[INFO] Detected competitors CSV: $FILE"
@@ -63,9 +64,9 @@ jobs:
       - name: Run processor if extracted event CSVs exist
         run: |
           for year_dir in data/extracted/*; do
-            if [[ -d "$year_dir/events" ]] && compgen -G "$year_dir/events/Event_*.csv" > /dev/null; then
-              echo "[INFO] Detected extracted event CSVs in: $year_dir/events"
-              dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --folder "$year_dir/events/"
+            if [[ -f "$year_dir/calendar_*.csv" ]] && [[ -d "$year_dir/events" ]] && compgen -G "$year_dir/events/Event_*.csv" > /dev/null; then
+              echo "[INFO] Detected full extracted dataset in: $year_dir"
+              dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --file "$year_dir"
             fi
           done
           
@@ -86,7 +87,7 @@ jobs:
             echo "[INFO] No competitor CSV processed — skipping metrics summary"
           fi
 
-      - name: Commit SQLite DB to repo
+      - name: Commit Competitor SQLite DB to repo
         run: |
           if [ -f ".competitor_csv_path" ]; then
             file=$(cat .competitor_csv_path)
@@ -94,21 +95,59 @@ jobs:
             dbPath="data/club_competitors_${year}.db"
       
             if [ -f "$dbPath" ]; then
-              echo "Committing $dbPath to repo..."
+              echo "Checking for changes in $dbPath..."
       
+              # Configure Git identity
               git config user.name "github-actions"
               git config user.email "github-actions@github.com"
-              
-              git rm --cached "$dbPath" || true
       
-              git add "$dbPath"
-              git commit -m "Persisted competitor DB for ${year} import [ci skip]" || echo "No changes to commit"
-              git push
+              # Check if the DB file has changes
+              if git diff --quiet "$dbPath"; then
+                echo "No changes to $dbPath — skipping commit"
+              else
+                echo "Changes detected in $dbPath — committing update"
+      
+                git rm --cached "$dbPath" || true
+                git add "$dbPath"
+                git commit -m "Persisted competitor DB for ${year} import [ci skip]" || echo "No changes to commit"
+                git push
+              fi
             else
               echo "DB not found: $dbPath"
             fi
           else
-            echo "No competitor CSV processed — skipping DB commit"
+            echo " No competitor CSV processed — skipping DB commit"
+          fi
+        shell: bash
+
+      - name: Commit ClubEvents SQLite DB to repo
+        run: |
+          if [ -f ".club_events_xlsx_path" ]; then
+            file=$(cat .club_events_xlsx_path)
+            year=$(basename "$file" | grep -oP '\d{4}')
+            dbPath="data/club_events_${year}.db"
+      
+            if [ -f "$dbPath" ]; then
+              echo "Checking for changes in $dbPath..."
+      
+              git config user.name "github-actions"
+              git config user.email "github-actions@github.com"
+      
+              if git diff --quiet "$dbPath"; then
+                echo "No changes to $dbPath — skipping commit"
+              else
+                echo "Changes detected in $dbPath — committing update"
+      
+                git rm --cached "$dbPath" || true
+                git add "$dbPath"
+                git commit -m "Persisted ClubEvents DB for ${year} import [ci skip]" || echo "No changes to commit"
+                git push
+              fi
+            else
+              echo "DB not found: $dbPath"
+            fi
+          else
+            echo "No ClubEvents XLSX processed — skipping DB commit"
           fi
         shell: bash
 
