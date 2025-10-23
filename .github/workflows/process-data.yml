@@ -88,66 +88,33 @@ jobs:
           fi
 
       - name: Commit Competitor SQLite DB to repo
+        if: ${{ exists('.competitor_csv_path') }}
         run: |
-          if [ -f ".competitor_csv_path" ]; then
-            file=$(cat .competitor_csv_path)
-            year=$(basename "$file" | grep -oP '\d{4}')
-            dbPath="data/club_competitors_${year}.db"
-      
-            if [ -f "$dbPath" ]; then
-              echo "Checking for changes in $dbPath..."
-      
-              # Configure Git identity
-              git config user.name "github-actions"
-              git config user.email "github-actions@github.com"
-      
-              # Check if the DB file has changes
-              if git diff --quiet "$dbPath"; then
-                echo "No changes to $dbPath — skipping commit"
-              else
-                echo "Changes detected in $dbPath — committing update"
-      
-                git rm --cached "$dbPath" || true
-                git add "$dbPath"
-                git commit -m "Persisted competitor DB for ${year} import [ci skip]" || echo "No changes to commit"
-                git push
-              fi
-            else
-              echo "DB not found: $dbPath"
-            fi
-          else
-            echo " No competitor CSV processed — skipping DB commit"
-          fi
+          file=$(cat .competitor_csv_path)
+          year=$(basename "$file" | grep -oP '\d{4}')
+          echo "dbPath=data/club_competitors_${year}.db" >> $GITHUB_ENV
+          echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
         shell: bash
-
+      
+      - name: Run commit-db action for competitor DB
+        uses: ./.github/actions/commit-db
+        with:
+          db-path: ${{ env.dbPath }}
+          commit-message: ${{ env.commitMessage }}
+      
       - name: Commit ClubEvents SQLite DB to repo
-        run: |
-          if [ -f ".club_events_xlsx_path" ]; then
-            file=$(cat .club_events_xlsx_path)
-            year=$(basename "$file" | grep -oP '\d{4}')
-            dbPath="data/club_events_${year}.db"
+       if: ${{ exists('.club_events_xlsx_path') }}
+       run: |
+         file=$(cat .club_events_xlsx_path)
+         year=$(basename "$file" | grep -oP '\d{4}')
+         echo "dbPath=data/club_events_${year}.db" >> $GITHUB_ENV
+         echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
+       shell: bash
       
-            if [ -f "$dbPath" ]; then
-              echo "Checking for changes in $dbPath..."
+-      name: Run commit-db action for ClubEvents DB
+       uses: ./.github/actions/commit-db
+       with:
+         db-path: ${{ env.dbPath }}
+         commit-message: ${{ env.commitMessage }}
+     
       
-              git config user.name "github-actions"
-              git config user.email "github-actions@github.com"
-      
-              if git diff --quiet "$dbPath"; then
-                echo "No changes to $dbPath — skipping commit"
-              else
-                echo "Changes detected in $dbPath — committing update"
-      
-                git rm --cached "$dbPath" || true
-                git add "$dbPath"
-                git commit -m "Persisted ClubEvents DB for ${year} import [ci skip]" || echo "No changes to commit"
-                git push
-              fi
-            else
-              echo "DB not found: $dbPath"
-            fi
-          else
-            echo "No ClubEvents XLSX processed — skipping DB commit"
-          fi
-        shell: bash
-

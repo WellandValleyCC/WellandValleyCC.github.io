@@ -1,0 +1,43 @@
+name: "Commit SQLite DB if changed"
+description: "Conditionally commit a SQLite DB file if it's new or modified"
+inputs:
+  db-path:
+    description: "Path to the SQLite DB file"
+    required: true
+  commit-message:
+    description: "Commit message to use"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        dbPath="${{ inputs.db-path }}"
+        message="${{ inputs.commit-message }}"
+
+        if [ -f "$dbPath" ]; then
+          echo "[Info] Checking for changes in $dbPath..."
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git ls-files --error-unmatch "$dbPath" > /dev/null 2>&1; then
+            # File is tracked — check for changes
+            if git diff --quiet "$dbPath"; then
+              echo "[Info] No changes to $dbPath — skipping commit"
+            else
+              echo "[Info] Changes detected in $dbPath — committing update"
+              git add "$dbPath"
+              git commit -m "$message" || echo "[Warning] No changes to commit"
+              git push
+            fi
+          else
+            # File is not tracked — commit it
+            echo "[Info] $dbPath is new — committing for the first time"
+            git add "$dbPath"
+            git commit -m "$message" || echo "[Warning] No changes to commit"
+            git push
+          fi
+        else
+          echo "[Error] DB not found: $dbPath"
+        fi
