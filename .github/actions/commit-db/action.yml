@@ -16,7 +16,7 @@ runs:
         message="${{ inputs.commit-message }}"
 
         if [ -f "$dbPath" ]; then
-          echo "[Info] Checking for changes in $dbPath..."
+          echo "[INFO] Checking for changes in $dbPath..."
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
@@ -24,20 +24,20 @@ runs:
           if git ls-files --error-unmatch "$dbPath" > /dev/null 2>&1; then
             # File is tracked — check for changes
             if git diff --quiet "$dbPath"; then
-              echo "[Info] No changes to $dbPath — skipping commit"
+              echo "[INFO] No changes to $dbPath — skipping commit"
             else
-              echo "[Info] Changes detected in $dbPath — committing update"
+              echo "[INFO] Changes detected in $dbPath — committing update"
               git add "$dbPath"
               git commit -m "$message" || echo "[WARN] No changes to commit"
               git push
             fi
           else
             # File is not tracked — commit it
-            echo "[Info] $dbPath is new — committing for the first time"
+            echo "[INFO] $dbPath is new — committing for the first time"
             git add "$dbPath"
             git commit -m "$message" || echo "[WARN] No changes to commit"
             git push
           fi
         else
-          echo "[Error] DB not found: $dbPath"
+          echo "[ERROR] DB not found: $dbPath"
         fi
