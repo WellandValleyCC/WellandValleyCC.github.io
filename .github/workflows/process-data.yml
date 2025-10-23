@@ -103,6 +103,7 @@ jobs:
               echo "[INFO] Found DB: $dbPath"
               echo "dbPath=$dbPath" >> $GITHUB_ENV
               echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
+              echo "skipCommit=false" >> $GITHUB_ENV
             else
               echo "[INFO] DB not found: $dbPath — skipping commit"
               echo "skipCommit=true" >> $GITHUB_ENV
@@ -126,11 +127,12 @@ jobs:
             file=$(cat .club_events_xlsx_path)
             year=$(basename "$file" | grep -oP '\d{4}')
             dbPath="data/club_events_${year}.db"
-      
+          
             if [ -f "$dbPath" ]; then
               echo "[INFO] Found DB: $dbPath"
               echo "dbPath=$dbPath" >> $GITHUB_ENV
               echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
+              echo "skipCommit=false" >> $GITHUB_ENV
             else
               echo "[INFO] DB not found: $dbPath — skipping commit"
               echo "skipCommit=true" >> $GITHUB_ENV
