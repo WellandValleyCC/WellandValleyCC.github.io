@@ -10,7 +10,7 @@ using Xunit;
 
 namespace EventProcessor.Tests
 {
-    public class EventProcessorTests
+    public class EventsImporterTests
     {
         private EventDbContext CreateEventContext()
         {
