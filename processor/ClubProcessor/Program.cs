@@ -7,7 +7,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Parse CLI arguments
         string? mode = null;
         string? inputPath = null;
 
@@ -23,8 +22,29 @@ class Program
             return;
         }
 
-        // Infer year from filename or folder name
+        string year = InferYear(mode, inputPath);
+        Directory.CreateDirectory("data");
+
+        switch (mode.ToLower())
+        {
+            case "competitors":
+                ImportCompetitors(inputPath, year);
+                break;
+
+            case "events":
+                ImportEvents(inputPath, year);
+                break;
+
+            default:
+                Console.WriteLine("Unsupported mode. Use 'competitors' or 'events'.");
+                break;
+        }
+    }
+
+    static string InferYear(string mode, string inputPath)
+    {
         string year = DateTime.UtcNow.Year.ToString();
+
         if (mode == "competitors" && File.Exists(inputPath))
         {
             var filename = Path.GetFileNameWithoutExtension(inputPath);
@@ -38,74 +58,63 @@ class Program
             if (match.Success) year = match.Value;
         }
 
-        Directory.CreateDirectory("data");
+        return year;
+    }
 
-        switch (mode.ToLower())
+    static void ImportCompetitors(string inputPath, string year)
+    {
+        var dbPath = Path.Combine("data", $"club_competitors_{year}.db");
+        var options = new DbContextOptionsBuilder<CompetitorDbContext>()
+            .UseSqlite($"Data Source={dbPath}")
+            .Options;
+
+        using var context = new CompetitorDbContext(options);
+
+        context.Database.Migrate();
+        Console.WriteLine($"[INFO] Migration complete for: {dbPath}");
+
+        var importer = new CompetitorImporter(context, DateTime.UtcNow);
+        importer.Import(inputPath);
+    }
+
+    static void ImportEvents(string inputPath, string year)
+    {
+        Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
+
+        var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
+        var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
+
+        var eventOptions = new DbContextOptionsBuilder<EventDbContext>()
+            .UseSqlite($"Data Source={eventDbPath}")
+            .Options;
+
+        var competitorOptions = new DbContextOptionsBuilder<CompetitorDbContext>()
+            .UseSqlite($"Data Source={competitorDbPath}")
+            .Options;
+
+        using var eventContext = new EventDbContext(eventOptions);
+        using var competitorContext = new CompetitorDbContext(competitorOptions);
+
+        eventContext.Database.Migrate();
+        Console.WriteLine($"[INFO] Migration complete for: {eventDbPath}");
+
+        competitorContext.Database.Migrate();
+        Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
+
+        var calendarCsvPath = Path.Combine(inputPath, $"Calendar_{year}.csv");
+        if (File.Exists(calendarCsvPath))
         {
-            case "competitors":
-                {
-                    var dbPath = Path.Combine("data", $"club_competitors_{year}.db");
-                    var options = new DbContextOptionsBuilder<CompetitorDbContext>()
-                        .UseSqlite($"Data Source={dbPath}")
-                        .Options;
-
-                    using var context = new CompetitorDbContext(options);
-
-                    context.Database.Migrate();
-                    Console.WriteLine($"[INFO] Migration complete for: {dbPath}");
-
-                    var importer = new CompetitorImporter(context, DateTime.UtcNow);
-                    importer.Import(inputPath);
-                    break;
-                }
-
-            case "events":
-                {
-                    Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
-
-                    var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
-                    var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
-
-                    var eventOptions = new DbContextOptionsBuilder<EventDbContext>()
-                        .UseSqlite($"Data Source={eventDbPath}")
-                        .Options;
-
-                    var competitorOptions = new DbContextOptionsBuilder<CompetitorDbContext>()
-                        .UseSqlite($"Data Source={competitorDbPath}")
-                        .Options;
-
-                    using var eventContext = new EventDbContext(eventOptions);
-                    using var competitorContext = new CompetitorDbContext(competitorOptions);
-
-                    eventContext.Database.Migrate();
-                    Console.WriteLine($"[INFO] Migration complete for: {eventDbPath}");
-
-                    competitorContext.Database.Migrate();
-                    Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
-
-                    // Calendar ingestion
-                    var calendarCsvPath = Path.Combine(inputPath, $"Calendar_{year}.csv");
-                    if (File.Exists(calendarCsvPath))
-                    {
-                        Console.WriteLine($"[INFO] Importing calendar from: {calendarCsvPath}");
-                        var calendarImporter = new CalendarImporter(eventContext);
-                        calendarImporter.ImportFromCsv(calendarCsvPath);
-                        Console.WriteLine("[OK] Calendar import complete");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
-                    }
-
-                    // Ride + Competitor ingestion
-                    var processor = new EventsImporter(eventContext, competitorContext);
-                    processor.ImportFromFolder(inputPath);
-                    break;
-                }
-
-            default:
-                Console.WriteLine("Unsupported mode. Use 'competitors' or 'events'.");
-                break;
+            Console.WriteLine($"[INFO] Importing calendar from: {calendarCsvPath}");
+            var calendarImporter = new CalendarImporter(eventContext);
+            calendarImporter.ImportFromCsv(calendarCsvPath);
+            Console.WriteLine("[OK] Calendar import complete");
         }
+        else
+        {
+            Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
+        }
+
+        var processor = new EventsImporter(eventContext, competitorContext);
+        processor.ImportFromFolder(inputPath);
     }
 }
