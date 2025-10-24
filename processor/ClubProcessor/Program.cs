@@ -83,6 +83,21 @@ class Program
                     competitorContext.Database.Migrate();
                     Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
 
+                    // Calendar ingestion
+                    var calendarCsvPath = Path.Combine(inputPath, $"Calendar_{year}.csv");
+                    if (File.Exists(calendarCsvPath))
+                    {
+                        Console.WriteLine($"[INFO] Importing calendar from: {calendarCsvPath}");
+                        var calendarImporter = new CalendarImporter(eventContext);
+                        calendarImporter.ImportFromCsv(calendarCsvPath);
+                        Console.WriteLine("[OK] Calendar import complete");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
+                    }
+
+                    // Ride + Competitor ingestion
                     var processor = new EventsImporter(eventContext, competitorContext);
                     processor.ImportFromFolder(inputPath);
                     break;
