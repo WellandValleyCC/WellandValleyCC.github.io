@@ -27,29 +27,29 @@ def extract_club_events(xlsx_path, output_dir):
     os.makedirs(events_dir, exist_ok=True)
 
     # Extract calendar sheet
-    if "calendar" in xl.sheet_names:
-        print("[OK] Extracting calendar sheet")
-        calendar_df = xl.parse("calendar")
-        calendar_out = os.path.join(year_dir, f"calendar_{year}.csv")
+    if "Calendar" in xl.sheet_names:
+        print("[OK] Extracting Calendar sheet")
+        calendar_df = xl.parse("Calendar")
+        calendar_out = os.path.join(year_dir, f"Calendar_{year}.csv")
         calendar_df.to_csv(calendar_out, index=False)
         print(f"[INFO] Saved to: {calendar_out} ({len(calendar_df)} rows)")
     else:
-        print("[WARN] Sheet missing: calendar")
+        print("[WARN] Sheet missing: Calendar")
 
     # Extract competitors sheet (reference only)
-    if "competitors" in xl.sheet_names:
-        print("[INFO] Extracting competitors sheet (reference only)")
-        competitors_df = xl.parse("competitors")
-        competitors_out = os.path.join(year_dir, f"competitors_{year}.csv")
+    if "Competitors" in xl.sheet_names:
+        print("[INFO] Extracting Competitors sheet (reference only)")
+        competitors_df = xl.parse("Competitors")
+        competitors_out = os.path.join(year_dir, f"Competitors_{year}.csv")
         competitors_df.to_csv(competitors_out, index=False)
         print(f"[INFO] Saved to: {competitors_out} ({len(competitors_df)} rows)")
     else:
-        print("[WARN] Sheet missing: competitors")
+        print("[WARN] Sheet missing: Competitors")
 
     # Extract all Event (n) sheets
-    event_sheets = [s for s in xl.sheet_names if re.match(r'Event \(\d+\)', s)]
+    event_sheets = [s for s in xl.sheet_names if re.fullmatch(r'Event_\d{2}', s)]
     if not event_sheets:
-        print("[WARN] No event sheets found")
+        print("[WARN] No Event_nn sheets found")
     else:
         for sheet in event_sheets:
             event_num = re.search(r'\d+', sheet).group()
