@@ -29,6 +29,9 @@ namespace ClubProcessor.Services
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, config);
 
+            csv.Read();         // Advance to header row
+            csv.ReadHeader();   // Parse header names
+
             var records = new List<CalendarEvent>();
 
             while (csv.Read())
@@ -40,6 +43,7 @@ namespace ClubProcessor.Services
                 }
             }
 
+            _db.CalendarEvents.ExecuteDelete();
             _db.CalendarEvents.AddRange(records);
             _db.SaveChanges();
         }
