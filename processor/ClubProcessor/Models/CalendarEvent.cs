@@ -1,0 +1,38 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ClubData.Models
+{
+    public class CalendarEvent
+    {
+        [Key]
+        public int EventID { get; set; }
+
+        [Required]
+        public DateTime EventDate { get; set; }
+
+        [Required]
+        public TimeSpan StartTime { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string EventName { get; set; } = string.Empty;
+
+        [Column(TypeName = "REAL")]
+        public double Miles { get; set; }
+
+        [MaxLength(100)]
+        public string Location { get; set; } = string.Empty;
+
+        public bool IsClubChampionship { get; set; }
+        public bool IsNonStandard10 { get; set; }
+        public bool IsEvening10 { get; set; }
+        public bool IsHardRideSeries { get; set; }
+
+        [MaxLength(20)]
+        public string SheetName { get; set; } = string.Empty;
+
+        public bool IsCancelled { get; set; }
+    }
+}

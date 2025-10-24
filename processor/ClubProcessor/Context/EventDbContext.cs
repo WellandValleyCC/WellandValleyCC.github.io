@@ -1,4 +1,5 @@
-﻿using ClubProcessor.Models;
+﻿using ClubData.Models;
+using ClubProcessor.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClubProcessor.Context
@@ -6,6 +7,7 @@ namespace ClubProcessor.Context
     public class EventDbContext : DbContext
     {
         public DbSet<Ride> Rides { get; set; }
+        public DbSet<CalendarEvent> CalendarEvents { get; set; }
 
         public EventDbContext(DbContextOptions<EventDbContext> options)
             : base(options)
@@ -26,15 +28,28 @@ namespace ClubProcessor.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Ride configuration
             modelBuilder.Entity<Ride>()
                 .HasKey(r => r.Id);
 
-            // Optional: configure enums as strings
             modelBuilder.Entity<Ride>()
                 .Property(r => r.Eligibility)
                 .HasConversion<string>();
 
-            // Optional: add indexes or constraints here
+            // CalendarEvent configuration
+            modelBuilder.Entity<CalendarEvent>(entity =>
+            {
+                entity.ToTable("CalendarEvents");
+
+                entity.HasKey(e => e.EventID);
+
+                entity.Property(e => e.EventDate).IsRequired();
+                entity.Property(e => e.StartTime).IsRequired();
+                entity.Property(e => e.EventName).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Miles).HasColumnType("REAL");
+                entity.Property(e => e.Location).HasMaxLength(100);
+                entity.Property(e => e.SheetName).HasMaxLength(20);
+            });
         }
     }
 }
