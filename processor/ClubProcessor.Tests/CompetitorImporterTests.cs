@@ -4,6 +4,7 @@ using ClubProcessor.Context;
 using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
 using ClubProcessor.Services;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Xunit;
@@ -34,7 +35,8 @@ namespace ClubProcessor.Tests
             importer.Import(testCsvPath);
 
             // Assert
-            Assert.Single(context.Competitors);
+            context.Competitors.Should().ContainSingle()
+                .Which.ClubNumber.Should().Be(9999);
         }
 
         [Fact]
@@ -67,11 +69,11 @@ namespace ClubProcessor.Tests
             importerToday.Import(testCsvPath2);
 
             // Assert
-            Assert.Equal(2, context.Competitors.Count());
-            var first = context.Competitors.OrderBy(c => c.Id).First();
-            Assert.Equal(ClaimStatus.FirstClaim, first.ClaimStatus);
-            var second = context.Competitors.OrderBy(c => c.Id).Skip(1).First();
-            Assert.Equal(ClaimStatus.SecondClaim, second.ClaimStatus);
+            context.Competitors.Should().HaveCount(2);
+
+            var competitors = context.Competitors.OrderBy(c => c.Id).ToList();
+            competitors[0].ClaimStatus.Should().Be(ClaimStatus.FirstClaim);
+            competitors[1].ClaimStatus.Should().Be(ClaimStatus.SecondClaim);
         }
 
         [Fact]
@@ -106,10 +108,11 @@ namespace ClubProcessor.Tests
             importerToday.Import(testCsvPath2);
 
             // Assert
-            Assert.Equal(1, context.Competitors.Count());
-            var competitor = context.Competitors.First();
-            Assert.Equal(yesterday, competitor.CreatedUtc);
-            Assert.Equal(today, competitor.LastUpdatedUtc);
+            context.Competitors.Should().HaveCount(1);
+
+            var competitor = context.Competitors.Single();
+            competitor.CreatedUtc.Should().Be(yesterday);
+            competitor.LastUpdatedUtc.Should().Be(today);
         }
 
         [Fact]
@@ -138,8 +141,8 @@ namespace ClubProcessor.Tests
 
             // Assert
             var imported = context.Competitors.Single(c => c.ClubNumber == 9999);
-            Assert.Equal(importDate, imported.CreatedUtc);
-            Assert.Equal(importDate, imported.LastUpdatedUtc);
+            imported.CreatedUtc.Should().Be(importDate);
+            imported.LastUpdatedUtc.Should().Be(importDate);
         }
 
         [Fact]
@@ -177,18 +180,17 @@ namespace ClubProcessor.Tests
             importerToday.Import(testCsvPath2);
 
             // Assert
-            Assert.Equal(2, context.Competitors.Count());
-            var first = context.Competitors.OrderBy(c => c.Id).First();
-            Assert.Equal(ClaimStatus.FirstClaim, first.ClaimStatus);
-            Assert.Equal(earlyImportDate, first.CreatedUtc);
-            Assert.Equal(earlyImportDate, first.LastUpdatedUtc);
-            var second = context.Competitors.OrderBy(c => c.Id).Skip(1).First();
-            Assert.Equal(ClaimStatus.SecondClaim, second.ClaimStatus);
-            Assert.Equal(laterImportDate, second.CreatedUtc);
-            Assert.Equal(laterImportDate, second.LastUpdatedUtc);
+            context.Competitors.Should().HaveCount(2);
+
+            var competitors = context.Competitors.OrderBy(c => c.Id).ToList();
+            competitors[0].ClaimStatus.Should().Be(ClaimStatus.FirstClaim);
+            competitors[0].CreatedUtc.Should().Be(earlyImportDate);
+            competitors[0].LastUpdatedUtc.Should().Be(earlyImportDate);
+
+            competitors[1].ClaimStatus.Should().Be(ClaimStatus.SecondClaim);
+            competitors[1].CreatedUtc.Should().Be(laterImportDate);
+            competitors[1].LastUpdatedUtc.Should().Be(laterImportDate);
         }
-
-
 
         [Fact]
         public void Import_ShouldApplyImportDateToTimestamps_WhenOtherPropertyIsChanged()
@@ -226,9 +228,9 @@ namespace ClubProcessor.Tests
 
             // Assert
             var imported = context.Competitors.Single(c => c.ClubNumber == 9999);
-            Assert.Equal(ClaimStatus.FirstClaim, imported.ClaimStatus);
-            Assert.Equal(earlyImportDate, imported.CreatedUtc);
-            Assert.Equal(laterImportDate, imported.LastUpdatedUtc);
+            imported.ClaimStatus.Should().Be(ClaimStatus.FirstClaim);
+            imported.CreatedUtc.Should().Be(earlyImportDate);
+            imported.LastUpdatedUtc.Should().Be(laterImportDate);
         }
 
         [Fact]
@@ -243,7 +245,6 @@ namespace ClubProcessor.Tests
             context.Database.OpenConnection();
             context.Database.EnsureCreated();
 
-            // Seed DB with 2 pre-existing competitors
             context.Competitors.AddRange(new[]
             {
                 new Competitor
@@ -277,14 +278,11 @@ namespace ClubProcessor.Tests
             });
             context.SaveChanges();
 
-            var assembledCompetitors = context.Competitors
-                .OrderBy(c => c.ClubNumber)
-                .ToList();
-            Assert.Equal(2, assembledCompetitors.Count);
-            Assert.Contains(assembledCompetitors, c => c.ClubNumber == 1001 && c.Surname == "Smith");
-            Assert.Contains(assembledCompetitors, c => c.ClubNumber == 1002 && c.Surname == "Brown");
+            var assembledCompetitors = context.Competitors.OrderBy(c => c.ClubNumber).ToList();
+            assembledCompetitors.Should().HaveCount(2);
+            assembledCompetitors.Should().Contain(c => c.ClubNumber == 1001 && c.Surname == "Smith");
+            assembledCompetitors.Should().Contain(c => c.ClubNumber == 1002 && c.Surname == "Brown");
 
-            // Prepare CSV input with 3 new competitors
             var csv = new StringBuilder();
             csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate");
             csv.AppendLine("2001,Doe,John,First Claim,False,False,False,True,False,2025-01-25");
@@ -295,24 +293,18 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(csvPath, csv.ToString());
 
-            using var reader = new StringReader(csv.ToString());
-
-            DateTime today = DateTime.UtcNow;
-            var importer = new CompetitorImporter(context, today);
+            var importer = new CompetitorImporter(context, DateTime.UtcNow);
 
             // Act
             importer.Import(csvPath);
 
             // Assert
-            var allCompetitors = context.Competitors
-                .OrderBy(c => c.ClubNumber)
-                .ToList();
-
-            Assert.Equal(3, allCompetitors.Count);
-            Assert.Contains(allCompetitors, c => c.ClubNumber == 2001 && c.Surname == "Doe");
-            Assert.Contains(allCompetitors, c => c.ClubNumber == 2002 && c.Surname == "Lee");
-            Assert.Contains(allCompetitors, c => c.ClubNumber == 2003 && c.Surname == "Khan");
-            Assert.DoesNotContain(allCompetitors, c => c.ClubNumber == 1001 || c.ClubNumber == 1002);
+            var allCompetitors = context.Competitors.OrderBy(c => c.ClubNumber).ToList();
+            allCompetitors.Should().HaveCount(3);
+            allCompetitors.Should().Contain(c => c.ClubNumber == 2001 && c.Surname == "Doe");
+            allCompetitors.Should().Contain(c => c.ClubNumber == 2002 && c.Surname == "Lee");
+            allCompetitors.Should().Contain(c => c.ClubNumber == 2003 && c.Surname == "Khan");
+            allCompetitors.Should().NotContain(c => c.ClubNumber == 1001 || c.ClubNumber == 1002);
         }
 
         [Fact]
@@ -484,5 +476,6 @@ namespace ClubProcessor.Tests
             Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == 1005));
         }
     }
+
 }
 

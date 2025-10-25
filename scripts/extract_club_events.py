@@ -55,7 +55,12 @@ def extract_club_events(xlsx_path, output_dir):
             event_num = re.search(r'\d+', sheet).group()
             print(f"[OK] Extracting event sheet: {sheet}")
             df = xl.parse(sheet)
-            df = df[df.iloc[:, 0].notna()]  # Keep rows where column A is not blank
+            
+            # Stop at first row where column A is blank
+            first_blank_index = df[df.iloc[:, 0].isnull() | (df.iloc[:, 0].astype(str).str.strip() == "")].index.min()
+            if pd.notnull(first_blank_index):
+                df = df.iloc[:first_blank_index]
+         
             event_out = os.path.join(events_dir, f"Event_{int(event_num):02}.csv")
             df.to_csv(event_out, index=False)
             print(f"[INFO] Saved to: {event_out} ({len(df)} rows)")

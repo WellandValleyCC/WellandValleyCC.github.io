@@ -66,37 +66,104 @@ namespace ClubProcessor.Services
             var match = Regex.Match(Path.GetFileName(path), @"Event_(\d+)\.csv");
             return match.Success ? int.Parse(match.Groups[1].Value) : -1;
         }
-
         private void ProcessEventCsv(string csvPath, int eventNumber)
         {
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-            var rows = csv.GetRecords<RideCsvRow>().ToList();
-            foreach (var row in rows)
+            var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
+            var incomingRides = incomingRows
+                .Select(row => ParseRide(row, eventNumber))
+                .Where(ride => ride != null)
+                .ToList();
+
+            var existingRides = eventContext.Rides
+                .Where(r => r.EventNumber == eventNumber)
+                .ToList();
+
+            var incomingByName = incomingRides
+                .GroupBy(r => r.Name)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            foreach (var group in incomingRides.GroupBy(r => r.Name))
             {
-                var ride = ParseRide(row, eventNumber);
-                if (ride != null)
+                if (group.Count() > 1)
                 {
-                    var existing = eventContext.Rides
-                        .FirstOrDefault(r => r.EventNumber == ride.EventNumber && r.Name == ride.Name);
-
-                    if (existing != null)
-                    {
-                        existing.ClubNumber = ride.ClubNumber;
-                        existing.ActualTime = ride.ActualTime;
-                        existing.TotalSeconds = ride.TotalSeconds;
-                        existing.IsRoadBike = ride.IsRoadBike;
-                        existing.Eligibility = ride.Eligibility;
-                    }
-                    else
-                    {
-                        eventContext.Rides.Add(ride);
-                    }
-
+                    Console.WriteLine($"[WARN] Duplicate ride name '{group.Key}' in Event {eventNumber}. Using first entry.");
                 }
             }
+
+            var existingByName = existingRides.ToDictionary(r => r.Name);
+
+            var toAdd = new List<Ride>();
+            var toUpdate = new List<Ride>();
+            var toDelete = new List<Ride>();
+
+            foreach (var incoming in incomingRides)
+            {
+                if (existingByName.TryGetValue(incoming.Name, out var existing))
+                {
+                    if (!RidesAreEqual(existing, incoming))
+                    {
+                        Console.WriteLine($"[UPDATE] Ride '{incoming.Name}' in Event {eventNumber}");
+                        LogRideDiff(existing, incoming);
+                        UpdateRide(existing, incoming);
+                        toUpdate.Add(existing);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[ADD] Ride '{incoming.Name}' in Event {eventNumber}");
+                    toAdd.Add(incoming);
+                }
+            }
+
+            foreach (var existing in existingRides)
+            {
+                if (!incomingByName.ContainsKey(existing.Name))
+                {
+                    Console.WriteLine($"[DELETE] Ride '{existing.Name}' in Event {eventNumber}");
+                    toDelete.Add(existing);
+                }
+            }
+
+            eventContext.Rides.RemoveRange(toDelete);
+            eventContext.Rides.UpdateRange(toUpdate);
+            eventContext.Rides.AddRange(toAdd);
         }
+
+        private void UpdateRide(Ride target, Ride source)
+        {
+            target.ClubNumber = source.ClubNumber;
+            target.ActualTime = source.ActualTime;
+            target.TotalSeconds = source.TotalSeconds;
+            target.IsRoadBike = source.IsRoadBike;
+            target.Eligibility = source.Eligibility;
+        }
+
+        private bool RidesAreEqual(Ride a, Ride b)
+        {
+            return a.ClubNumber == b.ClubNumber &&
+                   a.ActualTime == b.ActualTime &&
+                   a.TotalSeconds == b.TotalSeconds &&
+                   a.IsRoadBike == b.IsRoadBike &&
+                   a.Eligibility == b.Eligibility;
+        }
+
+        private void LogRideDiff(Ride old, Ride updated)
+        {
+            if (old.ClubNumber != updated.ClubNumber)
+                Console.WriteLine($"  - ClubNumber: {old.ClubNumber} → {updated.ClubNumber}");
+            if (old.ActualTime != updated.ActualTime)
+                Console.WriteLine($"  - ActualTime: {old.ActualTime} → {updated.ActualTime}");
+            if (old.TotalSeconds != updated.TotalSeconds)
+                Console.WriteLine($"  - TotalSeconds: {old.TotalSeconds} → {updated.TotalSeconds}");
+            if (old.IsRoadBike != updated.IsRoadBike)
+                Console.WriteLine($"  - IsRoadBike: {old.IsRoadBike} → {updated.IsRoadBike}");
+            if (old.Eligibility != updated.Eligibility)
+                Console.WriteLine($"  - Eligibility: {old.Eligibility} → {updated.Eligibility}");
+        }
+
 
         /// <remarks>
         ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
