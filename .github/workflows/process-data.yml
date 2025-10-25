@@ -53,6 +53,8 @@ jobs:
             if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
               echo "[INFO] Detected ClubEvents XLSX: $FILE"
               echo "$FILE" > .club_events_xlsx_path
+              # Log sha256 of the checked-in XLSX so runs are traceable
+              sha256sum "$FILE" || true
               python3 scripts/extract_club_events.py "$FILE" data/extracted/
             elif [[ "$FILE" == data/competitors_*.csv ]]; then
               echo "[INFO] Detected competitors CSV: $FILE"
@@ -74,6 +76,13 @@ jobs:
               echo "[INFO] Skipping $year_dir — required files not found"
             fi
           done
+          
+      - name: Upload extracted CSV artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: extracted-csvs
+          path: artifacts/extracted/
           
       - name: Summarise competitor metrics
         run: |
