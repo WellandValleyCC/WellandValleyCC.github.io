@@ -25,6 +25,7 @@ namespace ClubData.Models
         [MaxLength(100)]
         public string Location { get; set; } = string.Empty;
 
+        public bool IsHillClimb { get; set; }
         public bool IsClubChampionship { get; set; }
         public bool IsNonStandard10 { get; set; }
         public bool IsEvening10 { get; set; }
