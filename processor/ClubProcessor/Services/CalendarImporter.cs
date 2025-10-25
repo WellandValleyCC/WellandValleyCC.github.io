@@ -46,12 +46,81 @@ namespace ClubProcessor.Services
         public void ImportFromCsv(string csvPath)
         {
             using var reader = new StreamReader(csvPath);
-            var records = ParseCalendarEvents(reader);
+            var incoming = ParseCalendarEvents(reader);
 
-            _db.CalendarEvents.ExecuteDelete();
-            _db.CalendarEvents.AddRange(records);
+            var existing = _db.CalendarEvents.ToList();
+            var incomingById = incoming.ToDictionary(e => e.EventID);
+            var existingById = existing.ToDictionary(e => e.EventID);
+
+            var toAdd = new List<CalendarEvent>();
+            var toUpdate = new List<CalendarEvent>();
+            var toDelete = new List<CalendarEvent>();
+
+            foreach (var evt in incoming)
+            {
+                if (existingById.TryGetValue(evt.EventID, out var match))
+                {
+                    if (!EventsAreEqual(match, evt))
+                    {
+                        Console.WriteLine($"[UPDATE] Event {evt.EventID}: {match.EventName} → {evt.EventName}");
+                        UpdateEvent(match, evt);
+                        toUpdate.Add(match);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[ADD] Event {evt.EventID}: {evt.EventName}");
+                    toAdd.Add(evt);
+                }
+            }
+
+            foreach (var evt in existing)
+            {
+                if (!incomingById.ContainsKey(evt.EventID))
+                {
+                    Console.WriteLine($"[DELETE] Event {evt.EventID}: {evt.EventName}");
+                    toDelete.Add(evt);
+                }
+            }
+
+            _db.CalendarEvents.RemoveRange(toDelete);
+            _db.CalendarEvents.UpdateRange(toUpdate);
+            _db.CalendarEvents.AddRange(toAdd);
             _db.SaveChanges();
         }
+
+        private bool EventsAreEqual(CalendarEvent a, CalendarEvent b)
+        {
+            return a.EventDate == b.EventDate &&
+                   a.StartTime == b.StartTime &&
+                   a.EventName == b.EventName &&
+                   a.Miles == b.Miles &&
+                   a.Location == b.Location &&
+                   a.IsHillClimb == b.IsHillClimb &&
+                   a.IsClubChampionship == b.IsClubChampionship &&
+                   a.IsNonStandard10 == b.IsNonStandard10 &&
+                   a.IsEvening10 == b.IsEvening10 &&
+                   a.IsHardRideSeries == b.IsHardRideSeries &&
+                   a.SheetName == b.SheetName &&
+                   a.IsCancelled == b.IsCancelled;
+        }
+
+        private void UpdateEvent(CalendarEvent target, CalendarEvent source)
+        {
+            target.EventDate = source.EventDate;
+            target.StartTime = source.StartTime;
+            target.EventName = source.EventName;
+            target.Miles = source.Miles;
+            target.Location = source.Location;
+            target.IsHillClimb = source.IsHillClimb;
+            target.IsClubChampionship = source.IsClubChampionship;
+            target.IsNonStandard10 = source.IsNonStandard10;
+            target.IsEvening10 = source.IsEvening10;
+            target.IsHardRideSeries = source.IsHardRideSeries;
+            target.SheetName = source.SheetName;
+            target.IsCancelled = source.IsCancelled;
+        }
+
 
         private CalendarEvent? TryParseCalendarEvent(CsvReader csv)
         {
