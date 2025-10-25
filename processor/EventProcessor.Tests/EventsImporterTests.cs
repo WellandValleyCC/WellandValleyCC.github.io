@@ -4,6 +4,7 @@ using ClubProcessor.Context;
 using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
 using ClubProcessor.Services;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Xunit;
@@ -43,7 +44,7 @@ namespace EventProcessor.Tests
             importer.ImportFromFolder(folderPath);
 
             // Assert
-            Assert.Equal(21, eventContext.Rides.Count());
+            eventContext.Rides.Should().HaveCount(21);
         }
 
         [Fact]
@@ -60,12 +61,12 @@ namespace EventProcessor.Tests
 
             // Assert
             var ride = eventContext.Rides.SingleOrDefault(r => r.Name == "Theo Marlin" && r.EventNumber == 1);
-            Assert.NotNull(ride);
-            Assert.Equal(101, ride.ClubNumber);
-            Assert.Equal("00:24:18", ride.ActualTime);
-            Assert.Equal(1458.0, ride.TotalSeconds, 2);
-            Assert.True(ride.IsRoadBike);
-            Assert.Equal(RideEligibility.DNF, ride.Eligibility);
+            ride.Should().NotBeNull();
+            ride!.ClubNumber.Should().Be(101);
+            ride.ActualTime.Should().Be("00:24:18");
+            ride.TotalSeconds.Should().BeApproximately(1458.0, 0.01);
+            ride.IsRoadBike.Should().BeTrue();
+            ride.Eligibility.Should().Be(RideEligibility.DNF);
         }
 
         private string CreateTestFolderWithCsvs()

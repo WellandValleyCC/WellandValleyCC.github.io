@@ -17,7 +17,7 @@ namespace ClubProcessor.Services
             _db = db;
         }
 
-        public void ImportFromCsv(string csvPath)
+        public List<CalendarEvent> ParseCalendarEvents(TextReader reader)
         {
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -26,14 +26,11 @@ namespace ClubProcessor.Services
                 TrimOptions = TrimOptions.Trim
             };
 
-            using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, config);
-
-            csv.Read();         // Advance to header row
-            csv.ReadHeader();   // Parse header names
+            csv.Read();
+            csv.ReadHeader();
 
             var records = new List<CalendarEvent>();
-
             while (csv.Read())
             {
                 var record = TryParseCalendarEvent(csv);
@@ -42,6 +39,14 @@ namespace ClubProcessor.Services
                     records.Add(record);
                 }
             }
+
+            return records;
+        }
+
+        public void ImportFromCsv(string csvPath)
+        {
+            using var reader = new StreamReader(csvPath);
+            var records = ParseCalendarEvents(reader);
 
             _db.CalendarEvents.ExecuteDelete();
             _db.CalendarEvents.AddRange(records);
@@ -81,6 +86,7 @@ namespace ClubProcessor.Services
                 EventName = nameRaw,
                 Miles = csv.GetField<double>("Miles"),
                 Location = csv.GetField("Location / Course") ?? string.Empty,
+                IsHillClimb = csv.GetField("Hill Climb") == "Y",
                 IsClubChampionship = csv.GetField("Club Championship") == "Y",
                 IsNonStandard10 = csv.GetField("Non-Standard 10") == "Y",
                 IsEvening10 = csv.GetField("Evening 10") == "Y",
