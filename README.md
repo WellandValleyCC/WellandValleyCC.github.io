@@ -6,7 +6,7 @@ This repository powers the static website for Welland Valley CC's time trial res
 
 ## Overview
 
-- **Input**: `data/competitors_2026.csv` or `data/Club Events 2026.xlsx` membership lists and event result files 
+- **Input**: `data/competitors_2026.csv` or `data/ClubEvents 2026.xlsx` membership lists and event result files 
 - **Reference**: `club_2026.db` SQLite file with member records and calendar data  
 - **Processing**: C# apps and helper scripts extract data, compute standings, and emit HTML pages  
 - **Publish**: Generated site is pushed to the `gh-pages` branch and served by GitHub Pages
@@ -289,3 +289,51 @@ To run the processor in debug mode:
    - Press **F5** to launch in debug mode
    - Inspect how each CSV is processed and written to the event database
 
+## Notes on ClubEvents_2026.XLSX
+
+### Conditional formatting on Event_nn sheets
+
+Configured using this macro.  Not saved as part of the sheet as it's not .xlsm
+
+```
+Sub ApplyStandardEventFormattingWithAbsoluteRefs()
+    Dim ws As Worksheet
+    Dim i As Integer
+    Dim fmt As FormatCondition
+
+    For i = 1 To 26
+        On Error Resume Next
+        Set ws = ThisWorkbook.Sheets("Event_" & Format(i, "00"))
+        On Error GoTo 0
+
+        If Not ws Is Nothing Then
+            ' Clear all existing conditional formatting
+            ws.Cells.FormatConditions.Delete
+
+            ' Rule 1: Format $D$2:$D$101 with number format (2 decimal places)
+            With ws.Range("$D$2:$D$101")
+                Set fmt = .FormatConditions.Add(Type:=xlExpression, Formula1:="=TEXT($B$104,""@"")=""Y""")
+                fmt.NumberFormat = "0.00"
+                fmt.StopIfTrue = False
+            End With
+            
+            ' Rule 2: Format $H$2:$H$101 with number format (2 decimal places)
+            With ws.Range("$H$2:$H$101")
+                Set fmt = .FormatConditions.Add(Type:=xlExpression, Formula1:="=TEXT($B$104,""@"")=""Y""")
+                fmt.NumberFormat = "hh:mm:ss.00;@"
+                fmt.StopIfTrue = False
+            End With
+
+            ' Rule 3: Fill $G$2:$H$101 with cyan when column I = "X"
+            With ws.Range("$G$2:$H$101")
+                Set fmt = .FormatConditions.Add(Type:=xlExpression, Formula1:="=$I2=""X""")
+                fmt.Interior.Color = RGB(179, 235, 255)
+                fmt.StopIfTrue = False
+            End With
+
+        End If
+    Next i
+
+    MsgBox "Formatting applied with absolute references to Event_01 through Event_26.", vbInformation
+End Sub
+```
