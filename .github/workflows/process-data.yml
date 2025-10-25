@@ -64,7 +64,7 @@ jobs:
       - name: Run processor if extracted event CSVs exist
         run: |
           for year_dir in data/extracted/*; do
-            if compgen -G "$year_dir/calendar_*.csv" > /dev/null && \
+            if compgen -G "$year_dir/Calendar_*.csv" > /dev/null && \
                [[ -d "$year_dir/events" ]] && \
                compgen -G "$year_dir/events/Event_*.csv" > /dev/null; then
           
