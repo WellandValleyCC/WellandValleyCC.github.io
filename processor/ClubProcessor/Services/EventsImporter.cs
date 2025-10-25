@@ -31,7 +31,7 @@ namespace ClubProcessor.Services
             }
 
             var year = yearMatch.Groups[1].Value;
-            var calendarPath = Path.Combine(folderPath, $"calendar_{year}.csv");
+            var calendarPath = Path.Combine(folderPath, $"Calendar_{year}.csv");
             var eventsDir = Path.Combine(folderPath, "events");
 
             if (!File.Exists(calendarPath))
