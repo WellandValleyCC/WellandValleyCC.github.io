@@ -66,6 +66,7 @@ namespace ClubProcessor.Services
             var match = Regex.Match(Path.GetFileName(path), @"Event_(\d+)\.csv");
             return match.Success ? int.Parse(match.Groups[1].Value) : -1;
         }
+
         private void ProcessEventCsv(string csvPath, int eventNumber)
         {
             using var reader = new StreamReader(csvPath);
@@ -76,6 +77,12 @@ namespace ClubProcessor.Services
                 .Select(row => ParseRide(row, eventNumber))
                 .Where(ride => ride != null)
                 .ToList();
+
+            Console.WriteLine($"[INFO] Parsed {incomingRows.Count} rows from {Path.GetFileName(csvPath)}");
+            foreach (var row in incomingRows.Where(r => string.IsNullOrWhiteSpace(r.Name)))
+            {
+                Console.WriteLine($"[WARN] Row with missing Name: NumberOrName={row.NumberOrName}, Time={row.ActualTime}");
+            }
 
             var existingRides = eventContext.Rides
                 .Where(r => r.EventNumber == eventNumber)
