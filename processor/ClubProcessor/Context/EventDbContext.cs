@@ -8,6 +8,7 @@ namespace ClubProcessor.Context
     {
         public DbSet<Ride> Rides { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
+        public DbSet<PointsAllocation> PointsAllocations { get; set; }
 
         public EventDbContext(DbContextOptions<EventDbContext> options)
             : base(options)
