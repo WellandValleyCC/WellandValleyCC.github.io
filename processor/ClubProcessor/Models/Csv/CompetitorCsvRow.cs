@@ -5,7 +5,7 @@
 
     namespace ClubProcessor.Models.Csv
     {
-        internal class CompetitorCsvRow
+        public class CompetitorCsvRow
         {
             [Name("ClubNumber")]
             public int ClubNumber { get; set; }
@@ -42,10 +42,13 @@
 
             [Ignore]
             public ClaimStatus ClaimStatus =>
-                ClaimStatusRaw?.Trim().ToLowerInvariant() switch
+                ClaimStatusRaw?
+                    .Trim()
+                    .ToLowerInvariant()
+                    .Replace(" ", "") switch
                 {
-                    "first claim" => ClaimStatus.FirstClaim,
-                    "second claim" => ClaimStatus.SecondClaim,
+                    "firstclaim" => ClaimStatus.FirstClaim,
+                    "secondclaim" => ClaimStatus.SecondClaim,
                     "honorary" => ClaimStatus.Honorary,
                     _ => ClaimStatus.Unknown
                 };

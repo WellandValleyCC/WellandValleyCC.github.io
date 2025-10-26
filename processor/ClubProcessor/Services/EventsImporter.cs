@@ -76,6 +76,7 @@ namespace ClubProcessor.Services
             var incomingRides = incomingRows
                 .Select(row => ParseRide(row, eventNumber))
                 .Where(ride => ride != null)
+                .Cast<Ride>() // assert non-null
                 .ToList();
 
             Console.WriteLine($"[INFO] Parsed {incomingRows.Count} rows from {Path.GetFileName(csvPath)}");
@@ -89,10 +90,11 @@ namespace ClubProcessor.Services
                 .ToList();
 
             var incomingByName = incomingRides
-                .GroupBy(r => r.Name)
+                .Where(r => !string.IsNullOrWhiteSpace(r.Name))
+                .GroupBy(r => r.Name!)
                 .ToDictionary(g => g.Key, g => g.First());
 
-            foreach (var group in incomingRides.GroupBy(r => r.Name))
+            foreach (var group in incomingRides.GroupBy(r => r.Name!))
             {
                 if (group.Count() > 1)
                 {
@@ -100,7 +102,7 @@ namespace ClubProcessor.Services
                 }
             }
 
-            var existingByName = existingRides.ToDictionary(r => r.Name);
+            var existingByName = existingRides.ToDictionary(r => r.Name!);
 
             var toAdd = new List<Ride>();
             var toUpdate = new List<Ride>();
@@ -108,7 +110,7 @@ namespace ClubProcessor.Services
 
             foreach (var incoming in incomingRides)
             {
-                if (existingByName.TryGetValue(incoming.Name, out var existing))
+                if (existingByName.TryGetValue(incoming.Name!, out var existing))
                 {
                     if (!RidesAreEqual(existing, incoming))
                     {
@@ -127,7 +129,7 @@ namespace ClubProcessor.Services
 
             foreach (var existing in existingRides)
             {
-                if (!incomingByName.ContainsKey(existing.Name))
+                if (!incomingByName.ContainsKey(existing.Name!))
                 {
                     Console.WriteLine($"[DELETE] Ride '{existing.Name}' in Event {eventNumber}");
                     toDelete.Add(existing);

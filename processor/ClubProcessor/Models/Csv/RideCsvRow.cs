@@ -8,7 +8,7 @@ namespace ClubProcessor.Models.Csv
     ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,
     ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X             * 
     /// </remarks>
-    internal class RideCsvRow
+    public class RideCsvRow
     {
         [Name("Number/Name")]
         public string? NumberOrName { get; set; }

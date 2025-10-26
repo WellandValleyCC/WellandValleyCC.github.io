@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubProcessor.Tests", "Club
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventProcessor.Tests", "EventProcessor.Tests\EventProcessor.Tests.csproj", "{2FC7CB5B-B736-4964-97C7-67A55BDD6B4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClubProcessor.Models.Tests", "ClubProcessor.Models.Tests\ClubProcessor.Models.Tests.csproj", "{2B9CBFEF-86F0-4E23-871C-2A37727E628C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,8 +57,23 @@ Global
 		{2FC7CB5B-B736-4964-97C7-67A55BDD6B4A}.Release|x64.Build.0 = Release|Any CPU
 		{2FC7CB5B-B736-4964-97C7-67A55BDD6B4A}.Release|x86.ActiveCfg = Release|Any CPU
 		{2FC7CB5B-B736-4964-97C7-67A55BDD6B4A}.Release|x86.Build.0 = Release|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Debug|x64.Build.0 = Debug|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Release|x64.ActiveCfg = Release|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Release|x64.Build.0 = Release|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B9CBFEF-86F0-4E23-871C-2A37727E628C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA85F478-C532-455D-8B49-1C9A0E822528}
 	EndGlobalSection
 EndGlobal
