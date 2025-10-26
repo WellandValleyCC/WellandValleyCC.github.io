@@ -4,6 +4,7 @@ using ClubProcessor.Context;
 using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
 using ClubProcessor.Services;
+using EventProcessor.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
@@ -13,30 +14,12 @@ namespace EventProcessor.Tests
 {
     public class EventsImporterTests
     {
-        private EventDbContext CreateEventContext()
-        {
-            var options = new DbContextOptionsBuilder<EventDbContext>()
-                .UseInMemoryDatabase(databaseName: "EventDb_" + Guid.NewGuid())
-                .Options;
-
-            return new EventDbContext(options);
-        }
-
-        private CompetitorDbContext CreateCompetitorContext()
-        {
-            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
-                .UseInMemoryDatabase(databaseName: "CompetitorDb_" + Guid.NewGuid())
-                .Options;
-
-            return new CompetitorDbContext(options);
-        }
-
         [Fact]
         public void ProcessFolder_ValidCsvFiles_ProcessesEvents()
         {
             // Arrange
-            var eventContext = CreateEventContext();
-            var competitorContext = CreateCompetitorContext();
+            using var eventContext = DbContextFactory.CreateEventContext();
+            using var competitorContext = DbContextFactory.CreateCompetitorContext();
             var importer = new EventsImporter(eventContext, competitorContext);
             var folderPath = CreateTestFolderWithCsvs();
 
@@ -51,8 +34,8 @@ namespace EventProcessor.Tests
         public void ImportFromFolder_WithValidStructure_ImportsEventData()
         {
             // Arrange
-            var eventContext = CreateEventContext();
-            var competitorContext = CreateCompetitorContext();
+            using var eventContext = DbContextFactory.CreateEventContext();
+            using var competitorContext = DbContextFactory.CreateCompetitorContext();
             var importer = new EventsImporter(eventContext, competitorContext);
             var folderPath = CreateTestFolderWithCsvs();
 

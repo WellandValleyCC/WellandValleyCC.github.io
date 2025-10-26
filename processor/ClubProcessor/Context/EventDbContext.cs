@@ -52,5 +52,17 @@ namespace ClubProcessor.Context
                 entity.Property(e => e.SheetName).HasMaxLength(20);
             });
         }
+
+        public int GetPointsForPosition(int position)
+        {
+            // Clamp position to 1–100
+            var clamped = Math.Clamp(position, 1, 100);
+
+            return PointsAllocations
+                .AsNoTracking()
+                .Where(p => p.Position == clamped)
+                .Select(p => p.Points)
+                .FirstOrDefault();
+        }
     }
 }

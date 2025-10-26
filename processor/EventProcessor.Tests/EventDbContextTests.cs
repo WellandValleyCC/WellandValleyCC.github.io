@@ -1,31 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using ClubProcessor.Models;
+using EventProcessor.Tests.Helpers;
+using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace ClubProcessor.Migrations.EventDb
+namespace EventProcessor.Tests
 {
-    /// <inheritdoc />
-    public partial class AddPointsAllocations : Migration
+    public class EventDbContextTests
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
+        [Theory]
+        [InlineData(1, 60)]
+        [InlineData(46, 2)]
+        [InlineData(100, 1)]
+        [InlineData(101, 1)] // clamped
+        [InlineData(0, 60)]  // clamped
+        public void GetPointsForPosition_ReturnsExpectedPoints(int position, int expected)
         {
-            migrationBuilder.CreateTable(
-                name: "PointsAllocations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Position = table.Column<int>(type: "INTEGER", nullable: false),
-                    Points = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PointsAllocations", x => x.Id);
-                });
+            // Assemble
+            using var context = DbContextFactory.CreateEventContext();
 
-            var allocations = Enumerable.Range(1, 100)
-                .Select(pos => new
+            context.PointsAllocations.AddRange(
+                Enumerable.Range(1, 100).Select(pos => new PointsAllocation
                 {
                     Position = pos,
                     Points = pos switch
@@ -79,28 +77,16 @@ namespace ClubProcessor.Migrations.EventDb
                         >= 47 and <= 100 => 1,
                         _ => 0
                     }
-                });
+                })
+            );
+            context.SaveChanges();
 
-            foreach (var alloc in allocations)
-            {
-                migrationBuilder.InsertData(
-                    table: "PointsAllocations",
-                    columns: new[] { "Position", "Points" },
-                    values: new object[] { alloc.Position, alloc.Points });
-            }
+            // Act
+            var result = context.GetPointsForPosition(position);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PointsAllocations_Position",
-                table: "PointsAllocations",
-                column: "Position",
-                unique: true);
+            // Assert
+            result.Should().Be(expected);
         }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "PointsAllocations");
-        }
     }
 }

@@ -2,6 +2,7 @@
 using ClubProcessor.Services;
 using CsvHelper;
 using CsvHelper.Configuration;
+using EventProcessor.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -11,15 +12,6 @@ namespace EventProcessor.Tests
 {
     public class CalendarImporterTests
     {
-        private EventDbContext CreateEventContext()
-        {
-            var options = new DbContextOptionsBuilder<EventDbContext>()
-                .UseInMemoryDatabase(databaseName: "EventDb_" + Guid.NewGuid())
-                .Options;
-
-            return new EventDbContext(options);
-        }
-
         /// <remarks>
         /// EventID,Date,Start time,Event Name,Miles,Location / Course,Hill Climb,	Club Championship,	Non-Standard 10,	Evening 10,	Hard Ride Series,Sheet Name,isCancelled
         /// 1,2025-04-01,18:30,Medbourne 9.5mile Hardride TT,9.5,Medbourne,,Y,Y,,Y,Event_01,
@@ -35,7 +27,8 @@ namespace EventProcessor.Tests
 1,2025-04-01,18:30,Medbourne TT,9.5,Medbourne,Y,Y,N,Y,Y,Event_01,N";
 
             using var reader = new StringReader(csvContent);
-            var importer = new CalendarImporter(CreateEventContext());
+            using var context = DbContextFactory.CreateEventContext();
+            var importer = new CalendarImporter(context);
 
             // Act
             var records = importer.ParseCalendarEvents(reader);
