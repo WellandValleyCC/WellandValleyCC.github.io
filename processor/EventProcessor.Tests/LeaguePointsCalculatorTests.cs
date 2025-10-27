@@ -40,7 +40,7 @@ namespace EventProcessor.Tests
 
         [Theory]
         [EventAutoData]
-        public void AddSingleRide_AutoData_UsesStandardPreconditions(
+        public void AddSingleRide_LeagueCalculation_ScoresNewRideCorrectly(
             // injected by EventAutoData: standard pools
             List<Competitor> competitors,
             List<Ride> allRides,
@@ -97,7 +97,7 @@ namespace EventProcessor.Tests
                 totalSeconds: totalSeconds,
                 isRoadBike: isRoadBike,
                 eligibility: RideEligibility.Valid,
-                actualTime: TimeSpan.FromSeconds(totalSeconds).ToString(@"hh\\:mm\\:ss"));
+                actualTime: TimeSpan.FromSeconds(totalSeconds).ToString(@"hh\:mm\:ss"));
 
             existingRides.Add(newRide);
 
