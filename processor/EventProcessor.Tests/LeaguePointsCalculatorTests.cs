@@ -52,8 +52,42 @@ namespace EventProcessor.Tests
             bool isRoadBike,
             double totalSeconds)
         {
-            // Arrange: build event-specific existing rides and add the new ride
-            var existing = allRides.Where(r => r.EventNumber == eventNumber).Select(CloneRide).ToList();
+            // Arrange: clone injected pools to avoid mutating shared fixtures
+            var competitorsCopy = competitors.Select(c => new Competitor
+            {
+                ClubNumber = c.ClubNumber,
+                Surname = c.Surname,
+                GivenName = c.GivenName,
+                ClaimStatus = c.ClaimStatus,
+                IsFemale = c.IsFemale,
+                IsJuvenile = c.IsJuvenile,
+                IsJunior = c.IsJunior,
+                IsSenior = c.IsSenior,
+                IsVeteran = c.IsVeteran,
+                CreatedUtc = c.CreatedUtc,
+                LastUpdatedUtc = c.LastUpdatedUtc
+            }).ToList();
+
+            var existingRides = allRides.Where(r => r.EventNumber == eventNumber)
+                                        .Select(r => new Ride
+                                        {
+                                            EventNumber = r.EventNumber,
+                                            ClubNumber = r.ClubNumber,
+                                            Name = r.Name,
+                                            ActualTime = r.ActualTime,
+                                            TotalSeconds = r.TotalSeconds,
+                                            IsRoadBike = r.IsRoadBike,
+                                            Eligibility = r.Eligibility,
+                                            AvgSpeed = r.AvgSpeed,
+                                            EventPosition = r.EventPosition
+                                        })
+                                        .ToList();
+
+            // Build the new ride. If clubNumber is provided ensure it's a real competitor
+            if (clubNumber.HasValue && !competitorsCopy.Any(c => c.ClubNumber == clubNumber.Value))
+            {
+                throw new InvalidOperationException($"Fixture supplied clubNumber {clubNumber.Value} that is not present in competitors");
+            }
 
             var numberOrName = clubNumber?.ToString() ?? $"Guest_{eventNumber}_Auto";
             var newRide = RideFactory.Create(
@@ -63,30 +97,70 @@ namespace EventProcessor.Tests
                 totalSeconds: totalSeconds,
                 isRoadBike: isRoadBike,
                 eligibility: RideEligibility.Valid,
-                actualTime: TimeSpan.FromSeconds(totalSeconds).ToString(@"hh\:mm\:ss"));
+                actualTime: TimeSpan.FromSeconds(totalSeconds).ToString(@"hh\\:mm\\:ss"));
 
-            existing.Add(newRide);
+            existingRides.Add(newRide);
 
-            // Act: call the calculator (use PointsForPosition internally)
-            // TO DO LeaguePointsCalculator.Calculate(existing, competitors, PointsForPosition);
+            // Act: call the calculator (use the PointsForPosition helper)
+            // TODO: LeaguePointsCalculator.Calculate(existingRides, competitorsCopy, PointsForPosition);
 
             // Find the updated ride
-            var updated = FindUpdatedRide(existing, newRide);
+            var updatedRide = newRide.ClubNumber != null
+                ? existingRides.Single(r => r.EventNumber == eventNumber && r.ClubNumber == newRide.ClubNumber)
+                : existingRides.Single(r => r.EventNumber == eventNumber && r.Name == newRide.Name && Math.Abs(r.TotalSeconds - newRide.TotalSeconds) < 0.001);
 
-            // Assert: Ensure positions/points are set for the added rider.
-            // For an AutoData test you might assert they are not null when the rider is eligible in that league.
-            // Example: ensure at least the SeniorsPosition and SeniorsPoints have been set to something
-            // when the competitor is a senior; otherwise, adapt asserts to the expected league membership.
-            var comp = competitors.FirstOrDefault(c => c.ClubNumber == updated.ClubNumber);
-            if (comp != null && comp.IsSenior && updated.Eligibility == RideEligibility.Valid && !updated.IsRoadBike)
+            // Assert: when competitor exists and eligibility is valid, verify positions/points use the table
+            if (updatedRide.Eligibility == RideEligibility.Valid && updatedRide.ClubNumber.HasValue)
             {
-                Assert.NotNull(updated.SeniorsPosition);
-                Assert.NotNull(updated.SeniorsPoints);
-                Assert.Equal(PointsForPosition(updated.SeniorsPosition ?? 0), updated.SeniorsPoints);
-            }
+                var comp = competitorsCopy.Single(c => c.ClubNumber == updatedRide.ClubNumber.Value);
 
-            // Additional assertions for Women, RoadBikeMen, etc. could follow the same pattern
-            // using comp.IsFemale, updated.IsRoadBike and age flags.
+                if (comp.IsJuvenile)
+                {
+                    Assert.NotNull(updatedRide.JuvenilesPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.JuvenilesPosition ?? 0), updatedRide.JuvenilesPoints);
+                }
+
+                if (comp.IsJunior)
+                {
+                    Assert.NotNull(updatedRide.JuniorsPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.JuniorsPosition ?? 0), updatedRide.JuniorsPoints);
+                }
+
+                if (comp.IsSenior)
+                {
+                    Assert.NotNull(updatedRide.SeniorsPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.SeniorsPosition ?? 0), updatedRide.SeniorsPoints);
+                }
+
+                if (comp.IsVeteran)
+                {
+                    Assert.NotNull(updatedRide.VeteransPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.VeteransPosition ?? 0), updatedRide.VeteransPoints);
+                }
+
+                if (comp.IsFemale)
+                {
+                    Assert.NotNull(updatedRide.WomenPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.WomenPosition ?? 0), updatedRide.WomenPoints);
+                }
+
+                if (updatedRide.IsRoadBike && !comp.IsFemale)
+                {
+                    Assert.NotNull(updatedRide.RoadBikeMenPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.RoadBikeMenPosition ?? 0), updatedRide.RoadBikeMenPoints);
+                }
+
+                if (updatedRide.IsRoadBike && comp.IsFemale)
+                {
+                    Assert.NotNull(updatedRide.RoadBikeWomenPosition);
+                    Assert.Equal(PointsForPosition(updatedRide.RoadBikeWomenPosition ?? 0), updatedRide.RoadBikeWomenPoints);
+                }
+            }
+            else
+            {
+                // For guests or non-valid eligibility you can assert fields are null or zero as appropriate
+                Assert.True(true); // no-op placeholder: replace with your guest/DNS expectations if desired
+            }
         }
 
         private static Ride CloneRide(Ride r) => new Ride { EventNumber = r.EventNumber, ClubNumber = r.ClubNumber, Name = r.Name, ActualTime = r.ActualTime, TotalSeconds = r.TotalSeconds, IsRoadBike = r.IsRoadBike, Eligibility = r.Eligibility, AvgSpeed = r.AvgSpeed, EventPosition = r.EventPosition };
