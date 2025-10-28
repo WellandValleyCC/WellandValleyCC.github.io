@@ -37,160 +37,51 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
-
-
         [Theory]
-        [InlineAutoData(AgeGroup.IsSenior, false, false, 830.0)] // senior male non-roadbike
-        [InlineAutoData(AgeGroup.IsSenior, true, true, 835.0)]  // senior female roadbike
-        [InlineAutoData(AgeGroup.IsJuvenile, false, false, 900.0)]
         [EventAutoData]
-        public void AddSingleRide_LeagueCalculation_ScoresNewRideCorrectly(
+        public void EventScoring_ForJuvenile_RanksJuvenileRidersWhoAreNotSecondClaim(
             List<Competitor> competitors,
             List<Ride> allRides,
-            int eventNumber,
-            AgeGroup ageGroup,
-            bool isFemale,
-            bool isRoadBike,
-            double totalSeconds)
+            int eventNumber)
         {
-            // Arrange: clone injected pools to avoid mutating shared fixtures
-            var competitorsCopy = competitors.Select(c => new Competitor
-            {
-                ClubNumber = c.ClubNumber,
-                Surname = c.Surname,
-                GivenName = c.GivenName,
-                ClaimStatus = c.ClaimStatus,
-                IsFemale = c.IsFemale,
-                IsJuvenile = c.IsJuvenile,
-                IsJunior = c.IsJunior,
-                IsSenior = c.IsSenior,
-                IsVeteran = c.IsVeteran,
-                CreatedUtc = c.CreatedUtc,
-                LastUpdatedUtc = c.LastUpdatedUtc
-            }).ToList();
+            // Arrange
+            var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
-            var existingRides = allRides.Where(r => r.EventNumber == eventNumber)
-                                        .Select(CloneRide)
-                                        .ToList();
+            var eventRides = allRides
+                .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
+                .ToList();
 
-            // Find or create a competitor that matches the requested AgeGroup and sex and is not already in the event
-            bool MatchesGroup(Competitor c)
-            {
-                return (ageGroup == AgeGroup.IsJuvenile && c.IsJuvenile)
-                    || (ageGroup == AgeGroup.IsJunior && c.IsJunior)
-                    || (ageGroup == AgeGroup.IsSenior && c.IsSenior)
-                    || (ageGroup == AgeGroup.IsVeteran && c.IsVeteran);
-            }
-
-            var usedClubNumbers = new HashSet<int>(existingRides.Where(r => r.ClubNumber.HasValue).Select(r => r.ClubNumber!.Value));
-
-            var candidate = competitorsCopy
-                .Where(c => MatchesGroup(c) && c.IsFemale == isFemale && !usedClubNumbers.Contains(c.ClubNumber))
-                .OrderBy(c => c.ClubNumber)
-                .FirstOrDefault();
-
-            if (candidate == null)
-            {
-                // create a synthetic competitor with a new club number that won't collide
-                int nextClub = competitorsCopy.Max(c => c.ClubNumber) + 1;
-                candidate = new Competitor
+            var juveniles = eventRides
+                .Where(r =>
                 {
-                    ClubNumber = nextClub,
-                    GivenName = $"Test{nextClub}",
-                    Surname = $"User{nextClub}",
-                    ClaimStatus = ClaimStatus.FirstClaim,
-                    IsFemale = isFemale,
-                    IsJuvenile = ageGroup == AgeGroup.IsJuvenile,
-                    IsJunior = ageGroup == AgeGroup.IsJunior,
-                    IsSenior = ageGroup == AgeGroup.IsSenior,
-                    IsVeteran = ageGroup == AgeGroup.IsVeteran,
-                    CreatedUtc = DateTime.UtcNow,
-                    LastUpdatedUtc = DateTime.UtcNow
-                };
-                competitorsCopy.Add(candidate);
-            }
-
-            // Build the new ride for that competitor
-            var numberOrName = candidate.ClubNumber.ToString();
-            var safeSeconds = double.IsNaN(totalSeconds) || double.IsInfinity(totalSeconds) || totalSeconds < 0 ? 900.0 : totalSeconds;
-            var newRide = RideFactory.Create(
-                eventNumber: eventNumber,
-                numberOrName: numberOrName,
-                name: null,
-                totalSeconds: safeSeconds,
-                isRoadBike: isRoadBike,
-                eligibility: RideEligibility.Valid,
-                actualTime: TimeSpan.FromSeconds(safeSeconds).ToString(@"hh\:mm\:ss"));
-
-            existingRides.Add(newRide);
+                    var c = competitorsByClubNumber[r.ClubNumber!.Value];
+                    return c.IsJuvenile && c.ClaimStatus != ClaimStatus.SecondClaim;
+                })
+                .OrderBy(r => r.TotalSeconds)
+                .ToList();
 
             // Act
-            // TO DO LeaguePointsCalculator.Calculate(existingRides, competitorsCopy, PointsForPosition);
+            // TO DO: LeaguePointsCalculator.Calculate(allRides, competitors, PointsForPosition);
 
-            // Find the updated ride
-            var updatedRide = existingRides.Single(r => r.EventNumber == eventNumber && r.ClubNumber == candidate.ClubNumber);
-
-            // Determine which category fields should be asserted
-            bool expectJuvenile = ageGroup == AgeGroup.IsJuvenile;
-            bool expectJunior = ageGroup == AgeGroup.IsJunior;
-            bool expectSenior = ageGroup == AgeGroup.IsSenior;
-            bool expectVeteran = ageGroup == AgeGroup.IsVeteran;
-            bool expectWomen = isFemale;
-            bool expectRoad = isRoadBike;
-
-            // Helper that asserts when there's at least one eligible rider in category; otherwise asserts null/0 as appropriate
-            void AssertCategory(Func<Ride, int?> positionSelector, Func<Ride, int?> pointsSelector, Func<Ride, bool> membershipPredicate, bool expect)
+            // Assert
+            for (int i = 0; i < juveniles.Count; i++)
             {
-                var categoryRides = existingRides
-                    .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid && r.ClubNumber.HasValue)
-                    .Where(r =>
-                    {
-                        var rc = competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber!.Value);
-                        return membershipPredicate(r);
-                    })
-                    .OrderBy(r => r.TotalSeconds)
-                    .ToList();
+                var ride = juveniles[i];
+                int expectedPosition = i + 1;
+                int expectedPoints = PointsForPosition(expectedPosition);
 
-                if (expect && categoryRides.Count > 0)
-                {
-                    Assert.True(positionSelector(updatedRide).HasValue, "Expected position to be set for category");
-                    int pos = positionSelector(updatedRide)!.Value;
-                    int pts = pointsSelector(updatedRide) ?? 0;
-                    Assert.Equal(PointsForPosition(pos), pts);
-                }
-                else
-                {
-                    Assert.False(positionSelector(updatedRide).HasValue, "Expected position to be null when category has no eligible riders or not expected");
-                    Assert.Equal(0, pointsSelector(updatedRide) ?? 0);
-                }
+                Assert.Equal(expectedPosition, ride.JuvenilesPosition);
+                Assert.Equal(expectedPoints, ride.JuvenilesPoints);
             }
 
-            AssertCategory(
-                r => r.JuvenilesPosition, 
-                r => r.JuvenilesPoints,
-                r => r.ClubNumber.HasValue 
-                    && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsJuvenile, 
-                expectJuvenile);
-
-            AssertCategory(r => r.JuniorsPosition, r => r.JuniorsPoints,
-                r => r.ClubNumber.HasValue && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsJunior, expectJunior);
-
-            AssertCategory(r => r.SeniorsPosition, r => r.SeniorsPoints,
-                r => r.ClubNumber.HasValue && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsSenior && !r.IsRoadBike, expectSenior && !expectRoad);
-
-            AssertCategory(r => r.VeteransPosition, r => r.VeteransPoints,
-                r => r.ClubNumber.HasValue && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsVeteran, expectVeteran);
-
-            AssertCategory(r => r.WomenPosition, r => r.WomenPoints,
-                r => r.ClubNumber.HasValue && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsFemale, expectWomen);
-
-            AssertCategory(r => r.RoadBikeMenPosition, r => r.RoadBikeMenPoints,
-                r => r.ClubNumber.HasValue && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsSenior && r.IsRoadBike && !competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsFemale,
-                expectSenior && expectRoad && !expectWomen);
-
-            AssertCategory(r => r.RoadBikeWomenPosition, r => r.RoadBikeWomenPoints,
-                r => r.ClubNumber.HasValue && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsSenior && r.IsRoadBike && competitorsCopy.Single(c => c.ClubNumber == r.ClubNumber.Value).IsFemale,
-                expectSenior && expectRoad && expectWomen);
+            // Ensure no other riders were scored in Juveniles
+            var nonJuveniles = eventRides.Except(juveniles);
+            foreach (var ride in nonJuveniles)
+            {
+                Assert.Null(ride.JuvenilesPosition);
+                Assert.Equal(0, ride.JuvenilesPoints);
+            }
         }
 
         private static Ride CloneRide(Ride r) => new Ride { EventNumber = r.EventNumber, ClubNumber = r.ClubNumber, Name = r.Name, ActualTime = r.ActualTime, TotalSeconds = r.TotalSeconds, IsRoadBike = r.IsRoadBike, Eligibility = r.Eligibility, AvgSpeed = r.AvgSpeed, EventPosition = r.EventPosition };

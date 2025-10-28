@@ -7,49 +7,107 @@ namespace EventProcessor.Tests.Helpers
 {
     public static class TestCompetitors
     {
-        // Static pool: three of each age-group/gender combination (24 competitors total).
-        // ClubNumber chosen to be unique and easy to read.
         public static readonly IReadOnlyList<Competitor> All = new List<Competitor>
         {
-            // Juvenile female
-            CompetitorFactory.Create(1001, "Bates", "Mia", isFemale: true, ageGroup: AgeGroup.IsJuvenile),
-            CompetitorFactory.Create(1002, "Carson", "Isla", isFemale: true, ageGroup: AgeGroup.IsJuvenile),
-            CompetitorFactory.Create(1003, "Dennison", "Zoe", isFemale: true, ageGroup: AgeGroup.IsJuvenile),
+            // 24 FirstClaim competitors
+            CompetitorFactory.Create(1001, "Bates", "Mia", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(1002, "Carson", "Isla", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(1003, "Dennison", "Zoe", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsJuvenile),
 
-            // Juvenile male
-            CompetitorFactory.Create(1011, "Evans", "Liam", isFemale: false, ageGroup: AgeGroup.IsJuvenile),
-            CompetitorFactory.Create(1012, "Fletcher", "Noah", isFemale: false, ageGroup: AgeGroup.IsJuvenile),
-            CompetitorFactory.Create(1013, "Graham", "Ethan", isFemale: false, ageGroup: AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(1011, "Evans", "Liam", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(1012, "Fletcher", "Noah", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(1013, "Graham", "Ethan", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsJuvenile),
 
-            // Junior female
-            CompetitorFactory.Create(1021, "Hughes", "Amelia", isFemale: true, ageGroup: AgeGroup.IsJunior),
-            CompetitorFactory.Create(1022, "Irwin", "Sophie", isFemale: true, ageGroup: AgeGroup.IsJunior),
-            CompetitorFactory.Create(1023, "Jackson", "Grace", isFemale: true, ageGroup: AgeGroup.IsJunior),
+            CompetitorFactory.Create(1021, "Hughes", "Amelia", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsJunior),
+            CompetitorFactory.Create(1022, "Irwin", "Sophie", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsJunior),
+            CompetitorFactory.Create(1023, "Jackson", "Grace", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsJunior),
 
-            // Junior male
-            CompetitorFactory.Create(1031, "King", "Oliver", isFemale: false, ageGroup: AgeGroup.IsJunior),
-            CompetitorFactory.Create(1032, "Lewis", "Harry", isFemale: false, ageGroup: AgeGroup.IsJunior),
-            CompetitorFactory.Create(1033, "Mason", "Jack", isFemale: false, ageGroup: AgeGroup.IsJunior),
+            CompetitorFactory.Create(1031, "King", "Oliver", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsJunior),
+            CompetitorFactory.Create(1032, "Lewis", "Harry", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsJunior),
+            CompetitorFactory.Create(1033, "Mason", "Jack", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsJunior),
 
-            // Senior female
-            CompetitorFactory.Create(1041, "Nash", "Charlotte", isFemale: true, ageGroup: AgeGroup.IsSenior),
-            CompetitorFactory.Create(1042, "Owens", "Emily", isFemale: true, ageGroup: AgeGroup.IsSenior),
-            CompetitorFactory.Create(1043, "Price", "Lucy", isFemale: true, ageGroup: AgeGroup.IsSenior),
+            CompetitorFactory.Create(1041, "Nash", "Charlotte", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsSenior),
+            CompetitorFactory.Create(1042, "Owens", "Emily", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsSenior),
+            CompetitorFactory.Create(1043, "Price", "Lucy", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsSenior),
 
-            // Senior male
-            CompetitorFactory.Create(1051, "Quinn", "James", isFemale: false, ageGroup: AgeGroup.IsSenior),
-            CompetitorFactory.Create(1052, "Reid", "Thomas", isFemale: false, ageGroup: AgeGroup.IsSenior),
-            CompetitorFactory.Create(1053, "Shaw", "Daniel", isFemale: false, ageGroup: AgeGroup.IsSenior),
+            CompetitorFactory.Create(1051, "Quinn", "James", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsSenior),
+            CompetitorFactory.Create(1052, "Reid", "Thomas", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsSenior),
+            CompetitorFactory.Create(1053, "Shaw", "Daniel", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsSenior),
 
-            // Veteran female
-            CompetitorFactory.Create(1061, "Turner", "Helen", isFemale: true, ageGroup: AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1062, "Underwood", "Alison", isFemale: true, ageGroup: AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1063, "Vaughn", "Janet", isFemale: true, ageGroup: AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1061, "Turner", "Helen", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1062, "Underwood", "Alison", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1063, "Vaughn", "Janet", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran),
 
-            // Veteran male
-            CompetitorFactory.Create(1071, "Walker", "Peter", isFemale: false, ageGroup: AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1072, "Xavier", "Martin", isFemale: false, ageGroup: AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1073, "Young", "Colin", isFemale: false, ageGroup: AgeGroup.IsVeteran)
+            CompetitorFactory.Create(1071, "Walker", "Peter", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1072, "Xavier", "Martin", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1073, "Young", "Colin", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran),
+
+            // SecondClaim competitors (24)
+            CompetitorFactory.Create(2001, "Abbott", "Maya", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(2002, "Barker", "Ella", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(2003, "Carter", "Ruby", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJuvenile),
+
+            CompetitorFactory.Create(2011, "Dixon", "Leo", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(2012, "Edwards", "Oscar", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(2013, "Foster", "George", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsJuvenile),
+
+            CompetitorFactory.Create(2021, "Griffin", "Chloe", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJunior),
+            CompetitorFactory.Create(2022, "Harrison", "Millie", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJunior),
+            CompetitorFactory.Create(2023, "Ingram", "Lily", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJunior),
+
+            CompetitorFactory.Create(2031, "Johnson", "Freddie", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsJunior),
+            CompetitorFactory.Create(2032, "Kerr", "Archie", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsJunior),
+            CompetitorFactory.Create(2033, "Lawson", "Henry", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsJunior),
+
+            CompetitorFactory.Create(2041, "Matthews", "Eva", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsSenior),
+            CompetitorFactory.Create(2042, "Nelson", "Rosie", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsSenior),
+            CompetitorFactory.Create(2043, "O'Brien", "Hannah", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsSenior),
+
+            CompetitorFactory.Create(2051, "Patel", "Samuel", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsSenior),
+            CompetitorFactory.Create(2052, "Roberts", "Jacob", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsSenior),
+            CompetitorFactory.Create(2053, "Simpson", "Logan", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsSenior),
+
+            CompetitorFactory.Create(2061, "Taylor", "Beth", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(2062, "Upton", "Rachel", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(2063, "Vincent", "Claire", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran),
+
+            CompetitorFactory.Create(2071, "White", "Adam", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(2072, "Zane", "Nathan", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(2073, "Adams", "Luke", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran),
+
+            // Honorary competitors (24)
+            CompetitorFactory.Create(3001, "Bennett", "Tia", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(3002, "Chapman", "Nina", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(3003, "Davies", "Leah", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJuvenile),
+
+            CompetitorFactory.Create(3011, "Ellis", "Jay", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(3012, "Franklin", "Max", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsJuvenile),
+            CompetitorFactory.Create(3013, "Gibson", "Ben", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsJuvenile),
+
+            CompetitorFactory.Create(3021, "Hayes", "Zara", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJunior),
+            CompetitorFactory.Create(3022, "Irving", "Megan", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJunior),
+            CompetitorFactory.Create(3023, "Jennings", "Amber", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJunior),
+
+            CompetitorFactory.Create(3031, "Kirk", "Reece", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsJunior),
+            CompetitorFactory.Create(3032, "Lloyd", "Tyler", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsJunior),
+            CompetitorFactory.Create(3033, "Mitchell", "Ryan", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsJunior),
+
+            CompetitorFactory.Create(3041, "Norris", "Ella", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsSenior),
+            CompetitorFactory.Create(3042, "Olsen", "Katie", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsSenior),
+            CompetitorFactory.Create(3043, "Parker", "Georgia", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsSenior),
+
+            CompetitorFactory.Create(3051, "Quincy", "Aaron", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsSenior),
+            CompetitorFactory.Create(3052, "Robinson", "Charlie", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsSenior),
+            CompetitorFactory.Create(3053, "Stevens", "Joseph", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsSenior),
+
+            CompetitorFactory.Create(3061, "Thompson", "Diana", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(3062, "Ursula", "Fiona", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(3063, "Valentine", "Paula", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran),
+
+            CompetitorFactory.Create(3071, "Watson", "Graham", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(3072, "York", "Trevor", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(3073, "Zimmer", "Derek", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran)
         }.AsReadOnly();
     }
 }
+

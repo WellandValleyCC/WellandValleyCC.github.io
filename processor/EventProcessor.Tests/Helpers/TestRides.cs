@@ -34,6 +34,27 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMember(1, 1051, "James Quinn", totalSeconds: 830, isRoadBike: true)); // Sen M RB
             rides.Add(RideFactory.CreateClubMember(1, 1052, "Thomas Reid", totalSeconds: 845));   // Sen M
             rides.Add(RideFactory.CreateClubMember(1, 1071, "Peter Walker", totalSeconds: 930));  // Vet M
+            
+            // SecondClaim additions
+            rides.Add(RideFactory.CreateClubMember(1, 2001, "Maya Abbott", totalSeconds: 910)); // Juv F
+            rides.Add(RideFactory.CreateClubMember(1, 2011, "Leo Dixon", totalSeconds: 905));  // Juv M
+            rides.Add(RideFactory.CreateClubMember(1, 2021, "Chloe Griffin", totalSeconds: 935)); // Jun F
+            rides.Add(RideFactory.CreateClubMember(1, 2031, "Freddie Johnson", totalSeconds: 885)); // Jun M
+            rides.Add(RideFactory.CreateClubMember(1, 2041, "Eva Matthews", totalSeconds: 870)); // Sen F
+            rides.Add(RideFactory.CreateClubMember(1, 2051, "Samuel Patel", totalSeconds: 860)); // Sen M
+            rides.Add(RideFactory.CreateClubMember(1, 2061, "Beth Taylor", totalSeconds: 990)); // Vet F
+            rides.Add(RideFactory.CreateClubMember(1, 2071, "Adam White", totalSeconds: 975)); // Vet M
+
+            // Honorary additions
+            rides.Add(RideFactory.CreateClubMember(1, 3001, "Tia Bennett", totalSeconds: 915)); // Juv F
+            rides.Add(RideFactory.CreateClubMember(1, 3011, "Jay Ellis", totalSeconds: 900)); // Juv M
+            rides.Add(RideFactory.CreateClubMember(1, 3021, "Zara Hayes", totalSeconds: 940)); // Jun F
+            rides.Add(RideFactory.CreateClubMember(1, 3031, "Reece Kirk", totalSeconds: 890)); // Jun M
+            rides.Add(RideFactory.CreateClubMember(1, 3041, "Ella Norris", totalSeconds: 875)); // Sen F
+            rides.Add(RideFactory.CreateClubMember(1, 3051, "Aaron Quincy", totalSeconds: 865)); // Sen M
+            rides.Add(RideFactory.CreateClubMember(1, 3061, "Diana Thompson", totalSeconds: 985)); // Vet F
+            rides.Add(RideFactory.CreateClubMember(1, 3071, "Graham Watson", totalSeconds: 970)); // Vet M
+
 
             // Event 2
             rides.Add(RideFactory.CreateClubMember(2, 1003, "Zoe Dennison", totalSeconds: 940));  // Juv F
@@ -48,6 +69,26 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMember(2, 1072, "Martin Xavier", totalSeconds: 965, isRoadBike: true)); // Vet M RB
             // One DNS to test non-valid eligibility
             rides.Add(RideFactory.CreateClubMember(2, 1051, "James Quinn", totalSeconds: 0, isRoadBike: false, eligibility: RideEligibility.DNS));
+            
+            // SecondClaim additions
+            rides.Add(RideFactory.CreateClubMember(2, 2002, "Ella Barker", totalSeconds: 925)); // Juv F
+            rides.Add(RideFactory.CreateClubMember(2, 2012, "Oscar Edwards", totalSeconds: 940)); // Juv M
+            rides.Add(RideFactory.CreateClubMember(2, 2022, "Millie Harrison", totalSeconds: 920)); // Jun F
+            rides.Add(RideFactory.CreateClubMember(2, 2032, "Archie Kerr", totalSeconds: 890)); // Jun M
+            rides.Add(RideFactory.CreateClubMember(2, 2042, "Rosie Nelson", totalSeconds: 860)); // Sen F
+            rides.Add(RideFactory.CreateClubMember(2, 2052, "Jacob Roberts", totalSeconds: 850)); // Sen M
+            rides.Add(RideFactory.CreateClubMember(2, 2062, "Rachel Upton", totalSeconds: 1000)); // Vet F
+            rides.Add(RideFactory.CreateClubMember(2, 2072, "Nathan Zane", totalSeconds: 980)); // Vet M
+
+            // Honorary additions
+            rides.Add(RideFactory.CreateClubMember(2, 3002, "Nina Chapman", totalSeconds: 930)); // Juv F
+            rides.Add(RideFactory.CreateClubMember(2, 3012, "Max Franklin", totalSeconds: 915)); // Juv M
+            rides.Add(RideFactory.CreateClubMember(2, 3022, "Megan Irving", totalSeconds: 925)); // Jun F
+            rides.Add(RideFactory.CreateClubMember(2, 3032, "Tyler Lloyd", totalSeconds: 895)); // Jun M
+            rides.Add(RideFactory.CreateClubMember(2, 3042, "Katie Olsen", totalSeconds: 855)); // Sen F
+            rides.Add(RideFactory.CreateClubMember(2, 3052, "Charlie Robinson", totalSeconds: 845)); // Sen M
+            rides.Add(RideFactory.CreateClubMember(2, 3062, "Fiona Ursula", totalSeconds: 995)); // Vet F
+            rides.Add(RideFactory.CreateClubMember(2, 3072, "Trevor York", totalSeconds: 975)); // Vet M
 
             // Event 3
             rides.Add(RideFactory.CreateClubMember(3, 1013, "Ethan Graham", totalSeconds: 980, isRoadBike: true)); // Juv M RB
@@ -60,6 +101,26 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMember(3, 1073, "Colin Young", totalSeconds: 1005)); // Vet M
             // One DNF to test non-valid eligibility
             rides.Add(RideFactory.CreateClubMember(3, 1052, "Thomas Reid", totalSeconds: 0, isRoadBike: false, eligibility: RideEligibility.DNF));
+
+            // SecondClaim additions
+            rides.Add(RideFactory.CreateClubMember(3, 2003, "Ruby Carter", totalSeconds: 935)); // Juv F
+            rides.Add(RideFactory.CreateClubMember(3, 2013, "George Foster", totalSeconds: 950)); // Juv M
+            rides.Add(RideFactory.CreateClubMember(3, 2023, "Lily Ingram", totalSeconds: 910)); // Jun F
+            rides.Add(RideFactory.CreateClubMember(3, 2033, "Henry Lawson", totalSeconds: 880)); // Jun M
+            rides.Add(RideFactory.CreateClubMember(3, 2043, "Hannah O'Brien", totalSeconds: 870)); // Sen F
+            rides.Add(RideFactory.CreateClubMember(3, 2053, "Logan Simpson", totalSeconds: 860)); // Sen M
+            rides.Add(RideFactory.CreateClubMember(3, 2063, "Claire Vincent", totalSeconds: 1010)); // Vet F
+            rides.Add(RideFactory.CreateClubMember(3, 2073, "Luke Adams", totalSeconds: 995)); // Vet M
+
+            // Honorary additions
+            rides.Add(RideFactory.CreateClubMember(3, 3003, "Leah Davies", totalSeconds: 940)); // Juv F
+            rides.Add(RideFactory.CreateClubMember(3, 3013, "Ben Gibson", totalSeconds: 925)); // Juv M
+            rides.Add(RideFactory.CreateClubMember(3, 3023, "Amber Jennings", totalSeconds: 920)); // Jun F
+            rides.Add(RideFactory.CreateClubMember(3, 3033, "Ryan Mitchell", totalSeconds: 890)); // Jun M
+            rides.Add(RideFactory.CreateClubMember(3, 3043, "Georgia Parker", totalSeconds: 865)); // Sen F
+            rides.Add(RideFactory.CreateClubMember(3, 3053, "Joseph Stevens", totalSeconds: 855)); // Sen M
+            rides.Add(RideFactory.CreateClubMember(3, 3063, "Paula Valentine", totalSeconds: 1025)); // Vet F
+            rides.Add(RideFactory.CreateClubMember(3, 3073, "Derek Zimmer", totalSeconds: 1000)); // Vet M
 
             // Append a deterministic random number (0..3) of guest riders to each event
             AppendGuestsForEvent(rides, eventNumber: 1, guestCount: Rng.Next(0, 4));
