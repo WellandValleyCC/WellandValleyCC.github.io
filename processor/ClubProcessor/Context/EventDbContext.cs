@@ -1,5 +1,4 @@
-﻿using ClubData.Models;
-using ClubProcessor.Models;
+﻿using ClubProcessor.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClubProcessor.Context

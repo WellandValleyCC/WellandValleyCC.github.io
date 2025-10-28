@@ -50,7 +50,7 @@ namespace EventProcessor.Tests.Helpers
             fixture.Register(() => allRides);
 
             // Register PointsForPosition
-            fixture.Register<Func<int, int>>(() => (pos) => LeaguePointsCalculatorTests.PointsForPosition(pos));
+            fixture.Register<Func<int, int>>(() => (pos) => CompetitionPointsCalculatorTests.PointsForPosition(pos));
 
             // Register an eventNumber chosen from the existing event numbers in allRides
             var distinctEventNumbers = allRides.Select(r => r.EventNumber).Distinct().OrderBy(n => n).ToArray();

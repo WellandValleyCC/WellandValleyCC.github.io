@@ -1,5 +1,6 @@
 ﻿using ClubProcessor.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClubProcessor.Models
 {
@@ -41,5 +42,8 @@ namespace ClubProcessor.Models
 
         public RideEligibility Eligibility { get; set; } = RideEligibility.Undefined;
         public string? Notes { get; set; }
+
+        [NotMapped]
+        public Competitor? Competitor { get; set; }
     }
 }

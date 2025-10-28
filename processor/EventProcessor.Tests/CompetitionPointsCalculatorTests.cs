@@ -5,7 +5,7 @@ using EventProcessor.Tests.Helpers;
 
 namespace EventProcessor.Tests
 {
-    public class LeaguePointsCalculatorTests
+    public class CompetitionPointsCalculatorTests
     {
         private static readonly IReadOnlyDictionary<int, int> PointsMap = BuildPointsMap();
 

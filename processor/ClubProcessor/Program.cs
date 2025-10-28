@@ -2,9 +2,50 @@ using ClubProcessor.Context;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
+using ClubProcessor.Interfaces;
+using ClubProcessor.Orchestration;
+using ClubProcessor.Calculators;
 
 class Program
 {
+    static IServiceProvider ConfigureServices()
+    {
+        var services = new ServiceCollection();
+
+        // Register all calculators
+        services.AddScoped<ICompetitionScoreCalculator, SeniorsScoreCalculator>();
+
+        /*
+        services.AddScoped<ICompetitionScoreCalculator, JuvenilesScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator, JuniorsScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator, WomenScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator, RoadBikeMenScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator, RoadBikeWomenScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator>(sp =>
+            new VeteransScoreCalculator(VeteransScoringMode.StandardTimes));
+
+        services.AddScoped<ICompetitionScoreCalculator>(sp =>
+            new LeagueScoreCalculator(LeagueLevel.Prem));
+        services.AddScoped<ICompetitionScoreCalculator>(sp =>
+            new LeagueScoreCalculator(LeagueLevel.League1));
+        services.AddScoped<ICompetitionScoreCalculator>(sp =>
+            new LeagueScoreCalculator(LeagueLevel.League2));
+        services.AddScoped<ICompetitionScoreCalculator>(sp =>
+            new LeagueScoreCalculator(LeagueLevel.League3));
+        services.AddScoped<ICompetitionScoreCalculator>(sp =>
+            new LeagueScoreCalculator(LeagueLevel.League4));
+
+        services.AddScoped<ICompetitionScoreCalculator, NevBrooksScoreCalculator>();
+
+        */
+
+        // Register orchestrator
+        services.AddScoped<CompetitionPointsCalculator>();
+
+        return services.BuildServiceProvider();
+    }
+
     static void Main(string[] args)
     {
         string? mode = null;
@@ -79,42 +120,9 @@ class Program
 
     static void ImportEvents(string inputPath, string year)
     {
-        Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
-
-        var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
-        var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
-
-        var eventOptions = new DbContextOptionsBuilder<EventDbContext>()
-            .UseSqlite($"Data Source={eventDbPath}")
-            .Options;
-
-        var competitorOptions = new DbContextOptionsBuilder<CompetitorDbContext>()
-            .UseSqlite($"Data Source={competitorDbPath}")
-            .Options;
-
-        using var eventContext = new EventDbContext(eventOptions);
-        using var competitorContext = new CompetitorDbContext(competitorOptions);
-
-        eventContext.Database.Migrate();
-        Console.WriteLine($"[INFO] Migration complete for: {eventDbPath}");
-
-        competitorContext.Database.Migrate();
-        Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
-
-        var calendarCsvPath = Path.Combine(inputPath, $"Calendar_{year}.csv");
-        if (File.Exists(calendarCsvPath))
-        {
-            Console.WriteLine($"[INFO] Importing calendar from: {calendarCsvPath}");
-            var calendarImporter = new CalendarImporter(eventContext);
-            calendarImporter.ImportFromCsv(calendarCsvPath);
-            Console.WriteLine("[OK] Calendar import complete");
-        }
-        else
-        {
-            Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
-        }
-
-        var processor = new EventsImporter(eventContext, competitorContext);
-        processor.ImportFromFolder(inputPath);
+        var provider = ConfigureServices();
+        var scorer = provider.GetRequiredService<CompetitionPointsCalculator>();
+        var coordinator = new EventImportCoordinator(scorer);
+        coordinator.Run(inputPath, year);
     }
 }

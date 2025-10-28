@@ -1,4 +1,4 @@
-﻿using ClubData.Models;
+﻿using ClubProcessor.Models;
 using ClubProcessor.Context;
 using CsvHelper;
 using CsvHelper.Configuration;
