@@ -144,7 +144,6 @@ namespace ClubProcessor.Services
         private void UpdateRide(Ride target, Ride source)
         {
             target.ClubNumber = source.ClubNumber;
-            target.ActualTime = source.ActualTime;
             target.TotalSeconds = source.TotalSeconds;
             target.IsRoadBike = source.IsRoadBike;
             target.Eligibility = source.Eligibility;
@@ -153,7 +152,6 @@ namespace ClubProcessor.Services
         private bool RidesAreEqual(Ride a, Ride b)
         {
             return a.ClubNumber == b.ClubNumber &&
-                   a.ActualTime == b.ActualTime &&
                    a.TotalSeconds == b.TotalSeconds &&
                    a.IsRoadBike == b.IsRoadBike &&
                    a.Eligibility == b.Eligibility;
@@ -163,8 +161,6 @@ namespace ClubProcessor.Services
         {
             if (old.ClubNumber != updated.ClubNumber)
                 Console.WriteLine($"  - ClubNumber: {old.ClubNumber} → {updated.ClubNumber}");
-            if (old.ActualTime != updated.ActualTime)
-                Console.WriteLine($"  - ActualTime: {old.ActualTime} → {updated.ActualTime}");
             if (old.TotalSeconds != updated.TotalSeconds)
                 Console.WriteLine($"  - TotalSeconds: {old.TotalSeconds} → {updated.TotalSeconds}");
             if (old.IsRoadBike != updated.IsRoadBike)
@@ -195,7 +191,6 @@ namespace ClubProcessor.Services
                 EventNumber = eventNumber,
                 Name = row.Name,
                 ClubNumber = isClubMember ? clubNumber : null,
-                ActualTime = row.ActualTime,
                 TotalSeconds = row.TotalSeconds,
                 IsRoadBike = row.IsRoadBike,
                 Eligibility = row.Eligibility,

@@ -1,6 +1,5 @@
 ﻿using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
-using System;
 
 namespace EventProcessor.Tests.Helpers
 {
@@ -29,7 +28,6 @@ namespace EventProcessor.Tests.Helpers
                 EventNumber = eventNumber,
                 Name = name ?? (isClubMember ? string.Empty : numberOrName ?? string.Empty),
                 ClubNumber = isClubMember ? clubNumber : null,
-                ActualTime = actualTime ?? string.Empty,
                 TotalSeconds = totalSeconds,
                 IsRoadBike = isRoadBike,
                 Eligibility = eligibility,

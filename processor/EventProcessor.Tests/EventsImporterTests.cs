@@ -46,8 +46,7 @@ namespace EventProcessor.Tests
             var ride = eventContext.Rides.SingleOrDefault(r => r.Name == "Theo Marlin" && r.EventNumber == 1);
             ride.Should().NotBeNull();
             ride!.ClubNumber.Should().Be(101);
-            ride.ActualTime.Should().Be("00:24:18");
-            ride.TotalSeconds.Should().BeApproximately(1458.0, 0.01);
+            ride.TotalSeconds.Should().Be(1458.0);
             ride.IsRoadBike.Should().BeTrue();
             ride.Eligibility.Should().Be(RideEligibility.DNF);
         }

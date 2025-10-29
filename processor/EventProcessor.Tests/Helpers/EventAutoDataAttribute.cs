@@ -37,7 +37,6 @@ namespace EventProcessor.Tests.Helpers
                 EventNumber = r.EventNumber,
                 ClubNumber = r.ClubNumber,
                 Name = r.Name,
-                ActualTime = r.ActualTime,
                 TotalSeconds = r.TotalSeconds,
                 IsRoadBike = r.IsRoadBike,
                 Eligibility = r.Eligibility,
