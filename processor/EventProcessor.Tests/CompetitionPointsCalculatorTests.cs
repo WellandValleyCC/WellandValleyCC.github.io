@@ -1,7 +1,11 @@
 ﻿using AutoFixture.Xunit2;
+using ClubProcessor.Calculators;
+using ClubProcessor.Interfaces;
 using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
+using ClubProcessor.Orchestration;
 using EventProcessor.Tests.Helpers;
+using FluentAssertions;
 
 namespace EventProcessor.Tests
 {
@@ -39,12 +43,73 @@ namespace EventProcessor.Tests
 
         [Theory]
         [EventAutoData]
-        public void EventScoring_ForJuvenile_RanksJuvenileRidersWhoAreNotSecondClaim(
+        public void EventScoring_ForSeniors_RanksAllAgeGroupRidersWhoAreNotSecondClaim(
             List<Competitor> competitors,
             List<Ride> allRides,
             int eventNumber)
         {
             // Arrange
+            var calculators = new List<ICompetitionScoreCalculator>
+            {
+                new SeniorsScoreCalculator()
+            };
+
+            var scorer = new CompetitionPointsCalculator(calculators);
+
+            Func<int, int> pointsForPosition = pos => pos <= 20 ? 21 - pos : 0;
+
+            var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
+
+            var eventRides = allRides
+                .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            var allCompetitionEligibleRides = eventRides
+                .Where(r =>
+                {
+                    var c = competitorsByClubNumber[r.ClubNumber!.Value];
+                    return c.ClaimStatus != ClaimStatus.SecondClaim;
+                })
+                .OrderBy(r => r.TotalSeconds)
+                .ToList();
+
+            // Act
+            scorer.ScoreAllCompetitions(allRides, competitors, pointsForPosition);
+
+            // Assert
+            for (int i = 0; i < allCompetitionEligibleRides.Count; i++)
+            {
+                var ride = allCompetitionEligibleRides[i];
+                int expectedPosition = i + 1;
+                int expectedPoints = pointsForPosition(expectedPosition);
+
+                ride.SeniorsPosition.Should().Be(expectedPosition,
+                    $"ride at index {i} should be ranked {expectedPosition} in Seniors");
+
+                ride.SeniorsPoints.Should().Be(expectedPoints,
+                    $"ride at index {i} should receive {expectedPoints} Seniors points");
+            }
+
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForJuveniles_RanksJuvenileRidersWhoAreNotSecondClaim(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            int eventNumber)
+        {
+            // Arrange
+            var calculators = new List<ICompetitionScoreCalculator>
+            {
+                new JuvenilesScoreCalculator()
+            };
+
+            var scorer = new CompetitionPointsCalculator(calculators);
+
+            Func<int, int> pointsForPosition = pos => pos <= 20 ? 21 - pos : 0;
+
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
             var eventRides = allRides
@@ -62,26 +127,29 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Act
-            // TO DO: LeaguePointsCalculator.Calculate(allRides, competitors, PointsForPosition);
+            scorer.ScoreAllCompetitions(allRides, competitors, pointsForPosition);
 
             // Assert
             for (int i = 0; i < juveniles.Count; i++)
             {
                 var ride = juveniles[i];
                 int expectedPosition = i + 1;
-                int expectedPoints = PointsForPosition(expectedPosition);
+                int expectedPoints = pointsForPosition(expectedPosition);
 
-                Assert.Equal(expectedPosition, ride.JuvenilesPosition);
-                Assert.Equal(expectedPoints, ride.JuvenilesPoints);
+                ride.JuvenilesPosition.Should().Be(expectedPosition,
+                    $"ride at index {i} should be ranked {expectedPosition}");
+
+                ride.JuvenilesPoints.Should().Be(expectedPoints,
+                    $"ride at index {i} should receive {expectedPoints} points");
             }
 
-            // Ensure no other riders were scored in Juveniles
             var nonJuveniles = eventRides.Except(juveniles);
             foreach (var ride in nonJuveniles)
             {
-                Assert.Null(ride.JuvenilesPosition);
-                Assert.Equal(0, ride.JuvenilesPoints);
+                ride.JuvenilesPosition.Should().BeNull("non-juveniles should not be assigned a JuvenilesPosition");
+                ride.JuvenilesPoints.Should().Be(0, "non-juveniles should not receive JuvenilesPoints");
             }
+
         }
 
         private static Ride CloneRide(Ride r) => new Ride { EventNumber = r.EventNumber, ClubNumber = r.ClubNumber, Name = r.Name, TotalSeconds = r.TotalSeconds, IsRoadBike = r.IsRoadBike, Eligibility = r.Eligibility, AvgSpeed = r.AvgSpeed, EventPosition = r.EventPosition };

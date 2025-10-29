@@ -17,9 +17,21 @@ public class EventImportCoordinatorTests
         string inputPath = "testdata/events/2025"; // Ensure this folder and Calendar_2025.csv exist
         string year = "2025";
 
+        // Ensure DB directories exist
+        var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
+        var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
+
+        Directory.CreateDirectory(Path.GetDirectoryName(eventDbPath)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(competitorDbPath)!);
+
+        // Optional: delete old test DBs
+        if (File.Exists(eventDbPath)) File.Delete(eventDbPath);
+        if (File.Exists(competitorDbPath)) File.Delete(competitorDbPath);
+
         // Act & Assert
         coordinator.Run(inputPath, year);
     }
+
 
     private class StubCompetitionPointsCalculator : CompetitionPointsCalculator
     {

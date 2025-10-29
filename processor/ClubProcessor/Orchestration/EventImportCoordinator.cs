@@ -1,4 +1,5 @@
-﻿using ClubProcessor.Context;
+﻿using ClubProcessor.Configuration;
+using ClubProcessor.Context;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,19 @@ namespace ClubProcessor.Orchestration
 
             ImportCalendar(eventContext, inputPath, year);
             ImportEvents(eventContext, competitorContext, inputPath);
+
+            // Load all rides and competitors for scoring
+            var rides = eventContext.Rides.ToList();
+            var competitors = competitorContext.Competitors.ToList();
+
+            var pointsForPosition = CompetitionConfig.LoadPointsForPosition(eventContext);
+            scorer.ScoreAllCompetitions(rides, competitors, pointsForPosition);
+
+            // Apply scoring
+            scorer.ScoreAllCompetitions(rides, competitors, pointsForPosition);
+
+            // Save changes
+            eventContext.SaveChanges();
         }
 
         private EventDbContext CreateEventContext(string year)

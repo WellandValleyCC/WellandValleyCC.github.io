@@ -40,7 +40,8 @@ class Program
 
         */
 
-        // Register orchestrator
+        // Register orchestrators
+        services.AddScoped<EventImportCoordinator>();
         services.AddScoped<CompetitionPointsCalculator>();
 
         return services.BuildServiceProvider();
@@ -122,7 +123,7 @@ class Program
     {
         var provider = ConfigureServices();
         var scorer = provider.GetRequiredService<CompetitionPointsCalculator>();
-        var coordinator = new EventImportCoordinator(scorer);
+        var coordinator = provider.GetRequiredService<EventImportCoordinator>();
         coordinator.Run(inputPath, year);
     }
 }
