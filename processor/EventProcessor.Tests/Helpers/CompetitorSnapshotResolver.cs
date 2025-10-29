@@ -1,0 +1,21 @@
+﻿using ClubProcessor.Models;
+
+namespace EventProcessor.Tests.Helpers
+{
+    public static class CompetitorSnapshotResolver
+    {
+        // Picks the latest version of the numbered competitor whose LastUpdatedUtc is <= eventDateUtc
+        public static Competitor? ResolveForEvent(
+            IReadOnlyDictionary<int, List<Competitor>> snapshotsByClubNumber,
+            int clubNumber,
+            DateTime eventDateUtc)
+        {
+            if (!snapshotsByClubNumber.TryGetValue(clubNumber, out var snaps)) return null;
+
+            return snaps
+                .Where(s => s.LastUpdatedUtc <= eventDateUtc)
+                .OrderByDescending(s => s.LastUpdatedUtc)
+                .FirstOrDefault();
+        }
+    }
+}

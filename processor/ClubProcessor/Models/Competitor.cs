@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace ClubProcessor.Models
 {
-    [DebuggerDisplay("#{ClubNumber} {FullName} ({ClaimStatus}, {Gender}, {AgeGroup})")]
+    [DebuggerDisplay("#{ClubNumber} {FullName} ({ClaimStatus}, {Gender}, {AgeGroup}), {CreatedUtcShort}")]
     public class Competitor
     {
         [Key]
@@ -39,7 +39,28 @@ namespace ClubProcessor.Models
         }
 
 
+        /// <summary>
+        /// The date that this Competitor record was created, in UTC.
+        /// </summary>
+        /// <remarks>
+        /// If the competitor gets updated later , this value should remain unchanged.
+        /// E.g. a name spelling correction should not modify CreatedUtc.
+        /// If ClaimStatus changes then a new Competitor record should be created instead.
+        /// </remarks>
         public DateTime CreatedUtc { get; set; }
+
+        [NotMapped]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public string CreatedUtcShort => CreatedUtc.ToString("yyyy-MM-dd");
+
+
+        /// <summary>
+        /// The date that this Competitor record was last modified, in UTC.
+        /// </summary>
+        /// <remarks>
+        /// If the competitor gets updated later , this value indicates when that happened.
+        /// E.g. a name spelling correction should not modify CreatedUtc.
+        /// </remarks>
         public DateTime LastUpdatedUtc { get; set; }
 
         [NotMapped]

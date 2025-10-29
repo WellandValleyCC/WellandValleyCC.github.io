@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace ClubProcessor.Models
 {
-    [DebuggerDisplay("Event {EventNumber} - {ClubNumber?.ToString() ?? Name} - {Time} - RoadBike: {IsRoadBike}")]
+    [DebuggerDisplay("Event {EventNumber} - {ClubNumber?.ToString() ?? Name} - {Time} - RoadBike: {IsRoadBike} {ClaimStatusDisplay}")]
     public class Ride
     {
         [Key]
@@ -94,8 +94,14 @@ namespace ClubProcessor.Models
         public RideEligibility Eligibility { get; set; } = RideEligibility.Undefined;
         public string? Notes { get; set; }
 
-
         [NotMapped]
         public Competitor? Competitor { get; set; }
+
+        [NotMapped] 
+        public CalendarEvent? CalendarEvent { get; set; }
+
+        [NotMapped]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public string ClaimStatusDisplay => Competitor != null ? Competitor.ClaimStatus.ToString() : string.Empty;
     }
 }

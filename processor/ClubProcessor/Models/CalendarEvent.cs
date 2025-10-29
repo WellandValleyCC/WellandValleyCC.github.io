@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 namespace ClubProcessor.Models
 {
+    [DebuggerDisplay("#{EventNumber} {EventDateShort}")]
     public class CalendarEvent
     {
         [Key]
@@ -15,6 +17,10 @@ namespace ClubProcessor.Models
 
         [Required]
         public DateTime EventDate { get; set; }
+
+        [NotMapped]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public string EventDateShort => EventDate.ToString("yyyy-MM-dd");
 
         [Required]
         public TimeSpan StartTime { get; set; }

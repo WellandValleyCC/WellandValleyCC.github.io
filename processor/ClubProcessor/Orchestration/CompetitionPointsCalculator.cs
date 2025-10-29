@@ -24,10 +24,12 @@ namespace ClubProcessor.Orchestration
         /// </summary>
         /// <param name="rides">All rides for the event.</param>
         /// <param name="competitors">All registered competitors.</param>
+        /// <param name="calendarEvents">All events in the calendar.</param>
         /// <param name="pointsForPosition">Delegate that returns points for a given position.</param>
-        public void ScoreAllCompetitions(List<Ride> rides, List<Competitor> competitors, Func<int, int> pointsForPosition)
+        public void ScoreAllCompetitions(List<Ride> rides, List<Competitor> competitors, List<CalendarEvent> calendarEvents, Func<int, int> pointsForPosition)
         {
             RideHydrationHelper.HydrateCompetitors(rides, competitors);
+            RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
 
             foreach (var calculator in calculators)
             {

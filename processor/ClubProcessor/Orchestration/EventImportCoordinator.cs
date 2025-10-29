@@ -27,15 +27,15 @@ namespace ClubProcessor.Orchestration
             ImportCalendar(eventContext, inputPath, year);
             ImportEvents(eventContext, competitorContext, inputPath);
 
-            // Load all rides and competitors for scoring
+            // Load all rides, competitors and the event calendar for scoring
             var rides = eventContext.Rides.ToList();
             var competitors = competitorContext.Competitors.ToList();
+            var calendar = eventContext.CalendarEvents.ToList();
 
             var pointsForPosition = CompetitionConfig.LoadPointsForPosition(eventContext);
-            scorer.ScoreAllCompetitions(rides, competitors, pointsForPosition);
-
+            
             // Apply scoring
-            scorer.ScoreAllCompetitions(rides, competitors, pointsForPosition);
+            scorer.ScoreAllCompetitions(rides, competitors, calendar, pointsForPosition);
 
             // Save changes
             eventContext.SaveChanges();

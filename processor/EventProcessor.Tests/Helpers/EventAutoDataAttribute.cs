@@ -16,7 +16,7 @@ namespace EventProcessor.Tests.Helpers
         {
             var fixture = new Fixture();
 
-            // Create local clones of canonical pools so we can inspect them to derive other registrations
+            // 1) Build deterministic copies of canonical pools
             var competitors = TestCompetitors.All.Select(c => new Competitor
             {
                 ClubNumber = c.ClubNumber,
@@ -44,16 +44,38 @@ namespace EventProcessor.Tests.Helpers
                 EventPosition = r.EventPosition
             }).ToList();
 
-            // Register the canonical pools so tests can receive them as parameters
+            // 2) Build CalendarEvents that align to the event numbers in allRides
+            // Use a recent rolling start so 30-day histories span several events
+            var firstEventDateUtc = DateTime.UtcNow.Date.AddDays(-35); // midnight UTC 35 days ago
+            var calendarEvents = TestCalendarEvents.CreateLookupForRides(allRides, firstEventDateUtc, interval: TimeSpan.FromDays(30));
+            var calendar = calendarEvents.Values.ToList();
+
+            // 3) Ensure every Ride has CalendarEvent populated so we have a date
+            foreach (var r in allRides)
+            {
+                if (calendarEvents.TryGetValue(r.EventNumber, out var ev))
+                {
+                    r.CalendarEvent = ev;
+                }
+                else
+                {
+                    // guard for unexpected event numbers used by EventAutoData
+                    throw new InvalidOperationException($"No CalendarEvent for EventNumber {r.EventNumber}");
+                }
+            }
+
+            // 4) Register the canonical pools and helpers on the fixture
+            // Register collections so tests can accept List<Competitor>, List<Ride>, List<CalendarEvent>
             fixture.Register(() => competitors);
             fixture.Register(() => allRides);
+            fixture.Register(() => calendarEvents);
+            fixture.Register(() => calendar);
 
-            // Register PointsForPosition
+            // PointsForPosition registration
             fixture.Register<Func<int, int>>(() => (pos) => CompetitionPointsCalculatorTests.PointsForPosition(pos));
 
             // Register an eventNumber chosen from the existing event numbers in allRides
             var distinctEventNumbers = allRides.Select(r => r.EventNumber).Distinct().OrderBy(n => n).ToArray();
-            // choose deterministic index (you could pick random seeded index instead)
             int chosenEventIndex = 0;
             int chosenEventNumber = distinctEventNumbers.Length > 0 ? distinctEventNumbers[chosenEventIndex] : 1;
             fixture.Register(() => chosenEventNumber);
@@ -61,22 +83,19 @@ namespace EventProcessor.Tests.Helpers
             // Register a clubNumber that is in competitors but not present in the chosen event's rides
             fixture.Register<int?>(() =>
             {
-                // Collect club numbers already used in the chosen event (exclude guests which are represented on Ride not Competitor)
                 var usedClubNumbers = new HashSet<int>(allRides
                     .Where(r => r.EventNumber == chosenEventNumber && r.ClubNumber.HasValue)
                     .Select(r => r.ClubNumber!.Value));
 
-                // Candidates: competitors with ClubNumber not present in the event
                 var candidates = competitors
-                    .Select(c => c.ClubNumber)          // ClubNumber is non-nullable int
+                    .Select(c => c.ClubNumber)
                     .Where(n => !usedClubNumbers.Contains(n))
                     .Distinct()
                     .OrderBy(n => n)
                     .ToArray();
 
-                if (candidates.Length == 0) return (int?)null; // fall back to guest
-
-                return (int?)candidates[0]; // deterministic choice; swap for seeded random if desired
+                if (candidates.Length == 0) return (int?)null;
+                return (int?)candidates[0];
             });
 
             // Optional: register RideFactory helper so AutoFixture can create Ride if requested
