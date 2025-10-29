@@ -7,7 +7,11 @@ namespace ClubProcessor.Models
     public class CalendarEvent
     {
         [Key]
-        public int EventID { get; set; }
+        public int Id { get; set; } // EF-generated primary key
+
+        public int EventNumber { get; set; } // From calendar sheet or filename
+
+        public string SheetName => $"Event_{EventNumber:D2}";
 
         [Required]
         public DateTime EventDate { get; set; }
@@ -30,9 +34,6 @@ namespace ClubProcessor.Models
         public bool IsNonStandard10 { get; set; }
         public bool IsEvening10 { get; set; }
         public bool IsHardRideSeries { get; set; }
-
-        [MaxLength(20)]
-        public string SheetName { get; set; } = string.Empty;
 
         public bool IsCancelled { get; set; }
     }

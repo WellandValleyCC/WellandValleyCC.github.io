@@ -75,33 +75,52 @@ def extract_club_events(xlsx_path, output_dir):
     if not event_sheets:
         print("[WARN] No Event_nn sheets found")
     else:
+        seen_event_numbers = set()
+        manifest_entries = []
+    
         for sheet in event_sheets:
             event_num = re.search(r'\d+', sheet).group()
+    
+            if event_num in seen_event_numbers:
+                print(f"[ERROR] Duplicate EventNumber detected: {event_num} in sheet {sheet}")
+                continue
+            seen_event_numbers.add(event_num)
+    
             print(f"[OK] Extracting event sheet: {sheet}")
             df = xl.parse(sheet)
-
+    
             # Trim at first blank in column A
             first_blank_index = df[df.iloc[:, 0].isnull() | (df.iloc[:, 0].astype(str).str.strip() == "")].index.min()
             if pd.notnull(first_blank_index):
                 df = df.iloc[:first_blank_index]
-
-            # Normalize string columns (strip whitespace, convert literal 'nan' to empty)
+    
+            # Normalize string columns
             for c in df.select_dtypes(include=["object"]).columns:
                 df[c] = df[c].astype(str).str.strip().replace({"nan": ""})
-
-            # Log header, counts and missing Name info
+    
+            # Log header and preview
             headers = list(df.columns)
             missing_name_count = df['Name'].isnull().sum() if 'Name' in df.columns else 'N/A'
             print(f"[INFO] Sheet {sheet} headers: {headers}; rows: {len(df)}; missing Names: {missing_name_count}")
-
-            # Preview first rows
             print(f"[INFO] Preview of Event_{event_num}.csv:")
             print(df.head(10).to_string(index=False))
-
+    
+            # Save CSV
             event_out = os.path.join(events_dir, f"Event_{int(event_num):02}.csv")
             df.to_csv(event_out, index=False)
             shutil.copy(event_out, os.path.join(artifact_dir, os.path.basename(event_out)))
             print(f"[INFO] Saved to: {event_out} ({len(df)} rows)")
+    
+            # Add to manifest
+            manifest_entries.append((event_num, sheet, os.path.join("events", f"Event_{int(event_num):02}.csv")))
+    
+        manifest_path = os.path.join(year_dir, f"EventManifest_{year}.csv")
+        with open(manifest_path, "w") as f:
+            f.write("EventNumber,SheetName,Filename\n")
+            for event_num, sheet_name, filename in sorted(manifest_entries, key=lambda x: int(x[0])):
+                f.write(f"{event_num},{sheet_name},{filename}\n")
+        print(f"[INFO] Manifest saved: {manifest_path}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

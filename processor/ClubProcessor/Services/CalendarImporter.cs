@@ -49,8 +49,8 @@ namespace ClubProcessor.Services
             var incoming = ParseCalendarEvents(reader);
 
             var existing = _db.CalendarEvents.ToList();
-            var incomingById = incoming.ToDictionary(e => e.EventID);
-            var existingById = existing.ToDictionary(e => e.EventID);
+            var incomingByNumber = incoming.ToDictionary(e => e.EventNumber);
+            var existingByNumber = existing.ToDictionary(e => e.EventNumber);
 
             var toAdd = new List<CalendarEvent>();
             var toUpdate = new List<CalendarEvent>();
@@ -58,27 +58,27 @@ namespace ClubProcessor.Services
 
             foreach (var evt in incoming)
             {
-                if (existingById.TryGetValue(evt.EventID, out var match))
+                if (existingByNumber.TryGetValue(evt.EventNumber, out var match))
                 {
                     if (!EventsAreEqual(match, evt))
                     {
-                        Console.WriteLine($"[UPDATE] Event {evt.EventID}: {match.EventName} → {evt.EventName}");
+                        Console.WriteLine($"[UPDATE] Event {evt.EventNumber}: {match.EventName} → {evt.EventName}");
                         UpdateEvent(match, evt);
                         toUpdate.Add(match);
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"[ADD] Event {evt.EventID}: {evt.EventName}");
+                    Console.WriteLine($"[ADD] Event {evt.EventNumber}: {evt.EventName}");
                     toAdd.Add(evt);
                 }
             }
 
             foreach (var evt in existing)
             {
-                if (!incomingById.ContainsKey(evt.EventID))
+                if (!incomingByNumber.ContainsKey(evt.EventNumber))
                 {
-                    Console.WriteLine($"[DELETE] Event {evt.EventID}: {evt.EventName}");
+                    Console.WriteLine($"[DELETE] Event {evt.EventNumber}: {evt.EventName}");
                     toDelete.Add(evt);
                 }
             }
@@ -101,7 +101,6 @@ namespace ClubProcessor.Services
                    a.IsNonStandard10 == b.IsNonStandard10 &&
                    a.IsEvening10 == b.IsEvening10 &&
                    a.IsHardRideSeries == b.IsHardRideSeries &&
-                   a.SheetName == b.SheetName &&
                    a.IsCancelled == b.IsCancelled;
         }
 
@@ -117,51 +116,49 @@ namespace ClubProcessor.Services
             target.IsNonStandard10 = source.IsNonStandard10;
             target.IsEvening10 = source.IsEvening10;
             target.IsHardRideSeries = source.IsHardRideSeries;
-            target.SheetName = source.SheetName;
             target.IsCancelled = source.IsCancelled;
         }
 
 
         private CalendarEvent? TryParseCalendarEvent(CsvReader csv)
         {
-            var eventId = csv.GetField<int>("EventID");
+            var eventNumber = csv.GetField<int>("Event Number");
 
             var dateRaw = csv.GetField<string>("Date");
             if (!DateTime.TryParse(dateRaw, out var eventDate))
             {
-                Console.WriteLine($"[WARN] Skipping EventID {eventId}: invalid date '{dateRaw}'");
+                Console.WriteLine($"[WARN] Skipping Event {eventNumber}: invalid date '{dateRaw}'");
                 return null;
             }
 
             var timeRaw = csv.GetField<string>("Start time");
             if (!TimeSpan.TryParse(timeRaw, out var startTime))
             {
-                Console.WriteLine($"[WARN] Skipping EventID {eventId}: invalid start time '{timeRaw}'");
+                Console.WriteLine($"[WARN] Skipping Event {eventNumber}: invalid start time '{timeRaw}'");
                 return null;
             }
 
             var nameRaw = csv.GetField<string>("Event Name");
             if (string.IsNullOrWhiteSpace(nameRaw))
             {
-                Console.WriteLine($"[WARN] Skipping EventID {eventId}: missing event name");
+                Console.WriteLine($"[WARN] Skipping Event {eventNumber}: missing event name");
                 return null;
             }
 
             return new CalendarEvent
             {
-                EventID = eventId,
+                EventNumber = eventNumber,
                 EventDate = eventDate,
                 StartTime = startTime,
                 EventName = nameRaw,
                 Miles = csv.GetField<double>("Miles"),
-                Location = csv.GetField("Location / Course") ?? string.Empty,
-                IsHillClimb = csv.GetField("Hill Climb") == "Y",
-                IsClubChampionship = csv.GetField("Club Championship") == "Y",
-                IsNonStandard10 = csv.GetField("Non-Standard 10") == "Y",
-                IsEvening10 = csv.GetField("Evening 10") == "Y",
-                IsHardRideSeries = csv.GetField("Hard Ride Series") == "Y",
-                SheetName = csv.GetField("Sheet Name") ?? string.Empty,
-                IsCancelled = csv.GetField("isCancelled") == "Y"
+                Location = csv.GetField<string>("Location / Course") ?? string.Empty,
+                IsHillClimb = csv.GetField<string>("Hill Climb") == "Y",
+                IsClubChampionship = csv.GetField<string>("Club Championship") == "Y",
+                IsNonStandard10 = csv.GetField<string>("Non-Standard 10") == "Y",
+                IsEvening10 = csv.GetField<string>("Evening 10") == "Y",
+                IsHardRideSeries = csv.GetField<string>("Hard Ride Series") == "Y",
+                IsCancelled = csv.GetField<string>("isCancelled") == "Y"
             };
         }
     }
