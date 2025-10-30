@@ -106,7 +106,36 @@ namespace EventProcessor.Tests.Helpers
 
             CompetitorFactory.Create(3071, "Watson", "Graham", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
             CompetitorFactory.Create(3072, "York", "Trevor", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(3073, "Zimmer", "Derek", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran)
+            CompetitorFactory.Create(3073, "Zimmer", "Derek", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
+
+            // Future-dated competitors (CreatedUtc = 50 days from now)
+            CompetitorFactory.Create(4001, "Harper", "Sylvie", ClaimStatus.FirstClaim, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4002, "Cross", "Damon", ClaimStatus.FirstClaim, false, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4003, "Langford", "Tessa", ClaimStatus.FirstClaim, true, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4004, "Blake", "Ronan", ClaimStatus.FirstClaim, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4005, "Frost", "Imogen", ClaimStatus.FirstClaim, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4006, "Drake", "Callum", ClaimStatus.FirstClaim, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4007, "Winslow", "Freya", ClaimStatus.FirstClaim, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4008, "Thorne", "Jasper", ClaimStatus.FirstClaim, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+
+            CompetitorFactory.Create(4011, "Marsh", "Elodie", ClaimStatus.SecondClaim, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4012, "Holt", "Kieran", ClaimStatus.SecondClaim, false, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4013, "Bishop", "Lara", ClaimStatus.SecondClaim, true, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4014, "Grayson", "Elliot", ClaimStatus.SecondClaim, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4015, "Marlow", "Isabel", ClaimStatus.SecondClaim, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4016, "Sutton", "Miles", ClaimStatus.SecondClaim, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4017, "Harrington", "Clara", ClaimStatus.SecondClaim, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4018, "Dalton", "Reed", ClaimStatus.SecondClaim, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+
+            CompetitorFactory.Create(4021, "Prescott", "Nina", ClaimStatus.Honorary, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4022, "Bennett", "Theo", ClaimStatus.Honorary, false, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4023, "Whitaker", "Maisie", ClaimStatus.Honorary, true, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4024, "Hawthorne", "Jude", ClaimStatus.Honorary, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4025, "Ellington", "Poppy", ClaimStatus.Honorary, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4026, "Radcliffe", "Finn", ClaimStatus.Honorary, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4027, "Ashford", "Lillian", ClaimStatus.Honorary, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4028, "Tanner", "Rowan", ClaimStatus.Honorary, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+
         }.AsReadOnly();
     }
 }

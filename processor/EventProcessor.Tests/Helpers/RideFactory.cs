@@ -39,7 +39,7 @@ namespace EventProcessor.Tests.Helpers
         /// <summary>
         /// Convenience overload for a club-member rider identified by club number.
         /// </summary>
-        public static Ride CreateClubMember(
+        public static Ride CreateClubMemberRide(
             int eventNumber,
             int clubNumber,
             string? name,
@@ -65,7 +65,7 @@ namespace EventProcessor.Tests.Helpers
         /// <summary>
         /// Convenience overload for a guest rider (no ClubNumber).
         /// </summary>
-        public static Ride CreateGuest(
+        public static Ride CreateGuestRide(
             int eventNumber,
             string guestName,
             double totalSeconds,

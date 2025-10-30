@@ -98,7 +98,7 @@ namespace EventProcessor.Tests.Helpers
                 return (int?)candidates[0];
             });
 
-            // Optional: register RideFactory helper so AutoFixture can create Ride if requested
+            // Register RideFactory helper so AutoFixture can create Ride if requested
             fixture.Register<Func<int, string?, string?, double, bool, RideEligibility, string?, Ride>>(
                 () => (eventNumber, numberOrName, name, totalSeconds, isRoadBike, eligibility, actualTime) =>
                     RideFactory.Create(eventNumber, numberOrName, name, totalSeconds, isRoadBike, eligibility, actualTime)
