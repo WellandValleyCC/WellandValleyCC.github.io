@@ -310,5 +310,159 @@ namespace EventProcessor.Tests
                 .WithMessage("Scoring aborted: missing competitors detected. Please check the membership list.");
         }
 
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForSeniors_RanksAllEligibleRidersNotSecondClaim(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            var calculators = new List<ICompetitionScoreCalculator> { new SeniorsScoreCalculator() };
+            var scorer = new CompetitionPointsCalculator(calculators);
+
+            // Competitor versions lookup (ordered by CreatedUtc ascending)
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            // Filter rides to only those we can score (valid, club numbers present in competitor set)
+            var validRides = allRides
+                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            // Act
+            scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+
+            // Build grouping and debug output
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
+            var debug = TestHelpers.RenderJuvenileDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug; // breakpoint-friendly
+
+            // Helper that asserts SeniorsPosition/Points on a ride
+            void AssertSeniorMatch(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, int Points) expected)
+            {
+                var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+                ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+                ride!.SeniorsPosition.Should().Be(expected.Position, $"club {expected.ClubNumber} ({expected.Name}) expected seniors position {expected.Position}");
+                ride.SeniorsPoints.Should().Be(expected.Points, $"club {expected.ClubNumber} ({expected.Name}) expected seniors points {expected.Points}");
+            }
+
+            // Example expected data (replace these arrays with the authoritative expected results for Seniors)
+            var expectedEvent1 = new[]
+            {
+                (ClubNumber: 1051, Name: "James Quinn", Position: 1, Points: 60),
+                (ClubNumber: 1041, Name: "Charlotte Nash", Position: 2, Points: 55),
+                (ClubNumber: 1052, Name: "Thomas Reid", Position: 3, Points: 51),
+            };
+
+            var expectedEvent2 = new[]
+            {
+                (ClubNumber: 1043, Name: "Lucy Price", Position: 1, Points: 60),
+                (ClubNumber: 1053, Name: "Daniel Shaw", Position: 2, Points: 55),
+                (ClubNumber: 1052, Name: "Thomas Reid", Position: 3, Points: 51),
+            };
+
+            var expectedEvent3 = new[]
+            {
+                (ClubNumber: 1043, Name: "Lucy Price", Position: 1, Points: 60),
+                (ClubNumber: 3053, Name: "Joseph Stevens", Position: 2, Points: 55),
+                (ClubNumber: 3051, Name: "Aaron Quincy", Position: 3, Points: 51),
+            };
+
+            // Local assert runner
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+
+                foreach (var exp in expected)
+                    AssertSeniorMatch(ridesForEvent, exp);
+            }
+
+            // Assert for events 1..3
+            AssertExpectedForEvent(1, expectedEvent1);
+            AssertExpectedForEvent(2, expectedEvent2);
+            AssertExpectedForEvent(3, expectedEvent3);
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForSeniors_ConsidersCompetitorClaimStatusHistory(
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            var baseCompetitors = TestCompetitors.All.ToList();
+
+            // create some future/past snapshots for a few club numbers as needed for the test
+            var futuresA = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1051), snapshots: 3, interval: TimeSpan.FromDays(30));
+            var futuresB = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(60));
+
+            var competitors = baseCompetitors.Concat(futuresA).Concat(futuresB).ToList();
+
+            var calculators = new List<ICompetitionScoreCalculator> { new SeniorsScoreCalculator() };
+            var scorer = new CompetitionPointsCalculator(calculators);
+
+            // Build competitor versions lookup (ordered by CreatedUtc ascending)
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            // Filter the rides we will assert on
+            var validRides = allRides
+                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            // Act
+            scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
+            var debug = TestHelpers.RenderJuvenileDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            // Assertion helper (same as above)
+            void AssertSeniorMatch(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, int Points) expected)
+            {
+                var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+                ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+                ride!.SeniorsPosition.Should().Be(expected.Position);
+                ride.SeniorsPoints.Should().Be(expected.Points);
+            }
+
+            // Expected results adjusted for history semantics (replace with authoritative values)
+            var expectedEvent1 = new[]
+            {
+                (ClubNumber: 1051, Name: "James Quinn", Position: 1, Points: 60),
+                (ClubNumber: 1052, Name: "Thomas Reid", Position: 2, Points: 55),
+                (ClubNumber: 1041, Name: "Charlotte Nash", Position: 3, Points: 51),
+            };
+
+            var expectedEvent2 = new[]
+            {
+                (ClubNumber: 1043, Name: "Lucy Price", Position: 1, Points: 60),
+                (ClubNumber: 1053, Name: "Daniel Shaw", Position: 2, Points: 55),
+                (ClubNumber: 1052, Name: "Thomas Reid", Position: 3, Points: 51),
+            };
+
+            var expectedEvent3 = new[]
+            {
+                (ClubNumber: 3051, Name: "Aaron Quincy", Position: 1, Points: 60),
+                (ClubNumber: 3053, Name: "Joseph Stevens", Position: 2, Points: 55),
+                (ClubNumber: 1043, Name: "Lucy Price", Position: 3, Points: 51),
+            };
+
+            // Local runner
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+
+                foreach (var exp in expected)
+                    AssertSeniorMatch(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, expectedEvent1);
+            AssertExpectedForEvent(2, expectedEvent2);
+            AssertExpectedForEvent(3, expectedEvent3);
+        }
     }
 }
