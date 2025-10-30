@@ -14,11 +14,11 @@ class Program
         var services = new ServiceCollection();
 
         // Register all calculators
-        services.AddScoped<ICompetitionScoreCalculator, SeniorsScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator, JuvenilesScoreCalculator>();
 
         /*
-        services.AddScoped<ICompetitionScoreCalculator, JuvenilesScoreCalculator>();
         services.AddScoped<ICompetitionScoreCalculator, JuniorsScoreCalculator>();
+        services.AddScoped<ICompetitionScoreCalculator, SeniorsScoreCalculator>();
         services.AddScoped<ICompetitionScoreCalculator, WomenScoreCalculator>();
         services.AddScoped<ICompetitionScoreCalculator, RoadBikeMenScoreCalculator>();
         services.AddScoped<ICompetitionScoreCalculator, RoadBikeWomenScoreCalculator>();

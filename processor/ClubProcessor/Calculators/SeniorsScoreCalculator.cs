@@ -14,7 +14,7 @@ namespace ClubProcessor.Calculators
     {
         public string CompetitionName => "Seniors";
 
-        public void ApplyScores(List<Ride> rides, Func<int, int> pointsForPosition)
+        public void ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
         {
             var eligible = rides
                 .Where(r => r.Competitor != null &&

@@ -41,7 +41,7 @@ public class EventImportCoordinatorTests
         {
             public string CompetitionName => "Stub";
 
-            public void ApplyScores(List<Ride> rides, Func<int, int> pointsForPosition)
+            public void ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
             {
                 // No-op
             }

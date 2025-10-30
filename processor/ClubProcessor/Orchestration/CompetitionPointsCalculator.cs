@@ -31,9 +31,19 @@ namespace ClubProcessor.Orchestration
             RideHydrationHelper.HydrateCompetitors(rides, competitors);
             RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
 
+            var ridesByEvent = rides
+                .GroupBy(r => r.EventNumber)
+                .OrderBy(g => g.Key);
+
             foreach (var calculator in calculators)
             {
-                calculator.ApplyScores(rides, pointsForPosition);
+                foreach (var group in ridesByEvent)
+                {
+                    int eventNumber = group.Key;
+                    var eventRides = group.ToList();
+
+                    calculator.ApplyScores(eventNumber, eventRides, pointsForPosition);
+                }
             }
         }
     }

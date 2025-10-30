@@ -6,6 +6,7 @@ using ClubProcessor.Models.Enums;
 using ClubProcessor.Orchestration;
 using EventProcessor.Tests.Helpers;
 using FluentAssertions;
+using System.Text;
 
 namespace EventProcessor.Tests
 {
@@ -41,14 +42,13 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
-
         [Theory]
         [EventAutoData]
         public void EventScoring_ForJuveniles_RanksJuvenileRidersWhoAreNotSecondClaim(
             List<Competitor> competitors,
             List<Ride> allRides,
             List<CalendarEvent> calendar,
-            int eventNumber)
+            int chosenEventNumber)
         {
             // Arrange
             var calculators = new List<ICompetitionScoreCalculator>
@@ -60,43 +60,107 @@ namespace EventProcessor.Tests
 
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
-            var eventRides = allRides
-                .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
+            var allEventRides = allRides
+                .Where(r => r.Eligibility == RideEligibility.Valid)
                 .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            var juveniles = eventRides
-                .Where(r =>
-                {
-                    var c = competitorsByClubNumber[r.ClubNumber!.Value];
-                    return c.IsJuvenile && c.ClaimStatus != ClaimStatus.SecondClaim;
-                })
-                .OrderBy(r => r.TotalSeconds)
-                .ToList();
+            var expectedEvent1 = new[]
+            {
+                // Event 1 actual juvenile results:
+                (ClubNumber: 1011, Name: "Liam Evans", Position: 1, Points: 60),
+                (ClubNumber: 1001, Name: "Mia Bates", Position: 2, Points: 53),
+                (ClubNumber: 3011, Name: "Jay Ellis", Position: 2, Points: 53),
+                (ClubNumber: 3001, Name: "Tia Bennett", Position: 4, Points: 48),
+                (ClubNumber: 1002, Name: "Isla Carson", Position: 5, Points: 46)
+            };
+
+            var expectedEvent2 = new[]
+            {
+                // Event 2 actual juvenile results:
+                (ClubNumber: 3012, Name: "Max Franklin", Position: 1, Points: 60),
+                (ClubNumber: 3002, Name: "Nina Chapman", Position: 2, Points: 55),
+                (ClubNumber: 1003, Name: "Zoe Dennison", Position: 3, Points: 51),
+                (ClubNumber: 1012, Name: "Noah Fletcher", Position: 4, Points: 48),
+                (ClubNumber: 1013, Name: "Ethan Graham", Position: 5, Points: 46)
+            };
+
+            var expectedEvent3 = new[]
+            {
+                // Event 3 actual juvenile results:
+                (ClubNumber: 3013, Name: "Ben Gibson", Position: 1, Points: 60),
+                (ClubNumber: 3003, Name: "Leah Davies", Position: 2, Points: 55),
+                (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51)
+            };
 
             // Act
             scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
 
             // Assert
-            for (int i = 0; i < juveniles.Count; i++)
+
+            // Build a single string for debugger inspection
+            var sb = new StringBuilder();
+
+            for (int evt = 1; evt <= 3; evt++)
             {
-                var ride = juveniles[i];
-                int expectedPosition = i + 1;
-                int expectedPoints = PointsForPosition(expectedPosition);
+                var juvenilesForEvent = allEventRides
+                    .Where(r => r.CalendarEvent!.EventNumber == evt)
+                    .Where(r =>
+                    {
+                        var c = competitorsByClubNumber[r.ClubNumber!.Value];
+                        return c.IsJuvenile && c.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.TotalSeconds)
+                    .ToList();
 
-                ride.JuvenilesPosition.Should().Be(expectedPosition,
-                    $"ride at index {i} should be ranked {expectedPosition}");
+                if (!juvenilesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no juvenile rides (or none eligible)");
+                    continue;
+                }
 
-                ride.JuvenilesPoints.Should().Be(expectedPoints,
-                    $"ride at index {i} should receive {expectedPoints} points");
+                sb.AppendLine($"// Event {evt} actual juvenile results:");
+                foreach (var ride in juvenilesForEvent)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    string name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.JuvenilesPosition.HasValue ? ride.JuvenilesPosition.Value.ToString() : "null";
+                    var pts = ride.JuvenilesPoints;
+                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
+                }
             }
 
-            var nonJuveniles = eventRides.Except(juveniles);
-            foreach (var ride in nonJuveniles)
+            // After: scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+
+            // Group valid rides by event number from allRides
+            var ridesByEvent = allRides
+                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
+                .GroupBy(r => r.EventNumber)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Helper to assert a single event
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
             {
-                ride.JuvenilesPosition.Should().BeNull("non-juveniles should not be assigned a JuvenilesPosition");
-                ride.JuvenilesPoints.Should().Be(0, "non-juveniles should not receive JuvenilesPoints");
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+
+                foreach (var exp in expected)
+                {
+                    var ride = ridesForEvent
+                        .SingleOrDefault(r => r.ClubNumber == exp.ClubNumber && r.CalendarEvent!.EventNumber == evtNumber);
+
+                    ride.Should().NotBeNull($"expected a ride for club {exp.ClubNumber} ({exp.Name}) in event {evtNumber}");
+
+                    ride!.JuvenilesPosition.Should().Be(exp.Position, $"club {exp.ClubNumber} ({exp.Name}) expected position {exp.Position}");
+                    ride.JuvenilesPoints.Should().Be(exp.Points, $"club {exp.ClubNumber} ({exp.Name}) expected points {exp.Points}");
+                }
             }
+
+            // Assert for events 1..3
+            AssertExpectedForEvent(1, expectedEvent1);
+            AssertExpectedForEvent(2, expectedEvent2);
+            AssertExpectedForEvent(3, expectedEvent3);
         }
 
         [Theory]
@@ -159,28 +223,67 @@ namespace EventProcessor.Tests
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
+            var expectedEvent1 = new[]
+            {
+                (ClubNumber: 1011, Name: "Liam Evans", Position: 1, Points: 60),
+                (ClubNumber: 3011, Name: "Jay Ellis", Position: 2, Points: 53),
+                (ClubNumber: 1001, Name: "Mia Bates", Position: 2, Points: 53),
+                (ClubNumber: 1002, Name: "Isla Carson", Position: 4, Points: 48),
+            };
+
+            var expectedEvent2 = new[]
+            {
+                (ClubNumber: 3012, Name: "Max Franklin", Position: 1, Points: 60),
+                (ClubNumber: 3002, Name: "Nina Chapman", Position: 2, Points: 55),
+                (ClubNumber: 1003, Name: "Zoe Dennison", Position: 3, Points: 51),
+                (ClubNumber: 1012, Name: "Noah Fletcher", Position: 4, Points: 48),
+                (ClubNumber: 1013, Name: "Ethan Graham", Position: 5, Points: 46),
+            };
+
+            var expectedEvent3 = new[]
+            {
+                (ClubNumber: 3013, Name: "Ben Gibson", Position: 1, Points: 60),
+                (ClubNumber: 3003, Name: "Leah Davies", Position: 2, Points: 55),
+                (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51),
+            };
+
+
             // Act
             scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
 
             // Assert - scored juveniles are ranked and points assigned according to pointsForPosition
-            for (int i = 0; i < expectedJuvenileRides.Count; i++)
-            {
-                var ride = expectedJuvenileRides[i];
-                int expectedPosition = i + 1;
-                int expectedPoints = points(expectedPosition);
 
-                ride.JuvenilesPosition.Should().Be(expectedPosition,
-                    $"ride at index {i} should be ranked {expectedPosition}");
-                ride.JuvenilesPoints.Should().Be(expectedPoints,
-                    $"ride at index {i} should receive {expectedPoints} points");
+            foreach (var exp in expectedEvent1)
+            {
+                var ride = eventRides
+                    .SingleOrDefault(r => r.ClubNumber == exp.ClubNumber && r.CalendarEvent!.EventNumber == 1);
+
+                ride.Should().NotBeNull($"expected a ride for club {exp.ClubNumber} ({exp.Name}) in event 1");
+
+                ride!.JuvenilesPosition.Should().Be(exp.Position, $"club {exp.ClubNumber} ({exp.Name}) expected position {exp.Position}");
+                ride.JuvenilesPoints.Should().Be(exp.Points, $"club {exp.ClubNumber} ({exp.Name}) expected points {exp.Points}");
             }
 
-            // Assert - other event rides should not have juvenile scoring
-            var nonJuvenileAndSecondClaimJuveniles = eventRides.Except(expectedJuvenileRides).ToList();
-            foreach (var ride in nonJuvenileAndSecondClaimJuveniles)
+            foreach (var exp in expectedEvent2)
             {
-                ride.JuvenilesPosition.Should().BeNull("non-juveniles, or juveniles who are second claim should not be assigned a JuvenilesPosition");
-                ride.JuvenilesPoints.Should().Be(0, "non-juveniles, or juveniles who are second claim non-juveniles should not receive JuvenilesPoints");
+                var ride = eventRides
+                    .SingleOrDefault(r => r.ClubNumber == exp.ClubNumber && r.CalendarEvent!.EventNumber == chosenEventNumber);
+
+                ride.Should().NotBeNull($"expected a ride for club {exp.ClubNumber} ({exp.Name}) in event {chosenEventNumber}");
+
+                ride!.JuvenilesPosition.Should().Be(exp.Position, $"club {exp.ClubNumber} ({exp.Name}) expected position {exp.Position}");
+                ride.JuvenilesPoints.Should().Be(exp.Points, $"club {exp.ClubNumber} ({exp.Name}) expected points {exp.Points}");
+            }
+
+            foreach (var exp in expectedEvent3)
+            {
+                var ride = eventRides
+                    .SingleOrDefault(r => r.ClubNumber == exp.ClubNumber && r.CalendarEvent!.EventNumber == 3);
+
+                ride.Should().NotBeNull($"expected a ride for club {exp.ClubNumber} ({exp.Name}) in event 3");
+
+                ride!.JuvenilesPosition.Should().Be(exp.Position, $"club {exp.ClubNumber} ({exp.Name}) expected position {exp.Position}");
+                ride.JuvenilesPoints.Should().Be(exp.Points, $"club {exp.ClubNumber} ({exp.Name}) expected points {exp.Points}");
             }
         }
 
