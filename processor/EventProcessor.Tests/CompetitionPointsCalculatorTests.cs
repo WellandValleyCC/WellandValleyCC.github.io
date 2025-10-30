@@ -41,6 +41,7 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
+
         [Theory]
         [EventAutoData]
         public void EventScoring_ForJuveniles_RanksJuvenileRidersWhoAreNotSecondClaim(
@@ -56,8 +57,6 @@ namespace EventProcessor.Tests
             };
 
             var scorer = new CompetitionPointsCalculator(calculators);
-
-            // Func<int, int> pointsForPosition = pos => pos <= 20 ? 21 - pos : 0;
 
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
