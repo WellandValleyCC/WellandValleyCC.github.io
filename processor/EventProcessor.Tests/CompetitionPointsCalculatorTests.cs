@@ -42,6 +42,14 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
+        private static void AssertRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, int Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+            ride!.JuvenilesPosition.Should().Be(expected.Position, $"club {expected.ClubNumber} ({expected.Name}) expected position {expected.Position}");
+            ride.JuvenilesPoints.Should().Be(expected.Points, $"club {expected.ClubNumber} ({expected.Name}) expected points {expected.Points}");
+        }
+
         [Theory]
         [EventAutoData]
         public void EventScoring_ForJuveniles_RanksJuvenileRidersWhoAreNotSecondClaim(
@@ -95,71 +103,28 @@ namespace EventProcessor.Tests
             // Act
             scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
 
-            // Assert
+            // Arrange helper structures
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(allRides);
 
-            // Build a single string for debugger inspection
-            var sb = new StringBuilder();
+            // Optional debug output (set breakpoint here or write to ITestOutputHelper)
+            var debug = TestHelpers.RenderJuvenileDebugOutput(allRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug; // place breakpoint here to inspect
 
-            for (int evt = 1; evt <= 3; evt++)
-            {
-                var juvenilesForEvent = allEventRides
-                    .Where(r => r.CalendarEvent!.EventNumber == evt)
-                    .Where(r =>
-                    {
-                        var c = competitorsByClubNumber[r.ClubNumber!.Value];
-                        return c.IsJuvenile && c.ClaimStatus != ClaimStatus.SecondClaim;
-                    })
-                    .OrderBy(r => r.TotalSeconds)
-                    .ToList();
-
-                if (!juvenilesForEvent.Any())
-                {
-                    sb.AppendLine($"// Event {evt}: no juvenile rides (or none eligible)");
-                    continue;
-                }
-
-                sb.AppendLine($"// Event {evt} actual juvenile results:");
-                foreach (var ride in juvenilesForEvent)
-                {
-                    var club = ride.ClubNumber!.Value;
-                    string name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
-                    var pos = ride.JuvenilesPosition.HasValue ? ride.JuvenilesPosition.Value.ToString() : "null";
-                    var pts = ride.JuvenilesPoints;
-                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
-                }
-            }
-
-            var debugOutput = sb.ToString();
-
-            // Group valid rides by event number from allRides
-            var ridesByEvent = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
-                .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
-                .GroupBy(r => r.EventNumber)
-                .ToDictionary(g => g.Key, g => g.ToList());
-
-            // Helper to assert a single event
-            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            // Assert via helper (use ridesByEvent, not allEventRides)
+            void AssertExpectedForEventSimple(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
             {
                 ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
 
                 foreach (var exp in expected)
-                {
-                    var ride = ridesForEvent
-                        .SingleOrDefault(r => r.ClubNumber == exp.ClubNumber && r.CalendarEvent!.EventNumber == evtNumber);
-
-                    ride.Should().NotBeNull($"expected a ride for club {exp.ClubNumber} ({exp.Name}) in event {evtNumber}");
-
-                    ride!.JuvenilesPosition.Should().Be(exp.Position, $"club {exp.ClubNumber} ({exp.Name}) expected position {exp.Position}");
-                    ride.JuvenilesPoints.Should().Be(exp.Points, $"club {exp.ClubNumber} ({exp.Name}) expected points {exp.Points}");
-                }
+                    AssertRideMatchesExpected(ridesForEvent, exp);
             }
 
             // Assert for events 1..3
-            AssertExpectedForEvent(1, expectedEvent1);
-            AssertExpectedForEvent(2, expectedEvent2);
-            AssertExpectedForEvent(3, expectedEvent3);
+            AssertExpectedForEventSimple(1, expectedEvent1);
+            AssertExpectedForEventSimple(2, expectedEvent2);
+            AssertExpectedForEventSimple(3, expectedEvent3);
         }
 
         [Theory]
@@ -253,81 +218,31 @@ namespace EventProcessor.Tests
                 (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51),
             };
 
-
             // Act
             scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
 
-            // Assert - scored juveniles are ranked and points assigned according to pointsForPosition
+            // Arrange helper structures
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(allRides);
 
-            // Build a single string for debugger inspection
-            var sb = new StringBuilder();
+            // Optional debug output (this render uses the same resolution rules as the assertions)
+            var debug = TestHelpers.RenderJuvenileDebugOutput(allRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug; // breakpoint-friendly
 
-            for (int evt = 1; evt <= 3; evt++)
-            {
-                var juvenilesForEvent = allEventRides
-                    .Where(r => r.CalendarEvent!.EventNumber == evt)
-                    .Where(r =>
-                    {
-                        if (!r.ClubNumber.HasValue) return false;
-                        if (!competitorsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
-
-                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent!.EventDate, DateTimeKind.Utc);
-                        var latestCompetitor = GetLatestCompetitorForEvent(versions, eventDateUtc);
-                        if (latestCompetitor == null) return false;
-
-                        return latestCompetitor.IsJuvenile && latestCompetitor.ClaimStatus != ClaimStatus.SecondClaim;
-                    })
-                    .OrderBy(r => r.TotalSeconds)
-                    .ToList();
-
-                if (!juvenilesForEvent.Any())
-                {
-                    sb.AppendLine($"// Event {evt}: no juvenile rides (or none eligible)");
-                    continue;
-                }
-
-                sb.AppendLine($"// Event {evt} actual juvenile results:");
-                foreach (var ride in juvenilesForEvent)
-                {
-                    var club = ride.ClubNumber!.Value;
-                    string name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
-                    var pos = ride.JuvenilesPosition.HasValue ? ride.JuvenilesPosition.Value.ToString() : "null";
-                    var pts = ride.JuvenilesPoints;
-                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
-                }
-            }
-
-            var debugOutput = sb.ToString();
-
-            // Group valid rides by event number from allRides
-            var ridesByEvent = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
-                .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
-                .GroupBy(r => r.EventNumber)
-                .ToDictionary(g => g.Key, g => g.ToList());
-
-            // Helper to assert a single event
-            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            // Assert using the same assertion helper
+            void AssertExpectedForEventWithHistory(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
             {
                 ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
 
                 foreach (var exp in expected)
-                {
-                    var ride = ridesForEvent
-                        .SingleOrDefault(r => r.ClubNumber == exp.ClubNumber && r.CalendarEvent!.EventNumber == evtNumber);
-
-                    ride.Should().NotBeNull($"expected a ride for club {exp.ClubNumber} ({exp.Name}) in event {evtNumber}");
-
-                    ride!.JuvenilesPosition.Should().Be(exp.Position, $"club {exp.ClubNumber} ({exp.Name}) expected position {exp.Position}");
-                    ride.JuvenilesPoints.Should().Be(exp.Points, $"club {exp.ClubNumber} ({exp.Name}) expected points {exp.Points}");
-                }
+                    AssertRideMatchesExpected(ridesForEvent, exp);
             }
 
             // Assert for events 1..3
-            AssertExpectedForEvent(1, expectedEvent1);
-            AssertExpectedForEvent(2, expectedEvent2);
-            AssertExpectedForEvent(3, expectedEvent3);
+            AssertExpectedForEventWithHistory(1, expectedEvent1);
+            AssertExpectedForEventWithHistory(2, expectedEvent2);
+            AssertExpectedForEventWithHistory(3, expectedEvent3);
         }
 
         [Theory]
