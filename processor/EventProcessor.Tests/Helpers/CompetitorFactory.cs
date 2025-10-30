@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace EventProcessor.Tests.Helpers
 {
-    public enum AgeGroup { IsJuvenile, IsJunior, IsSenior, IsVeteran }
-
     public static class CompetitorFactory
     {
         //public static Competitor Create(
@@ -43,7 +41,7 @@ namespace EventProcessor.Tests.Helpers
             ClaimStatus claimStatus = ClaimStatus.FirstClaim,
             bool isFemale = false,
             AgeGroup ageGroup = AgeGroup.IsSenior,
-            DateTime? lastUpdated = null,
+            DateTime? createdUtc = null,
             int? id = null)
         {
             return new Competitor
@@ -58,8 +56,8 @@ namespace EventProcessor.Tests.Helpers
                 IsJunior = ageGroup == AgeGroup.IsJunior,
                 IsSenior = ageGroup == AgeGroup.IsSenior,
                 IsVeteran = ageGroup == AgeGroup.IsVeteran,
-                CreatedUtc = DateTime.UtcNow.Date.AddDays(-100),
-                LastUpdatedUtc = lastUpdated ?? DateTime.UtcNow.Date.AddDays(-100)
+                CreatedUtc = createdUtc ?? DateTime.UtcNow.Date.AddDays(-100),
+                LastUpdatedUtc = createdUtc ?? DateTime.UtcNow.Date.AddDays(-100)
             };
         }
 

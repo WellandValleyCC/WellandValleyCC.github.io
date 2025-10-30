@@ -51,7 +51,7 @@ namespace ClubProcessor.Models
 
         [NotMapped]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public string CreatedUtcShort => CreatedUtc.ToString("yyyy-MM-dd");
+        public string CreatedUtcShort => CreatedUtc.ToString("dd/MM/yyyy");
 
 
         /// <summary>

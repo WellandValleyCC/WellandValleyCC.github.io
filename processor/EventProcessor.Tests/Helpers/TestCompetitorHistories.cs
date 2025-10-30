@@ -16,7 +16,7 @@ namespace EventProcessor.Tests.Helpers
             string lastName,
             string firstName,
             ClaimStatus initialStatus,
-            DateTime firstUpdated,
+            DateTime firstCreated,
             int snapshots = 2,
             TimeSpan? interval = null)
         {
@@ -29,7 +29,7 @@ namespace EventProcessor.Tests.Helpers
                     lastName,
                     firstName,
                     i % 2 == 0 ? initialStatus : Toggle(initialStatus),
-                    lastUpdated: firstUpdated.AddTicks(interval.Value.Ticks * i)
+                    createdUtc: firstCreated.AddTicks(interval.Value.Ticks * i)
                 );
             }
 

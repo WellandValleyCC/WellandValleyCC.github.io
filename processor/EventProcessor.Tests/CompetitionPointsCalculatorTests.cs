@@ -41,62 +41,6 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
-        //[Theory]
-        //[EventAutoData]
-        //public void EventScoring_ForSeniors_RanksAllAgeGroupRidersWhoAreNotSecondClaim(
-        //    List<Competitor> competitors,
-        //    List<Ride> allRides,
-        //    int eventNumber)
-        //{
-        //    // Arrange
-        //    var calculators = new List<ICompetitionScoreCalculator>
-        //    {
-        //        new SeniorsScoreCalculator()
-        //    };
-
-        //    var scorer = new CompetitionPointsCalculator(calculators);
-
-        //    // Func<int, int> pointsForPosition = pos => pos <= 20 ? 21 - pos : 0;
-
-        //    var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
-
-        //    var eventRides = allRides
-        //        .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
-        //        .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
-        //        .ToList();
-
-        //    var allCompetitionEligibleRides = eventRides
-        //        .Where(r =>
-        //        {
-        //            var c = competitorsByClubNumber[r.ClubNumber!.Value];
-        //            return c.ClaimStatus != ClaimStatus.SecondClaim;
-        //        })
-        //        .OrderBy(r => r.TotalSeconds)
-        //        .ToList();
-
-        //    // Act
-        //    scorer.ScoreAllCompetitions(allRides, competitors, PointsForPosition);
-
-        //    // Assert: scored rides must be FirstClaim or Honorary
-        //    for (int i = 0; i < allCompetitionEligibleRides.Count; i++)
-        //    {
-        //        var ride = allCompetitionEligibleRides[i];
-        //        int expectedPosition = i + 1;
-        //        int expectedPoints = PointsForPosition(expectedPosition);
-
-        //        ride.SeniorsPosition.Should().Be(expectedPosition,
-        //            $"ride at index {i} should be ranked {expectedPosition} in Seniors");
-
-        //        ride.SeniorsPoints.Should().Be(expectedPoints,
-        //            $"ride at index {i} should receive {expectedPoints} Seniors points");
-
-        //        var competitor = competitors.Single(c => c.ClubNumber == ride.ClubNumber);
-        //        competitor.ClaimStatus.Should().Match(
-        //            status => status == ClaimStatus.FirstClaim || status == ClaimStatus.Honorary,
-        //            "only FirstClaim or Honorary riders should be scored in Seniors");
-        //    }
-        //}
-
         [Theory]
         [EventAutoData]
         public void EventScoring_ForJuveniles_RanksJuvenileRidersWhoAreNotSecondClaim(
@@ -161,24 +105,23 @@ namespace EventProcessor.Tests
         public void EventScoring_ForJuveniles_ConsidersCompetitorClaimStatusHistoryUsingTestCompetitors(
             List<Ride> allRides,
             List<CalendarEvent> calendar,
-            int eventNumber)
+            int chosenEventNumber)
         {
             // Arrange
             // Start with the stable juveniles from TestCompetitors.All
             var baseCompetitors = TestCompetitors.All.ToList();
 
-            // Create futrure versions for two juvenile club numbers drawn from TestCompetitors.All
+            // Create future versions for two juvenile club numbers drawn from TestCompetitors.All
             // (choose two known juvenile club numbers from the file, e.g. 1001 and 1002)
             var miaBatesFutures = CompetitorFactory.CreateFutureVersions(
                 baseCompetitors.GetByClubNumber(1001),
                 snapshots: 3,
-                interval: TimeSpan.FromDays(30));
+                interval: TimeSpan.FromDays(60));
 
             var islaCarsonFutures = CompetitorFactory.CreateFutureVersions(
                 baseCompetitors.GetByClubNumber(1002),
                 snapshots: 3,
-                interval: TimeSpan.FromDays(30));
-
+                interval: TimeSpan.FromDays(60));
 
             // Combine stable competitors with the futures (futures are additional rows for same ClubNumber)
             var competitors = baseCompetitors
@@ -192,16 +135,16 @@ namespace EventProcessor.Tests
 
             Func<int, int> points = PointsForPosition;
 
-            // Build snapshots grouped by club number for resolution by ride date
-            var snapshotsByClubNumber = competitors
+            // Build Competitor snapshots grouped by club number for resolution by ride date
+            var competitorsByClubNumber = competitors
                 .Where(c => c.ClubNumber != 0)
                 .GroupBy(c => c.ClubNumber)
                 .ToDictionary(g => g.Key, g => g.OrderBy(s => s.LastUpdatedUtc).ToList());
 
             // Select event rides where the rider exists in our snapshots
             var eventRides = allRides
-                .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
-                .Where(r => r.ClubNumber.HasValue && snapshotsByClubNumber.ContainsKey(r.ClubNumber.Value))
+                .Where(r => r.EventNumber == chosenEventNumber && r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
             // determine expected juvenile rides using the snapshot effective at each ride's date
@@ -210,7 +153,7 @@ namespace EventProcessor.Tests
                 {
                     var clubNumber = r.ClubNumber!.Value;
                     var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent!.EventDate, DateTimeKind.Utc);
-                    var snapshot = CompetitorSnapshotResolver.ResolveForEvent(snapshotsByClubNumber, clubNumber, eventDateUtc);
+                    var snapshot = CompetitorSnapshotResolver.ResolveForEvent(competitorsByClubNumber, clubNumber, eventDateUtc);
                     if (snapshot == null) return false;
                     return snapshot.IsJuvenile && snapshot.ClaimStatus != ClaimStatus.SecondClaim;
                 })
@@ -234,12 +177,78 @@ namespace EventProcessor.Tests
             }
 
             // Assert - other event rides should not have juvenile scoring
-            var nonJuveniles = eventRides.Except(expectedJuvenileRides).ToList();
-            foreach (var ride in nonJuveniles)
+            var nonJuvenileAndSecondClaimJuveniles = eventRides.Except(expectedJuvenileRides).ToList();
+            foreach (var ride in nonJuvenileAndSecondClaimJuveniles)
             {
-                ride.JuvenilesPosition.Should().BeNull("non-juveniles should not be assigned a JuvenilesPosition");
-                ride.JuvenilesPoints.Should().Be(0, "non-juveniles should not receive JuvenilesPoints");
+                ride.JuvenilesPosition.Should().BeNull("non-juveniles, or juveniles who are second claim should not be assigned a JuvenilesPosition");
+                ride.JuvenilesPoints.Should().Be(0, "non-juveniles, or juveniles who are second claim non-juveniles should not receive JuvenilesPoints");
             }
         }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForAllAgeRanges_ThrowsIfCompetitorNotCreateForRideDate(
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            const int eventNumber = 2;
+            var baseCompetitors = TestCompetitors.All.ToList();
+            var baseRides =TestRides.All.ToList();
+
+            // Inject future-dated competitors for club numbers present in Event 2
+            // These will have CreatedUtc > EventDate, so resolution should fail
+            var futureCompetitors = new List<Competitor>
+            {
+                CompetitorFactory.Create(4001, "Harper", "Sylvie", ClaimStatus.FirstClaim, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4002, "Cross", "Damon", ClaimStatus.FirstClaim, false, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4003, "Langford", "Tessa", ClaimStatus.FirstClaim, true, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4004, "Blake", "Ronan", ClaimStatus.FirstClaim, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4005, "Frost", "Imogen", ClaimStatus.FirstClaim, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4006, "Drake", "Callum", ClaimStatus.FirstClaim, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4007, "Winslow", "Freya", ClaimStatus.FirstClaim, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+                CompetitorFactory.Create(4008, "Thorne", "Jasper", ClaimStatus.FirstClaim, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            };
+
+            var competitors = baseCompetitors.Concat(futureCompetitors).ToList();
+
+            // Some rides for Competitors which have not been created yet (Competitor row is dated in future).
+            // This is not a valid situation.  These riders should cause
+            // scoring to throw InvalidOperationException("Scoring aborted: missing competitors detected. Please check the membership list.");
+            var ridesUsingFutureCompetitors = new List<Ride>
+            {
+                RideFactory.CreateClubMemberRide(2, 4001, "Sylvie Harper", totalSeconds: 910),  // Juv F FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4002, "Damon Cross", totalSeconds: 905),    // Juv M FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4003, "Tessa Langford", totalSeconds: 930), // Jun F FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4004, "Ronan Blake", totalSeconds: 920),    // Jun M FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4005, "Imogen Frost", totalSeconds: 880),   // Sen F FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4006, "Callum Drake", totalSeconds: 870),   // Sen M FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4007, "Freya Winslow", totalSeconds: 990),  // Vet F FirstClaim
+                RideFactory.CreateClubMemberRide(2, 4008, "Jasper Thorne", totalSeconds: 975)   // Vet M FirstClaim
+            };
+
+            var rides = baseRides.Concat(ridesUsingFutureCompetitors).ToList();
+
+            var calculators = new List<ICompetitionScoreCalculator> { new JuvenilesScoreCalculator() };
+            var scorer = new CompetitionPointsCalculator(calculators);
+
+            // Build snapshot dictionary
+            var competitorsByClubNumber = competitors
+                .Where(c => c.ClubNumber != 0)
+                .GroupBy(c => c.ClubNumber)
+                .ToDictionary(g => g.Key, g => g.OrderBy(s => s.CreatedUtc).ToList());
+
+            // Filter rides for Event 2
+            var eventRides = rides
+                .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.ClubNumber.HasValue)
+                .ToList();
+
+            // Act & Assert
+            var act = () => scorer.ScoreAllCompetitions(rides, competitors, calendar, PointsForPosition);
+
+            act.Should().Throw<InvalidOperationException>()
+                .WithMessage("Scoring aborted: missing competitors detected. Please check the membership list.");
+        }
+
     }
 }
