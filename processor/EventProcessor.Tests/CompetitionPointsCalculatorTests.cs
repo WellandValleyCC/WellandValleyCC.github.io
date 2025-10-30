@@ -58,12 +58,7 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var calculators = new List<ICompetitionScoreCalculator>
-            {
-                new JuvenilesScoreCalculator()
-            };
-
-            var scorer = new CompetitionPointsCalculator(calculators);
+            var scorer = CompetitionPointsCalculatorFactory.Create();
 
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
@@ -162,8 +157,7 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Scorer setup
-            var calculators = new List<ICompetitionScoreCalculator> { new JuvenilesScoreCalculator() };
-            var scorer = new CompetitionPointsCalculator(calculators);
+            var scorer = CompetitionPointsCalculatorFactory.Create();
 
             Func<int, int> points = PointsForPosition;
 
@@ -288,8 +282,7 @@ namespace EventProcessor.Tests
 
             var rides = baseRides.Concat(ridesUsingFutureCompetitors).ToList();
 
-            var calculators = new List<ICompetitionScoreCalculator> { new JuvenilesScoreCalculator() };
-            var scorer = new CompetitionPointsCalculator(calculators);
+            var scorer = CompetitionPointsCalculatorFactory.Create();
 
             // Build snapshot dictionary
             var competitorsByClubNumber = competitors
@@ -318,8 +311,7 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var calculators = new List<ICompetitionScoreCalculator> { new SeniorsScoreCalculator() };
-            var scorer = new CompetitionPointsCalculator(calculators);
+            var scorer = CompetitionPointsCalculatorFactory.Create();
 
             // Competitor versions lookup (ordered by CreatedUtc ascending)
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -398,10 +390,9 @@ namespace EventProcessor.Tests
             var futuresA = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1051), snapshots: 3, interval: TimeSpan.FromDays(30));
             var futuresB = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(60));
 
-            var competitors = baseCompetitors.Concat(futuresA).Concat(futuresB).ToList();
+            var scorer = CompetitionPointsCalculatorFactory.Create();
 
-            var calculators = new List<ICompetitionScoreCalculator> { new SeniorsScoreCalculator() };
-            var scorer = new CompetitionPointsCalculator(calculators);
+            var competitors = baseCompetitors.Concat(futuresA).Concat(futuresB).ToList();
 
             // Build competitor versions lookup (ordered by CreatedUtc ascending)
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
