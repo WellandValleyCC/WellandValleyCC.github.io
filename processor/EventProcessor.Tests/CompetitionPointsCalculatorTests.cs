@@ -42,12 +42,26 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
-        private static void AssertRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        private static void AssertJuvenileRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
             ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
-            ride!.JuvenilesPosition.Should().Be(expected.Position, $"club {expected.ClubNumber} ({expected.Name}) expected position {expected.Position}");
-            ride.JuvenilesPoints.Should().Be(expected.Points, $"club {expected.ClubNumber} ({expected.Name}) expected points {expected.Points}");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.JuvenilesPosition.Should().Be(expected.Position, $"expected JuvenilesPosition {expected.Position} for {context}");
+            ride.JuvenilesPoints.Should().Be(expected.Points, $"expected JuvenilesPoints {expected.Points} for {context}");
+        }
+
+        void AssertSeniorRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.SeniorsPosition.Should().Be(expected.Position, $"expected SeniorsPosition {expected.Position} for {context}");
+            ride.SeniorsPoints.Should().Be(expected.Points, $"expected SeniorsPoints {expected.Points} for {context}");
         }
 
         [Theory]
@@ -113,7 +127,7 @@ namespace EventProcessor.Tests
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
 
                 foreach (var exp in expected)
-                    AssertRideMatchesExpected(ridesForEvent, exp);
+                    CompetitionPointsCalculatorTests.AssertJuvenileRideMatchesExpected(ridesForEvent, exp);
             }
 
             // Assert for events 1..3
@@ -215,7 +229,7 @@ namespace EventProcessor.Tests
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
 
                 foreach (var exp in expected)
-                    AssertRideMatchesExpected(ridesForEvent, exp);
+                    CompetitionPointsCalculatorTests.AssertJuvenileRideMatchesExpected(ridesForEvent, exp);
             }
 
             // Assert for events 1..3
@@ -315,102 +329,68 @@ namespace EventProcessor.Tests
             var debug = TestHelpers.RenderSeniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug; // breakpoint-friendly
 
-            // Helper that asserts SeniorsPosition/Points on a ride
-            void AssertSeniorMatch(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
-            {
-                var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
-                ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
-                ride!.SeniorsPosition.Should().Be(expected.Position, $"club {expected.ClubNumber} ({expected.Name}) expected seniors position {expected.Position}");
-                ride.SeniorsPoints.Should().Be(expected.Points, $"club {expected.ClubNumber} ({expected.Name}) expected seniors points {expected.Points}");
-            }
-
             // Expected data for Seniors competition
             var expectedEvent1 = new[]
             {
-                (ClubNumber: 1051, Name: "James Quinn",     Position:  1, Points: 60),// time: 830
+                (ClubNumber: 1051, Name: "James Quinn",     Position:  1, Points: 60.0),// time: 830
                 (ClubNumber: 1052, Name: "Thomas Reid",     Position:  2, Points: 55),// time: 845
                 (ClubNumber: 1041, Name: "Charlotte Nash",  Position:  3, Points: 51),// time: 850
-                (ClubNumber: 1042, Name: "Emily Owens",     Position:  4, Points: 47.0),// time: 860
-                (ClubNumber: 2051, Name: "Samuel Patel",    Position:  4, Points: 47.0),// time: 860
-                (ClubNumber: 3051, Name: "Aaron Quincy",    Position:  6, Points: 44),// time: 865
-                (ClubNumber: 2041, Name: "Eva Matthews",    Position:  7, Points: 42),// time: 870
-                (ClubNumber: 3041, Name: "Ella Norris",     Position:  8, Points: 40),// time: 875
-                (ClubNumber: 1031, Name: "Oliver King",     Position:  9, Points: 39),// time: 880
-                (ClubNumber: 2031, Name: "Freddie Johnson", Position: 10, Points: 38), // time: 885
-                (ClubNumber: 1011, Name: "Liam Evans",      Position: 11, Points: 37.5), // time: 890
-                (ClubNumber: 3031, Name: "Reece Kirk",      Position: 11, Points: 37.5), // time: 890
-                (ClubNumber: 1032, Name: "Harry Lewis",     Position: 13, Points: 36), // time: 895
-                (ClubNumber: 1001, Name: "Mia Bates",       Position: 14, Points: 33.5), // time: 900
-                (ClubNumber: 3011, Name: "Jay Ellis",       Position: 14, Points: 33.5), // time: 900
-                (ClubNumber: 2011, Name: "Leo Dixon",       Position: 16, Points: 32), // time: 905
-                (ClubNumber: 2001, Name: "Maya Abbott",     Position: 17, Points: 31), // time: 910
-                (ClubNumber: 3001, Name: "Tia Bennett",     Position: 18, Points: 30), // time: 915
-                (ClubNumber: 1002, Name: "Isla Carson",     Position: 19, Points: 29), // time: 920
-                (ClubNumber: 1071, Name: "Peter Walker",    Position: 20, Points: 28), // time: 930
-                (ClubNumber: 2021, Name: "Chloe Griffin",   Position: 21, Points: 27), // time: 935
-                (ClubNumber: 1021, Name: "Amelia Hughes",   Position: 22, Points: 25.5), // time: 940
-                (ClubNumber: 3021, Name: "Zara Hayes",      Position: 22, Points: 25.5), // time: 940
-                (ClubNumber: 3071, Name: "Graham Watson",   Position: 24, Points: 24), // time: 970
-                (ClubNumber: 3061, Name: "Diana Thompson",  Position: 25, Points: 23), // time: 985
-                (ClubNumber: 2061, Name: "Beth Taylor",     Position: 26, Points: 22),// time: 990
-
+                (ClubNumber: 1042, Name: "Emily Owens",     Position:  4, Points: 48),// time: 860
+                (ClubNumber: 3051, Name: "Aaron Quincy",    Position:  5, Points: 44),// time: 865
+                (ClubNumber: 3041, Name: "Ella Norris",     Position:  6, Points: 40),// time: 875
+                (ClubNumber: 1031, Name: "Oliver King",     Position:  7, Points: 39),// time: 880
+                (ClubNumber: 1011, Name: "Liam Evans",      Position:  8, Points: 39.5), // time: 890
+                (ClubNumber: 3031, Name: "Reece Kirk",      Position:  8, Points: 39.5), // time: 890
+                (ClubNumber: 1032, Name: "Harry Lewis",     Position: 10, Points: 38), // time: 895
+                (ClubNumber: 1001, Name: "Mia Bates",       Position: 11, Points: 36.5), // time: 900
+                (ClubNumber: 3011, Name: "Jay Ellis",       Position: 11, Points: 36.5), // time: 900
+                (ClubNumber: 3001, Name: "Tia Bennett",     Position: 13, Points: 35), // time: 915
+                (ClubNumber: 1002, Name: "Isla Carson",     Position: 14, Points: 34), // time: 920
+                (ClubNumber: 1071, Name: "Peter Walker",    Position: 15, Points: 33), // time: 930
+                (ClubNumber: 1021, Name: "Amelia Hughes",   Position: 16, Points: 31.5), // time: 940
+                (ClubNumber: 3021, Name: "Zara Hayes",      Position: 16, Points: 31.5), // time: 940
+                (ClubNumber: 3071, Name: "Graham Watson",   Position: 18, Points: 30), // time: 970
+                (ClubNumber: 3061, Name: "Diana Thompson",  Position: 19, Points: 29), // time: 985
             };
 
             var expectedEvent2 = new[]
             {
                 (ClubNumber: 1043, Name: "Lucy Price",         Position:  1, Points: 60), // time: 840
                 (ClubNumber: 3052, Name: "Charlie Robinson",   Position:  2, Points: 55), // time: 845
-                (ClubNumber: 2052, Name: "Jacob Roberts",      Position:  3, Points: 51), // time: 850
-                (ClubNumber: 1053, Name: "Daniel Shaw",        Position:  4, Points: 47.0), // time: 855
-                (ClubNumber: 3042, Name: "Katie Olsen",        Position:  4, Points: 47.0), // time: 855
-                (ClubNumber: 2042, Name: "Rosie Nelson",       Position:  6, Points: 44), // time: 860
-                (ClubNumber: 2032, Name: "Archie Kerr",        Position:  7, Points: 42), // time: 890
-                (ClubNumber: 3032, Name: "Tyler Lloyd",        Position:  8, Points: 40), // time: 895
-                (ClubNumber: 1022, Name: "Sophie Irwin",       Position:  9, Points: 39), // time: 900
-                (ClubNumber: 1023, Name: "Grace Jackson",      Position: 10, Points: 37.5), // time: 915
-                (ClubNumber: 3012, Name: "Max Franklin",       Position: 10, Points: 37.5), // time: 915
-                (ClubNumber: 2022, Name: "Millie Harrison",    Position: 12, Points: 36), // time: 920
-                (ClubNumber: 2002, Name: "Ella Barker",        Position: 13, Points: 33.5), // time: 925
-                (ClubNumber: 3022, Name: "Megan Irving",       Position: 13, Points: 33.5), // time: 925
-                (ClubNumber: 3002, Name: "Nina Chapman",       Position: 15, Points: 32), // time: 930
-                (ClubNumber: 1003, Name: "Zoe Dennison",       Position: 16, Points: 29.5), // time: 940
-                (ClubNumber: 2012, Name: "Oscar Edwards",      Position: 16, Points: 29.5), // time: 940
-                (ClubNumber: 1012, Name: "Noah Fletcher",      Position: 18, Points: 28), // time: 955
-                (ClubNumber: 1072, Name: "Martin Xavier",      Position: 19, Points: 27), // time: 965
-                (ClubNumber: 1013, Name: "Ethan Graham",       Position: 20, Points: 26), // time: 970
-                (ClubNumber: 3072, Name: "Trevor York",        Position: 21, Points: 25), // time: 975
-                (ClubNumber: 1061, Name: "Helen Turner",       Position: 22, Points: 25.5), // time: 980
-                (ClubNumber: 2072, Name: "Nathan Zane",        Position: 22, Points: 25.5), // time: 980
-                (ClubNumber: 1062, Name: "Alison Underwood",   Position: 24, Points: 23.5), // time: 995
-                (ClubNumber: 3062, Name: "Fiona Ursula",       Position: 24, Points: 23.5), // time: 995
-                (ClubNumber: 2062, Name: "Rachel Upton",       Position: 26, Points: 22), // time: 1000
+                (ClubNumber: 1053, Name: "Daniel Shaw",        Position:  3, Points: 51), // time: 855
+                (ClubNumber: 3032, Name: "Tyler Lloyd",        Position:  4, Points: 48), // time: 895
+                (ClubNumber: 1022, Name: "Sophie Irwin",       Position:  5, Points: 46), // time: 900
+                (ClubNumber: 1023, Name: "Grace Jackson",      Position:  6, Points: 43), // time: 915
+                (ClubNumber: 3012, Name: "Max Franklin",       Position:  6, Points: 43), // time: 915
+                (ClubNumber: 3022, Name: "Megan Irving",       Position:  8, Points: 40), // time: 925
+                (ClubNumber: 3002, Name: "Nina Chapman",       Position:  9, Points: 39), // time: 930
+                (ClubNumber: 1003, Name: "Zoe Dennison",       Position: 10, Points: 38), // time: 940
+                (ClubNumber: 1012, Name: "Noah Fletcher",      Position: 11, Points: 37), // time: 955
+                (ClubNumber: 1072, Name: "Martin Xavier",      Position: 12, Points: 36), // time: 965
+                (ClubNumber: 1013, Name: "Ethan Graham",       Position: 13, Points: 35), // time: 970
+                (ClubNumber: 3072, Name: "Trevor York",        Position: 14, Points: 34), // time: 975
+                (ClubNumber: 1061, Name: "Helen Turner",       Position: 15, Points: 33), // time: 980
+                (ClubNumber: 1062, Name: "Alison Underwood",   Position: 16, Points: 31.5), // time: 995
+                (ClubNumber: 3062, Name: "Fiona Ursula",       Position: 16, Points: 31.5), // time: 995
             };
 
             var expectedEvent3 = new[]
             {
-                (ClubNumber: 3053, Name: "Joseph Stevens",     Position:  1, Points: 60), // time: 855
-                (ClubNumber: 1043, Name: "Lucy Price",         Position:  2, Points: 53.0), // time: 860
-                (ClubNumber: 2053, Name: "Logan Simpson",      Position:  2, Points: 53.0), // time: 860
-                (ClubNumber: 3043, Name: "Georgia Parker",     Position:  4, Points: 48), // time: 865
-                (ClubNumber: 1041, Name: "Charlotte Nash",     Position:  5, Points: 45.0), // time: 870
-                (ClubNumber: 2043, Name: "Hannah O'Brien",     Position:  5, Points: 45.0), // time: 870
-                (ClubNumber: 2033, Name: "Henry Lawson",       Position:  7, Points: 42), // time: 880
-                (ClubNumber: 3033, Name: "Ryan Mitchell",      Position:  8, Points: 40), // time: 890
-                (ClubNumber: 1031, Name: "Oliver King",        Position:  9, Points: 39), // time: 905
-                (ClubNumber: 1033, Name: "Jack Mason",         Position: 10, Points: 37.5), // time: 910
-                (ClubNumber: 2023, Name: "Lily Ingram",        Position: 10, Points: 37.5), // time: 910
-                (ClubNumber: 3023, Name: "Amber Jennings",     Position: 12, Points: 36), // time: 920
-                (ClubNumber: 3013, Name: "Ben Gibson",         Position: 13, Points: 35), // time: 925
-                (ClubNumber: 2003, Name: "Ruby Carter",        Position: 14, Points: 33.5), // time: 935
-                (ClubNumber: 3003, Name: "Leah Davies",        Position: 15, Points: 33.5), // time: 940
-                (ClubNumber: 2013, Name: "George Foster",      Position: 16, Points: 32), // time: 950
-                (ClubNumber: 1013, Name: "Ethan Graham",       Position: 17, Points: 31), // time: 980
-                (ClubNumber: 1071, Name: "Peter Walker",       Position: 18, Points: 30), // time: 990
-                (ClubNumber: 2073, Name: "Luke Adams",         Position: 19, Points: 29), // time: 995
-                (ClubNumber: 1073, Name: "Colin Young",        Position: 20, Points: 28), // time: 1005
-                (ClubNumber: 2063, Name: "Claire Vincent",     Position: 21, Points: 27), // time: 1010
-                (ClubNumber: 1063, Name: "Janet Vaughn",       Position: 22, Points: 26), // time: 1020
-                (ClubNumber: 3063, Name: "Paula Valentine",    Position: 23, Points: 25), // time: 1025
+                (ClubNumber: 3053, Name: "Joseph Stevens",     Position:  1, Points: 60.0), // time: 855
+                (ClubNumber: 1043, Name: "Lucy Price",         Position:  2, Points: 55), // time: 860
+                (ClubNumber: 3043, Name: "Georgia Parker",     Position:  3, Points: 51), // time: 865
+                (ClubNumber: 1041, Name: "Charlotte Nash",     Position:  4, Points: 48), // time: 870
+                (ClubNumber: 3033, Name: "Ryan Mitchell",      Position:  5, Points: 46), // time: 890
+                (ClubNumber: 1031, Name: "Oliver King",        Position:  6, Points: 44), // time: 905
+                (ClubNumber: 1033, Name: "Jack Mason",         Position:  7, Points: 42), // time: 910
+                (ClubNumber: 3023, Name: "Amber Jennings",     Position:  8, Points: 40), // time: 920
+                (ClubNumber: 3013, Name: "Ben Gibson",         Position:  9, Points: 39), // time: 925
+                (ClubNumber: 3003, Name: "Leah Davies",        Position: 10, Points: 38), // time: 940
+                (ClubNumber: 1013, Name: "Ethan Graham",       Position: 11, Points: 37), // time: 980
+                (ClubNumber: 1071, Name: "Peter Walker",       Position: 12, Points: 36), // time: 990
+                (ClubNumber: 1073, Name: "Colin Young",        Position: 13, Points: 35), // time: 1005
+                (ClubNumber: 1063, Name: "Janet Vaughn",       Position: 14, Points: 34), // time: 1020
+                (ClubNumber: 3063, Name: "Paula Valentine",    Position: 15, Points: 33), // time: 1025
             };
 
             // Local assert runner
@@ -420,7 +400,7 @@ namespace EventProcessor.Tests
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
 
                 foreach (var exp in expected)
-                    AssertSeniorMatch(ridesForEvent, exp);
+                    AssertSeniorRideMatchesExpected(ridesForEvent, exp);
             }
 
             // Assert for events 1..3
@@ -461,15 +441,6 @@ namespace EventProcessor.Tests
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
             var debug = TestHelpers.RenderSeniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
-
-            // Assertion helper (same as above)
-            void AssertSeniorMatch(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
-            {
-                var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
-                ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
-                ride!.SeniorsPosition.Should().Be(expected.Position);
-                ride.SeniorsPoints.Should().Be(expected.Points);
-            }
 
             // Expected data for Seniors competition
             var expectedEvent1 = new[]
@@ -567,7 +538,7 @@ namespace EventProcessor.Tests
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
 
                 foreach (var exp in expected)
-                    AssertSeniorMatch(ridesForEvent, exp);
+                    AssertSeniorRideMatchesExpected(ridesForEvent, exp);
             }
 
             AssertExpectedForEvent(1, expectedEvent1);
