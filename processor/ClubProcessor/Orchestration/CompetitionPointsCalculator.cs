@@ -26,7 +26,11 @@ namespace ClubProcessor.Orchestration
         /// <param name="competitors">All registered competitors.</param>
         /// <param name="calendarEvents">All events in the calendar.</param>
         /// <param name="pointsForPosition">Delegate that returns points for a given position.</param>
-        public void ScoreAllCompetitions(List<Ride> rides, List<Competitor> competitors, List<CalendarEvent> calendarEvents, Func<int, int> pointsForPosition)
+        public void ScoreAllCompetitions(
+            List<Ride> rides,
+            List<Competitor> competitors,
+            List<CalendarEvent> calendarEvents,
+            Func<int, int> pointsForPosition)
         {
             RideHydrationHelper.HydrateCompetitors(rides, competitors);
             RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
@@ -37,15 +41,20 @@ namespace ClubProcessor.Orchestration
 
             foreach (var calculator in calculators)
             {
+                Console.WriteLine($"Scoring {calculator.CompetitionName}");
+
                 foreach (var group in ridesByEvent)
                 {
                     int eventNumber = group.Key;
                     var eventRides = group.ToList();
 
-                    calculator.ApplyScores(eventNumber, eventRides, pointsForPosition);
+                    int affected = calculator.ApplyScores(eventNumber, eventRides, pointsForPosition);
+
+                    Console.WriteLine($"  Event {eventNumber}: {affected} rides scored");
                 }
             }
         }
+
     }
 }
 

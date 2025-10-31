@@ -14,9 +14,9 @@ namespace ClubProcessor.Calculators
     {
         public string CompetitionName => "Seniors";
 
-        public void ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
+        public int ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
         {
-            var eligible = rides
+            var eligibleRides = rides
                 .Where(r => r.Competitor != null && r.EventNumber == eventNumber &&
                             r.Competitor.ClaimStatus is ClaimStatus.FirstClaim or ClaimStatus.Honorary &&
                             r.Eligibility == RideEligibility.Valid)
@@ -26,12 +26,12 @@ namespace ClubProcessor.Calculators
             var position = 1;
             int i = 0;
 
-            while (i < eligible.Count)
+            while (i < eligibleRides.Count)
             {
-                var currentTime = eligible[i].TotalSeconds;
+                var currentTime = eligibleRides[i].TotalSeconds;
 
                 // Find all riders tied at this time
-                var tiedGroup = eligible
+                var tiedGroup = eligibleRides
                     .Skip(i)
                     .TakeWhile(r => r.TotalSeconds == currentTime)
                     .ToList();
@@ -57,6 +57,8 @@ namespace ClubProcessor.Calculators
                 position += tieCount;
                 i += tieCount;
             }
+
+            return eligibleRides.Count;
         }
     }
 }
