@@ -42,7 +42,7 @@ namespace EventProcessor.Tests
             return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
         }
 
-        private static void AssertRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, int Points) expected)
+        private static void AssertRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
             ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
@@ -70,7 +70,7 @@ namespace EventProcessor.Tests
             var expectedEvent1 = new[]
             {
                 // Event 1 actual juvenile results:
-                (ClubNumber: 1011, Name: "Liam Evans", Position: 1, Points: 60),
+                (ClubNumber: 1011, Name: "Liam Evans", Position: 1, Points: 60.0),
                 (ClubNumber: 1001, Name: "Mia Bates", Position: 2, Points: 53),
                 (ClubNumber: 3011, Name: "Jay Ellis", Position: 2, Points: 53),
                 (ClubNumber: 3001, Name: "Tia Bennett", Position: 4, Points: 48),
@@ -80,7 +80,7 @@ namespace EventProcessor.Tests
             var expectedEvent2 = new[]
             {
                 // Event 2 actual juvenile results:
-                (ClubNumber: 3012, Name: "Max Franklin", Position: 1, Points: 60),
+                (ClubNumber: 3012, Name: "Max Franklin", Position: 1, Points: 60.0),
                 (ClubNumber: 3002, Name: "Nina Chapman", Position: 2, Points: 55),
                 (ClubNumber: 1003, Name: "Zoe Dennison", Position: 3, Points: 51),
                 (ClubNumber: 1012, Name: "Noah Fletcher", Position: 4, Points: 48),
@@ -90,7 +90,7 @@ namespace EventProcessor.Tests
             var expectedEvent3 = new[]
             {
                 // Event 3 actual juvenile results:
-                (ClubNumber: 3013, Name: "Ben Gibson", Position: 1, Points: 60),
+                (ClubNumber: 3013, Name: "Ben Gibson", Position: 1, Points: 60.0),
                 (ClubNumber: 3003, Name: "Leah Davies", Position: 2, Points: 55),
                 (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51)
             };
@@ -107,7 +107,7 @@ namespace EventProcessor.Tests
             _ = debug; // place breakpoint here to inspect
 
             // Assert via helper (use ridesByEvent, not allEventRides)
-            void AssertExpectedForEventSimple(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            void AssertExpectedForEventSimple(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
             {
                 ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
@@ -175,7 +175,7 @@ namespace EventProcessor.Tests
 
             var expectedEvent1 = new[]
             {
-                (ClubNumber: 1011, Name: "Liam Evans", Position: 1, Points: 60),
+                (ClubNumber: 1011, Name: "Liam Evans", Position: 1, Points: 60.0),
                 (ClubNumber: 3011, Name: "Jay Ellis", Position: 2, Points: 55),
                 (ClubNumber: 3001, Name: "Tia Bennett", Position: 3, Points: 51),
             };
@@ -184,15 +184,15 @@ namespace EventProcessor.Tests
             {
                 (ClubNumber: 3012, Name: "Max Franklin", Position: 1, Points: 60),
                 (ClubNumber: 3002, Name: "Nina Chapman", Position: 2, Points: 55),
-                (ClubNumber: 1003, Name: "Zoe Dennison", Position: 3, Points: 50),  // Order is: 60,55,51,48,46,44,42,40,39,38,37,36,35
-                (ClubNumber: 2012, Name: "Oscar Edwards", Position: 3, Points: 50), // 51 + 48 = 99 points.  Shared between two, is 49.5 each.  Rounded up = 50
+                (ClubNumber: 1003, Name: "Zoe Dennison", Position: 3, Points: 49.5),  // Order is: 60,55,51,48,46,44,42,40,39,38,37,36,35
+                (ClubNumber: 2012, Name: "Oscar Edwards", Position: 3, Points: 49.5), // 51 + 48 = 99 points.  Shared between two, is 49.5 each.
                 (ClubNumber: 1012, Name: "Noah Fletcher", Position: 5, Points: 46),
                 (ClubNumber: 1013, Name: "Ethan Graham", Position: 6, Points: 44),
             };
 
             var expectedEvent3 = new[]
             {
-                (ClubNumber: 3013, Name: "Ben Gibson", Position: 1, Points: 60),
+                (ClubNumber: 3013, Name: "Ben Gibson", Position: 1, Points: 60.0),
                 (ClubNumber: 3003, Name: "Leah Davies", Position: 2, Points: 55),
                 (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51),
             };
@@ -209,7 +209,7 @@ namespace EventProcessor.Tests
             _ = debug; // breakpoint-friendly
 
             // Assert using the same assertion helper
-            void AssertExpectedForEventWithHistory(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            void AssertExpectedForEventWithHistory(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
             {
                 ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
@@ -312,11 +312,11 @@ namespace EventProcessor.Tests
 
             // Build grouping and debug output
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
-            var debug = TestHelpers.RenderJuvenileDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            var debug = TestHelpers.RenderSeniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug; // breakpoint-friendly
 
             // Helper that asserts SeniorsPosition/Points on a ride
-            void AssertSeniorMatch(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, int Points) expected)
+            void AssertSeniorMatch(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
             {
                 var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
                 ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
@@ -324,30 +324,97 @@ namespace EventProcessor.Tests
                 ride.SeniorsPoints.Should().Be(expected.Points, $"club {expected.ClubNumber} ({expected.Name}) expected seniors points {expected.Points}");
             }
 
-            // Example expected data (replace these arrays with the authoritative expected results for Seniors)
+            // Expected data for Seniors competition
             var expectedEvent1 = new[]
             {
-                (ClubNumber: 1051, Name: "James Quinn", Position: 1, Points: 60),
-                (ClubNumber: 1041, Name: "Charlotte Nash", Position: 2, Points: 55),
-                (ClubNumber: 1052, Name: "Thomas Reid", Position: 3, Points: 51),
+                (ClubNumber: 1051, Name: "James Quinn",     Position:  1, Points: 60),// time: 830
+                (ClubNumber: 1052, Name: "Thomas Reid",     Position:  2, Points: 55),// time: 845
+                (ClubNumber: 1041, Name: "Charlotte Nash",  Position:  3, Points: 51),// time: 850
+                (ClubNumber: 1042, Name: "Emily Owens",     Position:  4, Points: 47.0),// time: 860
+                (ClubNumber: 2051, Name: "Samuel Patel",    Position:  4, Points: 47.0),// time: 860
+                (ClubNumber: 3051, Name: "Aaron Quincy",    Position:  6, Points: 44),// time: 865
+                (ClubNumber: 2041, Name: "Eva Matthews",    Position:  7, Points: 42),// time: 870
+                (ClubNumber: 3041, Name: "Ella Norris",     Position:  8, Points: 40),// time: 875
+                (ClubNumber: 1031, Name: "Oliver King",     Position:  9, Points: 39),// time: 880
+                (ClubNumber: 2031, Name: "Freddie Johnson", Position: 10, Points: 38), // time: 885
+                (ClubNumber: 1011, Name: "Liam Evans",      Position: 11, Points: 37.5), // time: 890
+                (ClubNumber: 3031, Name: "Reece Kirk",      Position: 11, Points: 37.5), // time: 890
+                (ClubNumber: 1032, Name: "Harry Lewis",     Position: 13, Points: 36), // time: 895
+                (ClubNumber: 1001, Name: "Mia Bates",       Position: 14, Points: 33.5), // time: 900
+                (ClubNumber: 3011, Name: "Jay Ellis",       Position: 14, Points: 33.5), // time: 900
+                (ClubNumber: 2011, Name: "Leo Dixon",       Position: 16, Points: 32), // time: 905
+                (ClubNumber: 2001, Name: "Maya Abbott",     Position: 17, Points: 31), // time: 910
+                (ClubNumber: 3001, Name: "Tia Bennett",     Position: 18, Points: 30), // time: 915
+                (ClubNumber: 1002, Name: "Isla Carson",     Position: 19, Points: 29), // time: 920
+                (ClubNumber: 1071, Name: "Peter Walker",    Position: 20, Points: 28), // time: 930
+                (ClubNumber: 2021, Name: "Chloe Griffin",   Position: 21, Points: 27), // time: 935
+                (ClubNumber: 1021, Name: "Amelia Hughes",   Position: 22, Points: 25.5), // time: 940
+                (ClubNumber: 3021, Name: "Zara Hayes",      Position: 22, Points: 25.5), // time: 940
+                (ClubNumber: 3071, Name: "Graham Watson",   Position: 24, Points: 24), // time: 970
+                (ClubNumber: 3061, Name: "Diana Thompson",  Position: 25, Points: 23), // time: 985
+                (ClubNumber: 2061, Name: "Beth Taylor",     Position: 26, Points: 22),// time: 990
+
             };
 
             var expectedEvent2 = new[]
             {
-                (ClubNumber: 1043, Name: "Lucy Price", Position: 1, Points: 60),
-                (ClubNumber: 1053, Name: "Daniel Shaw", Position: 2, Points: 55),
-                (ClubNumber: 1052, Name: "Thomas Reid", Position: 3, Points: 51),
+                (ClubNumber: 1043, Name: "Lucy Price",         Position:  1, Points: 60), // time: 840
+                (ClubNumber: 3052, Name: "Charlie Robinson",   Position:  2, Points: 55), // time: 845
+                (ClubNumber: 2052, Name: "Jacob Roberts",      Position:  3, Points: 51), // time: 850
+                (ClubNumber: 1053, Name: "Daniel Shaw",        Position:  4, Points: 47.0), // time: 855
+                (ClubNumber: 3042, Name: "Katie Olsen",        Position:  4, Points: 47.0), // time: 855
+                (ClubNumber: 2042, Name: "Rosie Nelson",       Position:  6, Points: 44), // time: 860
+                (ClubNumber: 2032, Name: "Archie Kerr",        Position:  7, Points: 42), // time: 890
+                (ClubNumber: 3032, Name: "Tyler Lloyd",        Position:  8, Points: 40), // time: 895
+                (ClubNumber: 1022, Name: "Sophie Irwin",       Position:  9, Points: 39), // time: 900
+                (ClubNumber: 1023, Name: "Grace Jackson",      Position: 10, Points: 37.5), // time: 915
+                (ClubNumber: 3012, Name: "Max Franklin",       Position: 10, Points: 37.5), // time: 915
+                (ClubNumber: 2022, Name: "Millie Harrison",    Position: 12, Points: 36), // time: 920
+                (ClubNumber: 2002, Name: "Ella Barker",        Position: 13, Points: 33.5), // time: 925
+                (ClubNumber: 3022, Name: "Megan Irving",       Position: 13, Points: 33.5), // time: 925
+                (ClubNumber: 3002, Name: "Nina Chapman",       Position: 15, Points: 32), // time: 930
+                (ClubNumber: 1003, Name: "Zoe Dennison",       Position: 16, Points: 29.5), // time: 940
+                (ClubNumber: 2012, Name: "Oscar Edwards",      Position: 16, Points: 29.5), // time: 940
+                (ClubNumber: 1012, Name: "Noah Fletcher",      Position: 18, Points: 28), // time: 955
+                (ClubNumber: 1072, Name: "Martin Xavier",      Position: 19, Points: 27), // time: 965
+                (ClubNumber: 1013, Name: "Ethan Graham",       Position: 20, Points: 26), // time: 970
+                (ClubNumber: 3072, Name: "Trevor York",        Position: 21, Points: 25), // time: 975
+                (ClubNumber: 1061, Name: "Helen Turner",       Position: 22, Points: 25.5), // time: 980
+                (ClubNumber: 2072, Name: "Nathan Zane",        Position: 22, Points: 25.5), // time: 980
+                (ClubNumber: 1062, Name: "Alison Underwood",   Position: 24, Points: 23.5), // time: 995
+                (ClubNumber: 3062, Name: "Fiona Ursula",       Position: 24, Points: 23.5), // time: 995
+                (ClubNumber: 2062, Name: "Rachel Upton",       Position: 26, Points: 22), // time: 1000
             };
 
             var expectedEvent3 = new[]
             {
-                (ClubNumber: 1043, Name: "Lucy Price", Position: 1, Points: 60),
-                (ClubNumber: 3053, Name: "Joseph Stevens", Position: 2, Points: 55),
-                (ClubNumber: 3051, Name: "Aaron Quincy", Position: 3, Points: 51),
+                (ClubNumber: 3053, Name: "Joseph Stevens",     Position:  1, Points: 60), // time: 855
+                (ClubNumber: 1043, Name: "Lucy Price",         Position:  2, Points: 53.0), // time: 860
+                (ClubNumber: 2053, Name: "Logan Simpson",      Position:  2, Points: 53.0), // time: 860
+                (ClubNumber: 3043, Name: "Georgia Parker",     Position:  4, Points: 48), // time: 865
+                (ClubNumber: 1041, Name: "Charlotte Nash",     Position:  5, Points: 45.0), // time: 870
+                (ClubNumber: 2043, Name: "Hannah O'Brien",     Position:  5, Points: 45.0), // time: 870
+                (ClubNumber: 2033, Name: "Henry Lawson",       Position:  7, Points: 42), // time: 880
+                (ClubNumber: 3033, Name: "Ryan Mitchell",      Position:  8, Points: 40), // time: 890
+                (ClubNumber: 1031, Name: "Oliver King",        Position:  9, Points: 39), // time: 905
+                (ClubNumber: 1033, Name: "Jack Mason",         Position: 10, Points: 37.5), // time: 910
+                (ClubNumber: 2023, Name: "Lily Ingram",        Position: 10, Points: 37.5), // time: 910
+                (ClubNumber: 3023, Name: "Amber Jennings",     Position: 12, Points: 36), // time: 920
+                (ClubNumber: 3013, Name: "Ben Gibson",         Position: 13, Points: 35), // time: 925
+                (ClubNumber: 2003, Name: "Ruby Carter",        Position: 14, Points: 33.5), // time: 935
+                (ClubNumber: 3003, Name: "Leah Davies",        Position: 15, Points: 33.5), // time: 940
+                (ClubNumber: 2013, Name: "George Foster",      Position: 16, Points: 32), // time: 950
+                (ClubNumber: 1013, Name: "Ethan Graham",       Position: 17, Points: 31), // time: 980
+                (ClubNumber: 1071, Name: "Peter Walker",       Position: 18, Points: 30), // time: 990
+                (ClubNumber: 2073, Name: "Luke Adams",         Position: 19, Points: 29), // time: 995
+                (ClubNumber: 1073, Name: "Colin Young",        Position: 20, Points: 28), // time: 1005
+                (ClubNumber: 2063, Name: "Claire Vincent",     Position: 21, Points: 27), // time: 1010
+                (ClubNumber: 1063, Name: "Janet Vaughn",       Position: 22, Points: 26), // time: 1020
+                (ClubNumber: 3063, Name: "Paula Valentine",    Position: 23, Points: 25), // time: 1025
             };
 
             // Local assert runner
-            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, int Points)[] expected)
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
             {
                 ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
                 ridesForEvent = ridesForEvent ?? new List<Ride>();
@@ -392,7 +459,7 @@ namespace EventProcessor.Tests
             scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
 
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
-            var debug = TestHelpers.RenderJuvenileDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            var debug = TestHelpers.RenderSeniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
 
             // Assertion helper (same as above)
@@ -404,7 +471,7 @@ namespace EventProcessor.Tests
                 ride.SeniorsPoints.Should().Be(expected.Points);
             }
 
-            // Expected results adjusted for history semantics (replace with authoritative values)
+            // Expected data for Seniors competition
             var expectedEvent1 = new[]
             {
                 (ClubNumber: 1051, Name: "James Quinn",     Position:  1, Points: 60),// time: 830
