@@ -48,7 +48,7 @@ namespace EventProcessor.Tests.Helpers
         // Render debug output: uses the same resolution logic as assertions
         public static string RenderJuvenileDebugOutput(
             IEnumerable<Ride> allRides,
-            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClub,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
             IEnumerable<int> eventNumbers)
         {
             var sb = new StringBuilder();
@@ -67,7 +67,7 @@ namespace EventProcessor.Tests.Helpers
                     .Where(r =>
                     {
                         if (!r.ClubNumber.HasValue) return false;
-                        if (!competitorVersionsByClub.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
 
                         var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
                         var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
@@ -91,6 +91,59 @@ namespace EventProcessor.Tests.Helpers
                     var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
                     var pos = ride.JuvenilesPosition.HasValue ? ride.JuvenilesPosition.Value.ToString() : "null";
                     var pts = ride.JuvenilesPoints;
+                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        // Render debug output: uses the same resolution logic as assertions
+        public static string RenderSeniorsDebugOutput(
+            IEnumerable<Ride> allRides,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
+            IEnumerable<int> eventNumbers)
+        {
+            var sb = new StringBuilder();
+
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClub: true);
+
+            foreach (var evt in eventNumbers.OrderBy(n => n))
+            {
+                if (!ridesByEvent.TryGetValue(evt, out var ridesForEvent) || !ridesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                var allAgeGroups = ridesForEvent
+                    .Where(r =>
+                    {
+                        if (!r.ClubNumber.HasValue) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+
+                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
+                        var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
+                        if (latest == null) return false;
+
+                        return latest.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.TotalSeconds)
+                    .ToList();
+
+                if (!allAgeGroups.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                sb.AppendLine($"// Event {evt} actual seniors results:");
+                foreach (var ride in allAgeGroups)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.SeniorsPosition.HasValue ? ride.SeniorsPosition.Value.ToString() : "null";
+                    var pts = ride.SeniorsPoints;
                     sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
                 }
             }
