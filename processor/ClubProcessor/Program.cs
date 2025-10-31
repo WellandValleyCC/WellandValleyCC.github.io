@@ -1,53 +1,11 @@
 using ClubProcessor.Context;
+using ClubProcessor.Orchestration;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.DependencyInjection;
-using ClubProcessor.Interfaces;
-using ClubProcessor.Orchestration;
-using ClubProcessor.Calculators;
 
 class Program
 {
-    static IServiceProvider ConfigureServices()
-    {
-        var services = new ServiceCollection();
-
-        // Register all calculators
-        services.AddScoped<ICompetitionScoreCalculator, JuvenilesScoreCalculator>();
-        services.AddScoped<ICompetitionScoreCalculator, SeniorsScoreCalculator>();
-
-        /*
-        services.AddScoped<ICompetitionScoreCalculator, JuniorsScoreCalculator>();
-
-        services.AddScoped<ICompetitionScoreCalculator, WomenScoreCalculator>();
-        services.AddScoped<ICompetitionScoreCalculator, RoadBikeMenScoreCalculator>();
-        services.AddScoped<ICompetitionScoreCalculator, RoadBikeWomenScoreCalculator>();
-        services.AddScoped<ICompetitionScoreCalculator>(sp =>
-            new VeteransScoreCalculator(VeteransScoringMode.StandardTimes));
-
-        services.AddScoped<ICompetitionScoreCalculator>(sp =>
-            new LeagueScoreCalculator(LeagueLevel.Prem));
-        services.AddScoped<ICompetitionScoreCalculator>(sp =>
-            new LeagueScoreCalculator(LeagueLevel.League1));
-        services.AddScoped<ICompetitionScoreCalculator>(sp =>
-            new LeagueScoreCalculator(LeagueLevel.League2));
-        services.AddScoped<ICompetitionScoreCalculator>(sp =>
-            new LeagueScoreCalculator(LeagueLevel.League3));
-        services.AddScoped<ICompetitionScoreCalculator>(sp =>
-            new LeagueScoreCalculator(LeagueLevel.League4));
-
-        services.AddScoped<ICompetitionScoreCalculator, NevBrooksScoreCalculator>();
-
-        */
-
-        // Register orchestrators
-        services.AddScoped<EventImportCoordinator>();
-        services.AddScoped<CompetitionPointsCalculator>();
-
-        return services.BuildServiceProvider();
-    }
-
     static void Main(string[] args)
     {
         string? mode = null;
@@ -122,9 +80,7 @@ class Program
 
     static void ImportEvents(string inputPath, string year)
     {
-        var provider = ConfigureServices();
-        var scorer = provider.GetRequiredService<CompetitionPointsCalculator>();
-        var coordinator = provider.GetRequiredService<EventImportCoordinator>();
+        var coordinator = new EventImportCoordinator();
         coordinator.Run(inputPath, year);
     }
 }

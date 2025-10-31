@@ -41,7 +41,7 @@ namespace EventProcessor.Tests.Helpers
                 IsRoadBike = r.IsRoadBike,
                 Eligibility = r.Eligibility,
                 AvgSpeed = r.AvgSpeed,
-                EventPosition = r.EventPosition
+                EventRank = r.EventRank
             }).ToList();
 
             // 2) Build CalendarEvents that align to the event numbers in allRides
@@ -70,9 +70,6 @@ namespace EventProcessor.Tests.Helpers
             fixture.Register(() => allRides);
             fixture.Register(() => calendarEvents);
             fixture.Register(() => calendar);
-
-            // PointsForPosition registration
-            fixture.Register<Func<int, int>>(() => (pos) => CompetitionPointsCalculatorTests.PointsForPosition(pos));
 
             // Register an eventNumber chosen from the existing event numbers in allRides
             var distinctEventNumbers = allRides.Select(r => r.EventNumber).Distinct().OrderBy(n => n).ToArray();

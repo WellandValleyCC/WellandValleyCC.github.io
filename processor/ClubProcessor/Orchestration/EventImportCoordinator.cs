@@ -7,11 +7,8 @@ namespace ClubProcessor.Orchestration
 {
     public class EventImportCoordinator
     {
-        private readonly CompetitionPointsCalculator scorer;
-
-        public EventImportCoordinator(CompetitionPointsCalculator scorer)
+        public EventImportCoordinator()
         {
-            this.scorer = scorer;
         }
 
         public void Run(string inputPath, string year)
@@ -31,11 +28,14 @@ namespace ClubProcessor.Orchestration
             var rides = eventContext.Rides.ToList();
             var competitors = competitorContext.Competitors.ToList();
             var calendar = eventContext.CalendarEvents.ToList();
-
             var pointsForPosition = CompetitionConfig.LoadPointsForPosition(eventContext);
-            
-            // Apply scoring
-            scorer.ScoreAllCompetitions(rides, competitors, calendar, pointsForPosition);
+
+            var processors = RideProcessingCoordinatorFactory.DiscoverAll(pointsForPosition);
+            var scorer = new RideProcessingCoordinator(processors, pointsForPosition);
+
+
+            // Apply scoring and ranking
+            scorer.ProcessAll(rides, competitors, calendar);
 
             // Save changes
             eventContext.SaveChanges();

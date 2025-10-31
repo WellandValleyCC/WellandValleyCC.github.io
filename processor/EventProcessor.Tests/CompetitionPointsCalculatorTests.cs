@@ -12,36 +12,6 @@ namespace EventProcessor.Tests
 {
     public class CompetitionPointsCalculatorTests
     {
-        private static readonly IReadOnlyDictionary<int, int> PointsMap = BuildPointsMap();
-
-        private static IReadOnlyDictionary<int, int> BuildPointsMap()
-        {
-            // primary positions with explicit values
-            int[] top = {
-                    60,55,51,48,46,44,42,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1
-                };
-
-            // fill remaining positions that are all 1 from 48..100
-            int maxPosition = 100;
-            var map = new Dictionary<int, int>(capacity: maxPosition);
-            for (int i = 0; i < top.Length; i++)
-            {
-                map[i + 1] = top[i];
-            }
-
-            for (int pos = top.Length + 1; pos <= maxPosition; pos++)
-            {
-                map[pos] = 1;
-            }
-
-            return map;
-        }
-
-        public static int PointsForPosition(int position)
-        {
-            return PointsMap.TryGetValue(position, out var pts) ? pts : 0;
-        }
-
         private static void AssertJuvenileRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
@@ -72,7 +42,7 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = CompetitionPointsCalculatorFactory.Create();
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
 
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
@@ -110,7 +80,7 @@ namespace EventProcessor.Tests
             };
 
             // Act
-            scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+            scorer.ProcessAll(allRides, competitors, calendar);
 
             // Arrange helper structures
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -171,9 +141,8 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Scorer setup
-            var scorer = CompetitionPointsCalculatorFactory.Create();
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
 
-            Func<int, int> points = PointsForPosition;
 
             // Build Competitor snapshots grouped by club number for resolution by ride date
             var competitorsByClubNumber = competitors
@@ -212,7 +181,7 @@ namespace EventProcessor.Tests
             };
 
             // Act
-            scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+            scorer.ProcessAll(allRides, competitors, calendar);
 
             // Arrange helper structures
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -281,7 +250,7 @@ namespace EventProcessor.Tests
 
             var rides = baseRides.Concat(ridesUsingFutureCompetitors).ToList();
 
-            var scorer = CompetitionPointsCalculatorFactory.Create();
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
 
             // Build snapshot dictionary
             var competitorsByClubNumber = competitors
@@ -296,7 +265,7 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Act & Assert
-            var act = () => scorer.ScoreAllCompetitions(rides, competitors, calendar, PointsForPosition);
+            var act = () => scorer.ProcessAll(rides, competitors, calendar);
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage("Scoring aborted: missing competitors detected. Please check the membership list.");
@@ -310,7 +279,7 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = CompetitionPointsCalculatorFactory.Create();
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
 
             // Competitor versions lookup (ordered by CreatedUtc ascending)
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -321,7 +290,7 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Act
-            scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+            scorer.ProcessAll(allRides, competitors, calendar);
 
             // Build grouping and debug output
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
@@ -424,7 +393,7 @@ namespace EventProcessor.Tests
             var futuresB = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(60));
             var futuresC = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1062), snapshots: 1, interval: TimeSpan.FromDays(90));
 
-            var scorer = CompetitionPointsCalculatorFactory.Create();
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
 
             var competitors = baseCompetitors.Concat(futuresA).Concat(futuresB).Concat(futuresC).ToList();
 
@@ -437,7 +406,7 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Act
-            scorer.ScoreAllCompetitions(allRides, competitors, calendar, PointsForPosition);
+            scorer.ProcessAll(allRides, competitors, calendar);
 
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClub: true);
             var debug = TestHelpers.RenderSeniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });

@@ -12,7 +12,7 @@ public class EventImportCoordinatorTests
     {
         // Arrange
         var scorer = new StubCompetitionPointsCalculator();
-        var coordinator = new EventImportCoordinator(scorer);
+        var coordinator = new EventImportCoordinator();
 
         string inputPath = "testdata/events/2025"; // Ensure this folder and Calendar_2025.csv exist
         string year = "2025";
@@ -33,15 +33,26 @@ public class EventImportCoordinatorTests
     }
 
 
-    private class StubCompetitionPointsCalculator : CompetitionPointsCalculator
+    private class StubCompetitionPointsCalculator : RideProcessingCoordinator
     {
-        public StubCompetitionPointsCalculator() : base(new List<ICompetitionScoreCalculator> { new NoOpCalculator() }) { }
+        public StubCompetitionPointsCalculator()
+            : base(  
+                  new List<IRideProcessor> { new NoOpProcessor() },
+                  position => 0 // Stubbed pointsForPosition delegate
+                  )
+        { }
 
-        private class NoOpCalculator : ICompetitionScoreCalculator
+        private class NoOpProcessor : ICompetitionScoreCalculator, IRideProcessor
         {
             public string CompetitionName => "Stub";
 
             public int ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
+            {
+                // No-op
+                return 0;
+            }
+
+            public int ProcessEvent(int eventNumber, List<Ride> eventRides)
             {
                 // No-op
                 return 0;

@@ -5,9 +5,15 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace ClubProcessor.Calculators
 {
-    public class JuvenilesScoreCalculator : ICompetitionScoreCalculator
+    public class JuvenilesScoreCalculator : ICompetitionScoreCalculator, IRideProcessor
     {
         public string CompetitionName => "Juveniles";
+        
+        private readonly Func<int, int> pointsForPosition;
+        public JuvenilesScoreCalculator(Func<int, int> pointsForPosition)
+        {
+            this.pointsForPosition = pointsForPosition;
+        }
 
         public int ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
         {
@@ -55,6 +61,11 @@ namespace ClubProcessor.Calculators
             }
 
             return eligibleRides.Count;
+        }
+
+        public int ProcessEvent(int eventNumber, List<Ride> eventRides)
+        {
+            return ApplyScores(eventNumber, eventRides, pointsForPosition);
         }
     }
 }

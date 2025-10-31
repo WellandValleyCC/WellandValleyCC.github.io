@@ -22,14 +22,14 @@ namespace ClubProcessor.Models
         public double? AvgSpeed { get; set; }
 
         /// <summary>
-        /// Overall position in the event, used for Seniors scoring.
+        /// Overall rank in the event, used for Event page rendering
         /// </summary>
-        public int? EventPosition { get; set; }
+        public int? EventRank { get; set; }
 
         /// <summary>
-        /// Gender-neutral RoadBike position for display and filtering.
+        /// Gender-neutral RoadBike rank for display and filtering.
         /// </summary>
-        public int? EventRoadBikePosition { get; set; }
+        public int? EventRoadBikeRank { get; set; }
 
         public int? SeniorsPosition { get; set; }
         public double? SeniorsPoints { get; set; }

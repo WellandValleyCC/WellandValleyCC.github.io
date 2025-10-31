@@ -19,7 +19,7 @@ namespace EventProcessor.Tests.Helpers
             RideEligibility eligibility = RideEligibility.Valid,
             string? actualTime = null,
             double? avgSpeed = null,
-            int? eventPosition = null)
+            int? eventRank = null)
         {
             bool isClubMember = int.TryParse(numberOrName?.Trim(), out int clubNumber);
 
@@ -32,7 +32,7 @@ namespace EventProcessor.Tests.Helpers
                 IsRoadBike = isRoadBike,
                 Eligibility = eligibility,
                 AvgSpeed = avgSpeed,
-                EventPosition = eventPosition
+                EventRank = eventRank
             };
         }
 
@@ -48,7 +48,7 @@ namespace EventProcessor.Tests.Helpers
             RideEligibility eligibility = RideEligibility.Valid,
             string? actualTime = null,
             double? avgSpeed = null,
-            int? eventPosition = null)
+            int? eventRank = null)
         {
             return Create(
                 eventNumber,
@@ -59,7 +59,7 @@ namespace EventProcessor.Tests.Helpers
                 eligibility,
                 actualTime,
                 avgSpeed,
-                eventPosition);
+                eventRank);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace EventProcessor.Tests.Helpers
             RideEligibility eligibility = RideEligibility.Valid,
             string? actualTime = null,
             double? avgSpeed = null,
-            int? eventPosition = null)
+            int? eventRank = null)
         {
             return Create(
                 eventNumber,
@@ -84,7 +84,7 @@ namespace EventProcessor.Tests.Helpers
                 eligibility,
                 actualTime,
                 avgSpeed,
-                eventPosition);
+                eventRank);
         }
     }
 }

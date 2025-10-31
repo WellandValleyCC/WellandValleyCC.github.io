@@ -10,9 +10,15 @@ namespace ClubProcessor.Calculators
     /// <summary>
     /// Scores all FirstClaim and Honorary members based on raw ride time.
     /// </summary>
-    public class SeniorsScoreCalculator : ICompetitionScoreCalculator
+    public class SeniorsScoreCalculator : ICompetitionScoreCalculator, IRideProcessor
     {
         public string CompetitionName => "Seniors";
+
+        private readonly Func<int, int> pointsForPosition;
+        public SeniorsScoreCalculator(Func<int, int> pointsForPosition)
+        {
+            this.pointsForPosition = pointsForPosition;
+        }
 
         public int ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
         {
@@ -59,6 +65,11 @@ namespace ClubProcessor.Calculators
             }
 
             return eligibleRides.Count;
+        }
+
+        public int ProcessEvent(int eventNumber, List<Ride> eventRides)
+        {
+            return ApplyScores(eventNumber, eventRides, pointsForPosition);
         }
     }
 }
