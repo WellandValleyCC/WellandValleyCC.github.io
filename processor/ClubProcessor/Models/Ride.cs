@@ -31,16 +31,7 @@ namespace ClubProcessor.Models
         /// </summary>
         public int? EventRoadBikePosition { get; set; }
 
-        /// <summary>
-        /// Alias for EventPosition used in Seniors scoring context.
-        /// Not persisted in the database.
-        /// </summary>
-        [NotMapped]
-        public int? SeniorsPosition
-        {
-            get => EventPosition;
-            set => EventPosition = value;
-        }
+        public int? SeniorsPosition { get; set; }
         public double? SeniorsPoints { get; set; }
 
         public int? WomenPosition { get; set; }
