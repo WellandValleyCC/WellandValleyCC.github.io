@@ -20,7 +20,7 @@ namespace ClubProcessor.Calculators
 
             for (int i = 0; i < eligible.Count; i++)
             {
-                eligible[i].EventRank = i + 1;
+                eligible[i].EventRoadBikeRank = i + 1;
             }
 
             return eligible.Count;
