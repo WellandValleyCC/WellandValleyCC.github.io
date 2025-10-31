@@ -33,10 +33,10 @@ namespace EventProcessor.Tests.Helpers
         }
 
         // Group rides by event number (only valid rides with club numbers by default)
-        public static Dictionary<int, List<Ride>> BuildRidesByEvent(IEnumerable<Ride> rides, bool onlyValidWithClub = true)
+        public static Dictionary<int, List<Ride>> BuildRidesByEvent(IEnumerable<Ride> rides, bool onlyValidWithClubNumber = true)
         {
             var q = rides ?? Enumerable.Empty<Ride>();
-            if (onlyValidWithClub)
+            if (onlyValidWithClubNumber)
             {
                 q = q.Where(r => r.Eligibility == RideEligibility.Valid && r.ClubNumber.HasValue);
             }
@@ -53,7 +53,7 @@ namespace EventProcessor.Tests.Helpers
         {
             var sb = new StringBuilder();
 
-            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClub: true);
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
 
             foreach (var evt in eventNumbers.OrderBy(n => n))
             {
@@ -106,7 +106,7 @@ namespace EventProcessor.Tests.Helpers
         {
             var sb = new StringBuilder();
 
-            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClub: true);
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
 
             foreach (var evt in eventNumbers.OrderBy(n => n))
             {

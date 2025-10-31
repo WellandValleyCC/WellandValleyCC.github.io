@@ -14,13 +14,35 @@ namespace ClubProcessor.Calculators
         public int AssignRanks(int eventNumber, List<Ride> rides)
         {
             var eligible = rides
-                .Where(r => r.Eligibility == RideEligibility.Valid && r.IsRoadBike == true)
+                .Where(r => r.Eligibility == RideEligibility.Valid && r.IsRoadBike)
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
+            int lastRank = 0;
+            double? lastTime = null;
+
             for (int i = 0; i < eligible.Count; i++)
             {
-                eligible[i].EventRoadBikeRank = i + 1;
+                var current = eligible[i];
+                var time = current.TotalSeconds;
+
+                int rank;
+                if (i == 0)
+                {
+                    rank = 1;
+                }
+                else if (Nullable.Equals(time, lastTime))
+                {
+                    rank = lastRank;
+                }
+                else
+                {
+                    rank = i + 1;
+                }
+
+                current.EventRoadBikeRank = rank;
+                lastRank = rank;
+                lastTime = time;
             }
 
             return eligible.Count;
