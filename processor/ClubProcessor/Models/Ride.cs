@@ -41,10 +41,10 @@ namespace ClubProcessor.Models
             get => EventPosition;
             set => EventPosition = value;
         }
-        public int? SeniorsPoints { get; set; }
+        public double? SeniorsPoints { get; set; }
 
         public int? WomenPosition { get; set; }
-        public int? WomenPoints { get; set; }
+        public double? WomenPoints { get; set; }
 
         [NotMapped]
         public TimeSpan? VeteransStandardTime { get; set; }
@@ -53,37 +53,37 @@ namespace ClubProcessor.Models
         public TimeSpan? VeteransTimeDelta { get; set; }
 
         public int? VeteransPosition { get; set; }
-        public int? VeteransPoints { get; set; }
+        public double? VeteransPoints { get; set; }
 
         public int? RoadBikeMenPosition { get; set; }
-        public int? RoadBikeMenPoints { get; set; }
+        public double? RoadBikeMenPoints { get; set; }
 
         public int? RoadBikeWomenPosition { get; set; }
-        public int? RoadBikeWomenPoints { get; set; }
+        public double? RoadBikeWomenPoints { get; set; }
 
         public int? JuvenilesPosition { get; set; }
-        public int? JuvenilesPoints { get; set; }
+        public double? JuvenilesPoints { get; set; }
 
         public int? JuniorsPosition { get; set; }
-        public int? JuniorsPoints { get; set; }
+        public double? JuniorsPoints { get; set; }
 
         public int? PremPosition { get; set; }
-        public int? PremPoints { get; set; }
+        public double? PremPoints { get; set; }
 
         public int? League1Position { get; set; }
-        public int? League1Points { get; set; }
+        public double? League1Points { get; set; }
 
         public int? League2Position { get; set; }
-        public int? League2Points { get; set; }
+        public double? League2Points { get; set; }
 
         public int? League3Position { get; set; }
-        public int? League3Points { get; set; }
+        public double? League3Points { get; set; }
 
         public int? League4Position { get; set; }
-        public int? League4Points { get; set; }
+        public double? League4Points { get; set; }
 
         public int? NevBrooksPosition { get; set; }
-        public int? NevBrooksPoints { get; set; }
+        public double? NevBrooksPoints { get; set; }
 
         public int? NevBrooksSecondsGenerated { get; set; }     // Raw handicap value
         public int? NevBrooksSecondsApplied { get; set; }       // Capped or adjusted handicap
