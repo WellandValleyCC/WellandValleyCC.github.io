@@ -34,7 +34,9 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMemberRide(1, 1051, "James Quinn", totalSeconds: 830, isRoadBike: true)); // Sen M RB
             rides.Add(RideFactory.CreateClubMemberRide(1, 1052, "Thomas Reid", totalSeconds: 845));   // Sen M
             rides.Add(RideFactory.CreateClubMemberRide(1, 1071, "Peter Walker", totalSeconds: 930));  // Vet M
-            
+
+            rides.Add(RideFactory.CreateClubMemberRide(1, 1062, "Alison Underwood", totalSeconds: 995)); // Vet F
+
             // SecondClaim additions
             rides.Add(RideFactory.CreateClubMemberRide(1, 2001, "Maya Abbott", totalSeconds: 910)); // Juv F
             rides.Add(RideFactory.CreateClubMemberRide(1, 2011, "Leo Dixon", totalSeconds: 905));  // Juv M
