@@ -13,7 +13,8 @@ namespace ClubProcessor.Calculators
             var eligible = rides
                 .Where(r => r.Competitor != null && r.EventNumber == eventNumber &&
                             r.Competitor.ClaimStatus is ClaimStatus.FirstClaim or ClaimStatus.Honorary &&
-                            r.Competitor.IsJuvenile)
+                            r.Competitor.IsJuvenile &&
+                            r.Eligibility == RideEligibility.Valid)
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
