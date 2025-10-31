@@ -11,7 +11,7 @@ namespace ClubProcessor.Calculators
         public void ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
         {
             var eligible = rides
-                .Where(r => r.Competitor != null && //r.EventNumber == eventNumber &&
+                .Where(r => r.Competitor != null && r.EventNumber == eventNumber &&
                             r.Competitor.ClaimStatus is ClaimStatus.FirstClaim or ClaimStatus.Honorary &&
                             r.Competitor.IsJuvenile)
                 .OrderBy(r => r.TotalSeconds)
@@ -38,7 +38,8 @@ namespace ClubProcessor.Calculators
                     .Sum();
 
                 //int sharedPoints = (totalPoints + tieCount - 1) / tieCount; // round fractions up
-                int sharedPoints = (int)Math.Round((double)totalPoints / tieCount, MidpointRounding.AwayFromZero);
+                //int sharedPoints = (int)Math.Round((double)totalPoints / tieCount, MidpointRounding.AwayFromZero);
+                double sharedPoints = (double)totalPoints / tieCount;
 
                 foreach (var ride in tiedGroup)
                 {
