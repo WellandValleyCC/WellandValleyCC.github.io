@@ -11,16 +11,16 @@ on:
     paths:
       - 'data/competitors_*.csv'
       - 'data/ClubEvents_*.xlsx'
-    workflow_dispatch:
-     inputs:
-       mode:
-         description: 'Run mode: competitors or events'
-         required: false
-         default: ''
-       year:
-         description: 'Year to process (e.g. 2025)'
-         required: false
-         default: ''
+  workflow_dispatch:
+   inputs:
+     mode:
+       description: 'Run mode: competitors or events'
+       required: false
+       default: ''
+     year:
+       description: 'Year to process (e.g. 2025)'
+       required: false
+       default: ''
 
 jobs:
   build-test-run:
