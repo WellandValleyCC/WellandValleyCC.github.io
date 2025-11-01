@@ -11,7 +11,16 @@ on:
     paths:
       - 'data/competitors_*.csv'
       - 'data/ClubEvents_*.xlsx'
-  workflow_dispatch:
+    workflow_dispatch:
+     inputs:
+       mode:
+         description: 'Run mode: competitors or events'
+         required: false
+         default: ''
+       year:
+         description: 'Year to process (e.g. 2025)'
+         required: false
+         default: ''
 
 jobs:
   build-test-run:
@@ -49,19 +58,52 @@ jobs:
       - name: Detect changed files and extract/process
         run: |
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          for FILE in $CHANGED; do
-            if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
-              echo "[INFO] Detected ClubEvents XLSX: $FILE"
-              echo "$FILE" > .club_events_xlsx_path
-              # Log sha256 of the checked-in XLSX so runs are traceable
-              sha256sum "$FILE" || true
-              python3 scripts/extract_club_events.py "$FILE" data/extracted/
-            elif [[ "$FILE" == data/competitors_*.csv ]]; then
-              echo "[INFO] Detected competitors CSV: $FILE"
+          YEAR="${{ github.event.inputs.year }}"
+          if [ -z "$YEAR" ]; then
+            YEAR=$(date +'%Y')
+            echo "[INFO] No year input provided — defaulting to current year: $YEAR"
+          fi
+          
+          if [ "${{ github.event.inputs.mode }}" = "competitors" ]; then
+            echo "[INFO] Manual trigger: competitors mode"
+            FILE="data/competitors_${YEAR}.csv"
+            if [ -f "$FILE" ]; then
+              echo "[INFO] Found file: $FILE"
               echo "$FILE" > .competitor_csv_path
               dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+            else
+              echo "[ERROR] File not found: $FILE"
+              exit 1
             fi
-          done
+          
+          elif [ "${{ github.event.inputs.mode }}" = "events" ]; then
+            echo "[INFO] Manual trigger: events mode"
+            FILE="data/ClubEvents_${YEAR}.xlsx"
+            if [ -f "$FILE" ]; then
+              echo "[INFO] Found file: $FILE"
+              echo "$FILE" > .club_events_xlsx_path
+              sha256sum "$FILE" || true
+              python3 scripts/extract_club_events.py "$FILE" data/extracted/
+            else
+              echo "[ERROR] File not found: $FILE"
+              exit 1
+            fi
+          
+          else
+            echo "[INFO] No manual mode specified — checking changed files"
+            for FILE in $CHANGED; do
+              if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
+                echo "[INFO] Detected ClubEvents XLSX: $FILE"
+                echo "$FILE" > .club_events_xlsx_path
+                sha256sum "$FILE" || true
+                python3 scripts/extract_club_events.py "$FILE" data/extracted/
+              elif [[ "$FILE" == data/competitors_*.csv ]]; then
+                echo "[INFO] Detected competitors CSV: $FILE"
+                echo "$FILE" > .competitor_csv_path
+                dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+              fi
+            done
+          fi
 
       - name: Run processor if extracted event CSVs exist
         run: |
