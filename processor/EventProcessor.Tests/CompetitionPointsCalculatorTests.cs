@@ -23,6 +23,18 @@ namespace EventProcessor.Tests
             ride.JuvenilesPoints.Should().Be(expected.Points, $"expected JuvenilesPoints {expected.Points} for {context}");
         }
 
+        private static void AssertJuniorRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.JuniorsPosition.Should().Be(expected.Position, $"expected JuniorsPosition {expected.Position} for {context}");
+            ride.JuniorsPoints.Should().Be(expected.Points, $"expected JuniorsPoints {expected.Points} for {context}");
+        }
+
+
         void AssertSeniorRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
@@ -32,6 +44,39 @@ namespace EventProcessor.Tests
 
             ride.SeniorsPosition.Should().Be(expected.Position, $"expected SeniorsPosition {expected.Position} for {context}");
             ride.SeniorsPoints.Should().Be(expected.Points, $"expected SeniorsPoints {expected.Points} for {context}");
+        }
+
+        private static void AssertWomenRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.WomenPosition.Should().Be(expected.Position, $"expected WomenPosition {expected.Position} for {context}");
+            ride.WomenPoints.Should().Be(expected.Points, $"expected WomenPoints {expected.Points} for {context}");
+        }
+
+        private static void AssertRoadBikeMenRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.RoadBikeMenPosition.Should().Be(expected.Position, $"expected RoadBikeMenPosition {expected.Position} for {context}");
+            ride.RoadBikeMenPoints.Should().Be(expected.Points, $"expected RoadBikeMenPoints {expected.Points} for {context}");
+        }
+
+        private static void AssertRoadBikeWomenRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.RoadBikeWomenPosition.Should().Be(expected.Position, $"expected RoadBikeWomenPosition {expected.Position} for {context}");
+            ride.RoadBikeWomenPoints.Should().Be(expected.Points, $"expected RoadBikeWomenPoints {expected.Points} for {context}");
         }
 
         [Theory]
@@ -671,6 +716,337 @@ namespace EventProcessor.Tests
                     lastEventRankValue = eventRankVal;
                 }
             }
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForJuniors_RanksJuniorRidersWhoAreNotSecondClaim(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderJuniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertJuniorRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, new[]
+            {
+                (1031, "Oliver King", 1, 60.0),
+                (1032, "Harry Lewis", 2, 55),
+                (3031, "Reece Kirk", 3, 51),
+            });
+
+            AssertExpectedForEvent(2, new[]
+            {
+                (3032, "Tyler Lloyd", 1, 60.0),
+            });
+
+            AssertExpectedForEvent(3, new[]
+            {
+                (1033, "Jack Mason", 1, 60.0),
+                (1031, "Oliver King", 2, 55),
+                (3033, "Ryan Mitchell", 3, 51),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForJuniors_ConsidersCompetitorClaimStatusHistory(
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var baseCompetitors = TestCompetitors.All.ToList();
+            var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1031), snapshots: 2, interval: TimeSpan.FromDays(45));
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitors = baseCompetitors.Concat(futures).ToList();
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderJuniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertJuniorRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, new[]
+            {
+                (1032, "Harry Lewis", 1, 60.0),
+                (3031, "Reece Kirk", 2, 55),
+            });
+
+            AssertExpectedForEvent(2, new[]
+                    {
+                (3032, "Tyler Lloyd", 1, 60.0),
+            });
+
+            AssertExpectedForEvent(3, new[]
+            {
+                (1033, "Jack Mason", 1, 60.0),
+                (3033, "Ryan Mitchell", 2, 55),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForWomen_RanksFemaleRidersWhoAreNotSecondClaim(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertWomenRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, new[]
+            {
+                (1041, "Charlotte Nash", 1, 60.0),
+                (1042, "Emily Owens", 2, 55),
+                (3041, "Ella Norris", 3, 51),
+                (1001, "Mia Bates", 4, 48),
+                (3001, "Tia Bennett", 5, 46),
+                (1002, "Isla Carson", 6, 44),
+                (1021, "Amelia Hughes", 7, 42),
+                (3021, "Zara Hayes", 8, 41),
+                (3061, "Diana Thompson", 9, 39),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForWomen_ConsidersCompetitorClaimStatusHistory(
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var baseCompetitors = TestCompetitors.All.ToList();
+            var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(45));
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitors = baseCompetitors.Concat(futures).ToList();
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertWomenRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, new[]
+            {
+                (1042, "Emily Owens", 1, 60.0),
+                (3041, "Ella Norris", 2, 55),
+                (1001, "Mia Bates", 3, 51),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForRoadBikeMen_RanksMaleRidersOnRoadBikesWhoAreNotSecondClaim(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderRoadBikeMenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertRoadBikeMenRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, new[]
+            {
+                (1051, "James Quinn", 1, 60.0),
+            });
+
+            AssertExpectedForEvent(2, new[]
+            {
+                (1022, "Sophie Irwin", 1, 60.0),
+                (1043, "Lucy Price", 2, 55),
+                (1072, "Martin Xavier", 3, 51),
+            });
+
+            AssertExpectedForEvent(3, new[]
+            {
+                (1013, "Ethan Graham", 1, 60.0),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForRoadBikeMen_ConsidersCompetitorClaimStatusHistory(
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var baseCompetitors = TestCompetitors.All.ToList();
+            var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1051), snapshots: 2, interval: TimeSpan.FromDays(45));
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitors = baseCompetitors.Concat(futures).ToList();
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderRoadBikeMenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertRoadBikeMenRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(1, new (int, string, int, double)[] { });
+
+            AssertExpectedForEvent(2, new[]
+            {
+                (1022, "Sophie Irwin", 1, 60.0),
+                (1043, "Lucy Price", 2, 55),
+                (1072, "Martin Xavier", 3, 51),
+            });
+
+            AssertExpectedForEvent(3, new[]
+            {
+                (1013, "Ethan Graham", 1, 60.0),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForRoadBikeWomen_RanksFemaleRidersOnRoadBikesWhoAreNotSecondClaim(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderRoadBikeWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertRoadBikeWomenRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(2, new[]
+            {
+                (1022, "Sophie Irwin", 1, 60.0),
+                (1043, "Lucy Price", 2, 55),
+            });
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForRoadBikeWomen_ConsidersCompetitorClaimStatusHistory(
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            var baseCompetitors = TestCompetitors.All.ToList();
+            var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1043), snapshots: 2, interval: TimeSpan.FromDays(45));
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            var competitors = baseCompetitors.Concat(futures).ToList();
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            scorer.ProcessAll(allRides, competitors, calendar);
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderRoadBikeWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
+            _ = debug;
+
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+                foreach (var exp in expected)
+                    AssertRoadBikeWomenRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            AssertExpectedForEvent(2, new[]
+            {
+                (1022, "Sophie Irwin", 1, 60.0),
+            });
         }
     }
 }
