@@ -140,7 +140,10 @@ namespace EventProcessor.Tests.Helpers
                     var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
                     var pos = ride.JuniorsPosition.HasValue ? ride.JuniorsPosition.Value.ToString() : "null";
                     var pts = ride.JuniorsPoints;
-                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup}");
                 }
             }
 

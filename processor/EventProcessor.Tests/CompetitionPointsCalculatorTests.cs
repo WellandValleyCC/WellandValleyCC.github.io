@@ -748,21 +748,27 @@ namespace EventProcessor.Tests
 
             AssertExpectedForEvent(1, new[]
             {
-                (1031, "Oliver King", 1, 60.0),
-                (1032, "Harry Lewis", 2, 55),
-                (3031, "Reece Kirk", 3, 51),
+                (ClubNumber: 1031, Name: "Oliver King", Position: 1, Points: 60.0), // 880s FirstClaim IsJunior
+                (ClubNumber: 3031, Name: "Reece Kirk", Position: 2, Points: 55), // 890s Honorary IsJunior
+                (ClubNumber: 1032, Name: "Harry Lewis", Position: 3, Points: 51), // 895s FirstClaim IsJunior
+                (ClubNumber: 1021, Name: "Amelia Hughes", Position: 4, Points: 47), // 940s FirstClaim IsJunior
+                (ClubNumber: 3021, Name: "Zara Hayes", Position: 4, Points: 47), // 940s Honorary IsJunior
             });
 
             AssertExpectedForEvent(2, new[]
             {
-                (3032, "Tyler Lloyd", 1, 60.0),
+                (ClubNumber: 3032, Name: "Tyler Lloyd", Position: 1, Points: 60.0), // 895s Honorary IsJunior
+                (ClubNumber: 1022, Name: "Sophie Irwin", Position: 2, Points: 55), // 900s FirstClaim IsJunior
+                (ClubNumber: 1023, Name: "Grace Jackson", Position: 3, Points: 51), // 915s FirstClaim IsJunior
+                (ClubNumber: 3022, Name: "Megan Irving", Position: 4, Points: 48), // 925s Honorary IsJunior
             });
 
             AssertExpectedForEvent(3, new[]
             {
-                (1033, "Jack Mason", 1, 60.0),
-                (1031, "Oliver King", 2, 55),
-                (3033, "Ryan Mitchell", 3, 51),
+                (ClubNumber: 3033, Name: "Ryan Mitchell", Position: 1, Points: 60.0), // 890s Honorary IsJunior
+                (ClubNumber: 1031, Name: "Oliver King", Position: 2, Points: 55), // 905s FirstClaim IsJunior
+                (ClubNumber: 1033, Name: "Jack Mason", Position: 3, Points: 51), // 910s FirstClaim IsJunior
+                (ClubNumber: 3023, Name: "Amber Jennings", Position: 4, Points: 48), // 920s Honorary IsJunior
             });
         }
 
@@ -797,19 +803,26 @@ namespace EventProcessor.Tests
 
             AssertExpectedForEvent(1, new[]
             {
-                (1032, "Harry Lewis", 1, 60.0),
-                (3031, "Reece Kirk", 2, 55),
+                (ClubNumber: 3031, Name: "Reece Kirk", Position: 1, Points: 60.0), // 890s Honorary IsJunior
+                (ClubNumber: 1032, Name: "Harry Lewis", Position: 2, Points: 55), // 895s FirstClaim IsJunior
+                (ClubNumber: 1021, Name: "Amelia Hughes", Position: 3, Points: 49.5), // 940s FirstClaim IsJunior
+                (ClubNumber: 3021, Name: "Zara Hayes", Position: 3, Points: 49.5), // 940s Honorary IsJunior
             });
 
-            AssertExpectedForEvent(2, new[]
-                    {
-                (3032, "Tyler Lloyd", 1, 60.0),
+            AssertExpectedForEvent(2, new[]    
+            {
+                (ClubNumber: 3032, Name: "Tyler Lloyd", Position: 1, Points: 60.0), // 895s Honorary IsJunior
+                (ClubNumber: 1022, Name: "Sophie Irwin", Position: 2, Points: 55), // 900s FirstClaim IsJunior
+                (ClubNumber: 1023, Name: "Grace Jackson", Position: 3, Points: 51), // 915s FirstClaim IsJunior
+                (ClubNumber: 3022, Name: "Megan Irving", Position: 4, Points: 48), // 925s Honorary IsJunior
             });
 
             AssertExpectedForEvent(3, new[]
             {
-                (1033, "Jack Mason", 1, 60.0),
-                (3033, "Ryan Mitchell", 2, 55),
+                (ClubNumber: 3033, Name: "Ryan Mitchell", Position: 1, Points: 60.0), // 890s Honorary IsJunior
+                (ClubNumber: 1031, Name: "Oliver King", Position: 2, Points: 55), // 905s FirstClaim IsJunior
+                (ClubNumber: 1033, Name: "Jack Mason", Position: 3, Points: 51), // 910s FirstClaim IsJunior
+                (ClubNumber: 3023, Name: "Amber Jennings", Position: 4, Points: 48), // 920s Honorary IsJunior
             });
         }
 
