@@ -1,5 +1,4 @@
-﻿using ClubData.Models;
-using ClubProcessor.Models;
+﻿using ClubProcessor.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClubProcessor.Context
@@ -22,6 +21,7 @@ namespace ClubProcessor.Context
             {
                 var basePath = AppContext.BaseDirectory;
                 var dbPath = Path.Combine(basePath, "data", "club_events_fallback.db");
+                Console.WriteLine($"[INFO] Using fallback DB: {dbPath}");
                 Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
                 optionsBuilder.UseSqlite($"Data Source={dbPath}");
             }
@@ -42,16 +42,19 @@ namespace ClubProcessor.Context
             {
                 entity.ToTable("CalendarEvents");
 
-                entity.HasKey(e => e.EventID);
+                entity.HasKey(e => e.Id); // EF-managed primary key
 
+                entity.HasIndex(e => e.EventNumber).IsUnique();
+
+                entity.Property(e => e.EventNumber).IsRequired();
                 entity.Property(e => e.EventDate).IsRequired();
                 entity.Property(e => e.StartTime).IsRequired();
                 entity.Property(e => e.EventName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Miles).HasColumnType("REAL");
                 entity.Property(e => e.Location).HasMaxLength(100);
-                entity.Property(e => e.SheetName).HasMaxLength(20);
             });
         }
+
 
         public int GetPointsForPosition(int position)
         {

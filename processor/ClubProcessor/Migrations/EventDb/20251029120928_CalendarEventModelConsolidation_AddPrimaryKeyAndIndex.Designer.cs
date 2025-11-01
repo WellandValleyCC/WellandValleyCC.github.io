@@ -3,6 +3,7 @@ using System;
 using ClubProcessor.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubProcessor.Migrations.EventDb
 {
     [DbContext(typeof(EventDbContext))]
-    partial class EventDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029120928_CalendarEventModelConsolidation_AddPrimaryKeyAndIndex")]
+    partial class CalendarEventModelConsolidation_AddPrimaryKeyAndIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -107,47 +110,47 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<int>("EventNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("EventRank")
+                    b.Property<int?>("EventPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("EventRoadBikeRank")
+                    b.Property<int?>("EventRoadBikePosition")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsRoadBike")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("JuniorsPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("JuniorsPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("JuniorsPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("JuvenilesPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("JuvenilesPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("JuvenilesPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("League1Points")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("League1Points")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("League1Position")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("League2Points")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("League2Points")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("League2Position")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("League3Points")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("League3Points")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("League3Position")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("League4Points")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("League4Points")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("League4Position")
                         .HasColumnType("INTEGER");
@@ -155,8 +158,8 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("NevBrooksPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("NevBrooksPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("NevBrooksPosition")
                         .HasColumnType("INTEGER");
@@ -173,41 +176,38 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("PremPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("PremPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("PremPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("RoadBikeMenPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("RoadBikeMenPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("RoadBikeMenPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("RoadBikeWomenPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("RoadBikeWomenPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("RoadBikeWomenPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("SeniorsPoints")
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("SeniorsPosition")
+                    b.Property<int?>("SeniorsPoints")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalSeconds")
                         .HasColumnType("REAL");
 
-                    b.Property<double?>("VeteransPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("VeteransPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("VeteransPosition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("WomenPoints")
-                        .HasColumnType("REAL");
+                    b.Property<int?>("WomenPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("WomenPosition")
                         .HasColumnType("INTEGER");

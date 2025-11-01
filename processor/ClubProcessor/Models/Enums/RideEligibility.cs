@@ -1,4 +1,22 @@
-﻿namespace ClubProcessor.Models.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ClubProcessor.Models.Enums
 {
-    public enum RideEligibility { Undefined = 0, Valid = 1, DNS = 2, DQ = 3, DNF = 4 }
+    public enum RideEligibility
+    {
+        [Display(Name = "Undefined")]
+        Undefined = 0,
+
+        [Display(Name = "Valid")]
+        Valid = 1,
+
+        [Display(Name = "DNS")]
+        DNS = 2,
+
+        [Display(Name = "DQ")]
+        DQ = 3,
+
+        [Display(Name = "DNF")]
+        DNF = 4
+    }
 }

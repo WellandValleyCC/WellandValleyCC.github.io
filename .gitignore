@@ -64,6 +64,9 @@ processor/ClubProcessor/Properties/launchSettings.json
 !data/club_events_*.db
 !data/club_competitors_*.db
 
+# Ignore all .db files in ClubProcessor/data
+processor/ClubProcessor/data/*.db
+
 # extractor artifacts and normalized workbooks
 artifacts/
 *.normalized.xlsx

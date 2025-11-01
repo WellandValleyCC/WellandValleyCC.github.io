@@ -23,7 +23,7 @@ namespace EventProcessor.Tests
         public void ParseCalendarEvents_ValidCsv_ParsesCorrectly()
         {
             // Arrange
-            var csvContent = @"EventID,Date,Start time,Event Name,Miles,Location / Course,Hill Climb,Club Championship,Non-Standard 10,Evening 10,Hard Ride Series,Sheet Name,isCancelled
+            var csvContent = @"Event Number,Date,Start time,Event Name,Miles,Location / Course,Hill Climb,Club Championship,Non-Standard 10,Evening 10,Hard Ride Series,Sheet Name,isCancelled
 1,2025-04-01,18:30,Medbourne TT,9.5,Medbourne,Y,Y,N,Y,Y,Event_01,N";
 
             using var reader = new StringReader(csvContent);
@@ -38,7 +38,7 @@ namespace EventProcessor.Tests
             var evt = records[0];
 
             evt.Should().NotBeNull();
-            evt.EventID.Should().Be(1);
+            evt.EventNumber.Should().Be(1);
             evt.EventDate.Should().Be(new DateTime(2025, 4, 1));
             evt.StartTime.Should().Be(TimeSpan.FromMinutes(18 * 60 + 30));
             evt.EventName.Should().Be("Medbourne TT");

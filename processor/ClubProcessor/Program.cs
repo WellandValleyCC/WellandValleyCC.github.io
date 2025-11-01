@@ -1,4 +1,5 @@
 using ClubProcessor.Context;
+using ClubProcessor.Orchestration;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -79,42 +80,7 @@ class Program
 
     static void ImportEvents(string inputPath, string year)
     {
-        Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
-
-        var eventDbPath = Path.Combine("data", $"club_events_{year}.db");
-        var competitorDbPath = Path.Combine("data", $"club_competitors_{year}.db");
-
-        var eventOptions = new DbContextOptionsBuilder<EventDbContext>()
-            .UseSqlite($"Data Source={eventDbPath}")
-            .Options;
-
-        var competitorOptions = new DbContextOptionsBuilder<CompetitorDbContext>()
-            .UseSqlite($"Data Source={competitorDbPath}")
-            .Options;
-
-        using var eventContext = new EventDbContext(eventOptions);
-        using var competitorContext = new CompetitorDbContext(competitorOptions);
-
-        eventContext.Database.Migrate();
-        Console.WriteLine($"[INFO] Migration complete for: {eventDbPath}");
-
-        competitorContext.Database.Migrate();
-        Console.WriteLine($"[INFO] Migration complete for: {competitorDbPath}");
-
-        var calendarCsvPath = Path.Combine(inputPath, $"Calendar_{year}.csv");
-        if (File.Exists(calendarCsvPath))
-        {
-            Console.WriteLine($"[INFO] Importing calendar from: {calendarCsvPath}");
-            var calendarImporter = new CalendarImporter(eventContext);
-            calendarImporter.ImportFromCsv(calendarCsvPath);
-            Console.WriteLine("[OK] Calendar import complete");
-        }
-        else
-        {
-            Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
-        }
-
-        var processor = new EventsImporter(eventContext, competitorContext);
-        processor.ImportFromFolder(inputPath);
+        var coordinator = new EventImportCoordinator();
+        coordinator.Run(inputPath, year);
     }
 }
