@@ -925,41 +925,41 @@ namespace EventProcessor.Tests
 
             AssertExpectedForEvent(1, new[]
                 {
-                    (ClubNumber: 1041, Name: "Charlotte Nash",   Position: 1, Points: 60.0), // 850s FirstClaim IsSenior
-                    (ClubNumber: 1042, Name: "Emily Owens",      Position: 2, Points: 55), // 860s FirstClaim IsSenior
-                    (ClubNumber: 3041, Name: "Ella Norris",      Position: 3, Points: 51), // 875s Honorary IsSenior
-                    (ClubNumber: 1001, Name: "Mia Bates",        Position: 4, Points: 48), // 900s FirstClaim IsJuvenile
-                    (ClubNumber: 3001, Name: "Tia Bennett",      Position: 5, Points: 46), // 915s Honorary IsJuvenile
-                    (ClubNumber: 1002, Name: "Isla Carson",      Position: 6, Points: 44), // 920s FirstClaim IsJuvenile
-                    (ClubNumber: 1021, Name: "Amelia Hughes",    Position: 7, Points: 41), // 940s FirstClaim IsJunior
-                    (ClubNumber: 3021, Name: "Zara Hayes",       Position: 7, Points: 41), // 940s Honorary IsJunior
-                    (ClubNumber: 3061, Name: "Diana Thompson",   Position: 9, Points: 39), // 985s Honorary IsVeteran
-                    (ClubNumber: 1062, Name: "Alison Underwood", Position: 10, Points: 38) // 995s FirstClaim IsVeteran
-                });
+// Excluded due to futures                    (ClubNumber: 1041, Name: "Charlotte Nash",   Position: 1, Points: 60.0), // 850s FirstClaim IsSenior
+                    (ClubNumber: 1042, Name: "Emily Owens",      Position: 1, Points: 60.0),  // 860s FirstClaim IsSenior
+                    (ClubNumber: 3041, Name: "Ella Norris",      Position: 2, Points: 55),    // 875s Honorary IsSenior
+                    (ClubNumber: 1001, Name: "Mia Bates",        Position: 3, Points: 51),    // 900s FirstClaim IsJuvenile
+                    (ClubNumber: 3001, Name: "Tia Bennett",      Position: 4, Points: 48),    // 915s Honorary IsJuvenile
+                    (ClubNumber: 1002, Name: "Isla Carson",      Position: 5, Points: 46),    // 920s FirstClaim IsJuvenile
+                    (ClubNumber: 1021, Name: "Amelia Hughes",    Position: 6, Points: 43),    // 940s FirstClaim IsJunior
+                    (ClubNumber: 3021, Name: "Zara Hayes",       Position: 6, Points: 43),    // 940s Honorary IsJunior
+                    (ClubNumber: 3061, Name: "Diana Thompson",   Position: 8, Points: 40),    // 985s Honorary IsVeteran
+                    (ClubNumber: 1062, Name: "Alison Underwood", Position: 9, Points: 39),    // 995s FirstClaim IsVeteran
+                });                                                                          
 
             AssertExpectedForEvent(2, new[]
                 {
                     (ClubNumber: 1043, Name: "Lucy Price",       Position: 1, Points: 60.0), // 840s FirstClaim IsSenior
-                    (ClubNumber: 3042, Name: "Katie Olsen",      Position: 2, Points: 55), // 855s Honorary IsSenior
-                    (ClubNumber: 1022, Name: "Sophie Irwin",     Position: 3, Points: 51), // 900s FirstClaim IsJunior
-                    (ClubNumber: 1023, Name: "Grace Jackson",    Position: 4, Points: 48), // 915s FirstClaim IsJunior
-                    (ClubNumber: 3022, Name: "Megan Irving",     Position: 5, Points: 46), // 925s Honorary IsJunior
-                    (ClubNumber: 3002, Name: "Nina Chapman",     Position: 6, Points: 44), // 930s Honorary IsJuvenile
-                    (ClubNumber: 1003, Name: "Zoe Dennison",     Position: 7, Points: 42), // 940s FirstClaim IsJuvenile
-                    (ClubNumber: 1061, Name: "Helen Turner",     Position: 8, Points: 40), // 980s FirstClaim IsVeteran
+                    (ClubNumber: 3042, Name: "Katie Olsen",      Position: 2, Points: 55),   // 855s Honorary IsSenior
+                    (ClubNumber: 1022, Name: "Sophie Irwin",     Position: 3, Points: 51),   // 900s FirstClaim IsJunior
+                    (ClubNumber: 1023, Name: "Grace Jackson",    Position: 4, Points: 48),   // 915s FirstClaim IsJunior
+                    (ClubNumber: 3022, Name: "Megan Irving",     Position: 5, Points: 46),   // 925s Honorary IsJunior
+                    (ClubNumber: 3002, Name: "Nina Chapman",     Position: 6, Points: 44),   // 930s Honorary IsJuvenile
+                    (ClubNumber: 1003, Name: "Zoe Dennison",     Position: 7, Points: 42),   // 940s FirstClaim IsJuvenile
+                    (ClubNumber: 1061, Name: "Helen Turner",     Position: 8, Points: 40),   // 980s FirstClaim IsVeteran
                     (ClubNumber: 1062, Name: "Alison Underwood", Position: 9, Points: 38.5), // 995s FirstClaim IsVeteran
-                    (ClubNumber: 3062, Name: "Fiona Ursula",     Position: 9, Points: 38.5) // 995s Honorary IsVeteran
+                    (ClubNumber: 3062, Name: "Fiona Ursula",     Position: 9, Points: 38.5)  // 995s Honorary IsVeteran
                 });
 
             AssertExpectedForEvent(3, new[]
                 {
                     (ClubNumber: 1043, Name: "Lucy Price",       Position: 1, Points: 60.0), // 860s FirstClaim IsSenior
-                    (ClubNumber: 3043, Name: "Georgia Parker",   Position: 2, Points: 55), // 865s Honorary IsSenior
-                    (ClubNumber: 1041, Name: "Charlotte Nash",   Position: 3, Points: 51), // 870s FirstClaim IsSenior
-                    (ClubNumber: 3023, Name: "Amber Jennings",   Position: 4, Points: 48), // 920s Honorary IsJunior
-                    (ClubNumber: 3003, Name: "Leah Davies",      Position: 5, Points: 46), // 940s Honorary IsJuvenile
-                    (ClubNumber: 1063, Name: "Janet Vaughn",     Position: 6, Points: 44), // 1020s FirstClaim IsVeteran
-                    (ClubNumber: 3063, Name: "Paula Valentine",  Position: 7, Points: 42) // 1025s Honorary IsVeteran
+                    (ClubNumber: 3043, Name: "Georgia Parker",   Position: 2, Points: 55),   // 865s Honorary IsSenior
+/*Futures*/         (ClubNumber: 1041, Name: "Charlotte Nash",   Position: 3, Points: 51), // 870s FirstClaim IsSenior Female TT
+                    (ClubNumber: 3023, Name: "Amber Jennings",   Position: 4, Points: 48),   // 920s Honorary IsJunior
+                    (ClubNumber: 3003, Name: "Leah Davies",      Position: 5, Points: 46),   // 940s Honorary IsJuvenile
+                    (ClubNumber: 1063, Name: "Janet Vaughn",     Position: 6, Points: 44),   // 1020s FirstClaim IsVeteran
+                    (ClubNumber: 3063, Name: "Paula Valentine",  Position: 7, Points: 42)    // 1025s Honorary IsVeteran
                 });
         }
 
@@ -1008,7 +1008,7 @@ namespace EventProcessor.Tests
             {
                 (ClubNumber: 1031, Name: "Oliver King",        Position: 1, Points: 60.0), // 905s FirstClaim IsJunior Male Road
                 (ClubNumber: 1013, Name: "Ethan Graham",       Position: 2, Points: 55), // 980s FirstClaim IsJuvenile Male Road
-                (ClubNumber: 1071, Name: "Peter Walker",       Position: 3, Points: 53), // 990s FirstClaim IsVeteran Male Road
+                (ClubNumber: 1071, Name: "Peter Walker",       Position: 3, Points: 51), // 990s FirstClaim IsVeteran Male Road
             });
         }
 
@@ -1045,7 +1045,7 @@ namespace EventProcessor.Tests
             {
                 (ClubNumber: 1031, Name: "Oliver King",  Position: 1, Points: 60.0), // 880s FirstClaim IsJunior Male Road
                 (ClubNumber: 1011, Name: "Liam Evans",   Position: 2, Points: 55), // 890s FirstClaim IsJuvenile Male Road
-                (ClubNumber: 1071, Name: "Peter Walker", Position: 3, Points: 53), // 930s FirstClaim IsVeteran Male Road
+                (ClubNumber: 1071, Name: "Peter Walker", Position: 3, Points: 51), // 930s FirstClaim IsVeteran Male Road
             });
 
             AssertExpectedForEvent(2, new[]
@@ -1058,7 +1058,7 @@ namespace EventProcessor.Tests
             {
                 (ClubNumber: 1031, Name: "Oliver King",        Position: 1, Points: 60.0), // 905s FirstClaim IsJunior Male Road
                 (ClubNumber: 1013, Name: "Ethan Graham",       Position: 2, Points: 55), // 980s FirstClaim IsJuvenile Male Road
-                (ClubNumber: 1071, Name: "Peter Walker",       Position: 3, Points: 53), // 990s FirstClaim IsVeteran Male Road
+                (ClubNumber: 1071, Name: "Peter Walker",       Position: 3, Points: 51), // 990s FirstClaim IsVeteran Male Road
             });
         }
 
@@ -1150,7 +1150,7 @@ namespace EventProcessor.Tests
                     AssertRoadBikeWomenRideMatchesExpected(ridesForEvent, exp);
             }
 
-            AssertExpectedForEvent(3, new[]
+            AssertExpectedForEvent(1, new[]
             {
                 (ClubNumber: 1041, Name: "Charlotte Nash",     Position: 1, Points: 60.0), // 850s FirstClaim IsSenior Female Road
                 (ClubNumber: 3041, Name: "Ella Norris",        Position: 2, Points: 55), // 875s Honorary IsSenior Female Road
@@ -1172,13 +1172,13 @@ namespace EventProcessor.Tests
                 (ClubNumber: 3062, Name: "Fiona Ursula",       Position: 8, Points: 40), // 995s Honorary IsVeteran Female Road
             });
 
-            AssertExpectedForEvent(2, new[]
+            AssertExpectedForEvent(3, new[]
             {
                 (ClubNumber: 1043, Name: "Lucy Price",         Position: 1, Points: 60.0), // 860s FirstClaim IsSenior Female Road
-                (ClubNumber: 3043, Name: "Georgia Parker",     Position: 2, Points: 55), // 865s Honorary IsSenior Female Road
-                (ClubNumber: 3023, Name: "Amber Jennings",     Position: 3, Points: 51), // 920s Honorary IsJunior Female Road
-                (ClubNumber: 3003, Name: "Leah Davies",        Position: 4, Points: 48), // 940s Honorary IsJuvenile Female Road
-                (ClubNumber: 3063, Name: "Paula Valentine",    Position: 5, Points: 46), // 1025s Honorary IsVeteran Female Road
+                (ClubNumber: 3043, Name: "Georgia Parker",     Position: 2, Points: 55),   // 865s Honorary IsSenior Female Road
+                (ClubNumber: 3023, Name: "Amber Jennings",     Position: 3, Points: 51),   // 920s Honorary IsJunior Female Road
+                (ClubNumber: 3003, Name: "Leah Davies",        Position: 4, Points: 48),   // 940s Honorary IsJuvenile Female Road
+                (ClubNumber: 3063, Name: "Paula Valentine",    Position: 5, Points: 46),   // 1025s Honorary IsVeteran Female Road
             });
         }
     }
