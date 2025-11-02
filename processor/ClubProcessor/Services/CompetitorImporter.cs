@@ -80,6 +80,7 @@ namespace ClubProcessor.Services
                     latest.IsSenior = competitor.IsSenior;
                     latest.IsVeteran = competitor.IsVeteran;
                     latest.LastUpdatedUtc = competitor.LastUpdatedUtc;
+                    latest.VetsBucket = competitor.VetsBucket;
                 }
             }
         }
