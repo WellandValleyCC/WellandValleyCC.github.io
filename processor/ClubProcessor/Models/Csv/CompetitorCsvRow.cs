@@ -37,6 +37,9 @@
             [Name("ImportDate")]
             public DateTime ImportDate { get; set; }
 
+            [Name("VetsBucket")]
+            public int? VetsBucket { get; set; }
+
             [Ignore]
             public string FullName => $"{GivenName} {Surname}".Trim();
 
