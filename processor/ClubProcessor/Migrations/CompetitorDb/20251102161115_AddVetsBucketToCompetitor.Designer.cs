@@ -3,6 +3,7 @@ using System;
 using ClubProcessor.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubProcessor.Migrations.CompetitorDb
 {
     [DbContext(typeof(CompetitorDbContext))]
-    partial class CompetitorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102161115_AddVetsBucketToCompetitor")]
+    partial class AddVetsBucketToCompetitor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");

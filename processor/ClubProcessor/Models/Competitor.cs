@@ -38,6 +38,7 @@ namespace ClubProcessor.Models
             }
         }
 
+        public int? VetsBucket { get; set; }
 
         /// <summary>
         /// The date that this Competitor record was created, in UTC.
