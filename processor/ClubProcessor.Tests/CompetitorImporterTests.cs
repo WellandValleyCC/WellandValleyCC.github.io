@@ -28,8 +28,8 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31,");
 
             // Act
             importer.Import(testCsvPath);
@@ -55,14 +55,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31,");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                "9999,Doe,John,Second Claim,false,false,false,true,false,2025-08-31");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                "9999,Doe,John,Second Claim,false,false,false,true,false,2025-08-31,");
 
             // Act
             importerYesterday.Import(testCsvPath1);
@@ -94,14 +94,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{yesterday:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{yesterday:yyyy-MM-dd},");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{today:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{today:yyyy-MM-dd},");
 
             // Act
             importerYesterday.Import(testCsvPath1);
@@ -126,8 +126,8 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 csvPath,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,John,First Claim,false,false,true,false,false,{importDate:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,false,true,false,false,{importDate:yyyy-MM-dd},");
 
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -158,14 +158,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd},");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,John,Second Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,Second Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd},");
 
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -205,14 +205,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,Johnathon,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,Johnathon,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd},");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd}");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd},");
 
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
