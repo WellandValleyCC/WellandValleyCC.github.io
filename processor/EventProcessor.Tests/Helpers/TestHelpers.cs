@@ -63,7 +63,7 @@ namespace EventProcessor.Tests.Helpers
                     continue;
                 }
 
-                var juveniles = ridesForEvent
+                var eligible = ridesForEvent
                     .Where(r =>
                     {
                         if (!r.ClubNumber.HasValue) return false;
@@ -71,27 +71,88 @@ namespace EventProcessor.Tests.Helpers
 
                         var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
                         var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
-                        if (latest == null) return false;
-
-                        return latest.IsJuvenile && latest.ClaimStatus != ClaimStatus.SecondClaim;
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
                     })
                     .OrderBy(r => r.TotalSeconds)
                     .ToList();
 
-                if (!juveniles.Any())
+                if (!eligible.Any())
                 {
-                    sb.AppendLine($"// Event {evt}: no juvenile rides (or none eligible)");
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
                     continue;
                 }
 
-                sb.AppendLine($"// Event {evt} actual juvenile results:");
-                foreach (var ride in juveniles)
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
                 {
                     var club = ride.ClubNumber!.Value;
                     var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
                     var pos = ride.JuvenilesPosition.HasValue ? ride.JuvenilesPosition.Value.ToString() : "null";
                     var pts = ride.JuvenilesPoints;
-                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
+                    line = line.PadRight(46); // ensures "Position" starts at column 42
+                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string RenderJuniorsDebugOutput(
+            IEnumerable<Ride> allRides,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
+            IEnumerable<int> eventNumbers)
+        {
+            var sb = new StringBuilder();
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
+
+            foreach (var evt in eventNumbers.OrderBy(n => n))
+            {
+                if (!ridesByEvent.TryGetValue(evt, out var ridesForEvent) || !ridesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                var eligible = ridesForEvent
+                    .Where(r =>
+                    {
+                        if (!r.ClubNumber.HasValue) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+
+                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
+                        var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.TotalSeconds)
+                    .ToList();
+
+                if (!eligible.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.JuniorsPosition.HasValue ? ride.JuniorsPosition.Value.ToString() : "null";
+                    var pts = ride.JuniorsPoints;
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
+                    line = line.PadRight(46); // ensures "Position" starts at column 42
+                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
                 }
             }
 
@@ -116,7 +177,7 @@ namespace EventProcessor.Tests.Helpers
                     continue;
                 }
 
-                var allAgeGroups = ridesForEvent
+                var eligible = ridesForEvent
                     .Where(r =>
                     {
                         if (!r.ClubNumber.HasValue) return false;
@@ -124,27 +185,200 @@ namespace EventProcessor.Tests.Helpers
 
                         var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
                         var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
-                        if (latest == null) return false;
-
-                        return latest.ClaimStatus != ClaimStatus.SecondClaim;
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
                     })
                     .OrderBy(r => r.TotalSeconds)
                     .ToList();
 
-                if (!allAgeGroups.Any())
+                if (!eligible.Any())
                 {
                     sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
                     continue;
                 }
 
-                sb.AppendLine($"// Event {evt} actual seniors results:");
-                foreach (var ride in allAgeGroups)
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
                 {
                     var club = ride.ClubNumber!.Value;
                     var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
                     var pos = ride.SeniorsPosition.HasValue ? ride.SeniorsPosition.Value.ToString() : "null";
                     var pts = ride.SeniorsPoints;
-                    sb.AppendLine($"(ClubNumber: {club}, Name: \"{name}\", Position: {pos}, Points: {pts}),");
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
+                    line = line.PadRight(46); // ensures "Position" starts at column 42
+                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string RenderWomenDebugOutput(
+            IEnumerable<Ride> allRides,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
+            IEnumerable<int> eventNumbers)
+        {
+            var sb = new StringBuilder();
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
+
+            foreach (var evt in eventNumbers.OrderBy(n => n))
+            {
+                if (!ridesByEvent.TryGetValue(evt, out var ridesForEvent) || !ridesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                var eligible = ridesForEvent
+                    .Where(r =>
+                    {
+                        if (!r.ClubNumber.HasValue) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+
+                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
+                        var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.TotalSeconds)
+                    .ToList();
+
+                if (!eligible.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.WomenPosition.HasValue ? ride.WomenPosition.Value.ToString() : "null";
+                    var pts = ride.WomenPoints;
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
+                    line = line.PadRight(46); // ensures "Position" starts at column 42
+                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string RenderRoadBikeMenDebugOutput(
+            IEnumerable<Ride> allRides,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
+            IEnumerable<int> eventNumbers)
+        {
+            var sb = new StringBuilder();
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
+
+            foreach (var evt in eventNumbers.OrderBy(n => n))
+            {
+                if (!ridesByEvent.TryGetValue(evt, out var ridesForEvent) || !ridesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                var eligible = ridesForEvent
+                    .Where(r =>
+                    {
+                        if (!r.ClubNumber.HasValue) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+
+                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
+                        var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.TotalSeconds)
+                    .ToList();
+
+                if (!eligible.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.RoadBikeMenPosition.HasValue ? ride.RoadBikeMenPosition.Value.ToString() : "null";
+                    var pts = ride.RoadBikeMenPoints;
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
+                    line = line.PadRight(46); // ensures "Position" starts at column 42
+                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string RenderRoadBikeWomenDebugOutput(
+            IEnumerable<Ride> allRides,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
+            IEnumerable<int> eventNumbers)
+        {
+            var sb = new StringBuilder();
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
+
+            foreach (var evt in eventNumbers.OrderBy(n => n))
+            {
+                if (!ridesByEvent.TryGetValue(evt, out var ridesForEvent) || !ridesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                var eligible = ridesForEvent
+                    .Where(r =>
+                    {
+                        if (!r.ClubNumber.HasValue) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+
+                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
+                        var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.TotalSeconds)
+                    .ToList();
+
+                if (!eligible.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.RoadBikeWomenPosition.HasValue ? ride.RoadBikeWomenPosition.Value.ToString() : "null";
+                    var pts = ride.RoadBikeWomenPoints;
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
+                    line = line.PadRight(46); // ensures "Position" starts at column 42
+                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
                 }
             }
 
