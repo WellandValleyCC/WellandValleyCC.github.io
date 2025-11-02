@@ -85,7 +85,7 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("PointsAllocations");
+                    b.ToTable("PointsAllocations", (string)null);
                 });
 
             modelBuilder.Entity("ClubProcessor.Models.Ride", b =>
@@ -214,7 +214,7 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rides");
+                    b.ToTable("Rides", (string)null);
                 });
 #pragma warning restore 612, 618
         }

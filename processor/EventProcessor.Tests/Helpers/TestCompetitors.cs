@@ -34,13 +34,13 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(1052, "Reid", "Thomas", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsSenior),
             CompetitorFactory.Create(1053, "Shaw", "Daniel", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsSenior),
 
-            CompetitorFactory.Create(1061, "Turner", "Helen", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1062, "Underwood", "Alison", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1063, "Vaughn", "Janet", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1061, "Turner", "Helen", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 4),
+            CompetitorFactory.Create(1062, "Underwood", "Alison", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 4),
+            CompetitorFactory.Create(1063, "Vaughn", "Janet", ClaimStatus.FirstClaim, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 4),
 
-            CompetitorFactory.Create(1071, "Walker", "Peter", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1072, "Xavier", "Martin", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(1073, "Young", "Colin", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(1071, "Walker", "Peter", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 5),
+            CompetitorFactory.Create(1072, "Xavier", "Martin", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 5),
+            CompetitorFactory.Create(1073, "Young", "Colin", ClaimStatus.FirstClaim, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 5),
 
             // SecondClaim competitors (24)
             CompetitorFactory.Create(2001, "Abbott", "Maya", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsJuvenile),
@@ -67,13 +67,13 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(2052, "Roberts", "Jacob", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsSenior),
             CompetitorFactory.Create(2053, "Simpson", "Logan", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsSenior),
 
-            CompetitorFactory.Create(2061, "Taylor", "Beth", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(2062, "Upton", "Rachel", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(2063, "Vincent", "Claire", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(2061, "Taylor", "Beth", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran   , vetsBucket: 1),
+            CompetitorFactory.Create(2062, "Upton", "Rachel", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran  , vetsBucket: 2),
+            CompetitorFactory.Create(2063, "Vincent", "Claire", ClaimStatus.SecondClaim, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 4),
 
-            CompetitorFactory.Create(2071, "White", "Adam", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(2072, "Zane", "Nathan", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(2073, "Adams", "Luke", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(2071, "White", "Adam", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 4),
+            CompetitorFactory.Create(2072, "Zane", "Nathan", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 6),
+            CompetitorFactory.Create(2073, "Adams", "Luke", ClaimStatus.SecondClaim, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 8),
 
             // Honorary competitors (24)
             CompetitorFactory.Create(3001, "Bennett", "Tia", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsJuvenile),
@@ -100,13 +100,13 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(3052, "Robinson", "Charlie", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsSenior),
             CompetitorFactory.Create(3053, "Stevens", "Joseph", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsSenior),
 
-            CompetitorFactory.Create(3061, "Thompson", "Diana", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(3062, "Ursula", "Fiona", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(3063, "Valentine", "Paula", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(3061, "Thompson", "Diana", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 1),
+            CompetitorFactory.Create(3062, "Ursula", "Fiona", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 5),
+            CompetitorFactory.Create(3063, "Valentine", "Paula", ClaimStatus.Honorary, isFemale: true, AgeGroup.IsVeteran, vetsBucket: 10),
 
-            CompetitorFactory.Create(3071, "Watson", "Graham", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(3072, "York", "Trevor", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
-            CompetitorFactory.Create(3073, "Zimmer", "Derek", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran),
+            CompetitorFactory.Create(3071, "Watson", "Graham", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 15),
+            CompetitorFactory.Create(3072, "York", "Trevor", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 9),
+            CompetitorFactory.Create(3073, "Zimmer", "Derek", ClaimStatus.Honorary, isFemale: false, AgeGroup.IsVeteran, vetsBucket: 5),
 
             // Future-dated competitors (CreatedUtc = 50 days from now)
             CompetitorFactory.Create(4001, "Harper", "Sylvie", ClaimStatus.FirstClaim, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
@@ -115,8 +115,8 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(4004, "Blake", "Ronan", ClaimStatus.FirstClaim, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4005, "Frost", "Imogen", ClaimStatus.FirstClaim, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4006, "Drake", "Callum", ClaimStatus.FirstClaim, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
-            CompetitorFactory.Create(4007, "Winslow", "Freya", ClaimStatus.FirstClaim, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
-            CompetitorFactory.Create(4008, "Thorne", "Jasper", ClaimStatus.FirstClaim, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4007, "Winslow", "Freya", ClaimStatus.FirstClaim, true, AgeGroup.IsVeteran, vetsBucket: 12, createdUtc: DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4008, "Thorne", "Jasper", ClaimStatus.FirstClaim, false, AgeGroup.IsVeteran, vetsBucket: 5, createdUtc: DateTime.UtcNow.AddDays(50)),
 
             CompetitorFactory.Create(4011, "Marsh", "Elodie", ClaimStatus.SecondClaim, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4012, "Holt", "Kieran", ClaimStatus.SecondClaim, false, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
@@ -124,8 +124,8 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(4014, "Grayson", "Elliot", ClaimStatus.SecondClaim, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4015, "Marlow", "Isabel", ClaimStatus.SecondClaim, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4016, "Sutton", "Miles", ClaimStatus.SecondClaim, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
-            CompetitorFactory.Create(4017, "Harrington", "Clara", ClaimStatus.SecondClaim, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
-            CompetitorFactory.Create(4018, "Dalton", "Reed", ClaimStatus.SecondClaim, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4017, "Harrington", "Clara", ClaimStatus.SecondClaim, true, AgeGroup.IsVeteran, vetsBucket: 17, createdUtc: DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4018, "Dalton", "Reed", ClaimStatus.SecondClaim, false, AgeGroup.IsVeteran, vetsBucket: 18, createdUtc: DateTime.UtcNow.AddDays(50)),
 
             CompetitorFactory.Create(4021, "Prescott", "Nina", ClaimStatus.Honorary, true, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4022, "Bennett", "Theo", ClaimStatus.Honorary, false, AgeGroup.IsJuvenile, DateTime.UtcNow.AddDays(50)),
@@ -133,8 +133,8 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(4024, "Hawthorne", "Jude", ClaimStatus.Honorary, false, AgeGroup.IsJunior, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4025, "Ellington", "Poppy", ClaimStatus.Honorary, true, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
             CompetitorFactory.Create(4026, "Radcliffe", "Finn", ClaimStatus.Honorary, false, AgeGroup.IsSenior, DateTime.UtcNow.AddDays(50)),
-            CompetitorFactory.Create(4027, "Ashford", "Lillian", ClaimStatus.Honorary, true, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
-            CompetitorFactory.Create(4028, "Tanner", "Rowan", ClaimStatus.Honorary, false, AgeGroup.IsVeteran, DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4027, "Ashford", "Lillian", ClaimStatus.Honorary, true, AgeGroup.IsVeteran, vetsBucket: 7, createdUtc: DateTime.UtcNow.AddDays(50)),
+            CompetitorFactory.Create(4028, "Tanner", "Rowan", ClaimStatus.Honorary, false, AgeGroup.IsVeteran, vetsBucket: 8, createdUtc: DateTime.UtcNow.AddDays(50)),
 
         }.AsReadOnly();
     }

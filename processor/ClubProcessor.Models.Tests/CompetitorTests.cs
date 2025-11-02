@@ -20,6 +20,13 @@ public class CompetitorTests
         var competitor = _fixture.Build<Competitor>()
             .With(c => c.GivenName, given)
             .With(c => c.Surname, surname)
+            // set fields which would otherwise fail validation
+            .With(c => c.IsJuvenile, false)
+            .With(c => c.IsJunior, false)
+            .With(c => c.IsSenior, true)
+            .With(c => c.IsVeteran, false)
+            .With(c => c.VetsBucket, (int?)null)
+            // ----------
             .Create();
 
         // Act
@@ -43,6 +50,13 @@ public class CompetitorTests
         var competitor = _fixture.Build<Competitor>()
             .With(c => c.GivenName, parts.ElementAtOrDefault(0) ?? "")
             .With(c => c.Surname, parts.ElementAtOrDefault(1) ?? "")
+            // set fields which would otherwise fail validation
+            .With(c => c.IsJuvenile, false)
+            .With(c => c.IsJunior, false)
+            .With(c => c.IsSenior, true)
+            .With(c => c.IsVeteran, false)
+            .With(c => c.VetsBucket, (int?)null)
+            // ----------
             .Create();
 
         // Act
@@ -57,6 +71,13 @@ public class CompetitorTests
     {
         var competitor = _fixture.Build<Competitor>()
             .With(c => c.ClaimStatus, ClaimStatus.Unknown)
+            // set fields which would otherwise fail validation
+            .With(c => c.IsJuvenile, false)
+            .With(c => c.IsJunior, false)
+            .With(c => c.IsSenior, true)
+            .With(c => c.IsVeteran, false)
+            .With(c => c.VetsBucket, (int?)null)
+            // ----------
             .Create();
 
         // Act

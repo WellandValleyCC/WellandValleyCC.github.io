@@ -47,7 +47,8 @@ namespace ClubProcessor.Services
                     IsSenior = row.IsSenior,
                     IsVeteran = row.IsVeteran,
                     CreatedUtc = row.ImportDate,
-                    LastUpdatedUtc = row.ImportDate
+                    LastUpdatedUtc = row.ImportDate,
+                    VetsBucket = row.VetsBucket,
                 });
             }
 

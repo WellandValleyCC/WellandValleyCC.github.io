@@ -42,8 +42,11 @@ namespace EventProcessor.Tests.Helpers
             bool isFemale = false,
             AgeGroup ageGroup = AgeGroup.IsSenior,
             DateTime? createdUtc = null,
+            int? vetsBucket = null,
             int? id = null)
         {
+            var created = createdUtc ?? DateTime.UtcNow.Date.AddDays(-100);
+
             return new Competitor
             {
                 Id = id ?? 0,
@@ -56,8 +59,9 @@ namespace EventProcessor.Tests.Helpers
                 IsJunior = ageGroup == AgeGroup.IsJunior,
                 IsSenior = ageGroup == AgeGroup.IsSenior,
                 IsVeteran = ageGroup == AgeGroup.IsVeteran,
-                CreatedUtc = createdUtc ?? DateTime.UtcNow.Date.AddDays(-100),
-                LastUpdatedUtc = createdUtc ?? DateTime.UtcNow.Date.AddDays(-100)
+                CreatedUtc = created,
+                LastUpdatedUtc = created,
+                VetsBucket = vetsBucket
             };
         }
 

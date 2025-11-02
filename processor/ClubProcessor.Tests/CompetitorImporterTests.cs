@@ -284,10 +284,10 @@ namespace ClubProcessor.Tests
             assembledCompetitors.Should().Contain(c => c.ClubNumber == 1002 && c.Surname == "Brown");
 
             var csv = new StringBuilder();
-            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate");
-            csv.AppendLine("2001,Doe,John,First Claim,False,False,False,True,False,2025-01-25");
-            csv.AppendLine("2002,Lee,Sarah,First Claim,True,False,True,False,False,2025-01-25");
-            csv.AppendLine("2003,Khan,Omar,First Claim,False,False,False,True,True,2025-01-25");
+            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket");
+            csv.AppendLine("2001,Doe,John,First Claim,False,False,False,True,False,2025-01-25,");
+            csv.AppendLine("2002,Lee,Sarah,First Claim,True,False,True,False,False,2025-01-25,");
+            csv.AppendLine("2003,Khan,Omar,First Claim,False,False,False,False,True,2025-01-25,5");
 
             var csvPath = "test-data/competitor_timestamp_test.csv";
             Directory.CreateDirectory("test-data");
@@ -434,8 +434,9 @@ namespace ClubProcessor.Tests
                     IsFemale = false,
                     IsJuvenile = false,
                     IsJunior = false,
-                    IsSenior = true,
+                    IsSenior = false,
                     IsVeteran = true,
+                    VetsBucket = 5,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
                 }
@@ -450,11 +451,11 @@ namespace ClubProcessor.Tests
 
             // Prepare CSV input with 4 existing competitors, but with isVeteran set True in all cases and all set to First Claim
             var csv = new StringBuilder();
-            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate");
-            csv.AppendLine("1001,Smith,Alice,First Claim,True,False,False,False,True,2025-02-25");
-            csv.AppendLine("1002,Brown,Bob,First Claim,False,False,False,False,True,2025-02-25");
-            csv.AppendLine("1003,Doe,John,First Claim,False,False,False,False,True,2025-02-25");
-            csv.AppendLine("1004,Lee,Sara,First Claim,True,False,False,False,True,2025-02-25");
+            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket");
+            csv.AppendLine("1001,Smith,Alice,First Claim,True,False,False,False,True,2025-02-25,5");
+            csv.AppendLine("1002,Brown,Bob,First Claim,False,False,False,False,True,2025-02-25,10");
+            csv.AppendLine("1003,Doe,John,First Claim,False,False,False,False,True,2025-02-25,1");
+            csv.AppendLine("1004,Lee,Sara,First Claim,True,False,False,False,True,2025-02-25,15");
 
             var csvPath = "test-data/competitor_timestamp_test.csv";
             Directory.CreateDirectory("test-data");
