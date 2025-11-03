@@ -29,7 +29,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+    
       - name: Fetch full Git history
         run: git fetch --unshallow
 
@@ -58,11 +60,19 @@ jobs:
       - name: Detect changed files and extract/process
         run: |
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          if [ -z "$CHANGED" ]; then
+            echo "[WARN] No changed files detected — falling back to latest matching files"
+            CHANGED=$(ls -t data/competitors_*.csv data/ClubEvents_*.xlsx 2>/dev/null | head -n2 || true)
+          fi
+          echo "[INFO] Files to process:"
+          echo "$CHANGED"
           YEAR="${{ github.event.inputs.year }}"
           if [ -z "$YEAR" ]; then
             YEAR=$(date +'%Y')
             echo "[INFO] No year input provided — defaulting to current year: $YEAR"
           fi
+          
+          MODE=$(echo "${{ github.event.inputs.mode }}" | tr '[:upper:]' '[:lower:]')
           
           if [ "${{ github.event.inputs.mode }}" = "competitors" ]; then
             echo "[INFO] Manual trigger: competitors mode"
@@ -91,6 +101,7 @@ jobs:
           
           else
             echo "[INFO] No manual mode specified — checking changed files"
+            IFS=$'\n'
             for FILE in $CHANGED; do
               if [[ "$FILE" == data/ClubEvents_*.xlsx ]]; then
                 echo "[INFO] Detected ClubEvents XLSX: $FILE"
@@ -103,6 +114,10 @@ jobs:
                 dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
               fi
             done
+            
+            if [ -z "$CHANGED" ]; then
+              echo "[WARN] No matching files found to process"
+            fi
           fi
 
       - name: Run processor if extracted event CSVs exist
