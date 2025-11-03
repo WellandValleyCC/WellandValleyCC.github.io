@@ -75,13 +75,17 @@ namespace ClubProcessor.Services
                     latest.Surname = competitor.Surname;
                     latest.GivenName = competitor.GivenName;
                     latest.IsFemale = competitor.IsFemale;
+
                     latest.IsJuvenile = latest.IsJunior = latest.IsSenior = latest.IsVeteran = false;
+                    latest.VetsBucket = null;
+
                     latest.IsJuvenile = competitor.IsJuvenile;
                     latest.IsJunior = competitor.IsJunior;
                     latest.IsSenior = competitor.IsSenior;
                     latest.IsVeteran = competitor.IsVeteran;
-                    latest.LastUpdatedUtc = competitor.LastUpdatedUtc;
                     latest.VetsBucket = competitor.VetsBucket;
+
+                    latest.LastUpdatedUtc = competitor.LastUpdatedUtc;
                 }
             }
         }
