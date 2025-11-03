@@ -57,8 +57,8 @@ jobs:
       - name: Detect changed files and extract/process
         run: |
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          if [ -z "$CHANGED" ]; then
-            echo "[WARN] No changed files detected — falling back to latest matching files"
+          if ! echo "$CHANGED" | grep -qE 'data/competitors_.*\.csv|data/ClubEvents_.*\.xlsx'; then
+            echo "[WARN] No matching files detected — falling back to latest matching files"
             CHANGED=$(ls -t data/competitors_*.csv data/ClubEvents_*.xlsx 2>/dev/null | head -n2 || true)
           fi
           echo "[INFO] Files to process:"
