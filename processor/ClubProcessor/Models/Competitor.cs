@@ -60,6 +60,7 @@ namespace ClubProcessor.Models
                 _isSenior = value;
             }
         }
+
         public required bool IsVeteran
         {
             get => _isVeteran;
@@ -67,10 +68,24 @@ namespace ClubProcessor.Models
             {
                 if (value && (_isJuvenile || _isJunior || _isSenior))
                     throw new ArgumentException("Only one age group flag may be true at a time", nameof(IsVeteran));
-                // If demoting from veteran to non-veteran, ensure VetsBucket is null first (fail-fast)
-                if (!value && _vetsBucket.HasValue)
-                    throw new InvalidOperationException("Cannot unset IsVeteran while VetsBucket is set. Clear VetsBucket first.");
                 _isVeteran = value;
+            }
+        }
+
+        /// <summary>
+        /// Vets bucket persisted by EF. Setter enforces that only veterans may have a non-null bucket.
+        /// </summary>
+        public int? VetsBucket
+        {
+            get => _vetsBucket;
+            set
+            {
+                if (value.HasValue && !_isVeteran)
+                    throw new ArgumentException("VetsBucket may only be set for veteran competitors", nameof(VetsBucket));
+                // Require veterans to have a bucket.
+                if (_isVeteran && !value.HasValue)
+                    throw new ArgumentException("Veteran competitors must have a VetsBucket", nameof(VetsBucket));
+                _vetsBucket = value;
             }
         }
 
@@ -114,23 +129,6 @@ namespace ClubProcessor.Models
                         // leave all false for Undefined
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Vets bucket persisted by EF. Setter enforces that only veterans may have a non-null bucket.
-        /// </summary>
-        public int? VetsBucket
-        {
-            get => _vetsBucket;
-            set
-            {
-                if (value.HasValue && !_isVeteran)
-                    throw new ArgumentException("VetsBucket may only be set for veteran competitors", nameof(VetsBucket));
-                // Require veterans to have a bucket.
-                if (_isVeteran && !value.HasValue)
-                    throw new ArgumentException("Veteran competitors must have a VetsBucket", nameof(VetsBucket));
-                _vetsBucket = value;
             }
         }
 

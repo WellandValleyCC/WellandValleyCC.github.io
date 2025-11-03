@@ -64,5 +64,35 @@ namespace EventProcessor.Tests
             if (c.VetsBucket.HasValue && !c.IsVeteran)
                 throw new ArgumentException("vetsBucket may only be specified for veteran competitors", nameof(c.VetsBucket));
         }
+
+        [Fact]
+        public void DemoteVeteranAndPromoteSenior_WhenVetsBucketCleared_Succeeds()
+        {
+            // Arrange
+            var competitor = new Competitor
+            {
+                ClubNumber = 1234,
+                Surname = "Brown",
+                GivenName = "Charlie",
+                ClaimStatus = ClaimStatus.FirstClaim,
+                IsFemale = false,
+
+                IsJuvenile = false,
+                IsJunior = false,
+                IsSenior = false,
+                IsVeteran = true,
+                VetsBucket = 3
+            };
+
+            // Act
+            competitor.IsVeteran = false;     // Clear the veteran flag
+            competitor.VetsBucket = null;     // Clear bucket before setting a non-veteran age group
+            competitor.IsSenior = true;       // Set to senior
+
+            // Assert
+            competitor.IsVeteran.Should().BeFalse();
+            competitor.IsSenior.Should().BeTrue();
+            competitor.VetsBucket.Should().BeNull();
+        }
     }
 }
