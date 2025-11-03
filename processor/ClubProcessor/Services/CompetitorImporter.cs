@@ -75,6 +75,7 @@ namespace ClubProcessor.Services
                     latest.Surname = competitor.Surname;
                     latest.GivenName = competitor.GivenName;
                     latest.IsFemale = competitor.IsFemale;
+                    latest.IsJuvenile = latest.IsJunior = latest.IsSenior = latest.IsVeteran = false;
                     latest.IsJuvenile = competitor.IsJuvenile;
                     latest.IsJunior = competitor.IsJunior;
                     latest.IsSenior = competitor.IsSenior;
