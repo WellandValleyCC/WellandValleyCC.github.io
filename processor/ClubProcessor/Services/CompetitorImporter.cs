@@ -31,6 +31,14 @@ namespace ClubProcessor.Services
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
             var rows = csv.GetRecords<CompetitorCsvRow>().ToList();
+
+            var validation = CompetitorCsvValidator.Validate(rows);
+            if (validation.Any())
+            {
+                var issues = string.Join(Environment.NewLine, validation);
+                throw new InvalidDataException($"Competitor CSV validation failed with the following issues:{Environment.NewLine}{issues}");
+            }
+
             var competitors = new List<Competitor>();
 
             foreach (var row in rows)
@@ -42,13 +50,7 @@ namespace ClubProcessor.Services
                     GivenName = row.GivenName,
                     ClaimStatus = row.ClaimStatus,
                     IsFemale = row.IsFemale,
-                    AgeGroup = row.IsJuvenile 
-                        ? AgeGroup.Juvenile
-                        :row.IsJunior 
-                            ? AgeGroup.Junior 
-                            : row.IsSenior 
-                                ? AgeGroup.Senior 
-                                : AgeGroup.Veteran,
+                    AgeGroup = row.AgeGroup,
                     VetsBucket = row.VetsBucket,
                     CreatedUtc = row.ImportDate,
                     LastUpdatedUtc = row.ImportDate,
