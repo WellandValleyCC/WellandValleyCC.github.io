@@ -55,10 +55,7 @@ namespace EventProcessor.Tests.Helpers
                 GivenName = givenName,
                 ClaimStatus = claimStatus,
                 IsFemale = isFemale,
-                IsJuvenile = ageGroup == AgeGroup.IsJuvenile,
-                IsJunior = ageGroup == AgeGroup.IsJunior,
-                IsSenior = ageGroup == AgeGroup.IsSenior,
-                IsVeteran = ageGroup == AgeGroup.IsVeteran,
+                AgeGroup = ageGroup,
                 CreatedUtc = created,
                 LastUpdatedUtc = created,
                 VetsBucket = vetsBucket
@@ -92,10 +89,7 @@ namespace EventProcessor.Tests.Helpers
                     GivenName = baseCompetitor.GivenName,
                     ClaimStatus = status,
                     IsFemale = baseCompetitor.IsFemale,
-                    IsJuvenile = baseCompetitor.IsJuvenile,
-                    IsJunior = baseCompetitor.IsJunior,
-                    IsSenior = baseCompetitor.IsSenior,
-                    IsVeteran = baseCompetitor.IsVeteran,
+                    AgeGroup = baseCompetitor.AgeGroup,
                     CreatedUtc = lastUpdated,
                     LastUpdatedUtc = lastUpdated
                     // copy any other properties your Competitor model has here, preserving original values

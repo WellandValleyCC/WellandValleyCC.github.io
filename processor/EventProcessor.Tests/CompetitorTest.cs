@@ -33,10 +33,7 @@ namespace EventProcessor.Tests
                     GivenName = "Alex",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = ageGroup == AgeGroup.IsJuvenile,
-                    IsJunior = ageGroup == AgeGroup.IsJunior,
-                    IsSenior = ageGroup == AgeGroup.IsSenior,
-                    IsVeteran = ageGroup == AgeGroup.IsVeteran,
+                    AgeGroup = ageGroup,
                     VetsBucket = vetsBucket,
                     CreatedUtc = DateTime.UtcNow,
                     LastUpdatedUtc = DateTime.UtcNow,
@@ -77,17 +74,14 @@ namespace EventProcessor.Tests
                 ClaimStatus = ClaimStatus.FirstClaim,
                 IsFemale = false,
 
-                IsJuvenile = false,
-                IsJunior = false,
-                IsSenior = false,
-                IsVeteran = true,
+                AgeGroup = AgeGroup.IsVeteran,
                 VetsBucket = 3
             };
 
             // Act
-            competitor.IsVeteran = false;     // Clear the veteran flag
-            competitor.VetsBucket = null;     // Clear bucket before setting a non-veteran age group
-            competitor.IsSenior = true;       // Set to senior
+            competitor.AgeGroup = AgeGroup.Undefined;     // Clear the veteran flag
+            competitor.VetsBucket = null;                 // Clear bucket before setting a non-veteran age group
+            competitor.AgeGroup = AgeGroup.IsSenior;      // Set to senior
 
             // Assert
             competitor.IsVeteran.Should().BeFalse();

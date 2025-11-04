@@ -254,10 +254,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Alice",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = true,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsSenior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 },
@@ -268,10 +265,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Bob",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsJunior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 }
@@ -330,10 +324,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Alice",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = true,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsSenior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 },
@@ -345,10 +336,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Bob",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsJunior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 },
@@ -359,10 +347,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Bob",
                     ClaimStatus = ClaimStatus.SecondClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsJunior,
                     CreatedUtc = new DateTime(2025, 02, 01),
                     LastUpdatedUtc = new DateTime(2025, 02, 01)
                 },
@@ -374,10 +359,7 @@ namespace ClubProcessor.Tests
                     GivenName = "John",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = true,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsSenior,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
                 },
@@ -389,10 +371,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Sarah",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsJunior,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
                 },
@@ -403,10 +382,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Sarah",
                     ClaimStatus = ClaimStatus.SecondClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsJunior,
                     CreatedUtc = new DateTime(2025, 02, 25),
                     LastUpdatedUtc = new DateTime(2025, 02, 25)
                 },
@@ -417,10 +393,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Sara",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.IsJunior,
                     CreatedUtc = new DateTime(2025, 03, 25),
                     LastUpdatedUtc = new DateTime(2025, 03, 25)
                 },
@@ -432,10 +405,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Omar",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = false,
-                    IsVeteran = true,
+                    AgeGroup = AgeGroup.IsVeteran,
                     VetsBucket = 5,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
@@ -477,6 +447,4 @@ namespace ClubProcessor.Tests
             Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == 1005));
         }
     }
-
 }
-

@@ -42,13 +42,16 @@ namespace ClubProcessor.Services
                     GivenName = row.GivenName,
                     ClaimStatus = row.ClaimStatus,
                     IsFemale = row.IsFemale,
-                    IsJuvenile = row.IsJuvenile,
-                    IsJunior = row.IsJunior,
-                    IsSenior = row.IsSenior,
-                    IsVeteran = row.IsVeteran,
+                    AgeGroup = row.IsJuvenile 
+                        ? AgeGroup.IsJuvenile
+                        :row.IsJunior 
+                            ? AgeGroup.IsJunior 
+                            : row.IsSenior 
+                                ? AgeGroup.IsSenior 
+                                : AgeGroup.IsVeteran,
+                    VetsBucket = row.VetsBucket,
                     CreatedUtc = row.ImportDate,
                     LastUpdatedUtc = row.ImportDate,
-                    VetsBucket = row.VetsBucket,
                 });
             }
 
@@ -76,13 +79,7 @@ namespace ClubProcessor.Services
                     latest.GivenName = competitor.GivenName;
                     latest.IsFemale = competitor.IsFemale;
 
-                    latest.IsJuvenile = latest.IsJunior = latest.IsSenior = latest.IsVeteran = false;
-                    latest.VetsBucket = null;
-
-                    latest.IsJuvenile = competitor.IsJuvenile;
-                    latest.IsJunior = competitor.IsJunior;
-                    latest.IsSenior = competitor.IsSenior;
-                    latest.IsVeteran = competitor.IsVeteran;
+                    latest.AgeGroup = competitor.AgeGroup;
                     latest.VetsBucket = competitor.VetsBucket;
 
                     latest.LastUpdatedUtc = competitor.LastUpdatedUtc;
