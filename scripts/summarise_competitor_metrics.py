@@ -8,13 +8,21 @@ def summarise_metrics(df):
     latest = df.sort_values('LastUpdatedUtc').drop_duplicates('ClubNumber', keep='last')
     print(f"📦 Unique competitors (latest per ClubNumber): {len(latest)}")
 
-    age_groups = ['Juvenile', 'Junior', 'Senior', 'Veteran']
-    for group in age_groups:
-        f = latest[(latest['AgeGroup'] == group) & (latest['IsFemale'] == 1)]
-        m = latest[(latest['AgeGroup'] == group) & (latest['IsFemale'] == 0)]
+    # Map AgeGroup enum integers to string labels
+    age_group_map = {
+        1: 'Juvenile',
+        2: 'Junior',
+        3: 'Senior',
+        4: 'Veteran'
+    }
+    latest['AgeGroupName'] = latest['AgeGroup'].map(age_group_map)
+
+    for group in ['Juvenile', 'Junior', 'Senior', 'Veteran']:
+        f = latest[(latest['AgeGroupName'] == group) & (latest['IsFemale'] == 1)]
+        m = latest[(latest['AgeGroupName'] == group) & (latest['IsFemale'] == 0)]
         print(f"📊 {group}: {len(f)}F / {len(m)}M / {len(f)+len(m)}T")
 
-    missing = latest[~latest['AgeGroup'].isin(age_groups)]
+    missing = latest[~latest['AgeGroup'].isin(age_group_map.keys())]
     print(f"⚠️ Competitors missing age group: {len(missing)}")
     if not missing.empty:
         print(missing[['ClubNumber', 'GivenName', 'Surname']].to_string(index=False))
