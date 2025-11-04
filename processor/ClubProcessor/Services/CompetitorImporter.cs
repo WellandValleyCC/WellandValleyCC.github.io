@@ -31,6 +31,14 @@ namespace ClubProcessor.Services
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
             var rows = csv.GetRecords<CompetitorCsvRow>().ToList();
+
+            var validation = CompetitorCsvValidator.Validate(rows);
+            if (validation.Any())
+            {
+                var issues = string.Join(Environment.NewLine, validation);
+                throw new InvalidDataException($"Competitor CSV validation failed with the following issues:{Environment.NewLine}{issues}");
+            }
+
             var competitors = new List<Competitor>();
 
             foreach (var row in rows)
@@ -42,13 +50,10 @@ namespace ClubProcessor.Services
                     GivenName = row.GivenName,
                     ClaimStatus = row.ClaimStatus,
                     IsFemale = row.IsFemale,
-                    IsJuvenile = row.IsJuvenile,
-                    IsJunior = row.IsJunior,
-                    IsSenior = row.IsSenior,
-                    IsVeteran = row.IsVeteran,
+                    AgeGroup = row.AgeGroup,
+                    VetsBucket = row.VetsBucket,
                     CreatedUtc = row.ImportDate,
                     LastUpdatedUtc = row.ImportDate,
-                    VetsBucket = row.VetsBucket,
                 });
             }
 
@@ -76,13 +81,7 @@ namespace ClubProcessor.Services
                     latest.GivenName = competitor.GivenName;
                     latest.IsFemale = competitor.IsFemale;
 
-                    latest.IsJuvenile = latest.IsJunior = latest.IsSenior = latest.IsVeteran = false;
-                    latest.VetsBucket = null;
-
-                    latest.IsJuvenile = competitor.IsJuvenile;
-                    latest.IsJunior = competitor.IsJunior;
-                    latest.IsSenior = competitor.IsSenior;
-                    latest.IsVeteran = competitor.IsVeteran;
+                    latest.AgeGroup = competitor.AgeGroup;
                     latest.VetsBucket = competitor.VetsBucket;
 
                     latest.LastUpdatedUtc = competitor.LastUpdatedUtc;

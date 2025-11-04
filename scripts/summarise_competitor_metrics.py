@@ -8,18 +8,14 @@ def summarise_metrics(df):
     latest = df.sort_values('LastUpdatedUtc').drop_duplicates('ClubNumber', keep='last')
     print(f"📦 Unique competitors (latest per ClubNumber): {len(latest)}")
 
-    for band in ['IsJuvenile', 'IsJunior', 'IsSenior', 'IsVeteran']:
-        f = latest[(latest[band] == 1) & (latest['IsFemale'] == 1)]
-        m = latest[(latest[band] == 1) & (latest['IsFemale'] == 0)]
-        print(f"📊 {band}: {len(f)}F / {len(m)}M / {len(f)+len(m)}T")
+    age_groups = ['Juvenile', 'Junior', 'Senior', 'Veteran']
+    for group in age_groups:
+        f = latest[(latest['AgeGroup'] == group) & (latest['IsFemale'] == 1)]
+        m = latest[(latest['AgeGroup'] == group) & (latest['IsFemale'] == 0)]
+        print(f"📊 {group}: {len(f)}F / {len(m)}M / {len(f)+len(m)}T")
 
-    missing = latest[
-        (latest['IsJuvenile'] == 0) &
-        (latest['IsJunior'] == 0) &
-        (latest['IsSenior'] == 0) &
-        (latest['IsVeteran'] == 0)
-    ]
-    print(f"⚠️ Competitors missing age band: {len(missing)}")
+    missing = latest[~latest['AgeGroup'].isin(age_groups)]
+    print(f"⚠️ Competitors missing age group: {len(missing)}")
     if not missing.empty:
         print(missing[['ClubNumber', 'GivenName', 'Surname']].to_string(index=False))
 

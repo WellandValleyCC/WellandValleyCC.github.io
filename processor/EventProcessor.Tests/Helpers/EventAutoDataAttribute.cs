@@ -24,10 +24,7 @@ namespace EventProcessor.Tests.Helpers
                 GivenName = c.GivenName,
                 ClaimStatus = c.ClaimStatus,
                 IsFemale = c.IsFemale,
-                IsJuvenile = c.IsJuvenile,
-                IsJunior = c.IsJunior,
-                IsSenior = c.IsSenior,
-                IsVeteran = c.IsVeteran,
+                AgeGroup = c.AgeGroup,
                 CreatedUtc = c.CreatedUtc,
                 LastUpdatedUtc = c.LastUpdatedUtc
             }).ToList();

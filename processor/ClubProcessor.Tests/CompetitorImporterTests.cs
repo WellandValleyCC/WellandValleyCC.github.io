@@ -28,8 +28,8 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31,");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                "9999,Doe,John,First Claim,false,senior,2025-08-31,");
 
             // Act
             importer.Import(testCsvPath);
@@ -55,14 +55,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                "9999,Doe,John,First Claim,false,false,false,true,false,2025-08-31,");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                "9999,Doe,John,First Claim,false,senioR,2025-08-31,");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                "9999,Doe,John,Second Claim,false,false,false,true,false,2025-08-31,");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                "9999,Doe,John,Second Claim,false,SENIOR,2025-08-31,");
 
             // Act
             importerYesterday.Import(testCsvPath1);
@@ -94,14 +94,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{yesterday:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,senior,{yesterday:yyyy-MM-dd},");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{today:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,senior,{today:yyyy-MM-dd},");
 
             // Act
             importerYesterday.Import(testCsvPath1);
@@ -126,8 +126,8 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 csvPath,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,John,First Claim,false,false,true,false,false,{importDate:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,junior,{importDate:yyyy-MM-dd},");
 
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -158,14 +158,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,Senior,{earlyImportDate:yyyy-MM-dd},");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,John,Second Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,Second Claim,false,veteran,{laterImportDate:yyyy-MM-dd},5");
 
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -205,14 +205,14 @@ namespace ClubProcessor.Tests
             Directory.CreateDirectory("test-data");
             File.WriteAllText(
                 testCsvPath1,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,Johnathon,First Claim,false,false,false,true,false,{earlyImportDate:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,Johnathon,First Claim,false,senior,{earlyImportDate:yyyy-MM-dd},");
 
             var testCsvPath2 = "test-data/competitors_test_2.csv";
             File.WriteAllText(
                 testCsvPath2,
-                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket\n" +
-                $"9999,Doe,John,First Claim,false,false,false,true,false,{laterImportDate:yyyy-MM-dd},");
+                "ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket\n" +
+                $"9999,Doe,John,First Claim,false,senior,{laterImportDate:yyyy-MM-dd},");
 
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -254,10 +254,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Alice",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = true,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Senior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 },
@@ -268,10 +265,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Bob",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Junior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 }
@@ -284,10 +278,10 @@ namespace ClubProcessor.Tests
             assembledCompetitors.Should().Contain(c => c.ClubNumber == 1002 && c.Surname == "Brown");
 
             var csv = new StringBuilder();
-            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket");
-            csv.AppendLine("2001,Doe,John,First Claim,False,False,False,True,False,2025-01-25,");
-            csv.AppendLine("2002,Lee,Sarah,First Claim,True,False,True,False,False,2025-01-25,");
-            csv.AppendLine("2003,Khan,Omar,First Claim,False,False,False,False,True,2025-01-25,5");
+            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket");
+            csv.AppendLine("2001,Doe,John,First Claim,False,Senior,2025-01-25,");
+            csv.AppendLine("2002,Lee,Sarah,First Claim,True,junior,2025-01-25,");
+            csv.AppendLine("2003,Khan,Omar,First Claim,False,Veteran,2025-01-25,5");
 
             var csvPath = "test-data/competitor_timestamp_test.csv";
             Directory.CreateDirectory("test-data");
@@ -330,10 +324,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Alice",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = true,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Senior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 },
@@ -345,10 +336,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Bob",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Junior,
                     CreatedUtc = new DateTime(2025, 01, 01),
                     LastUpdatedUtc = new DateTime(2025, 01, 01)
                 },
@@ -359,10 +347,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Bob",
                     ClaimStatus = ClaimStatus.SecondClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Junior,
                     CreatedUtc = new DateTime(2025, 02, 01),
                     LastUpdatedUtc = new DateTime(2025, 02, 01)
                 },
@@ -374,10 +359,7 @@ namespace ClubProcessor.Tests
                     GivenName = "John",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = true,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Senior,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
                 },
@@ -389,10 +371,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Sarah",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Junior,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
                 },
@@ -403,10 +382,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Sarah",
                     ClaimStatus = ClaimStatus.SecondClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Junior,
                     CreatedUtc = new DateTime(2025, 02, 25),
                     LastUpdatedUtc = new DateTime(2025, 02, 25)
                 },
@@ -417,10 +393,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Sara",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = true,
-                    IsJuvenile = false,
-                    IsJunior = true,
-                    IsSenior = false,
-                    IsVeteran = false,
+                    AgeGroup = AgeGroup.Junior,
                     CreatedUtc = new DateTime(2025, 03, 25),
                     LastUpdatedUtc = new DateTime(2025, 03, 25)
                 },
@@ -432,10 +405,7 @@ namespace ClubProcessor.Tests
                     GivenName = "Omar",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = false,
-                    IsJunior = false,
-                    IsSenior = false,
-                    IsVeteran = true,
+                    AgeGroup = AgeGroup.Veteran,
                     VetsBucket = 5,
                     CreatedUtc = new DateTime(2025, 01, 25),
                     LastUpdatedUtc = new DateTime(2025, 01, 25)
@@ -451,11 +421,11 @@ namespace ClubProcessor.Tests
 
             // Prepare CSV input with 4 existing competitors, but with isVeteran set True in all cases and all set to First Claim
             var csv = new StringBuilder();
-            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,isJuvenile,isJunior,isSenior,isVeteran,ImportDate,VetsBucket");
-            csv.AppendLine("1001,Smith,Alice,First Claim,True,False,False,False,True,2025-02-25,5");
-            csv.AppendLine("1002,Brown,Bob,First Claim,False,False,False,False,True,2025-02-25,10");
-            csv.AppendLine("1003,Doe,John,First Claim,False,False,False,False,True,2025-02-25,1");
-            csv.AppendLine("1004,Lee,Sara,First Claim,True,False,False,False,True,2025-02-25,15");
+            csv.AppendLine("ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,ImportDate,VetsBucket");
+            csv.AppendLine("1001,Smith,Alice,First Claim,True,Veteran,2025-02-25,5");
+            csv.AppendLine("1002,Brown,Bob,First Claim,False,Veteran,2025-02-25,10");
+            csv.AppendLine("1003,Doe,John,First Claim,False,Veteran,2025-02-25,1");
+            csv.AppendLine("1004,Lee,Sara,First Claim,True,Veteran,2025-02-25,15");
 
             var csvPath = "test-data/competitor_timestamp_test.csv";
             Directory.CreateDirectory("test-data");
@@ -477,6 +447,4 @@ namespace ClubProcessor.Tests
             Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == 1005));
         }
     }
-
 }
-

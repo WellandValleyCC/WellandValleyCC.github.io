@@ -8,7 +8,7 @@ namespace ClubProcessor.Models
     [DebuggerDisplay("#{ClubNumber} {FullName} ({ClaimStatus}, {Gender}, {AgeGroup}), {CreatedUtcShort}")]
     public class Competitor
     {
-        [Key]
+         [Key]
         public int Id { get; set; }  // Auto-incremented by EF/SQLite
 
         public required int ClubNumber { get; set; }       // e.g. 9999
@@ -20,57 +20,7 @@ namespace ClubProcessor.Models
         [NotMapped]
         public string Gender => IsFemale ? "Female" : "Male";
 
-        // Backing fields
-        private bool _isJuvenile;
-        private bool _isJunior;
-        private bool _isSenior;
-        private bool _isVeteran;
         private int? _vetsBucket;
-
-        /// <summary>
-        /// Age flags persisted by EF (one-hot enforced by setters)
-        /// </summary>
-        public required bool IsJuvenile
-        {
-            get => _isJuvenile;
-            set
-            {
-                if (value && (_isJunior || _isSenior || _isVeteran))
-                    throw new ArgumentException("Only one age group flag may be true at a time", nameof(IsJuvenile));
-                _isJuvenile = value;
-            }
-        }
-        public required bool IsJunior
-        {
-            get => _isJunior;
-            set
-            {
-                if (value && (_isJuvenile || _isSenior || _isVeteran))
-                    throw new ArgumentException("Only one age group flag may be true at a time", nameof(IsJunior));
-                _isJunior = value;
-            }
-        }
-        public required bool IsSenior
-        {
-            get => _isSenior;
-            set
-            {
-                if (value && (_isJuvenile || _isJunior || _isVeteran))
-                    throw new ArgumentException("Only one age group flag may be true at a time", nameof(IsSenior));
-                _isSenior = value;
-            }
-        }
-
-        public required bool IsVeteran
-        {
-            get => _isVeteran;
-            set
-            {
-                if (value && (_isJuvenile || _isJunior || _isSenior))
-                    throw new ArgumentException("Only one age group flag may be true at a time", nameof(IsVeteran));
-                _isVeteran = value;
-            }
-        }
 
         /// <summary>
         /// Vets bucket persisted by EF. Setter enforces that only veterans may have a non-null bucket.
@@ -80,57 +30,26 @@ namespace ClubProcessor.Models
             get => _vetsBucket;
             set
             {
-                if (value.HasValue && !_isVeteran)
+                if (value.HasValue && !IsVeteran)
                     throw new ArgumentException("VetsBucket may only be set for veteran competitors", nameof(VetsBucket));
-                // Require veterans to have a bucket.
-                if (_isVeteran && !value.HasValue)
+
+                if (IsVeteran && !value.HasValue)
                     throw new ArgumentException("Veteran competitors must have a VetsBucket", nameof(VetsBucket));
+
                 _vetsBucket = value;
             }
         }
 
-        /// <summary>
-        /// Computed AgeGroup with setter to switch flags atomically
-        /// </summary>
         [NotMapped]
-        public AgeGroup AgeGroup
-        {
-            get
-            {
-                if (IsJuvenile) return AgeGroup.IsJuvenile;
-                if (IsJunior) return AgeGroup.IsJunior;
-                if (IsSenior) return AgeGroup.IsSenior;
-                if (IsVeteran) return AgeGroup.IsVeteran;
-                return AgeGroup.Undefined;
-            }
-            set
-            {
-                // clear all then set the requested one
-                _isJuvenile = false;
-                _isJunior = false;
-                _isSenior = false;
-                _isVeteran = false;
+        public bool IsJuvenile => AgeGroup == AgeGroup.Juvenile;
+        [NotMapped]
+        public bool IsJunior => AgeGroup == AgeGroup.Junior;
+        [NotMapped]
+        public bool IsSenior => AgeGroup == AgeGroup.Senior;
+        [NotMapped]
+        public bool IsVeteran => AgeGroup == AgeGroup.Veteran;
 
-                switch (value)
-                {
-                    case AgeGroup.IsJuvenile:
-                        _isJuvenile = true;
-                        break;
-                    case AgeGroup.IsJunior:
-                        _isJunior = true;
-                        break;
-                    case AgeGroup.IsSenior:
-                        _isSenior = true;
-                        break;
-                    case AgeGroup.IsVeteran:
-                        _isVeteran = true;
-                        break;
-                    default:
-                        // leave all false for Undefined
-                        break;
-                }
-            }
-        }
+        public required AgeGroup AgeGroup { get; set; }
 
         /// <summary>
         /// The date that this Competitor record was created, in UTC.
@@ -186,11 +105,6 @@ namespace ClubProcessor.Models
         {
             if (ClaimStatus == ClaimStatus.Unknown)
                 throw new InvalidOperationException("ClaimStatus must be explicitly set.");
-
-            // Exactly one age-flag or allow Undefined? Here we allow Undefined if business rules permit.
-            int trueCount = (IsJuvenile ? 1 : 0) + (IsJunior ? 1 : 0) + (IsSenior ? 1 : 0) + (IsVeteran ? 1 : 0);
-            if (trueCount > 1)
-                throw new InvalidOperationException("Competitor must not have more than one age group flag set.");
 
             if (_vetsBucket.HasValue && !IsVeteran)
                 throw new InvalidOperationException("VetsBucket may only be set for veteran competitors.");

@@ -10,12 +10,12 @@ namespace EventProcessor.Tests
     {
         // ageGroup, vetsBucket (nullable), expectException
         [Theory]
-        [InlineData(AgeGroup.IsVeteran, 1, false)]   // veteran with bucket -> OK
-        [InlineData(AgeGroup.IsVeteran, null, true)]// veteran without bucket -> should throw
-        [InlineData(AgeGroup.IsSenior, null, false)] // non-veteran without bucket -> OK
-        [InlineData(AgeGroup.IsSenior, 5, true)]     // non-veteran with bucket -> should throw
-        [InlineData(AgeGroup.IsJunior, 2, true)]     // non-veteran with bucket -> should throw
-        [InlineData(AgeGroup.IsJuvenile, null, false)] // juvenile without bucket -> OK
+        [InlineData(AgeGroup.Veteran, 1, false)]   // veteran with bucket -> OK
+        [InlineData(AgeGroup.Veteran, null, true)]// veteran without bucket -> should throw
+        [InlineData(AgeGroup.Senior, null, false)] // non-veteran without bucket -> OK
+        [InlineData(AgeGroup.Senior, 5, true)]     // non-veteran with bucket -> should throw
+        [InlineData(AgeGroup.Junior, 2, true)]     // non-veteran with bucket -> should throw
+        [InlineData(AgeGroup.Juvenile, null, false)] // juvenile without bucket -> OK
         public void Competitor_VetsBucketValidation_ByAgeGroup(
             AgeGroup ageGroup,
             int? vetsBucket,
@@ -33,10 +33,7 @@ namespace EventProcessor.Tests
                     GivenName = "Alex",
                     ClaimStatus = ClaimStatus.FirstClaim,
                     IsFemale = false,
-                    IsJuvenile = ageGroup == AgeGroup.IsJuvenile,
-                    IsJunior = ageGroup == AgeGroup.IsJunior,
-                    IsSenior = ageGroup == AgeGroup.IsSenior,
-                    IsVeteran = ageGroup == AgeGroup.IsVeteran,
+                    AgeGroup = ageGroup,
                     VetsBucket = vetsBucket,
                     CreatedUtc = DateTime.UtcNow,
                     LastUpdatedUtc = DateTime.UtcNow,
@@ -77,17 +74,14 @@ namespace EventProcessor.Tests
                 ClaimStatus = ClaimStatus.FirstClaim,
                 IsFemale = false,
 
-                IsJuvenile = false,
-                IsJunior = false,
-                IsSenior = false,
-                IsVeteran = true,
+                AgeGroup = AgeGroup.Veteran,
                 VetsBucket = 3
             };
 
             // Act
-            competitor.IsVeteran = false;     // Clear the veteran flag
-            competitor.VetsBucket = null;     // Clear bucket before setting a non-veteran age group
-            competitor.IsSenior = true;       // Set to senior
+            competitor.AgeGroup = AgeGroup.Undefined;     // Clear the veteran flag
+            competitor.VetsBucket = null;                 // Clear bucket before setting a non-veteran age group
+            competitor.AgeGroup = AgeGroup.Senior;      // Set to senior
 
             // Assert
             competitor.IsVeteran.Should().BeFalse();
