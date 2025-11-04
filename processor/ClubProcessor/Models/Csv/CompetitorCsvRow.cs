@@ -22,17 +22,8 @@
             [Name("isFemale")]
             public bool IsFemale { get; set; }
 
-            [Name("isJuvenile")]
-            public bool IsJuvenile { get; set; }
-
-            [Name("isJunior")]
-            public bool IsJunior { get; set; }
-
-            [Name("isSenior")]
-            public bool IsSenior { get; set; }
-
-            [Name("isVeteran")]
-            public bool IsVeteran { get; set; }
+            [Name("AgeGroup")]
+            public required string AgeGroupRaw { get; set; }
 
             [Name("ImportDate")]
             public DateTime ImportDate { get; set; }
@@ -54,6 +45,19 @@
                     "secondclaim" => ClaimStatus.SecondClaim,
                     "honorary" => ClaimStatus.Honorary,
                     _ => ClaimStatus.Unknown
+                };
+
+            [Ignore]
+            public AgeGroup AgeGroup =>
+                AgeGroupRaw?
+                    .Trim()
+                    .ToLowerInvariant() switch
+                {
+                    "juvenile" => AgeGroup.Juvenile,
+                    "junior" => AgeGroup.Junior,
+                    "senior" => AgeGroup.Senior,
+                    "veteran" => AgeGroup.Veteran,
+                    _ => AgeGroup.Undefined
                 };
         }
     }

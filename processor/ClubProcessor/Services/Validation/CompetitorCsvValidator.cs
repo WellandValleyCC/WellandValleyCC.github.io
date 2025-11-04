@@ -1,11 +1,9 @@
-﻿using ClubProcessor.Models;
-using ClubProcessor.Models.Csv.ClubProcessor.Models.Csv;
+﻿using ClubProcessor.Models.Csv.ClubProcessor.Models.Csv;
 using ClubProcessor.Models.Enums;
-using System.Globalization;
 
-public class CompetitorCsvValidator
+static public class CompetitorCsvValidator
 {
-    public IEnumerable<string> Validate(IEnumerable<CompetitorCsvRow> rows)
+    static public IEnumerable<string> Validate(IEnumerable<CompetitorCsvRow> rows)
     {
         var issues = new List<string>();
         var seenClubNumbers = new HashSet<int>();
@@ -35,20 +33,10 @@ public class CompetitorCsvValidator
                 issues.Add($"Line {lineNumber}: ClaimStatus is 'Unknown' and must be explicitly set.");
             }
 
-            // Age category: exactly one of Juvenile, Junior, Senior, Veteran must be true
-            var ageCategories = new[]
+            // AgeGroup: must match known values Juvenile, Junior, Senior, Veteran (case-insensitive)
+            if (row.AgeGroup == AgeGroup.Undefined)
             {
-                row.IsJuvenile,
-                row.IsJunior,
-                row.IsSenior,
-                row.IsVeteran
-            };
-
-            var trueCount = ageCategories.Count(b => b);
-
-            if (trueCount != 1)
-            {
-                issues.Add($"Line {lineNumber}: Exactly one age category must be true (Juvenile, Junior, Senior, Veteran). Found {trueCount}.");
+                issues.Add($"Line {lineNumber}: AgeGroup is 'Unknown' and must be explicitly set.");
             }
 
             // ImportDate: must be YYYY-MM-DD
