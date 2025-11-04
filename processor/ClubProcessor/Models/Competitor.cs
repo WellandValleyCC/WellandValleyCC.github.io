@@ -41,13 +41,13 @@ namespace ClubProcessor.Models
         }
 
         [NotMapped]
-        public bool IsJuvenile => AgeGroup == AgeGroup.IsJuvenile;
+        public bool IsJuvenile => AgeGroup == AgeGroup.Juvenile;
         [NotMapped]
-        public bool IsJunior => AgeGroup == AgeGroup.IsJunior;
+        public bool IsJunior => AgeGroup == AgeGroup.Junior;
         [NotMapped]
-        public bool IsSenior => AgeGroup == AgeGroup.IsSenior;
+        public bool IsSenior => AgeGroup == AgeGroup.Senior;
         [NotMapped]
-        public bool IsVeteran => AgeGroup == AgeGroup.IsVeteran;
+        public bool IsVeteran => AgeGroup == AgeGroup.Veteran;
 
         public required AgeGroup AgeGroup { get; set; }
 

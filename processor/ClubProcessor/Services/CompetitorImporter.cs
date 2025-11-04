@@ -43,12 +43,12 @@ namespace ClubProcessor.Services
                     ClaimStatus = row.ClaimStatus,
                     IsFemale = row.IsFemale,
                     AgeGroup = row.IsJuvenile 
-                        ? AgeGroup.IsJuvenile
+                        ? AgeGroup.Juvenile
                         :row.IsJunior 
-                            ? AgeGroup.IsJunior 
+                            ? AgeGroup.Junior 
                             : row.IsSenior 
-                                ? AgeGroup.IsSenior 
-                                : AgeGroup.IsVeteran,
+                                ? AgeGroup.Senior 
+                                : AgeGroup.Veteran,
                     VetsBucket = row.VetsBucket,
                     CreatedUtc = row.ImportDate,
                     LastUpdatedUtc = row.ImportDate,
