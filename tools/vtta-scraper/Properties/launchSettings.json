@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "vtta-scraper": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\repos\\wvcc\\WellandValleyCC.github.io\\tools\\vtta-scraper\\results"
+    }
+  }
+}

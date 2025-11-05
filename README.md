@@ -11,6 +11,12 @@ This repository powers the static website for Welland Valley CC's time trial res
 - **Processing**: C# apps and helper scripts extract data, compute standings, and emit HTML pages  
 - **Publish**: Generated site is pushed to the `gh-pages` branch and served by GitHub Pages
 
+## Tools
+
+The `tools/` folder contains standalone utilities that support data preparation, standards syncing, and infrastructure automation. These are designed to complement the main processing pipeline and improve reproducibility across seasons.
+
+- [VTTA Scraper](tools/vtta-scraper/README.md): Automates extraction of age-standard times from vtta.org.uk for multiple distances, producing a unified CSV keyed by Age.
+
 ---
 
 ```plaintext
@@ -337,3 +343,7 @@ Sub ApplyStandardEventFormattingWithAbsoluteRefs()
     MsgBox "Formatting applied with absolute references to Event_01 through Event_26.", vbInformation
 End Sub
 ```
+
+## Tools
+### VTTA Scraper
+[VTTA Scraper](tools/vtta-scraper/README.md)
