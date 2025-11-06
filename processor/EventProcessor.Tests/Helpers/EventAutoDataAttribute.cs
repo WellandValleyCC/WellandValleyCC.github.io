@@ -26,7 +26,8 @@ namespace EventProcessor.Tests.Helpers
                 IsFemale = c.IsFemale,
                 AgeGroup = c.AgeGroup,
                 CreatedUtc = c.CreatedUtc,
-                LastUpdatedUtc = c.LastUpdatedUtc
+                LastUpdatedUtc = c.LastUpdatedUtc,
+                VetsBucket = c.VetsBucket
             }).ToList();
 
             var allRides = TestRides.All.Select(r => new Ride
