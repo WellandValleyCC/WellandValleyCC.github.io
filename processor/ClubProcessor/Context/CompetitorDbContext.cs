@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using ClubProcessor.Models;
+using ClubProcessor.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClubProcessor.Context
 {
@@ -17,15 +18,8 @@ namespace ClubProcessor.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var basePath = AppContext.BaseDirectory;
-                var dbPath = Path.Combine(basePath, "data", "results.db");
-                var directoryPath = Path.GetDirectoryName(dbPath);
-
-                if (!string.IsNullOrEmpty(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
+                var dbPath = DbPathResolver.GetCompetitorDbPath("2025"); // or inject year if dynamic
+                Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
                 optionsBuilder.UseSqlite($"Data Source={dbPath}");
             }
         }
