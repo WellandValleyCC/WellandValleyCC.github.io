@@ -18,7 +18,7 @@ namespace ClubProcessor.Calculators
             var eligibleRides = rides
                 .Where(r => r.Competitor != null && r.EventNumber == eventNumber)
                 .Where(IsEligible)
-                .OrderBy(r => r.TotalSeconds)
+                .OrderBy(GetOrderingTime)
                 .ToList();
 
             int position = 1;
@@ -30,7 +30,7 @@ namespace ClubProcessor.Calculators
 
                 var tiedGroup = eligibleRides
                     .Skip(i)
-                    .TakeWhile(r => r.TotalSeconds == currentTime)
+                    .TakeWhile(r => GetOrderingTime(r) == currentTime)
                     .ToList();
 
                 int tieCount = tiedGroup.Count;
@@ -59,5 +59,10 @@ namespace ClubProcessor.Calculators
 
         protected abstract bool IsEligible(Ride ride);
         protected abstract void AssignPoints(Ride ride, int position, double points);
+
+        /// <summary>
+        /// Returns the time value used for ranking. Override in derived classes to apply handicaps or alternate metrics.
+        /// </summary>
+        protected virtual double GetOrderingTime(Ride r) => r.TotalSeconds;
     }
 }

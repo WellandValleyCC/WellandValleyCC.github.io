@@ -23,5 +23,22 @@ namespace ClubProcessor.Calculators
             r.VeteransPosition = position;
             r.VeteransPoints = points;
         }
+        protected override double GetOrderingTime(Ride r)
+        {
+            if (!r.Competitor?.VetsBucket.HasValue ?? true)
+                throw new InvalidOperationException($"Veterans bucket not set for competitor {r.Competitor.ClubNumber} - {r.Name}");
+
+            return r.TotalSeconds;
+
+            // TO DO: Implement handicap calculation when vets provider is available
+            //var year = r.CalendarEvent.EventDate.Year;
+            //var handicapSeconds = _vetsProvider.GetHandicapSeconds(year, r.DistanceMiles, r.Competitor.IsFemale, r.Competitor.VetsBucket.Value);
+
+            //r.HandicapSeconds = handicapSeconds;
+            //r.HandicapTotalSeconds = r.TotalSeconds - handicapSeconds;
+
+            //return r.HandicapTotalSeconds;
+        }
+
     }
 }
