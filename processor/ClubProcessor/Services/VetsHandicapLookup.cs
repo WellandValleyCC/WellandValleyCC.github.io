@@ -1,33 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ClubProcessor.Interfaces;
+using ClubProcessor.Utilities;
 
 namespace ClubProcessor.Services
 {
     public class VetsHandicapLookup : IVetsHandicapProvider
     {
-        // Gender independent handicap tables mapping distanceMiles --> { vetsBucket --> seconds }
-        private static readonly Dictionary<double, Dictionary<int, int>> MaleSeconds;
-        private static readonly Dictionary<double, Dictionary<int, int>> FemaleSeconds;
-
         private const int MinBucket = 1;
         private const int MaxBucket = 40;
-        private const int BucketDomainSize = MaxBucket - MinBucket + 1; // 40
 
-        static VetsHandicapLookup()
+        private static readonly Dictionary<int, VetsHandicapLookup> Cache = new();
+
+        private readonly Dictionary<double, Dictionary<int, int>> _maleSeconds;
+        private readonly Dictionary<double, Dictionary<int, int>> _femaleSeconds;
+
+        private VetsHandicapLookup(int effectiveYear)
         {
-            MaleSeconds = new();
-            FemaleSeconds = new();
+            _maleSeconds = new();
+            _femaleSeconds = new();
 
-            var repoRoot = FindGitRepoRoot();
+            var repoRoot = RepoLocator.FindGitRepoRoot();
             var dataFolder = Path.Combine(repoRoot, "data");
-            var filePath = Path.Combine(dataFolder, $"vtta-standards-combined.2025.csv");
+            var filePath = Path.Combine(dataFolder, $"vtta-standards-combined.{effectiveYear}.csv");
 
             if (!File.Exists(filePath))
-            {
                 throw new FileNotFoundException($"Standards file not found: {filePath}");
-            }
+
             var lines = File.ReadAllLines(filePath);
             var headers = lines[0].Split(',');
 
@@ -41,16 +43,16 @@ namespace ClubProcessor.Services
                 .Where(t => t.h.StartsWith("f"))
                 .ToList();
 
-            foreach (var (h, i) in maleCols)
+            foreach (var (h, _) in maleCols)
             {
                 var dist = double.Parse(h.Substring(1));
-                MaleSeconds[dist] = new Dictionary<int, int>();
+                _maleSeconds[dist] = new();
             }
 
-            foreach (var (h, i) in femaleCols)
+            foreach (var (h, _) in femaleCols)
             {
                 var dist = double.Parse(h.Substring(1));
-                FemaleSeconds[dist] = new Dictionary<int, int>();
+                _femaleSeconds[dist] = new();
             }
 
             foreach (var line in lines.Skip(1))
@@ -59,42 +61,34 @@ namespace ClubProcessor.Services
                 if (!int.TryParse(cells[0], out int age)) continue;
 
                 int vetsBucket = age - 49;
-                if (vetsBucket < 1 || vetsBucket > 40) continue;
+                if (vetsBucket < MinBucket || vetsBucket > MaxBucket) continue;
 
                 foreach (var (h, i) in maleCols)
                 {
                     var dist = double.Parse(h.Substring(1));
-                    MaleSeconds[dist][vetsBucket] = ParseTime(cells[i]);
+                    _maleSeconds[dist][vetsBucket] = ParseTime(cells[i]);
                 }
 
                 foreach (var (h, i) in femaleCols)
                 {
                     var dist = double.Parse(h.Substring(1));
-                    FemaleSeconds[dist][vetsBucket] = ParseTime(cells[i]);
+                    _femaleSeconds[dist][vetsBucket] = ParseTime(cells[i]);
                 }
             }
         }
 
-        public static string FindGitRepoRoot()
+        public static VetsHandicapLookup ForSeason(int seasonYear)
         {
-            var dir = new DirectoryInfo(AppContext.BaseDirectory);
-            while (dir != null && !Directory.Exists(Path.Combine(dir.FullName, ".git")))
+            int effectiveYear = VttaStandardYearResolver.GetEffectiveStandardYear(seasonYear);
+            if (!Cache.TryGetValue(effectiveYear, out var instance))
             {
-                dir = dir.Parent;
+                instance = new VetsHandicapLookup(effectiveYear);
+                Cache[effectiveYear] = instance;
             }
-
-            if (dir == null)
-                throw new DirectoryNotFoundException("Could not locate Git repo root (no .git folder found)");
-
-            return dir.FullName;
+            return instance;
         }
 
-        private static int ParseTime(string s)
-        {
-            return TimeSpan.TryParse(s, out var ts) ? (int)ts.TotalSeconds : 0;
-        }
-
-        public int GetHandicapSeconds(double distanceMiles, bool isFemale, int vetsBucket)
+        public int GetHandicapSeconds(int year, double distanceMiles, bool isFemale, int vetsBucket)
         {
             if (vetsBucket < MinBucket || vetsBucket > MaxBucket)
             {
@@ -102,11 +96,11 @@ namespace ClubProcessor.Services
                     $"vetsBucket must be between {MinBucket} and {MaxBucket} (inclusive).");
             }
 
-            var source = isFemale ? FemaleSeconds : MaleSeconds;
+            var lookup = isFemale ? _femaleSeconds : _maleSeconds;
 
-            if (!source.TryGetValue(distanceMiles, out var bucketMap))
+            if (!lookup.TryGetValue(distanceMiles, out var bucketMap))
             {
-                var supported = string.Join(", ", source.Keys.OrderBy(k => k));
+                var supported = string.Join(", ", lookup.Keys.OrderBy(k => k));
                 throw new ArgumentOutOfRangeException(nameof(distanceMiles), distanceMiles,
                     $"Unsupported distance {distanceMiles}. Supported distances: {supported}.");
             }
@@ -118,6 +112,11 @@ namespace ClubProcessor.Services
             }
 
             return seconds;
+        }
+
+        private static int ParseTime(string s)
+        {
+            return TimeSpan.TryParse(s, out var ts) ? (int)ts.TotalSeconds : 0;
         }
     }
 }

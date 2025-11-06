@@ -2,6 +2,6 @@
 {
     public interface IVetsHandicapProvider
     {
-        int GetHandicapSeconds(double distanceMiles, bool isFemale, int vetsBucket);
+        int GetHandicapSeconds(int year, double distanceMiles, bool isFemale, int vetsBucket);
     }
 }
