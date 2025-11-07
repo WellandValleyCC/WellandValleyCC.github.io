@@ -433,12 +433,13 @@ namespace EventProcessor.Tests.Helpers
                     var ageGroup = ride.AgeGroupDisplay;
                     var claimStatus = ride.ClaimStatusDisplay;
                     var totalSeconds = ride.TotalSeconds;
-                    var handicap = ride.Handicap?.ToString() ?? "n/a";
+                    var vetsBucket = ride.Competitor?.VetsBucket.HasValue == true ? ride.Competitor.VetsBucket.Value.ToString() : "n/a";
+                    var handicapSeconds = ride.HandicapSeconds?.ToString() ?? "n/a";
                     var handicapTotalSeconds = ride.HandicapTotalSeconds?.ToString() ?? "n/a";
 
                     // Align the name column outside the quotes
                     string line = string.Format(
-                        "(ClubNumber: {0,-4}, Name: \"{1}\",{2}Position: {3,-3}, Points: {4,-5})",
+                        "(ClubNumber: {0,-4}, Name: \"{1}\",{2}Position: {3,-4}, Points: {4,-5})",
                         club,
                         name,
                         new string(' ', Math.Max(1, 22 - name.Length)), // pad spaces after the closing quote
@@ -446,7 +447,7 @@ namespace EventProcessor.Tests.Helpers
                         pts);
 
                     sb.AppendLine(
-                        $"{line} // {totalSeconds,4}s AAT: {handicap,-3} HandicapTotalSeconds: {handicapTotalSeconds,-4} {claimStatus,-10} {ageGroup,-8} {gender,-6} {bikeType}");
+                        $"{line} // {totalSeconds,4}s VetsBucket:{vetsBucket,-4} AAT:{handicapSeconds,-4} HandicapTotalSeconds:{handicapTotalSeconds,-4} {claimStatus,-10} {ageGroup,-8} {gender,-6} {bikeType}");
                 }
             }
 
