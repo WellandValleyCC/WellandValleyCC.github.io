@@ -26,7 +26,7 @@ namespace ClubProcessor.Calculators
 
             while (i < eligibleRides.Count)
             {
-                var currentTime = eligibleRides[i].TotalSeconds;
+                var currentTime = GetOrderingTime(eligibleRides[i]);
 
                 var tiedGroup = eligibleRides
                     .Skip(i)

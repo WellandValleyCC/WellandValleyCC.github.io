@@ -1,4 +1,5 @@
-﻿using ClubProcessor.Models;
+﻿using ClubProcessor.Interfaces;
+using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,18 @@ namespace ClubProcessor.Calculators
     {
         public override string CompetitionName => "Veterans";
 
-        public VeteransCompetitionCalculator(Func<int, int> pointsForPosition) : base(pointsForPosition) { }
+        private readonly int competitionYear;
+        private readonly IVetsHandicapProvider handicapProvider;
+
+        public VeteransCompetitionCalculator(
+            Func<int, int> pointsForPosition,
+            int competitionYear,
+            IVetsHandicapProvider handicapProvider)
+            : base(pointsForPosition)
+        {
+            this.competitionYear = competitionYear;
+            this.handicapProvider = handicapProvider;
+        }
 
         protected override bool IsEligible(Ride r) =>
             r.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary, AgeGroup: AgeGroup.Veteran } &&
@@ -23,22 +35,30 @@ namespace ClubProcessor.Calculators
             r.VeteransPosition = position;
             r.VeteransPoints = points;
         }
+
         protected override double GetOrderingTime(Ride r)
         {
-            if (!r.Competitor?.VetsBucket.HasValue ?? true)
-                throw new InvalidOperationException($"Veterans bucket not set for competitor {r.Competitor.ClubNumber} - {r.Name}");
+            // Only validate if we need to calculate
+            if (!r.HandicapSeconds.HasValue)
+            {
+                if (r.Competitor == null)
+                    throw new InvalidOperationException($"Competitor not set for ride {r.Name}");
 
-            return r.TotalSeconds;
+                if (!r.Competitor.VetsBucket.HasValue)
+                    throw new InvalidOperationException($"Veterans bucket not set for competitor {r.Competitor.ClubNumber} - {r.Name}");
 
-            // TO DO: Implement handicap calculation when vets provider is available
-            //var year = r.CalendarEvent.EventDate.Year;
-            //var handicapSeconds = _vetsProvider.GetHandicapSeconds(year, r.DistanceMiles, r.Competitor.IsFemale, r.Competitor.VetsBucket.Value);
+                if (r.CalendarEvent == null)
+                    throw new InvalidOperationException($"CalendarEvent not set for ride {r.Competitor.ClubNumber} - {r.Name}");
 
-            //r.HandicapSeconds = handicapSeconds;
-            //r.HandicapTotalSeconds = r.TotalSeconds - handicapSeconds;
+                r.HandicapSeconds = handicapProvider.GetHandicapSeconds(
+                    competitionYear,
+                    r.CalendarEvent.Miles,
+                    r.Competitor.IsFemale,
+                    r.Competitor.VetsBucket.Value);
+            }
 
-            //return r.HandicapTotalSeconds;
+            return r.HandicapTotalSeconds
+                ?? throw new InvalidOperationException($"HandicapTotalSeconds could not be calculated for ride {r.Competitor?.ClubNumber} - {r.Name}");
         }
-
     }
 }

@@ -29,10 +29,10 @@ namespace ClubProcessor.Orchestration
             var competitors = competitorContext.Competitors.ToList();
             var calendar = eventContext.CalendarEvents.ToList();
             var pointsForPosition = CompetitionConfig.LoadPointsForPosition(eventContext);
+            var competitionYear = int.Parse(year);
 
-            var processors = RideProcessingCoordinatorFactory.DiscoverAll(pointsForPosition);
+            var processors = RideProcessingCoordinatorFactory.DiscoverAll(pointsForPosition, competitionYear);
             var scorer = new RideProcessingCoordinator(processors, pointsForPosition);
-
 
             // Apply scoring and ranking
             scorer.ProcessAll(rides, competitors, calendar);

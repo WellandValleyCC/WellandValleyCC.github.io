@@ -88,7 +88,7 @@ namespace ClubProcessor.Models
         [NotMapped]
         public Competitor? Competitor { get; set; }
 
-        [NotMapped] 
+        [NotMapped]
         public CalendarEvent? CalendarEvent { get; set; }
 
         [NotMapped]
@@ -115,7 +115,6 @@ namespace ClubProcessor.Models
         public double? HandicapSeconds { get; set; }
 
         [NotMapped]
-        public double? HandicapTotalSeconds { get; set; }
-
+        public double? HandicapTotalSeconds => HandicapSeconds == null ? null : TotalSeconds - HandicapSeconds.Value;
     }
 }

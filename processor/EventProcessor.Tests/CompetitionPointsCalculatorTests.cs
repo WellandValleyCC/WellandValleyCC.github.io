@@ -98,7 +98,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
@@ -197,8 +198,8 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Scorer setup
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
-
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Build Competitor snapshots grouped by club number for resolution by ride date
             var competitorsByClubNumber = competitors
@@ -306,7 +307,8 @@ namespace EventProcessor.Tests
 
             var rides = baseRides.Concat(ridesUsingFutureCompetitors).ToList();
 
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = ridesUsingFutureCompetitors.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Build snapshot dictionary
             var competitorsByClubNumber = competitors
@@ -335,7 +337,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Competitor versions lookup (ordered by CreatedUtc ascending)
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -450,7 +453,8 @@ namespace EventProcessor.Tests
             var futuresB = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(60));
             var futuresC = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1062), snapshots: 1, interval: TimeSpan.FromDays(90));
 
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             var competitors = baseCompetitors.Concat(futuresA).Concat(futuresB).Concat(futuresC).ToList();
 
@@ -559,7 +563,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             // Include all eligible rides (club members and guests)
@@ -612,7 +617,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -677,7 +683,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -737,7 +744,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -792,7 +800,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1031), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -845,7 +854,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -913,7 +923,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -981,7 +992,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -1031,7 +1043,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1051), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -1080,7 +1093,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -1140,7 +1154,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1043), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -1201,7 +1216,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Competitor versions lookup (ordered by CreatedUtc ascending)
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
