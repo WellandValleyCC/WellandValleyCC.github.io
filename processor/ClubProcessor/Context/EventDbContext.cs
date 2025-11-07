@@ -1,4 +1,5 @@
 ﻿using ClubProcessor.Models;
+using ClubProcessor.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClubProcessor.Context
@@ -19,11 +20,12 @@ namespace ClubProcessor.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var basePath = AppContext.BaseDirectory;
-                var dbPath = Path.Combine(basePath, "data", "club_events_fallback.db");
-                Console.WriteLine($"[INFO] Using fallback DB: {dbPath}");
-                Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
-                optionsBuilder.UseSqlite($"Data Source={dbPath}");
+                if (!optionsBuilder.IsConfigured)
+                {
+                    var dbPath = DbPathResolver.GetEventDbPath("2025"); // or inject year if dynamic
+                    Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+                    optionsBuilder.UseSqlite($"Data Source={dbPath}");
+                }
             }
         }
 

@@ -154,6 +154,97 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMemberRide(99, 4027, "Lillian Ashford", totalSeconds: 1020, isRoadBike: true)); // Vet F Honorary
             rides.Add(RideFactory.CreateClubMemberRide(99, 4028, "Rowan Tanner", totalSeconds: 1005, isRoadBike: false)); // Vet M Honorary
 
+            // Event 4: All new Veterans (5001–5040 male, 5101–5140 female)
+            // Deterministic spread: 1770–1830 seconds (60s band around 1800)
+
+            for (int i = 0; i < 40; i++)
+            {
+                int clubNumber = 5001 + i;
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (i % 61); // deterministic spread
+                bool isRoadBike = (i % 2 == 0);
+
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4,
+                    clubNumber,
+                    $"{competitor.FullName}",
+                    totalSeconds,
+                    isRoadBike));
+            }
+
+            for (int i = 0; i < 40; i++)
+            {
+                int clubNumber = 5101 + i;
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + ((i + 20) % 61); // offset to mix distribution
+                bool isRoadBike = (i % 2 != 0);
+
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4,
+                    clubNumber,
+                    $"{competitor.FullName}",
+                    totalSeconds,
+                    isRoadBike));
+            }
+
+            // Event 4: Add a few non-Veterans for coverage
+            // Juveniles
+            {
+                int clubNumber = 1001; // Mia Bates
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (clubNumber % 61);
+                bool isRoadBike = true;
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
+            }
+
+            {
+                int clubNumber = 1011; // Liam Evans
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (clubNumber % 61);
+                bool isRoadBike = false;
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
+            }
+
+            // Juniors
+            {
+                int clubNumber = 1021; // Amelia Hughes
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (clubNumber % 61);
+                bool isRoadBike = true;
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
+            }
+
+            {
+                int clubNumber = 1031; // Oliver King
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (clubNumber % 61);
+                bool isRoadBike = false;
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
+            }
+
+            // Seniors
+            {
+                int clubNumber = 1041; // Charlotte Nash
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (clubNumber % 61);
+                bool isRoadBike = true;
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
+            }
+
+            {
+                int clubNumber = 1051; // James Quinn
+                var competitor = TestCompetitors.All.First(c => c.ClubNumber == clubNumber);
+                int totalSeconds = 1770 + (clubNumber % 61);
+                bool isRoadBike = false;
+                rides.Add(RideFactory.CreateClubMemberRide(
+                    4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
+            }
+
             return rides.AsReadOnly();
         }
 

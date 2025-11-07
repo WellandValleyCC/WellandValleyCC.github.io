@@ -27,4 +27,11 @@
     <ProjectReference Include="..\ClubProcessor\ClubProcessor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="..\..\..\data\vtta-standards-combined.2025.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>data\vtta-standards-combined.2025.csv</TargetPath>
+    </None>
+  </ItemGroup>
+
 </Project>

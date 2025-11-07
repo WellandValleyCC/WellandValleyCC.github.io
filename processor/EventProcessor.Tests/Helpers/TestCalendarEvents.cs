@@ -8,7 +8,8 @@ namespace EventProcessor.Tests.Helpers
             => new CalendarEvent
             {
                 EventNumber = eventNumber,
-                EventDate = DateTime.SpecifyKind(eventDateUtc, DateTimeKind.Utc)
+                EventDate = DateTime.SpecifyKind(eventDateUtc, DateTimeKind.Utc),
+                Miles = 10.0,
             };
 
         public static IReadOnlyList<CalendarEvent> CreateSequence(

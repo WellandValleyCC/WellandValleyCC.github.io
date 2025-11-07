@@ -88,7 +88,7 @@ namespace ClubProcessor.Models
         [NotMapped]
         public Competitor? Competitor { get; set; }
 
-        [NotMapped] 
+        [NotMapped]
         public CalendarEvent? CalendarEvent { get; set; }
 
         [NotMapped]
@@ -111,5 +111,10 @@ namespace ClubProcessor.Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string EventDateDisplay => CalendarEvent != null ? CalendarEvent.EventDate.ToShortDateString() : string.Empty;
 
+        [NotMapped]
+        public double? HandicapSeconds { get; set; }
+
+        [NotMapped]
+        public double? HandicapTotalSeconds => HandicapSeconds == null ? null : TotalSeconds - HandicapSeconds.Value;
     }
 }

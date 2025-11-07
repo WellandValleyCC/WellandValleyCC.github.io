@@ -46,6 +46,17 @@ namespace EventProcessor.Tests
             ride.SeniorsPoints.Should().Be(expected.Points, $"expected SeniorsPoints {expected.Points} for {context}");
         }
 
+        void AssertVeteranRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.VeteransPosition.Should().Be(expected.Position, $"expected VeteransPosition {expected.Position} for {context}");
+            ride.VeteransPoints.Should().Be(expected.Points,     $"expected VeteransPoints {expected.Points} for {context}");
+        }
+
         private static void AssertWomenRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
@@ -87,7 +98,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
@@ -186,8 +198,8 @@ namespace EventProcessor.Tests
                 .ToList();
 
             // Scorer setup
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
-
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Build Competitor snapshots grouped by club number for resolution by ride date
             var competitorsByClubNumber = competitors
@@ -295,7 +307,8 @@ namespace EventProcessor.Tests
 
             var rides = baseRides.Concat(ridesUsingFutureCompetitors).ToList();
 
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = ridesUsingFutureCompetitors.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Build snapshot dictionary
             var competitorsByClubNumber = competitors
@@ -324,7 +337,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             // Competitor versions lookup (ordered by CreatedUtc ascending)
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -439,7 +453,8 @@ namespace EventProcessor.Tests
             var futuresB = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(60));
             var futuresC = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1062), snapshots: 1, interval: TimeSpan.FromDays(90));
 
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
 
             var competitors = baseCompetitors.Concat(futuresA).Concat(futuresB).Concat(futuresC).ToList();
 
@@ -548,7 +563,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             // Include all eligible rides (club members and guests)
@@ -601,7 +617,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -666,7 +683,8 @@ namespace EventProcessor.Tests
             List<CalendarEvent> calendar)
         {
             // Arrange
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -726,7 +744,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -781,7 +800,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1031), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -834,7 +854,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -902,7 +923,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1041), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -970,7 +992,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -1020,7 +1043,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1051), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -1069,7 +1093,8 @@ namespace EventProcessor.Tests
             List<Ride> allRides,
             List<CalendarEvent> calendar)
         {
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
@@ -1129,7 +1154,8 @@ namespace EventProcessor.Tests
         {
             var baseCompetitors = TestCompetitors.All.ToList();
             var futures = CompetitorFactory.CreateFutureVersions(baseCompetitors.GetByClubNumber(1043), snapshots: 2, interval: TimeSpan.FromDays(45));
-            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitors = baseCompetitors.Concat(futures).ToList();
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
@@ -1181,5 +1207,135 @@ namespace EventProcessor.Tests
                 (ClubNumber: 3063, Name: "Paula Valentine",    Position: 5, Points: 46),   // 1025s Honorary IsVeteran Female Road
             });
         }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForVeterans_ScoresAllEligibleVeteransRidersUsingHandicaps(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
+
+            // Competitor versions lookup (ordered by CreatedUtc ascending)
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            // Filter the rides we will assert on - just those for club members
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            // Act
+            scorer.ProcessAll(allRides, competitors, calendar);
+
+            // Build grouping and debug output
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderVeteransDebugOutput(validRides, competitorVersions, new[] { 4 });
+            _ = debug; // breakpoint-friendly
+
+            // Expected data for Veterans competition in Event 4
+            // NOTE: Fill in expected positions/points once your handicap algorithm is defined.
+            // For now, scaffold with ClubNumber + Name only, positions/points TBD.
+            var expectedEvent4 = new[]
+            {
+                // Event 4 actual results:
+                (ClubNumber: 5140, Name: "Theresa Adams",         Position: 1   , Points: 60.0  ), // 1829s VetsBucket:40   AAT:793  HandicapTotalSeconds:1036 FirstClaim Veteran  Female Road
+                (ClubNumber: 5139, Name: "Frances Zane",          Position: 2   , Points: 55   ), // 1828s VetsBucket:39   AAT:762  HandicapTotalSeconds:1066 FirstClaim Veteran  Female TT
+                (ClubNumber: 5138, Name: "Joanne White",          Position: 3   , Points: 51   ), // 1827s VetsBucket:38   AAT:732  HandicapTotalSeconds:1095 FirstClaim Veteran  Female Road
+                (ClubNumber: 5137, Name: "Helen Vincent",         Position: 4   , Points: 48   ), // 1826s VetsBucket:37   AAT:704  HandicapTotalSeconds:1122 FirstClaim Veteran  Female TT
+                (ClubNumber: 5136, Name: "Margaret Upton",        Position: 5   , Points: 46   ), // 1825s VetsBucket:36   AAT:677  HandicapTotalSeconds:1148 FirstClaim Veteran  Female Road
+                (ClubNumber: 5135, Name: "Denise Taylor",         Position: 6   , Points: 44   ), // 1824s VetsBucket:35   AAT:652  HandicapTotalSeconds:1172 FirstClaim Veteran  Female TT
+                (ClubNumber: 5134, Name: "Janice Simpson",        Position: 7   , Points: 42   ), // 1823s VetsBucket:34   AAT:628  HandicapTotalSeconds:1195 FirstClaim Veteran  Female Road
+                (ClubNumber: 5133, Name: "Deborah Roberts",       Position: 8   , Points: 40   ), // 1822s VetsBucket:33   AAT:604  HandicapTotalSeconds:1218 FirstClaim Veteran  Female TT
+                (ClubNumber: 5132, Name: "Louise Patel",          Position: 9   , Points: 39   ), // 1821s VetsBucket:32   AAT:582  HandicapTotalSeconds:1239 FirstClaim Veteran  Female Road
+                (ClubNumber: 5040, Name: "Edward Nelson",         Position: 10  , Points: 38   ), // 1809s VetsBucket:40   AAT:561  HandicapTotalSeconds:1248 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5131, Name: "Catherine O'Brien",     Position: 11  , Points: 37   ), // 1820s VetsBucket:31   AAT:561  HandicapTotalSeconds:1259 FirstClaim Veteran  Female TT
+                (ClubNumber: 5039, Name: "Geoffrey Matthews",     Position: 12  , Points: 36   ), // 1808s VetsBucket:39   AAT:534  HandicapTotalSeconds:1274 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5130, Name: "Audrey Nelson",         Position: 13  , Points: 35   ), // 1819s VetsBucket:30   AAT:541  HandicapTotalSeconds:1278 FirstClaim Veteran  Female Road
+                (ClubNumber: 5129, Name: "Eleanor Matthews",      Position: 14  , Points: 34   ), // 1818s VetsBucket:29   AAT:521  HandicapTotalSeconds:1297 FirstClaim Veteran  Female TT
+                (ClubNumber: 5038, Name: "Norman Lewis",          Position: 15  , Points: 33   ), // 1807s VetsBucket:38   AAT:508  HandicapTotalSeconds:1299 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5128, Name: "Monica Lewis",          Position: 16  , Points: 32   ), // 1817s VetsBucket:28   AAT:502  HandicapTotalSeconds:1315 FirstClaim Veteran  Female Road
+                (ClubNumber: 5037, Name: "Leslie Kerr",           Position: 17  , Points: 31   ), // 1806s VetsBucket:37   AAT:483  HandicapTotalSeconds:1323 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5127, Name: "Vanessa Kerr",          Position: 18  , Points: 30   ), // 1816s VetsBucket:27   AAT:484  HandicapTotalSeconds:1332 FirstClaim Veteran  Female TT
+                (ClubNumber: 5036, Name: "Eric Johnson",          Position: 19  , Points: 29   ), // 1805s VetsBucket:36   AAT:459  HandicapTotalSeconds:1346 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5126, Name: "Patricia Johnson",      Position: 20  , Points: 28   ), // 1815s VetsBucket:26   AAT:467  HandicapTotalSeconds:1348 FirstClaim Veteran  Female Road
+                (ClubNumber: 5125, Name: "Joanna Irving",         Position: 21  , Points: 27   ), // 1814s VetsBucket:25   AAT:450  HandicapTotalSeconds:1364 FirstClaim Veteran  Female TT
+                (ClubNumber: 5035, Name: "Rodney Irving",         Position: 22  , Points: 26   ), // 1804s VetsBucket:35   AAT:437  HandicapTotalSeconds:1367 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5124, Name: "Melissa Harrison",      Position: 23  , Points: 25   ), // 1813s VetsBucket:24   AAT:434  HandicapTotalSeconds:1379 FirstClaim Veteran  Female Road
+                (ClubNumber: 5034, Name: "Keith Harrison",        Position: 24  , Points: 24   ), // 1803s VetsBucket:34   AAT:415  HandicapTotalSeconds:1388 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5123, Name: "Angela Gibson",         Position: 25  , Points: 23   ), // 1812s VetsBucket:23   AAT:419  HandicapTotalSeconds:1393 FirstClaim Veteran  Female TT
+                (ClubNumber: 5033, Name: "Howard Gibson",         Position: 26  , Points: 21.5 ), // 1802s VetsBucket:33   AAT:395  HandicapTotalSeconds:1407 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5122, Name: "Rebecca Fletcher",      Position: 26  , Points: 21.5 ), // 1811s VetsBucket:22   AAT:404  HandicapTotalSeconds:1407 FirstClaim Veteran  Female Road
+                (ClubNumber: 5121, Name: "Natalie Edwards",       Position: 28  , Points: 20   ), // 1810s VetsBucket:21   AAT:390  HandicapTotalSeconds:1420 FirstClaim Veteran  Female TT
+                (ClubNumber: 5032, Name: "Barry Fletcher",        Position: 29  , Points: 19   ), // 1801s VetsBucket:32   AAT:375  HandicapTotalSeconds:1426 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5031, Name: "Alan Edwards",          Position: 30  , Points: 18   ), // 1800s VetsBucket:31   AAT:357  HandicapTotalSeconds:1443 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5120, Name: "Samantha Dixon",        Position: 31  , Points: 17   ), // 1809s VetsBucket:20   AAT:365  HandicapTotalSeconds:1444 FirstClaim Veteran  Female Road
+                (ClubNumber: 5030, Name: "Clive Dixon",           Position: 32  , Points: 16   ), // 1799s VetsBucket:30   AAT:339  HandicapTotalSeconds:1460 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5119, Name: "Julia Carter",          Position: 33  , Points: 15   ), // 1808s VetsBucket:19   AAT:342  HandicapTotalSeconds:1466 FirstClaim Veteran  Female TT
+                (ClubNumber: 5029, Name: "Russell Carter",        Position: 34  , Points: 14   ), // 1798s VetsBucket:29   AAT:321  HandicapTotalSeconds:1477 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5118, Name: "Eliza Barker",          Position: 35  , Points: 13   ), // 1807s VetsBucket:18   AAT:322  HandicapTotalSeconds:1485 FirstClaim Veteran  Female Road
+                (ClubNumber: 5028, Name: "Nigel Barker",          Position: 36  , Points: 12   ), // 1797s VetsBucket:28   AAT:305  HandicapTotalSeconds:1492 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5117, Name: "Lydia Abbott",          Position: 37  , Points: 11   ), // 1806s VetsBucket:17   AAT:303  HandicapTotalSeconds:1503 FirstClaim Veteran  Female TT
+                (ClubNumber: 5027, Name: "Trevor Abbott",         Position: 38  , Points: 10   ), // 1796s VetsBucket:27   AAT:289  HandicapTotalSeconds:1507 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5116, Name: "Harriet Zimmer",        Position: 39  , Points: 9    ), // 1805s VetsBucket:16   AAT:286  HandicapTotalSeconds:1519 FirstClaim Veteran  Female Road
+                (ClubNumber: 5026, Name: "Harvey Zimmer",         Position: 40  , Points: 8    ), // 1795s VetsBucket:26   AAT:274  HandicapTotalSeconds:1521 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5115, Name: "Claudia Young",         Position: 41  , Points: 7    ), // 1804s VetsBucket:15   AAT:271  HandicapTotalSeconds:1533 FirstClaim Veteran  Female TT
+                (ClubNumber: 5025, Name: "Malcolm Young",         Position: 42  , Points: 6    ), // 1794s VetsBucket:25   AAT:259  HandicapTotalSeconds:1535 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5114, Name: "Phoebe Xavier",         Position: 43  , Points: 5    ), // 1803s VetsBucket:14   AAT:257  HandicapTotalSeconds:1546 FirstClaim Veteran  Female Road
+                (ClubNumber: 5024, Name: "Leon Xavier",           Position: 44  , Points: 4    ), // 1793s VetsBucket:24   AAT:245  HandicapTotalSeconds:1548 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5113, Name: "Naomi Walker",          Position: 45  , Points: 3    ), // 1802s VetsBucket:13   AAT:244  HandicapTotalSeconds:1558 FirstClaim Veteran  Female TT
+                (ClubNumber: 5023, Name: "Dean Walker",           Position: 46  , Points: 2    ), // 1792s VetsBucket:23   AAT:231  HandicapTotalSeconds:1561 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5112, Name: "Isabel Vaughn",         Position: 47  , Points: 1    ), // 1801s VetsBucket:12   AAT:232  HandicapTotalSeconds:1569 FirstClaim Veteran  Female Road
+                (ClubNumber: 5022, Name: "Stuart Vaughn",         Position: 48  , Points: 1    ), // 1791s VetsBucket:22   AAT:218  HandicapTotalSeconds:1573 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5111, Name: "Megan Underwood",       Position: 49  , Points: 1    ), // 1800s VetsBucket:11   AAT:222  HandicapTotalSeconds:1578 FirstClaim Veteran  Female TT
+                (ClubNumber: 5021, Name: "Gavin Underwood",       Position: 50  , Points: 1    ), // 1790s VetsBucket:21   AAT:206  HandicapTotalSeconds:1584 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5110, Name: "Bethany Turner",        Position: 51  , Points: 1    ), // 1799s VetsBucket:10   AAT:213  HandicapTotalSeconds:1586 FirstClaim Veteran  Female Road
+                (ClubNumber: 5109, Name: "Grace Stevens",         Position: 52  , Points: 1    ), // 1798s VetsBucket:9    AAT:205  HandicapTotalSeconds:1593 FirstClaim Veteran  Female TT
+                (ClubNumber: 5020, Name: "Paul Turner",           Position: 53  , Points: 1    ), // 1789s VetsBucket:20   AAT:194  HandicapTotalSeconds:1595 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5108, Name: "Charlotte Reeves",      Position: 54  , Points: 1    ), // 1797s VetsBucket:8    AAT:198  HandicapTotalSeconds:1599 FirstClaim Veteran  Female Road
+                (ClubNumber: 5107, Name: "Laura Quinn",           Position: 55  , Points: 1    ), // 1796s VetsBucket:7    AAT:191  HandicapTotalSeconds:1605 FirstClaim Veteran  Female TT
+                (ClubNumber: 5019, Name: "Martin Stevens",        Position: 56  , Points: 1    ), // 1788s VetsBucket:19   AAT:182  HandicapTotalSeconds:1606 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5106, Name: "Hannah Peters",         Position: 57  , Points: 1    ), // 1795s VetsBucket:6    AAT:185  HandicapTotalSeconds:1610 FirstClaim Veteran  Female Road
+                (ClubNumber: 5105, Name: "Rachel Osborne",        Position: 58  , Points: 1    ), // 1794s VetsBucket:5    AAT:180  HandicapTotalSeconds:1614 FirstClaim Veteran  Female TT
+                (ClubNumber: 5018, Name: "Anthony Reid",          Position: 59  , Points: 1    ), // 1787s VetsBucket:18   AAT:171  HandicapTotalSeconds:1616 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5104, Name: "Emily Norris",          Position: 60  , Points: 1    ), // 1793s VetsBucket:4    AAT:176  HandicapTotalSeconds:1617 FirstClaim Veteran  Female Road
+                (ClubNumber: 5103, Name: "Clara Mitchell",        Position: 61  , Points: 1    ), // 1792s VetsBucket:3    AAT:173  HandicapTotalSeconds:1619 FirstClaim Veteran  Female TT
+                (ClubNumber: 5102, Name: "Sophie Lawrence",       Position: 62  , Points: 1    ), // 1791s VetsBucket:2    AAT:169  HandicapTotalSeconds:1622 FirstClaim Veteran  Female Road
+                (ClubNumber: 5101, Name: "Alice Kendall",         Position: 63  , Points: 1    ), // 1790s VetsBucket:1    AAT:167  HandicapTotalSeconds:1623 FirstClaim Veteran  Female TT
+                (ClubNumber: 5017, Name: "Jason Quinn",           Position: 64  , Points: 1    ), // 1786s VetsBucket:17   AAT:160  HandicapTotalSeconds:1626 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5016, Name: "Neil Parker",           Position: 65  , Points: 1    ), // 1785s VetsBucket:16   AAT:150  HandicapTotalSeconds:1635 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5015, Name: "Darren Owens",          Position: 66  , Points: 1    ), // 1784s VetsBucket:15   AAT:140  HandicapTotalSeconds:1644 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5014, Name: "Craig Norton",          Position: 67  , Points: 1    ), // 1783s VetsBucket:14   AAT:130  HandicapTotalSeconds:1653 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5013, Name: "Gareth Murray",         Position: 68  , Points: 1    ), // 1782s VetsBucket:13   AAT:121  HandicapTotalSeconds:1661 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5012, Name: "Patrick Lawson",        Position: 69  , Points: 1    ), // 1781s VetsBucket:12   AAT:112  HandicapTotalSeconds:1669 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5011, Name: "Stephen Kirk",          Position: 70  , Points: 1    ), // 1780s VetsBucket:11   AAT:104  HandicapTotalSeconds:1676 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5010, Name: "Colin Jennings",        Position: 71  , Points: 1    ), // 1779s VetsBucket:10   AAT:96   HandicapTotalSeconds:1683 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5009, Name: "Douglas Ingram",        Position: 72  , Points: 1    ), // 1778s VetsBucket:9    AAT:88   HandicapTotalSeconds:1690 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5008, Name: "Adrian Holt",           Position: 73  , Points: 1    ), // 1777s VetsBucket:8    AAT:80   HandicapTotalSeconds:1697 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5007, Name: "Philip Grayson",        Position: 74  , Points: 1    ), // 1776s VetsBucket:7    AAT:73   HandicapTotalSeconds:1703 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5006, Name: "Ian Foster",            Position: 75  , Points: 1    ), // 1775s VetsBucket:6    AAT:66   HandicapTotalSeconds:1709 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5005, Name: "George Ellison",        Position: 76  , Points: 1    ), // 1774s VetsBucket:5    AAT:59   HandicapTotalSeconds:1715 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5004, Name: "Hugh Dalton",           Position: 77  , Points: 1    ), // 1773s VetsBucket:4    AAT:53   HandicapTotalSeconds:1720 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5003, Name: "Victor Chapman",        Position: 78  , Points: 1    ), // 1772s VetsBucket:3    AAT:47   HandicapTotalSeconds:1725 FirstClaim Veteran  Male   Road
+                (ClubNumber: 5002, Name: "Simon Bennett",         Position: 79  , Points: 1    ), // 1771s VetsBucket:2    AAT:42   HandicapTotalSeconds:1729 FirstClaim Veteran  Male   TT
+                (ClubNumber: 5001, Name: "Mark Anderson",         Position: 80  , Points: 1    ), // 1770s VetsBucket:1    AAT:36   HandicapTotalSeconds:1734 FirstClaim Veteran  Male   Road
+            };
+
+            // Local assert runner
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+
+                foreach (var exp in expected)
+                    AssertVeteranRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            // Assert for Event 4 only
+            AssertExpectedForEvent(4, expectedEvent4);
+        }
+
     }
 }
