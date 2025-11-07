@@ -111,5 +111,11 @@ namespace ClubProcessor.Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string EventDateDisplay => CalendarEvent != null ? CalendarEvent.EventDate.ToShortDateString() : string.Empty;
 
+        [NotMapped]
+        public int? Handicap { get; set; }
+
+        [NotMapped]
+        public int? HandicapTotalSeconds { get; set; }
+
     }
 }

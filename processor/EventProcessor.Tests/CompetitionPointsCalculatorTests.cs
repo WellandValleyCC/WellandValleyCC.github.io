@@ -46,6 +46,17 @@ namespace EventProcessor.Tests
             ride.SeniorsPoints.Should().Be(expected.Points, $"expected SeniorsPoints {expected.Points} for {context}");
         }
 
+        void AssertVeteranRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
+        {
+            var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
+            ride.Should().NotBeNull($"expected a ride for club {expected.ClubNumber} ({expected.Name})");
+
+            var context = $"[Club: {ride!.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+            ride.VeteransPosition.Should().Be(expected.Position, $"expected VeteransPosition {expected.Position} for {context}");
+            ride.VeteransPoints.Should().Be(expected.Points,     $"expected VeteransPoints {expected.Points} for {context}");
+        }
+
         private static void AssertWomenRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
@@ -1181,5 +1192,59 @@ namespace EventProcessor.Tests
                 (ClubNumber: 3063, Name: "Paula Valentine",    Position: 5, Points: 46),   // 1025s Honorary IsVeteran Female Road
             });
         }
+
+        [Theory]
+        [EventAutoData]
+        public void EventScoring_ForVeterans_ScoresAllEligibleVeteransRidersUsingHandicaps(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate());
+
+            // Competitor versions lookup (ordered by CreatedUtc ascending)
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            // Filter the rides we will assert on - just those for club members
+            var validRides = allRides
+                .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
+                .ToList();
+
+            // Act
+            scorer.ProcessAll(allRides, competitors, calendar);
+
+            // Build grouping and debug output
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
+            var debug = TestHelpers.RenderVeteransDebugOutput(validRides, competitorVersions, new[] { 4 });
+            _ = debug; // breakpoint-friendly
+
+            // Expected data for Veterans competition in Event 4
+            // NOTE: Fill in expected positions/points once your handicap algorithm is defined.
+            // For now, scaffold with ClubNumber + Name only, positions/points TBD.
+            var expectedEvent4 = new[]
+            {
+                // Example entries (replace with actual expected handicapped positions/points)
+                (ClubNumber: 5001, Name: "Mark Anderson", Position: 1, Points: 60.0),
+                (ClubNumber: 5002, Name: "Simon Bennett", Position: 2, Points: 55.0),
+                (ClubNumber: 5101, Name: "Alice Kendall", Position: 3, Points: 51.0),
+                (ClubNumber: 5102, Name: "Sophie Lawrence", Position: 4, Points: 48.0),
+                // … continue for all 80 Veterans plus the 6 non-Veterans you added
+            };
+
+            // Local assert runner
+            void AssertExpectedForEvent(int evtNumber, (int ClubNumber, string Name, int Position, double Points)[] expected)
+            {
+                ridesByEvent.TryGetValue(evtNumber, out var ridesForEvent);
+                ridesForEvent = ridesForEvent ?? new List<Ride>();
+
+                foreach (var exp in expected)
+                    AssertVeteranRideMatchesExpected(ridesForEvent, exp);
+            }
+
+            // Assert for Event 4 only
+            AssertExpectedForEvent(4, expectedEvent4);
+        }
+
     }
 }
