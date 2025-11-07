@@ -112,10 +112,10 @@ namespace ClubProcessor.Models
         public string EventDateDisplay => CalendarEvent != null ? CalendarEvent.EventDate.ToShortDateString() : string.Empty;
 
         [NotMapped]
-        public int? Handicap { get; set; }
+        public double? HandicapSeconds { get; set; }
 
         [NotMapped]
-        public int? HandicapTotalSeconds { get; set; }
+        public double? HandicapTotalSeconds { get; set; }
 
     }
 }
