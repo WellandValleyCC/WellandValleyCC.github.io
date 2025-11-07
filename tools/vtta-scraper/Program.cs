@@ -5,7 +5,7 @@
     {
         private static async Task<int> Main(string[] args)
         { 
-            var distances = new[] { "0.88", "5", "8.5", "9", "10", "11", "13.5", "20", "25" };
+            var distances = new[] { "0.88", "5", "8.5", "9", "9.5", "10", "11", "13.5", "20", "25" };
             var headless = true;
 
             try
