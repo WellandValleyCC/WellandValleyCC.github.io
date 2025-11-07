@@ -426,18 +426,27 @@ namespace EventProcessor.Tests.Helpers
                 {
                     var club = ride.ClubNumber!.Value;
                     var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
-                    var pos = ride.SeniorsPosition.HasValue ? ride.SeniorsPosition.Value.ToString() : "null";
-                    var pts = ride.SeniorsPoints;
+                    var pos = ride.VeteransPosition.HasValue ? ride.VeteransPosition.Value.ToString() : "null";
+                    var pts = ride.VeteransPoints;
                     var gender = ride.Gender;
                     var bikeType = ride.RoadBikeIndicator;
                     var ageGroup = ride.AgeGroupDisplay;
                     var claimStatus = ride.ClaimStatusDisplay;
                     var totalSeconds = ride.TotalSeconds;
-                    var handicap = ride.Handicap;
-                    var handicapTotalSeconds = ride.HandicapTotalSeconds ?? 0;
-                    var line = $"(ClubNumber: {club}, Name: \"{name}\",";
-                    line = line.PadRight(46); // ensures "Position" starts at column 42
-                    sb.AppendLine($"{line} Position: {pos}, Points: {pts}), // {totalSeconds}s {claimStatus} {ageGroup} {gender} {bikeType}");
+                    var handicap = ride.Handicap?.ToString() ?? "n/a";
+                    var handicapTotalSeconds = ride.HandicapTotalSeconds?.ToString() ?? "n/a";
+
+                    // Align the name column outside the quotes
+                    string line = string.Format(
+                        "(ClubNumber: {0,-4}, Name: \"{1}\",{2}Position: {3,-3}, Points: {4,-5})",
+                        club,
+                        name,
+                        new string(' ', Math.Max(1, 22 - name.Length)), // pad spaces after the closing quote
+                        pos,
+                        pts);
+
+                    sb.AppendLine(
+                        $"{line} // {totalSeconds,4}s AAT: {handicap,-3} HandicapTotalSeconds: {handicapTotalSeconds,-4} {claimStatus,-10} {ageGroup,-8} {gender,-6} {bikeType}");
                 }
             }
 
