@@ -1,4 +1,6 @@
-﻿using ClubProcessor.Interfaces;
+﻿using ClubProcessor.Calculators;
+using ClubProcessor.Interfaces;
+using ClubProcessor.Services; // for VetsHandicapLookup
 using System.Reflection;
 
 namespace ClubProcessor.Orchestration
@@ -10,6 +12,7 @@ namespace ClubProcessor.Orchestration
         /// </summary>
         public static List<IRideProcessor> DiscoverAll(
             Func<int, int> pointsForPosition,
+            int competitionYear,
             Assembly? searchAssembly = null,
             IEnumerable<Type>? additionalProcessorTypes = null,
             IEnumerable<Type>? excludeProcessorTypes = null)
@@ -28,7 +31,7 @@ namespace ClubProcessor.Orchestration
             if (excludeProcessorTypes != null)
                 discovered = discovered.Except(excludeProcessorTypes).ToList();
 
-            return InstantiateProcessors(discovered, pointsForPosition);
+            return InstantiateProcessors(discovered, pointsForPosition, competitionYear);
         }
 
         /// <summary>
@@ -36,26 +39,40 @@ namespace ClubProcessor.Orchestration
         /// </summary>
         public static RideProcessingCoordinator Create(
             Func<int, int> pointsForPosition,
+            int competitionYear,
             IEnumerable<Type>? additionalProcessorTypes = null,
             IEnumerable<Type>? excludeProcessorTypes = null,
             Assembly? searchAssembly = null)
         {
-            var processors = DiscoverAll(pointsForPosition, searchAssembly, additionalProcessorTypes, excludeProcessorTypes);
+            var processors = DiscoverAll(pointsForPosition, competitionYear, searchAssembly, additionalProcessorTypes, excludeProcessorTypes);
             return new RideProcessingCoordinator(processors, pointsForPosition);
         }
 
         // Centralised instantiation logic used by both public factories
-        private static List<IRideProcessor> InstantiateProcessors(IEnumerable<Type> types, Func<int, int> pointsForPosition)
+        private static List<IRideProcessor> InstantiateProcessors(IEnumerable<Type> types, Func<int, int> pointsForPosition, int competitionYear)
         {
             return types
                 .Distinct()
                 .OrderBy(t => t.FullName, StringComparer.Ordinal)
                 .Select(type =>
                 {
+                    // Special case: VeteransCompetitionCalculator
+                    if (type == typeof(VeteransCompetitionCalculator))
+                    {
+                        var handicapProvider = VetsHandicapLookup.ForSeason(competitionYear);
+                        return (IRideProcessor)Activator.CreateInstance(
+                            type,
+                            pointsForPosition,
+                            competitionYear,
+                            handicapProvider)!;
+                    }
+
+                    // Generic case: ctor with delegate
                     var ctorWithDelegate = type.GetConstructor(new[] { typeof(Func<int, int>) });
                     if (ctorWithDelegate != null)
                         return (IRideProcessor)ctorWithDelegate.Invoke(new object[] { pointsForPosition });
 
+                    // Default ctor
                     var defaultCtor = type.GetConstructor(Type.EmptyTypes);
                     if (defaultCtor != null)
                         return (IRideProcessor)Activator.CreateInstance(type)!;

@@ -384,5 +384,75 @@ namespace EventProcessor.Tests.Helpers
 
             return sb.ToString();
         }
+
+        public static string RenderVeteransDebugOutput(
+            IEnumerable<Ride> allRides,
+            IReadOnlyDictionary<int, List<Competitor>> competitorVersionsByClubNumber,
+            IEnumerable<int> eventNumbers)
+        {
+            var sb = new StringBuilder();
+
+            var ridesByEvent = BuildRidesByEvent(allRides, onlyValidWithClubNumber: true);
+
+            foreach (var evt in eventNumbers.OrderBy(n => n))
+            {
+                if (!ridesByEvent.TryGetValue(evt, out var ridesForEvent) || !ridesForEvent.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                var eligible = ridesForEvent
+                    .Where(r =>
+                    {
+                        if (!r.ClubNumber.HasValue) return false;
+                        if (!competitorVersionsByClubNumber.TryGetValue(r.ClubNumber.Value, out var versions)) return false;
+
+                        var eventDateUtc = DateTime.SpecifyKind(r.CalendarEvent?.EventDate ?? DateTime.MinValue, DateTimeKind.Utc);
+                        var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
+                        return latest?.ClaimStatus != ClaimStatus.SecondClaim;
+                    })
+                    .OrderBy(r => r.HandicapTotalSeconds)
+                    .ToList();
+
+                if (!eligible.Any())
+                {
+                    sb.AppendLine($"// Event {evt}: no rides (or none eligible)");
+                    continue;
+                }
+
+                sb.AppendLine($"// Event {evt} actual results:");
+                foreach (var ride in eligible)
+                {
+                    var club = ride.ClubNumber!.Value;
+                    var name = (ride.Name ?? string.Empty).Replace("\"", "\\\"");
+                    var pos = ride.VeteransPosition.HasValue ? ride.VeteransPosition.Value.ToString() : "null";
+                    var pts = ride.VeteransPoints;
+                    var gender = ride.Gender;
+                    var bikeType = ride.RoadBikeIndicator;
+                    var ageGroup = ride.AgeGroupDisplay;
+                    var claimStatus = ride.ClaimStatusDisplay;
+                    var totalSeconds = ride.TotalSeconds;
+                    var vetsBucket = ride.Competitor?.VetsBucket.HasValue == true ? ride.Competitor.VetsBucket.Value.ToString() : "n/a";
+                    var handicapSeconds = ride.HandicapSeconds?.ToString() ?? "n/a";
+                    var handicapTotalSeconds = ride.HandicapTotalSeconds?.ToString() ?? "n/a";
+
+                    // Align the name column outside the quotes
+                    string line = string.Format(
+                        "(ClubNumber: {0,-4}, Name: \"{1}\",{2}Position: {3,-4}, Points: {4,-5})",
+                        club,
+                        name,
+                        new string(' ', Math.Max(1, 22 - name.Length)), // pad spaces after the closing quote
+                        pos,
+                        pts);
+
+                    sb.AppendLine(
+                        $"{line} // {totalSeconds,4}s VetsBucket:{vetsBucket,-4} AAT:{handicapSeconds,-4} HandicapTotalSeconds:{handicapTotalSeconds,-4} {claimStatus,-10} {ageGroup,-8} {gender,-6} {bikeType}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
     }
 }
