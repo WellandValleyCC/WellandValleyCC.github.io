@@ -70,6 +70,16 @@ def extract_club_events(xlsx_path, output_dir):
         print(f"[INFO] Saved to: {competitors_out} ({len(competitors_df)} rows)")
     else:
         print("[WARN] Sheet missing: Competitors")
+        
+    if "Leagues" in xl.sheet_names:
+        print("[OK] Extracting Leagues sheet")
+        leagues_df = xl.parse("Leagues")
+        leagues_out = os.path.join(year_dir, f"Leagues_{year}.csv")
+        leagues_df.to_csv(leagues_out, index=False)
+        shutil.copy(leagues_out, os.path.join(artifact_dir, os.path.basename(leagues_out)))
+        print(f"[INFO] Saved to: {leagues_out} ({len(leagues_df)} rows)")
+    else:
+        print("[WARN] Sheet missing: Leagues")
 
     event_sheets = [s for s in xl.sheet_names if re.fullmatch(r'Event_\d{2}', s)]
     if not event_sheets:
