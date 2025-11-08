@@ -43,6 +43,9 @@ namespace ClubProcessor.Models
         [NotMapped]
         public TimeSpan? VeteransTimeDelta { get; set; }
 
+        public double? VeteransHandicapSeconds { get; set; }
+        [NotMapped]
+        public double? VeteransHandicapTotalSeconds => VeteransHandicapSeconds == null ? null : TotalSeconds - VeteransHandicapSeconds.Value;
         public int? VeteransPosition { get; set; }
         public double? VeteransPoints { get; set; }
 
@@ -110,10 +113,5 @@ namespace ClubProcessor.Models
         [NotMapped]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string EventDateDisplay => CalendarEvent != null ? CalendarEvent.EventDate.ToShortDateString() : string.Empty;
-
-        public double? HandicapSeconds { get; set; }
-
-        [NotMapped]
-        public double? HandicapTotalSeconds => HandicapSeconds == null ? null : TotalSeconds - HandicapSeconds.Value;
     }
 }

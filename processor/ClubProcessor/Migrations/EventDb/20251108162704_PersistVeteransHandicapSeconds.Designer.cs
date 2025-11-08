@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubProcessor.Migrations.EventDb
 {
     [DbContext(typeof(EventDbContext))]
-    [Migration("20251108161244_PersistVetsHandicapSeconds")]
-    partial class PersistVetsHandicapSeconds
+    [Migration("20251108162704_PersistVeteransHandicapSeconds")]
+    partial class PersistVeteransHandicapSeconds
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,9 +116,6 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<int?>("EventRoadBikeRank")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("HandicapSeconds")
-                        .HasColumnType("REAL");
-
                     b.Property<bool>("IsRoadBike")
                         .HasColumnType("INTEGER");
 
@@ -204,6 +201,9 @@ namespace ClubProcessor.Migrations.EventDb
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalSeconds")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("VeteransHandicapSeconds")
                         .HasColumnType("REAL");
 
                     b.Property<double?>("VeteransPoints")

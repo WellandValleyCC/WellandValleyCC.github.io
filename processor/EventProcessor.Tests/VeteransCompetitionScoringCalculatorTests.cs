@@ -111,12 +111,12 @@ namespace EventProcessor.Tests
             var debug = TestHelpers.RenderVeteransDebugOutput(rides, competitorVersions, new[] { 1 });
             _ = debug; // breakpoint-friendly
 
-            ride.HandicapSeconds.Should().Be(
+            ride.VeteransHandicapSeconds.Should().Be(
                 expectedAatSeconds,
                 because: $"VetsBucket {vetsBucket}, {(isFemale?"Female":"Male")}, Distance {distanceMiles} miles");
 
-            ride.HandicapTotalSeconds.Should().Be(
-                totalSeconds - ride.HandicapSeconds,
+            ride.VeteransHandicapTotalSeconds.Should().Be(
+                totalSeconds - ride.VeteransHandicapSeconds,
                 because: $"VetsBucket {vetsBucket}, {(isFemale ? "Female" : "Male")}, Distance {distanceMiles} miles");
         }
     }

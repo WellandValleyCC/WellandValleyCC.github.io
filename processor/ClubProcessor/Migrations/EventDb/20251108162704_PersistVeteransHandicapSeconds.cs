@@ -5,13 +5,13 @@
 namespace ClubProcessor.Migrations.EventDb
 {
     /// <inheritdoc />
-    public partial class PersistVetsHandicapSeconds : Migration
+    public partial class PersistVeteransHandicapSeconds : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<double>(
-                name: "HandicapSeconds",
+                name: "VeteransHandicapSeconds",
                 table: "Rides",
                 type: "REAL",
                 nullable: true);
@@ -21,7 +21,7 @@ namespace ClubProcessor.Migrations.EventDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "HandicapSeconds",
+                name: "VeteransHandicapSeconds",
                 table: "Rides");
         }
     }

@@ -113,9 +113,6 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<int?>("EventRoadBikeRank")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("HandicapSeconds")
-                        .HasColumnType("REAL");
-
                     b.Property<bool>("IsRoadBike")
                         .HasColumnType("INTEGER");
 
@@ -201,6 +198,9 @@ namespace ClubProcessor.Migrations.EventDb
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalSeconds")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("VeteransHandicapSeconds")
                         .HasColumnType("REAL");
 
                     b.Property<double?>("VeteransPoints")
