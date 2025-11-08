@@ -21,7 +21,11 @@ on:
        description: 'Year to process (e.g. 2025)'
        required: false
        default: ''
-
+     verbosity:
+       description: 'Verbosity level for dotnet test (minimal, normal, detailed)'
+       required: false
+       default: 'minimal'
+      
 jobs:
   build-test-run:
     runs-on: ubuntu-latest
@@ -55,8 +59,8 @@ jobs:
         run: dotnet test processor/ClubProcessor.sln --list-tests
 
       - name: Run tests
-        run: dotnet test processor/ClubProcessor.sln --verbosity minimal
-  
+        run: dotnet test processor/ClubProcessor.sln --verbosity ${{ github.event.inputs.verbosity }}
+ 
       - name: Detect changed files and extract/process
         run: |
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})

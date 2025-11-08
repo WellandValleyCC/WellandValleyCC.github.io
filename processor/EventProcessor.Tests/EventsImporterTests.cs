@@ -23,6 +23,8 @@ namespace EventProcessor.Tests
             var importer = new EventsImporter(eventContext, competitorContext);
             var folderPath = CreateTestFolderWithCsvs();
 
+            Console.WriteLine($"[TEST] Using folder path: {folderPath}");
+
             // Act
             importer.ImportFromFolder(folderPath);
 
@@ -39,6 +41,8 @@ namespace EventProcessor.Tests
             var importer = new EventsImporter(eventContext, competitorContext);
             var folderPath = CreateTestFolderWithCsvs();
 
+            Console.WriteLine($"[TEST] Using folder path: {folderPath}");
+
             // Act
             importer.ImportFromFolder(folderPath);
 
@@ -53,6 +57,7 @@ namespace EventProcessor.Tests
 
         private string CreateTestFolderWithCsvs()
         {
+            // Root inside the test output directory so CI can always access it
             var root = Path.Combine(AppContext.BaseDirectory, "TestExtracted_" + Guid.NewGuid());
             var yearFolder = Path.Combine(root, "2025");
             var eventsFolder = Path.Combine(yearFolder, "events");
@@ -60,10 +65,10 @@ namespace EventProcessor.Tests
             Directory.CreateDirectory(eventsFolder);
 
             // Create dummy calendar and competitor files
-            File.WriteAllText(Path.Combine(yearFolder, "calendar_2025.csv"),
+            File.WriteAllText(Path.Combine(yearFolder, "Calendar_2025.csv"),
                 "Date,EventName\n2025-05-01,TT01");
 
-            File.WriteAllText(Path.Combine(yearFolder, "competitors_2025.csv"),
+            File.WriteAllText(Path.Combine(yearFolder, "Competitors_2025.csv"),
                 "ClubNumber,Name\n101,Theo Marlin");
 
             // Create one sample event file
@@ -94,6 +99,9 @@ namespace EventProcessor.Tests
             };
 
             File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), eventCsv);
+
+            // Sanity check: ensure folder exists before returning
+            Directory.Exists(yearFolder).Should().BeTrue("Test folder should exist before import");
 
             return yearFolder; // Return path to 2025 folder
         }
