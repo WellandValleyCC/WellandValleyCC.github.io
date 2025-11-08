@@ -51,6 +51,9 @@ jobs:
       - name: Build solution
         run: dotnet build processor/ClubProcessor.sln --configuration Release
 
+      - name: List tests
+        run: dotnet test processor/ClubProcessor.sln --list-tests
+
       - name: Run tests
         run: dotnet test processor/ClubProcessor.sln --verbosity minimal
   

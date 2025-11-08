@@ -53,7 +53,7 @@ namespace EventProcessor.Tests
 
         private string CreateTestFolderWithCsvs()
         {
-            var root = Path.Combine(Path.GetTempPath(), "TestExtracted_" + Guid.NewGuid());
+            var root = Path.Combine(AppContext.BaseDirectory, "TestExtracted_" + Guid.NewGuid());
             var yearFolder = Path.Combine(root, "2025");
             var eventsFolder = Path.Combine(yearFolder, "events");
 
