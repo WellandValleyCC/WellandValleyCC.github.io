@@ -53,6 +53,7 @@ namespace EventProcessor.Tests
 
         private string CreateTestFolderWithCsvs()
         {
+            // Root inside the test output directory so CI can always access it
             var root = Path.Combine(AppContext.BaseDirectory, "TestExtracted_" + Guid.NewGuid());
             var yearFolder = Path.Combine(root, "2025");
             var eventsFolder = Path.Combine(yearFolder, "events");
@@ -94,6 +95,9 @@ namespace EventProcessor.Tests
             };
 
             File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), eventCsv);
+
+            // Sanity check: ensure folder exists before returning
+            Directory.Exists(yearFolder).Should().BeTrue("Test folder should exist before import");
 
             return yearFolder; // Return path to 2025 folder
         }
