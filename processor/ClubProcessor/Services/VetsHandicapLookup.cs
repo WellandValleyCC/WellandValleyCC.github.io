@@ -30,6 +30,8 @@ namespace ClubProcessor.Services
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"Standards file not found: {filePath}");
 
+            Console.WriteLine($"[INFO] Using VTTA standards file: {filePath}");
+
             var lines = File.ReadAllLines(filePath);
             var headers = lines[0].Split(',');
 
