@@ -65,10 +65,10 @@ namespace EventProcessor.Tests
             Directory.CreateDirectory(eventsFolder);
 
             // Create dummy calendar and competitor files
-            File.WriteAllText(Path.Combine(yearFolder, "calendar_2025.csv"),
+            File.WriteAllText(Path.Combine(yearFolder, "Calendar_2025.csv"),
                 "Date,EventName\n2025-05-01,TT01");
 
-            File.WriteAllText(Path.Combine(yearFolder, "competitors_2025.csv"),
+            File.WriteAllText(Path.Combine(yearFolder, "Competitors_2025.csv"),
                 "ClubNumber,Name\n101,Theo Marlin");
 
             // Create one sample event file
