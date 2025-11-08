@@ -23,6 +23,8 @@ namespace EventProcessor.Tests
             var importer = new EventsImporter(eventContext, competitorContext);
             var folderPath = CreateTestFolderWithCsvs();
 
+            Console.WriteLine($"[TEST] Using folder path: {folderPath}");
+
             // Act
             importer.ImportFromFolder(folderPath);
 
@@ -38,6 +40,8 @@ namespace EventProcessor.Tests
             using var competitorContext = DbContextFactory.CreateCompetitorContext();
             var importer = new EventsImporter(eventContext, competitorContext);
             var folderPath = CreateTestFolderWithCsvs();
+
+            Console.WriteLine($"[TEST] Using folder path: {folderPath}");
 
             // Act
             importer.ImportFromFolder(folderPath);
