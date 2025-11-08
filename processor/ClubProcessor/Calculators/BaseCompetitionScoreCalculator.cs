@@ -3,7 +3,7 @@ using ClubProcessor.Models;
 
 namespace ClubProcessor.Calculators
 {
-    internal abstract class BaseCompetitionScoreCalculator : ICompetitionScoreCalculator, IRideProcessor
+    public abstract class BaseCompetitionScoreCalculator : ICompetitionScoreCalculator, IRideProcessor
     {
         public abstract string CompetitionName { get; }
 
@@ -52,7 +52,7 @@ namespace ClubProcessor.Calculators
             return eligibleRides.Count;
         }
 
-        public int ProcessEvent(int eventNumber, List<Ride> eventRides)
+        public virtual int ProcessEvent(int eventNumber, List<Ride> eventRides)
         {
             return ApplyScores(eventNumber, eventRides, pointsForPosition);
         }

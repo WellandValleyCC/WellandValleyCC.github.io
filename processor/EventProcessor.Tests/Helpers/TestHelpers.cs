@@ -412,7 +412,7 @@ namespace EventProcessor.Tests.Helpers
                         var latest = GetLatestCompetitorForEvent(versions, eventDateUtc);
                         return latest?.ClaimStatus != ClaimStatus.SecondClaim;
                     })
-                    .OrderBy(r => r.HandicapTotalSeconds)
+                    .OrderBy(r => r.VeteransHandicapTotalSeconds)
                     .ToList();
 
                 if (!eligible.Any())
@@ -434,8 +434,8 @@ namespace EventProcessor.Tests.Helpers
                     var claimStatus = ride.ClaimStatusDisplay;
                     var totalSeconds = ride.TotalSeconds;
                     var vetsBucket = ride.Competitor?.VetsBucket.HasValue == true ? ride.Competitor.VetsBucket.Value.ToString() : "n/a";
-                    var handicapSeconds = ride.HandicapSeconds?.ToString() ?? "n/a";
-                    var handicapTotalSeconds = ride.HandicapTotalSeconds?.ToString() ?? "n/a";
+                    var handicapSeconds = ride.VeteransHandicapSeconds?.ToString() ?? "n/a";
+                    var handicapTotalSeconds = ride.VeteransHandicapTotalSeconds?.ToString() ?? "n/a";
 
                     // Align the name column outside the quotes
                     string line = string.Format(

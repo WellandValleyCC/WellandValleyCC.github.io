@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClubProcessor.Calculators
 {
-    internal class VeteransCompetitionCalculator : BaseCompetitionScoreCalculator
+    public class VeteransCompetitionCalculator : BaseCompetitionScoreCalculator
     {
         public override string CompetitionName => "Veterans";
 
@@ -39,7 +39,7 @@ namespace ClubProcessor.Calculators
         protected override double GetOrderingTime(Ride r)
         {
             // Only validate if we need to calculate
-            if (!r.HandicapSeconds.HasValue)
+            if (!r.VeteransHandicapSeconds.HasValue)
             {
                 if (r.Competitor == null)
                     throw new InvalidOperationException($"Competitor not set for ride {r.Name}");
@@ -50,15 +50,26 @@ namespace ClubProcessor.Calculators
                 if (r.CalendarEvent == null)
                     throw new InvalidOperationException($"CalendarEvent not set for ride {r.Competitor.ClubNumber} - {r.Name}");
 
-                r.HandicapSeconds = handicapProvider.GetHandicapSeconds(
+                r.VeteransHandicapSeconds = handicapProvider.GetHandicapSeconds(
                     competitionYear,
                     r.CalendarEvent.Miles,
                     r.Competitor.IsFemale,
                     r.Competitor.VetsBucket.Value);
             }
 
-            return r.HandicapTotalSeconds
+            return r.VeteransHandicapTotalSeconds
                 ?? throw new InvalidOperationException($"HandicapTotalSeconds could not be calculated for ride {r.Competitor?.ClubNumber} - {r.Name}");
         }
+
+        public override int ProcessEvent(int eventNumber, List<Ride> eventRides)
+        {
+            foreach (var r in eventRides)
+            {
+                r.VeteransHandicapSeconds = null;
+            }
+
+            return base.ProcessEvent(eventNumber, eventRides);
+        }
+
     }
 }
