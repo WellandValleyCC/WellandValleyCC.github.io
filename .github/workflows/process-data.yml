@@ -55,7 +55,7 @@ jobs:
         run: dotnet test processor/ClubProcessor.sln --list-tests
 
       - name: Run tests
-        run: dotnet test processor/ClubProcessor.sln --verbosity minimal
+        run: dotnet test processor/ClubProcessor.sln --verbosity normal
   
       - name: Detect changed files and extract/process
         run: |
