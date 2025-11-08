@@ -60,5 +60,16 @@ namespace ClubProcessor.Calculators
             return r.HandicapTotalSeconds
                 ?? throw new InvalidOperationException($"HandicapTotalSeconds could not be calculated for ride {r.Competitor?.ClubNumber} - {r.Name}");
         }
+
+        public override int ProcessEvent(int eventNumber, List<Ride> eventRides)
+        {
+            foreach (var r in eventRides)
+            {
+                r.HandicapSeconds = null;
+            }
+
+            return base.ProcessEvent(eventNumber, eventRides);
+        }
+
     }
 }

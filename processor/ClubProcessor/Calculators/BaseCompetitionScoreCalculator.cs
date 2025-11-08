@@ -52,7 +52,7 @@ namespace ClubProcessor.Calculators
             return eligibleRides.Count;
         }
 
-        public int ProcessEvent(int eventNumber, List<Ride> eventRides)
+        public virtual int ProcessEvent(int eventNumber, List<Ride> eventRides)
         {
             return ApplyScores(eventNumber, eventRides, pointsForPosition);
         }
