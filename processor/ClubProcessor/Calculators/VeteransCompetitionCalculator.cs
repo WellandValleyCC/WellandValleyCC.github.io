@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClubProcessor.Calculators
 {
-    internal class VeteransCompetitionCalculator : BaseCompetitionScoreCalculator
+    public class VeteransCompetitionCalculator : BaseCompetitionScoreCalculator
     {
         public override string CompetitionName => "Veterans";
 

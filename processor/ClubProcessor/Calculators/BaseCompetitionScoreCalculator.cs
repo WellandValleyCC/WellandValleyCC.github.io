@@ -3,7 +3,7 @@ using ClubProcessor.Models;
 
 namespace ClubProcessor.Calculators
 {
-    internal abstract class BaseCompetitionScoreCalculator : ICompetitionScoreCalculator, IRideProcessor
+    public abstract class BaseCompetitionScoreCalculator : ICompetitionScoreCalculator, IRideProcessor
     {
         public abstract string CompetitionName { get; }
 
