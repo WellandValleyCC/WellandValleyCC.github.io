@@ -59,7 +59,7 @@ jobs:
         run: dotnet test processor/ClubProcessor.sln --list-tests
 
       - name: Run tests
-        run: dotnet test processor/ClubProcessor.sln --verbosity ${{ default(github.event.inputs.verbosity, 'minimal') }}
+        run: dotnet test processor/ClubProcessor.sln --verbosity ${{ github.event.inputs.verbosity != '' && github.event.inputs.verbosity || 'minimal' }}
  
       - name: Detect changed files and extract/process
         run: |
