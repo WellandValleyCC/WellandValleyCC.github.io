@@ -75,6 +75,8 @@ namespace ClubProcessor.Models
         /// </remarks>
         public DateTime LastUpdatedUtc { get; set; }
 
+        public League League { get; set; }
+
         [NotMapped]
         public string FullName =>
             string.Join(" ", new[] { GivenName, Surname }
