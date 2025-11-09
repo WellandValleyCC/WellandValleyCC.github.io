@@ -61,20 +61,8 @@ namespace ClubProcessor.Models
         public int? JuniorsPosition { get; set; }
         public double? JuniorsPoints { get; set; }
 
-        public int? PremPosition { get; set; }
-        public double? PremPoints { get; set; }
-
-        public int? League1Position { get; set; }
-        public double? League1Points { get; set; }
-
-        public int? League2Position { get; set; }
-        public double? League2Points { get; set; }
-
-        public int? League3Position { get; set; }
-        public double? League3Points { get; set; }
-
-        public int? League4Position { get; set; }
-        public double? League4Points { get; set; }
+        public int? LeaguePosition { get; set; }
+        public double? LeaguePoints { get; set; }
 
         public int? NevBrooksPosition { get; set; }
         public double? NevBrooksPoints { get; set; }
