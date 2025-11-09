@@ -1,5 +1,6 @@
-﻿using ClubProcessor.Models;
-using ClubProcessor.Context;
+﻿using ClubProcessor.Context;
+using ClubProcessor.Models;
+using ClubProcessor.Models.Csv;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -17,36 +18,9 @@ namespace ClubProcessor.Services
             _db = db;
         }
 
-        public List<CalendarEvent> ParseCalendarEvents(TextReader reader)
+        public (int addedCount, int updatedCount, int deletedCount) ImportFromCsv(string csvPath)
         {
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HeaderValidated = null,
-                MissingFieldFound = null,
-                TrimOptions = TrimOptions.Trim
-            };
-
-            using var csv = new CsvReader(reader, config);
-            csv.Read();
-            csv.ReadHeader();
-
-            var records = new List<CalendarEvent>();
-            while (csv.Read())
-            {
-                var record = TryParseCalendarEvent(csv);
-                if (record != null)
-                {
-                    records.Add(record);
-                }
-            }
-
-            return records;
-        }
-
-        public void ImportFromCsv(string csvPath)
-        {
-            using var reader = new StreamReader(csvPath);
-            var incoming = ParseCalendarEvents(reader);
+            var incoming = ParseCsv(csvPath);
 
             var existing = _db.CalendarEvents.ToList();
             var incomingByNumber = incoming.ToDictionary(e => e.EventNumber);
@@ -87,6 +61,36 @@ namespace ClubProcessor.Services
             _db.CalendarEvents.UpdateRange(toUpdate);
             _db.CalendarEvents.AddRange(toAdd);
             _db.SaveChanges();
+
+            return (toAdd.Count, toUpdate.Count, toDelete.Count);
+        }
+
+        private static void ValidateHeaders(CsvReader csv)
+        {
+            csv.Read();
+            csv.ReadHeader();
+            
+            var headers = (csv.Context.Reader?.HeaderRecord ?? Array.Empty<string>())
+                .Select(h => h.Trim())
+                .ToArray();
+
+            var requiredHeaders = new[]
+            {
+                "Event Number","Date","Start time","Event Name","Miles","Location / Course",
+                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","isCancelled"
+            };
+
+            foreach (var required in requiredHeaders)
+            {
+                if (!headers.Any(h => string.Equals(h, required, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Console.WriteLine("[INFO] Headers: " + string.Join(", ", headers));
+
+                    throw new FormatException(
+                        $"Calendar CSV is missing required column: {required}. " +
+                        $"Expected columns: {string.Join(", ", requiredHeaders)}");
+                }
+            }
         }
 
         private bool EventsAreEqual(CalendarEvent a, CalendarEvent b)
@@ -119,47 +123,81 @@ namespace ClubProcessor.Services
             target.IsCancelled = source.IsCancelled;
         }
 
-
-        private CalendarEvent? TryParseCalendarEvent(CsvReader csv)
+        private IReadOnlyList<CalendarEvent> ParseCsv(string csvPath)
         {
-            var eventNumber = csv.GetField<int>("Event Number");
-
-            var dateRaw = csv.GetField<string>("Date");
-            if (!DateTime.TryParse(dateRaw, out var eventDate))
+            using var reader = new StreamReader(csvPath);
+            using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                Console.WriteLine($"[WARN] Skipping Event {eventNumber}: invalid date '{dateRaw}'");
+                TrimOptions = TrimOptions.Trim,
+                IgnoreBlankLines = true,
+                HeaderValidated = null,
+                MissingFieldFound = null,
+                PrepareHeaderForMatch = args => (args.Header ?? string.Empty).Trim()
+            });
+
+            ValidateHeaders(csv);
+
+            var rows = csv.GetRecords<CalendarEventCsv>().ToList();
+
+            ValidateNoDuplicateEvents(rows);
+
+            return rows
+                .Select(r => MapRowToCalendarEvent(r))
+                .Where(ev => ev != null)
+                .ToList()!;
+        }
+
+        private static void ValidateNoDuplicateEvents(IEnumerable<CalendarEventCsv> rows)
+        {
+            var duplicates = rows.GroupBy(r => r.EventNumber).Where(g => g.Count() > 1).ToList();
+            if (duplicates.Any())
+            {
+                var dupList = string.Join(", ", duplicates.Select(d => d.Key));
+                throw new FormatException($"Calendar CSV contains duplicate EventNumber rows: {dupList}");
+            }
+        }
+
+        private CalendarEvent? MapRowToCalendarEvent(CalendarEventCsv row)
+        {
+            if (!DateTime.TryParse(row.DateRaw, out var eventDate))
+            {
+                Console.WriteLine($"[WARN] Skipping Event {row.EventNumber}: invalid date '{row.DateRaw}'");
                 return null;
             }
 
-            var timeRaw = csv.GetField<string>("Start time");
-            if (!TimeSpan.TryParse(timeRaw, out var startTime))
+            if (!TimeSpan.TryParse(row.StartTimeRaw, out var startTime))
             {
-                Console.WriteLine($"[WARN] Skipping Event {eventNumber}: invalid start time '{timeRaw}'");
+                Console.WriteLine($"[WARN] Skipping Event {row.EventNumber}: invalid start time '{row.StartTimeRaw}'");
                 return null;
             }
 
-            var nameRaw = csv.GetField<string>("Event Name");
-            if (string.IsNullOrWhiteSpace(nameRaw))
+            if (string.IsNullOrWhiteSpace(row.EventName))
             {
-                Console.WriteLine($"[WARN] Skipping Event {eventNumber}: missing event name");
+                Console.WriteLine($"[WARN] Skipping Event {row.EventNumber}: missing event name");
                 return null;
             }
+
+            Console.WriteLine($"[DEBUG] Event {row.EventNumber}: ClubChamp='{row.ClubChampRaw}', NonStd10='{row.NonStd10Raw}', Evening10='{row.Evening10Raw}', HardRide='{row.HardRideRaw}', Cancelled='{row.CancelledRaw}'");
 
             return new CalendarEvent
             {
-                EventNumber = eventNumber,
-                EventDate = eventDate,
+                EventNumber = row.EventNumber,
+                EventDate = DateTime.SpecifyKind(eventDate, DateTimeKind.Utc),
                 StartTime = startTime,
-                EventName = nameRaw,
-                Miles = csv.GetField<double>("Miles"),
-                Location = csv.GetField<string>("Location / Course") ?? string.Empty,
-                IsHillClimb = csv.GetField<string>("Hill Climb") == "Y",
-                IsClubChampionship = csv.GetField<string>("Club Championship") == "Y",
-                IsNonStandard10 = csv.GetField<string>("Non-Standard 10") == "Y",
-                IsEvening10 = csv.GetField<string>("Evening 10") == "Y",
-                IsHardRideSeries = csv.GetField<string>("Hard Ride Series") == "Y",
-                IsCancelled = csv.GetField<string>("isCancelled") == "Y"
+                EventName = row.EventName,
+                Miles = row.Miles,
+                Location = row.Location,
+                IsHillClimb = IsYes(row.HillClimbRaw),
+                IsClubChampionship = IsYes(row.ClubChampRaw),
+                IsNonStandard10 = IsYes(row.NonStd10Raw),
+                IsEvening10 = IsYes(row.Evening10Raw),
+                IsHardRideSeries = IsYes(row.HardRideRaw),
+                IsCancelled = IsYes(row.CancelledRaw)
             };
         }
+
+        private static bool IsYes(string? raw) =>
+            !string.IsNullOrWhiteSpace(raw) &&
+            new[] { "Y", "YES", "TRUE" }.Contains(raw.Trim(), StringComparer.OrdinalIgnoreCase);
     }
 }
