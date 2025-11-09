@@ -7,7 +7,8 @@ namespace ClubProcessor.Calculators
     {
         public abstract string CompetitionName { get; }
 
-        private readonly Func<int, int> pointsForPosition;
+        protected readonly Func<int, int> pointsForPosition;
+
         protected BaseCompetitionScoreCalculator(Func<int, int> pointsForPosition)
         {
             this.pointsForPosition = pointsForPosition;
