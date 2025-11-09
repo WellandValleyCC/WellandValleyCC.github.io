@@ -22,6 +22,7 @@ namespace ClubProcessor.Orchestration
             Migrate(competitorContext, $"club_competitors_{year}.db");
 
             ImportCalendar(eventContext, inputPath, year);
+            ImportLeagues(competitorContext, inputPath, year); 
             ImportEvents(eventContext, competitorContext, inputPath);
 
             // Load all rides, competitors and the event calendar for scoring
@@ -78,6 +79,25 @@ namespace ClubProcessor.Orchestration
             else
             {
                 Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
+            }
+        }
+
+        private void ImportLeagues(CompetitorDbContext competitorContext, string inputPath, string year)
+        {
+            var leaguesCsvPath = Path.Combine(inputPath, $"Leagues_{year}.csv");
+            if (File.Exists(leaguesCsvPath))
+            {
+                Console.WriteLine($"[INFO] Importing leagues from: {leaguesCsvPath}");
+                var importer = new LeagueMembershipImporter(competitorContext, DateTime.UtcNow);
+
+                // Run import and capture counts
+                var (updatedCount, clearedCount) = importer.Import(leaguesCsvPath);
+
+                Console.WriteLine($"[OK] League import complete: {updatedCount} updated, {clearedCount} cleared");
+            }
+            else
+            {
+                Console.WriteLine($"[WARN] Leagues CSV not found: {leaguesCsvPath}");
             }
         }
 
