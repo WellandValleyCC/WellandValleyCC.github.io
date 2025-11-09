@@ -69,6 +69,12 @@ namespace ClubProcessor.Services
 
             foreach (var row in rows)
             {
+                if (result.ContainsKey(row.ClubNumber))
+                {
+                    throw new InvalidOperationException(
+                        $"League assignment failed: duplicate entry in Leagues CSV for ClubNumber={row.ClubNumber}, Name={row.ClubMemberName}");
+                }
+
                 var competitor = ValidateCompetitor(row);
                 result[row.ClubNumber] = row.League;
             }
