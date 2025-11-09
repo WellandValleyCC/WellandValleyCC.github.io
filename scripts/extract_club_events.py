@@ -5,6 +5,7 @@ import re
 import hashlib
 import shutil
 from openpyxl import load_workbook
+import warnings
 
 def sha256(path):
     h = hashlib.sha256()
@@ -19,6 +20,14 @@ def normalize_xlsx(src_path):
     wb.save(normalized)
     return normalized
 
+def suppress_openpyxl_header_footer_warnings():
+    warnings.filterwarnings(
+        "ignore",
+        category=UserWarning,
+        module="openpyxl.worksheet.header_footer"
+    )
+    print("[INFO] Suppressed openpyxl header/footer warnings (safe to ignore, no impact on CSV extraction)")
+    
 def extract_club_events(xlsx_path, output_dir):
     match = re.search(r'ClubEvents_(\d{4})\.xlsx$', os.path.basename(xlsx_path))
     if not match:
@@ -29,6 +38,8 @@ def extract_club_events(xlsx_path, output_dir):
     print(f"[INFO] Input XLSX path: {xlsx_path}")
     print(f"[INFO] Input XLSX sha256: {sha256(xlsx_path)}")
 
+    suppress_openpyxl_header_footer_warnings()
+    
     try:
         normalized_path = normalize_xlsx(xlsx_path)
         print(f"[INFO] Normalized XLSX saved: {normalized_path}")
@@ -70,6 +81,16 @@ def extract_club_events(xlsx_path, output_dir):
         print(f"[INFO] Saved to: {competitors_out} ({len(competitors_df)} rows)")
     else:
         print("[WARN] Sheet missing: Competitors")
+        
+    if "Leagues" in xl.sheet_names:
+        print("[OK] Extracting Leagues sheet")
+        leagues_df = xl.parse("Leagues")
+        leagues_out = os.path.join(year_dir, f"Leagues_{year}.csv")
+        leagues_df.to_csv(leagues_out, index=False)
+        shutil.copy(leagues_out, os.path.join(artifact_dir, os.path.basename(leagues_out)))
+        print(f"[INFO] Saved to: {leagues_out} ({len(leagues_df)} rows)")
+    else:
+        print("[WARN] Sheet missing: Leagues")
 
     event_sheets = [s for s in xl.sheet_names if re.fullmatch(r'Event_\d{2}', s)]
     if not event_sheets:
@@ -103,7 +124,7 @@ def extract_club_events(xlsx_path, output_dir):
             missing_name_count = df['Name'].isnull().sum() if 'Name' in df.columns else 'N/A'
             print(f"[INFO] Sheet {sheet} headers: {headers}; rows: {len(df)}; missing Names: {missing_name_count}")
             print(f"[INFO] Preview of Event_{event_num}.csv:")
-            print(df.head(10).to_string(index=False))
+            print(df.head(4).to_string(index=False))
     
             # Save CSV
             event_out = os.path.join(events_dir, f"Event_{int(event_num):02}.csv")

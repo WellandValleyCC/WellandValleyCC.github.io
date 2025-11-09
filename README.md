@@ -347,3 +347,7 @@ End Sub
 ## Tools
 ### VTTA Scraper
 [VTTA Scraper](tools/vtta-scraper/README.md)
+
+## League Competitions
+League allocations (Prem, 1–4) are defined mid‑season in `Leagues_YYYY.csv`.  
+See [League Competitions Guide](developer-docs/leagues.md) for details on membership persistence and scoring outputs.
