@@ -43,7 +43,25 @@ namespace ClubProcessor.Services
 
             var rows = csv.GetRecords<LeagueCsvRow>().ToList();
 
+            ValidateNoDuplicateCompetitors(rows);
+
             return MapRowsToLeagueAssignments(rows);
+        }
+
+        private static void ValidateNoDuplicateCompetitors(IEnumerable<LeagueCsvRow> rows)
+        {
+            var duplicates = rows
+                .GroupBy(r => (r.ClubNumber, r.ClubMemberName))
+                .Where(g => g.Count() > 1)
+                .ToList();
+
+            if (duplicates.Any())
+            {
+                var dupList = string.Join(", ",
+                    duplicates.Select(d => $"{d.Key.ClubNumber}-{d.Key.ClubMemberName}"));
+                throw new FormatException(
+                    $"Leagues CSV contains duplicate competitor rows: {dupList}");
+            }
         }
 
         private void ValidateHeaders(CsvReader csv)
@@ -83,26 +101,21 @@ namespace ClubProcessor.Services
             return result;
         }
 
-        private Competitor ValidateCompetitor(LeagueCsvRow row)
+        private IEnumerable<Competitor> ValidateCompetitor(LeagueCsvRow row)
         {
             var matches = context.Competitors
                 .Where(c => c.ClubNumber == row.ClubNumber)
-                .AsEnumerable() // force client-side evaluation because FullName is not a database field
+                .AsEnumerable()
                 .Where(c => c.FullName == row.ClubMemberName)
                 .ToList();
 
-            if (matches.Count == 0)
+            if (!matches.Any())
             {
                 throw new InvalidOperationException(
                     $"League assignment failed: no competitor found for ClubNumber={row.ClubNumber}, Name={row.ClubMemberName}");
             }
-            if (matches.Count > 1)
-            {
-                throw new InvalidOperationException(
-                    $"League assignment failed: multiple competitors found for ClubNumber={row.ClubNumber}, Name={row.ClubMemberName}");
-            }
 
-            return matches.Single();
+            return matches; // return all rows for this competitor
         }
 
         private int ApplyLeagueAssignments(Dictionary<int, League> leagues)
@@ -110,8 +123,11 @@ namespace ClubProcessor.Services
             var count = 0;
             foreach (var kvp in leagues)
             {
-                var competitor = context.Competitors.SingleOrDefault(c => c.ClubNumber == kvp.Key);
-                if (competitor != null)
+                var competitors = context.Competitors
+                    .Where(c => c.ClubNumber == kvp.Key)
+                    .ToList();
+
+                foreach (var competitor in competitors)
                 {
                     competitor.League = kvp.Value;
                     competitor.LastUpdatedUtc = runtime;
