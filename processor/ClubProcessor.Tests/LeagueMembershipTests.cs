@@ -121,7 +121,7 @@ namespace ClubProcessor.Tests
         }
 
         [Fact]
-        public void Import_WhenMultipleLeagueEntriesMatch_ShouldThrowInvalidOperationException()
+        public void Import_WhenDuplicateLeagueEntriesInCsv_ShouldThrowInvalidOperationException()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<CompetitorDbContext>()
@@ -131,35 +131,18 @@ namespace ClubProcessor.Tests
             using var context = new CompetitorDbContext(options);
             var importer = new LeagueMembershipImporter(context, DateTime.UtcNow);
 
-            // Two competitors with same ClubNumber + Name
-            context.Competitors.AddRange(new[]
+            context.Competitors.Add(new Competitor
             {
-                new Competitor
-                {
-                    Id = 1,
-                    ClubNumber = 1001,
-                    Surname = "Smith",
-                    GivenName = "Alice",
-                    ClaimStatus = ClaimStatus.FirstClaim,
-                    IsFemale = true,
-                    AgeGroup = AgeGroup.Senior,
-                    CreatedUtc = DateTime.UtcNow,
-                    LastUpdatedUtc = DateTime.UtcNow,
-                    League = League.Undefined
-                },
-                new Competitor
-                {
-                    Id = 2,
-                    ClubNumber = 1002,
-                    Surname = "Smith",
-                    GivenName = "John",
-                    ClaimStatus = ClaimStatus.FirstClaim,
-                    IsFemale = false,
-                    AgeGroup = AgeGroup.Senior,
-                    CreatedUtc = DateTime.UtcNow,
-                    LastUpdatedUtc = DateTime.UtcNow,
-                    League = League.Undefined
-                }
+                Id = 1,
+                ClubNumber = 1001,
+                Surname = "Smith",
+                GivenName = "Alice",
+                ClaimStatus = ClaimStatus.FirstClaim,
+                IsFemale = true,
+                AgeGroup = AgeGroup.Senior,
+                CreatedUtc = DateTime.UtcNow,
+                LastUpdatedUtc = DateTime.UtcNow,
+                League = League.Undefined
             });
             context.SaveChanges();
 
@@ -168,8 +151,7 @@ namespace ClubProcessor.Tests
             {
                 "ClubNumber,ClubMemberName,LeagueDivision",
                 "1001,Alice Smith,Prem",
-                "1002,John Smith,Prem",
-                "1001,Alice Smith,1"
+                "1001,Alice Smith,1" // duplicate row for same competitor
             });
 
             // Act
@@ -177,10 +159,11 @@ namespace ClubProcessor.Tests
 
             // Assert
             act.Should().Throw<InvalidOperationException>()
-               .WithMessage("*multiple competitors found*")
+               .WithMessage("*duplicate entry*")
                .WithMessage("*ClubNumber=1001*")
                .WithMessage("*Name=Alice Smith*");
         }
+
 
     }
 }
