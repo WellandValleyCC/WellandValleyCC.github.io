@@ -17,6 +17,7 @@
 
 ###  Workflow details
 
+```plaintext
 Inputs
  ├─ Competitors_YYYY.csv   (baseline competitor metadata: ID, Name, AgeGroup, Gender, etc.)
  ├─ Leagues_YYYY.csv       (authoritative league membership: CompetitorID → League)
@@ -52,6 +53,7 @@ Processing (--mode events)
           – LeaguePosition, LeaguePoints
       • Competitors table contains:
           – Current League assignment (single source of truth)
+```
 
 ### Key Principles
 - Competitors table holds membership (League column).
