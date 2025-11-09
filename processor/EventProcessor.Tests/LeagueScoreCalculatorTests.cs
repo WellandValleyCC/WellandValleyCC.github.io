@@ -31,6 +31,12 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
+            // Arrange league memberships for the expected competitors
+            competitors.Single(c => c.ClubNumber == 5001).League = League.League1;
+            competitors.Single(c => c.ClubNumber == 5002).League = League.League1;
+            competitors.Single(c => c.ClubNumber == 5101).League = League.Premier;
+            competitors.Single(c => c.ClubNumber == 5102).League = League.Premier;
+
             // Act
             scorer.ProcessAll(allRides, competitors, calendar);
 
@@ -54,7 +60,7 @@ namespace EventProcessor.Tests
             {
                 (ClubNumber: 5001, Name: "Mark Anderson", Position: 1, Points: 60.0),
                 (ClubNumber: 5002, Name: "Simon Bennett", Position: 2, Points: 55),
-                (ClubNumber: 5101, Name: "Alice Kendall", Position: 1, Points: 60.0), // female league
+                (ClubNumber: 5101, Name: "Alice Kendall", Position: 1, Points: 60.0), // Premier league
                 (ClubNumber: 5102, Name: "Sophie Lawrence", Position: 2, Points: 55),
             });
         }
