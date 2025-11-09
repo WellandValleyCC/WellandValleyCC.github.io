@@ -89,8 +89,11 @@ namespace ClubProcessor.Orchestration
             {
                 Console.WriteLine($"[INFO] Importing leagues from: {leaguesCsvPath}");
                 var importer = new LeagueMembershipImporter(competitorContext, DateTime.UtcNow);
-                importer.Import(leaguesCsvPath);
-                Console.WriteLine("[OK] League import complete");
+
+                // Run import and capture counts
+                var (updatedCount, clearedCount) = importer.Import(leaguesCsvPath);
+
+                Console.WriteLine($"[OK] League import complete: {updatedCount} updated, {clearedCount} cleared");
             }
             else
             {

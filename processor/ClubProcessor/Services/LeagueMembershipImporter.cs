@@ -19,12 +19,13 @@ namespace ClubProcessor.Services
             this.runtime = runtime;
         }
 
-        public void Import(string csvPath)
+        public (int updatedCount, int clearedCount) Import(string csvPath)
         {
             var leaguesFromCsv = ParseCsv(csvPath); // ClubNumber → League
-            ApplyLeagueAssignments(leaguesFromCsv);
-            RemoveObsoleteLeagueAssignments(leaguesFromCsv.Keys.ToHashSet());
+            var updatedCount = ApplyLeagueAssignments(leaguesFromCsv);
+            var clearedCount = RemoveObsoleteLeagueAssignments(leaguesFromCsv.Keys.ToHashSet());
             context.SaveChanges();
+            return (updatedCount, clearedCount);
         }
 
         private Dictionary<int, League> ParseCsv(string csvPath)
@@ -104,8 +105,9 @@ namespace ClubProcessor.Services
             return matches.Single();
         }
 
-        private void ApplyLeagueAssignments(Dictionary<int, League> leagues)
+        private int ApplyLeagueAssignments(Dictionary<int, League> leagues)
         {
+            var count = 0;
             foreach (var kvp in leagues)
             {
                 var competitor = context.Competitors.SingleOrDefault(c => c.ClubNumber == kvp.Key);
@@ -113,20 +115,25 @@ namespace ClubProcessor.Services
                 {
                     competitor.League = kvp.Value;
                     competitor.LastUpdatedUtc = runtime;
+                    count++;
                 }
             }
+            return count;
         }
 
-        private void RemoveObsoleteLeagueAssignments(HashSet<int> validClubNumbers)
+        private int RemoveObsoleteLeagueAssignments(HashSet<int> validClubNumbers)
         {
+            var count = 0;
             foreach (var competitor in context.Competitors)
             {
                 if (!validClubNumbers.Contains(competitor.ClubNumber))
                 {
                     competitor.League = League.Undefined;
                     competitor.LastUpdatedUtc = runtime;
+                    count++;
                 }
             }
+            return count;
         }
     }
 }
