@@ -1,5 +1,6 @@
 ﻿using ClubProcessor.Configuration;
 using ClubProcessor.Context;
+using ClubProcessor.Models.Extensions;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ namespace ClubProcessor.Orchestration
             Migrate(competitorContext, $"club_competitors_{year}.db");
 
             ImportCalendar(eventContext, inputPath, year);
-            ImportLeagues(competitorContext, inputPath, year); 
+            ImportLeagues(competitorContext, inputPath, year);
             ImportEvents(eventContext, competitorContext, inputPath);
 
             // Load all rides, competitors and the event calendar for scoring
@@ -34,6 +35,8 @@ namespace ClubProcessor.Orchestration
 
             var processors = RideProcessingCoordinatorFactory.DiscoverAll(pointsForPosition, competitionYear);
             var scorer = new RideProcessingCoordinator(processors, pointsForPosition);
+
+            CompetitorExtensions.LogOverrideEligibleCompetitors(competitors);
 
             // Apply scoring and ranking
             scorer.ProcessAll(rides, competitors, calendar);

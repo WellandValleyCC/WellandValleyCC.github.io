@@ -1,6 +1,7 @@
 ﻿using ClubProcessor.Interfaces;
 using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
+using ClubProcessor.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,8 @@ namespace ClubProcessor.Calculators
         }
 
         protected override bool IsEligible(Ride r) =>
-            r.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary, AgeGroup: AgeGroup.Veteran } &&
+            r.Competitor is { IsVeteran : true } c &&
+            c.IsEligible() &&
             r.Eligibility == RideEligibility.Valid;
 
         protected override void AssignPoints(Ride r, int position, double points)

@@ -1,5 +1,6 @@
 ﻿using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
+using ClubProcessor.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace ClubProcessor.Calculators
         public NevBrooksCompetitionCalculator(Func<int, int> pointsForPosition) : base(pointsForPosition) { }
 
         protected override bool IsEligible(Ride r) =>
-            r.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary } &&
+            r.Competitor?.IsEligible() == true &&
             r.Eligibility == RideEligibility.Valid &&
             r.CalendarEvent?.IsEvening10 == true;
 
