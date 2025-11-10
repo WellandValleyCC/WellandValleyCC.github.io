@@ -30,8 +30,8 @@ namespace ClubProcessor.Orchestration
         /// <param name="calendarEvents">All events in the calendar.</param>
         public void ProcessAll(List<Ride> rides, List<Competitor> competitors, List<CalendarEvent> calendarEvents)
         {
-            RideHydrationHelper.HydrateCompetitors(rides, competitors);
             RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
+            RideHydrationHelper.HydrateCompetitors(rides, competitors);
 
             var ridesByEvent = rides
                 .GroupBy(r => r.EventNumber)
