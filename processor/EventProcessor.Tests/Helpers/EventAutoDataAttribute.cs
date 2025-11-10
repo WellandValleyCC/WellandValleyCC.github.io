@@ -43,10 +43,24 @@ namespace EventProcessor.Tests.Helpers
             }).ToList();
 
             // 2) Build CalendarEvents that align to the event numbers in allRides
-            // Use a recent rolling start so 30-day histories span several events
+            // Use a recent rolling start so 30‑day histories span several events
             var firstEventDateUtc = DateTime.UtcNow.Date.AddDays(-35); // midnight UTC 35 days ago
-            var calendarEvents = TestCalendarEvents.CreateLookupForRides(allRides, firstEventDateUtc, interval: TimeSpan.FromDays(30));
+
+            // Override distances for specific events
+            var milesByEvent = new Dictionary<int, double>
+            {
+                { 6, 9.5 },
+                { 7, 25.0 }
+            };
+
+            var calendarEvents = TestCalendarEvents.CreateLookupForRides(
+                allRides,
+                firstEventDateUtc,
+                interval: TimeSpan.FromDays(30),
+                milesByEvent: milesByEvent);
+
             var calendar = calendarEvents.Values.ToList();
+
 
             // 3) Ensure every Ride has CalendarEvent populated so we have a date
             foreach (var r in allRides)

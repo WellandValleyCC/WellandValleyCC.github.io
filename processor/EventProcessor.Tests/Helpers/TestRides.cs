@@ -245,6 +245,35 @@ namespace EventProcessor.Tests.Helpers
                     4, clubNumber, $"{competitor.FullName}", totalSeconds, isRoadBike));
             }
 
+            // Event 5: First 10m TT for Nev Brooks competitors
+            rides.Add(RideFactory.CreateClubMemberRide(5, 6001, "Tom Harris", totalSeconds: 1500, isRoadBike: true));   // FirstClaim
+            rides.Add(RideFactory.CreateClubMemberRide(5, 6002, "Emma Lewis", totalSeconds: 1520, isRoadBike: false)); // Honorary
+            rides.Add(RideFactory.CreateClubMemberRide(5, 6005, "Daniel Owen", totalSeconds: 1490, isRoadBike: true)); // SecondClaim (excluded)
+            rides.Add(RideFactory.CreateClubMemberRide(5, 6007, "Luke Quinn", totalSeconds: 1600, isRoadBike: false)); // FirstClaim Veteran
+            rides.Add(RideFactory.CreateClubMemberRide(5, 6008, "Hannah Reed", totalSeconds: 1480, isRoadBike: true)); // FirstClaim Senior
+
+            // Event 6: 9.5 mile TT for Nev Brooks competitors
+            rides.Add(RideFactory.CreateClubMemberRide(6, 6001, "Tom Harris", totalSeconds: 1425, isRoadBike: true));   // FirstClaim
+            rides.Add(RideFactory.CreateClubMemberRide(6, 6002, "Emma Lewis", totalSeconds: 1440, isRoadBike: false)); // Honorary
+            rides.Add(RideFactory.CreateClubMemberRide(6, 6005, "Daniel Owen", totalSeconds: 1410, isRoadBike: true)); // SecondClaim (excluded)
+            rides.Add(RideFactory.CreateClubMemberRide(6, 6007, "Luke Quinn", totalSeconds: 1500, isRoadBike: false)); // FirstClaim Veteran
+            rides.Add(RideFactory.CreateClubMemberRide(6, 6008, "Hannah Reed", totalSeconds: 1405, isRoadBike: true)); // FirstClaim Senior
+
+            // Event 7: 25 mile TT for Nev Brooks competitors
+            rides.Add(RideFactory.CreateClubMemberRide(7, 6001, "Tom Harris", totalSeconds: 3900, isRoadBike: true));   // ~65 minutes
+            rides.Add(RideFactory.CreateClubMemberRide(7, 6002, "Emma Lewis", totalSeconds: 3950, isRoadBike: false));
+            rides.Add(RideFactory.CreateClubMemberRide(7, 6005, "Daniel Owen", totalSeconds: 3880, isRoadBike: true)); // SecondClaim
+            rides.Add(RideFactory.CreateClubMemberRide(7, 6007, "Luke Quinn", totalSeconds: 4100, isRoadBike: false));
+            rides.Add(RideFactory.CreateClubMemberRide(7, 6008, "Hannah Reed", totalSeconds: 3875, isRoadBike: true));
+
+            // Event 8: Second 10m TT for Nev Brooks competitors
+            rides.Add(RideFactory.CreateClubMemberRide(8, 6001, "Tom Harris", totalSeconds: 1470, isRoadBike: true));   // improvement
+            rides.Add(RideFactory.CreateClubMemberRide(8, 6002, "Emma Lewis", totalSeconds: 1510, isRoadBike: false)); // slight improvement
+            rides.Add(RideFactory.CreateClubMemberRide(8, 6005, "Daniel Owen", totalSeconds: 1485, isRoadBike: true)); // SecondClaim (excluded)
+            rides.Add(RideFactory.CreateClubMemberRide(8, 6007, "Luke Quinn", totalSeconds: 1590, isRoadBike: false)); // improvement
+            rides.Add(RideFactory.CreateClubMemberRide(8, 6008, "Hannah Reed", totalSeconds: 1475, isRoadBike: true)); // improvement
+
+
             return rides.AsReadOnly();
         }
 
