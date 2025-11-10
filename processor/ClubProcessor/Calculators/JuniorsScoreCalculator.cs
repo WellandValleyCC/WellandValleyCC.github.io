@@ -1,7 +1,6 @@
-﻿using ClubProcessor.Interfaces;
-using ClubProcessor.Models;
+﻿using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
-using System.Reflection.Metadata.Ecma335;
+using ClubProcessor.Models.Extensions;
 
 namespace ClubProcessor.Calculators
 {
@@ -12,7 +11,8 @@ namespace ClubProcessor.Calculators
         public JuniorsScoreCalculator(Func<int, int> pointsForPosition) : base(pointsForPosition) { }
 
         protected override bool IsEligible(Ride r) =>
-            r.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary, IsJunior: true } &&
+            r.Competitor is { IsJunior: true } c &&
+            c.IsEligible() &&
             r.Eligibility == RideEligibility.Valid;
 
         protected override void AssignPoints(Ride r, int position, double points)
