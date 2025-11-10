@@ -1,5 +1,6 @@
 ﻿using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
+using ClubProcessor.Models.Extensions;
 
 namespace ClubProcessor.Calculators
 {
@@ -13,7 +14,7 @@ namespace ClubProcessor.Calculators
         public SeniorsScoreCalculator(Func<int, int> pointsForPosition) : base(pointsForPosition) { }
 
         protected override bool IsEligible(Ride r) =>
-            r.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary } &&
+            r.Competitor?.IsEligible() == true &&
             r.Eligibility == RideEligibility.Valid;
 
         protected override void AssignPoints(Ride r, int position, double points)
