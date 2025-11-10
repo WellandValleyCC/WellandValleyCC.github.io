@@ -67,9 +67,9 @@ namespace ClubProcessor.Models
         public int? NevBrooksPosition { get; set; }
         public double? NevBrooksPoints { get; set; }
 
-        public int? NevBrooksSecondsGenerated { get; set; }     // Raw handicap value
-        public int? NevBrooksSecondsApplied { get; set; }       // Capped or adjusted handicap
-        public int? NevBrooksSecondsAdjustedTime { get; set; }  // Final time after handicap
+        public double? NevBrooksSecondsGenerated { get; set; }     // Raw handicap value
+        public double? NevBrooksSecondsApplied { get; set; }       // Capped or adjusted handicap
+        public double? NevBrooksSecondsAdjustedTime { get; set; }  // Final time after handicap
 
         public bool IsGuest => ClubNumber == null && !string.IsNullOrWhiteSpace(Name);
 

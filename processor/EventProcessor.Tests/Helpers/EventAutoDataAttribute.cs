@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
 using ClubProcessor.Models;
+using ClubProcessor.Models.Csv;
 using ClubProcessor.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -43,9 +44,23 @@ namespace EventProcessor.Tests.Helpers
             }).ToList();
 
             // 2) Build CalendarEvents that align to the event numbers in allRides
-            // Use a recent rolling start so 30-day histories span several events
+            // Use a recent rolling start so 30‑day histories span several events
             var firstEventDateUtc = DateTime.UtcNow.Date.AddDays(-35); // midnight UTC 35 days ago
-            var calendarEvents = TestCalendarEvents.CreateLookupForRides(allRides, firstEventDateUtc, interval: TimeSpan.FromDays(30));
+
+            var evening10Events = new HashSet<int> { 5, 8 }; // standard 10m TTs
+            var milesByEvent = new Dictionary<int, double>
+            {
+                { 6, 9.5 }, // non‑standard
+                { 7, 25.0 } // non‑standard
+            };
+
+            var calendarEvents = TestCalendarEvents.CreateLookupForRides(
+                allRides,
+                firstEventDateUtc,
+                interval: TimeSpan.FromDays(30),
+                milesByEvent: milesByEvent,
+                evening10Events: evening10Events);
+
             var calendar = calendarEvents.Values.ToList();
 
             // 3) Ensure every Ride has CalendarEvent populated so we have a date
