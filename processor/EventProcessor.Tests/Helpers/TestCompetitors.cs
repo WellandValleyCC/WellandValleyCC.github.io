@@ -219,6 +219,19 @@ namespace EventProcessor.Tests.Helpers
             CompetitorFactory.Create(5138, "White", "Joanne", ClaimStatus.FirstClaim, true, AgeGroup.Veteran, vetsBucket: 38),
             CompetitorFactory.Create(5139, "Zane", "Frances", ClaimStatus.FirstClaim, true, AgeGroup.Veteran, vetsBucket: 39),
             CompetitorFactory.Create(5140, "Adams", "Theresa", ClaimStatus.FirstClaim, true, AgeGroup.Veteran, vetsBucket: 40),
+
+            // Nev Brooks test competitors (ClubNumbers 6001–6010)
+            CompetitorFactory.Create(6001, "Harris", "Tom", ClaimStatus.FirstClaim, false, AgeGroup.Senior),
+            CompetitorFactory.Create(6002, "Lewis", "Emma", ClaimStatus.Honorary, true, AgeGroup.Senior),
+            CompetitorFactory.Create(6003, "Morris", "Jack", ClaimStatus.FirstClaim, false, AgeGroup.Junior),
+            CompetitorFactory.Create(6004, "Nelson", "Sophie", ClaimStatus.FirstClaim, true, AgeGroup.Junior),
+            CompetitorFactory.Create(6005, "Owen", "Daniel", ClaimStatus.SecondClaim, false, AgeGroup.Senior),
+            CompetitorFactory.Create(6006, "Perry", "Grace", ClaimStatus.Honorary, true, AgeGroup.Veteran, vetsBucket: 2),
+            CompetitorFactory.Create(6007, "Quinn", "Luke", ClaimStatus.FirstClaim, false, AgeGroup.Veteran, vetsBucket: 3),
+            CompetitorFactory.Create(6008, "Reed", "Hannah", ClaimStatus.FirstClaim, true, AgeGroup.Senior),
+            CompetitorFactory.Create(6009, "Smith", "Oliver", ClaimStatus.SecondClaim, false, AgeGroup.Junior),
+            CompetitorFactory.Create(6010, "Taylor", "Chloe", ClaimStatus.Honorary, true, AgeGroup.Junior),
+
         }.AsReadOnly();
     }
 }
