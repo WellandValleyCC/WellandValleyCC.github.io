@@ -10,15 +10,15 @@ namespace ClubProcessor.Calculators
     {
         public override string CompetitionName => "Nev Brooks";
 
-        // Lookup: ClubNumber → last generated handicap seconds
-        private readonly Dictionary<int, double> previousGeneratedByClub = new();
+        // Lookup: ClubNumber --> last generated handicap seconds
+        private readonly Dictionary<int, double> previousGeneratedByClubNumber = new();
 
         public NevBrooksCompetitionCalculator(Func<int, int> pointsForPosition) : base(pointsForPosition) { }
 
         protected override bool IsEligible(Ride r) =>
             r.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary } &&
             r.Eligibility == RideEligibility.Valid &&
-            r.CalendarEvent?.Miles == 10.0;
+            r.CalendarEvent?.IsEvening10 == true;
 
         protected override void AssignPoints(Ride r, int position, double points)
         {
@@ -51,7 +51,8 @@ namespace ClubProcessor.Calculators
                 // Always generate handicap for this ride
                 r.NevBrooksSecondsGenerated = r.TotalSeconds - 995.0;
 
-                if (r.ClubNumber.HasValue && previousGeneratedByClub.TryGetValue(r.ClubNumber.Value, out var prevGenerated))
+                // Only apply if we really had a prior generated value
+                if (r.ClubNumber.HasValue && previousGeneratedByClubNumber.TryGetValue(r.ClubNumber.Value, out var prevGenerated))
                 {
                     r.NevBrooksSecondsApplied = prevGenerated;
                     r.NevBrooksSecondsAdjustedTime = r.TotalSeconds - prevGenerated;
@@ -62,12 +63,13 @@ namespace ClubProcessor.Calculators
                     r.NevBrooksSecondsAdjustedTime = null;
                 }
 
-                // Update lookup for next event
-                if (r.ClubNumber.HasValue)
-                    previousGeneratedByClub[r.ClubNumber.Value] = r.NevBrooksSecondsGenerated.Value;
+                // Update lookup for next event — after we’ve set Generated
+                if (r.ClubNumber.HasValue && r.NevBrooksSecondsGenerated.HasValue)
+                {
+                    previousGeneratedByClubNumber[r.ClubNumber.Value] = r.NevBrooksSecondsGenerated.Value;
+                }
             }
 
-            // Score only rides with AdjustedTime
             var scoredRides = eventRides.Where(r => r.NevBrooksSecondsAdjustedTime.HasValue).ToList();
             return ApplyScores(eventNumber, scoredRides, pointsForPosition);
         }
