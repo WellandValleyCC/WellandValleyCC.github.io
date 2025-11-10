@@ -443,7 +443,7 @@ namespace ClubProcessor.Tests
             Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == 1001));
             Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == 1002));
             Assert.Equal(1, context.Competitors.Count(c => c.ClubNumber == 1003));
-            Assert.Equal(3, context.Competitors.Count(c => c.ClubNumber == 1004));
+            Assert.Equal(4, context.Competitors.Count(c => c.ClubNumber == 1004));  // New one slots in before the latest of the existing three
             Assert.Equal(0, context.Competitors.Count(c => c.ClubNumber == 1005));
         }
     }

@@ -65,7 +65,7 @@ namespace ClubProcessor.Services
             foreach (var competitor in incoming)
             {
                 var existingRecords = context.Competitors
-                    .Where(c => c.ClubNumber == competitor.ClubNumber)
+                    .Where(c => c.ClubNumber == competitor.ClubNumber && c.CreatedUtc <= competitor.CreatedUtc)
                     .OrderByDescending(c => c.CreatedUtc)
                     .ToList();
 
