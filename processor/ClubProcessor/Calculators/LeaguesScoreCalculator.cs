@@ -21,6 +21,12 @@ namespace ClubProcessor.Calculators
             r.LeaguePoints = points;
         }
 
+        protected override void ClearPoints(Ride r)
+        {
+            r.LeaguePosition = null;
+            r.LeaguePoints = null;
+        }
+
         public override int ProcessEvent(int eventNumber, List<Ride> eventRides)
         {
             // Partition rides by league

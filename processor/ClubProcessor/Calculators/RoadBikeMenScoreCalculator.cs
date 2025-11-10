@@ -21,5 +21,11 @@ namespace ClubProcessor.Calculators
             r.RoadBikeMenPosition = position;
             r.RoadBikeMenPoints = points;
         }
+
+        protected override void ClearPoints(Ride r)
+        {
+            r.RoadBikeMenPosition = null;
+            r.RoadBikeMenPoints = null;
+        }
     }
 }

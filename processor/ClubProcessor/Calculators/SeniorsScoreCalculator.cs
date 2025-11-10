@@ -22,5 +22,11 @@ namespace ClubProcessor.Calculators
             r.SeniorsPosition = position;
             r.SeniorsPoints = points;
         }
+
+        protected override void ClearPoints(Ride r)
+        {
+            r.SeniorsPosition = null;
+            r.SeniorsPoints = null;
+        }
     }
 }
