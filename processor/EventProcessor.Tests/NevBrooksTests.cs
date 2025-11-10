@@ -1,4 +1,4 @@
-﻿using ClubProcessor.Models;
+using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
 using ClubProcessor.Orchestration;
 using EventProcessor.Tests.Helpers;
@@ -46,12 +46,44 @@ namespace EventProcessor.Tests
                     AssertNevBrooksRideMatchesExpected(ridesForEvent, exp);
             }
 
+            foreach (var evt in ridesByEvent.Keys.Where(n => n != 5 && n != 8))
+            {
+                foreach (var ride in ridesByEvent[evt])
+                {
+                    var context = $"[Club: {ride.ClubNumber}, Name: {ride.Name}, Event: {ride.EventNumber}]";
+
+                    bool eligibleTen = ride.Competitor is { ClaimStatus: ClaimStatus.FirstClaim or ClaimStatus.Honorary }
+                                       && ride.Eligibility == RideEligibility.Valid
+                                       && ride.CalendarEvent?.Miles == 10.0;
+
+                    if (eligibleTen)
+                    {
+                        // Baseline only: Generated set, others null
+                        ride.NevBrooksSecondsGenerated.Should().NotBeNull($"Generated must be set for eligible 10m TT {context}");
+                        ride.NevBrooksSecondsApplied.Should().BeNull($"Applied should be null for first/unsuccessful 10m TT {context}");
+                        ride.NevBrooksSecondsAdjustedTime.Should().BeNull($"AdjustedTime should be null for baseline {context}");
+                        ride.NevBrooksPosition.Should().BeNull($"Position should be null for baseline {context}");
+                        ride.NevBrooksPoints.Should().BeNull($"Points should be null for baseline {context}");
+                    }
+                    else
+                    {
+                        // Ineligible or non?10m: all null
+                        ride.NevBrooksSecondsGenerated.Should().BeNull($"Generated should be null for ineligible/non?10m ride {context}");
+                        ride.NevBrooksSecondsApplied.Should().BeNull($"Applied should be null for ineligible/non?10m ride {context}");
+                        ride.NevBrooksSecondsAdjustedTime.Should().BeNull($"AdjustedTime should be null for ineligible/non?10m ride {context}");
+                        ride.NevBrooksPosition.Should().BeNull($"Position should be null for ineligible/non?10m ride {context}");
+                        ride.NevBrooksPoints.Should().BeNull($"Points should be null for ineligible/non?10m ride {context}");
+                    }
+                }
+            }
+
             // Example expectations for Event 8 (second 10m TT)
             AssertExpectedForEvent(8, new[]
             {
                 (ClubNumber: 6001, Name: "Tom Harris", Position: 1, Points: 60.0),
-                (ClubNumber: 6002, Name: "Emma Lewis", Position: 2, Points: 55),
-                // 6005 (SecondClaim) excluded automatically
+                (ClubNumber: 6002, Name: "Emma Lewis", Position: 2, Points: 53.0),
+                (ClubNumber: 6007, Name: "Luke Quinn", Position: 2, Points: 53.0),
+                (ClubNumber: 6008, Name: "Hannah Reed", Position: 4, Points: 48.0),
             });
 
             // Assert negative cases: all other events should have NevBrooks properties null
@@ -64,7 +96,6 @@ namespace EventProcessor.Tests
                 }
             }
 
-            // Assert ineligible riders in Event 5 and 8 also have NevBrooks properties null
             foreach (var evt in new[] { 5, 8 })
             {
                 if (ridesByEvent.TryGetValue(evt, out var ridesForEvent))
