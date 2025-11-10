@@ -4,19 +4,25 @@ namespace EventProcessor.Tests.Helpers
 {
     public static class TestCalendarEvents
     {
-        public static CalendarEvent Create(int eventNumber, DateTime eventDateUtc, double miles)
+        public static CalendarEvent Create(
+            int eventNumber,
+            DateTime eventDateUtc,
+            double miles,
+            bool isEvening10 = false)
             => new CalendarEvent
             {
                 EventNumber = eventNumber,
                 EventDate = DateTime.SpecifyKind(eventDateUtc, DateTimeKind.Utc),
                 Miles = miles,
+                IsEvening10 = isEvening10
             };
 
         public static IReadOnlyList<CalendarEvent> CreateSequence(
             IEnumerable<int> eventNumbers,
             DateTime firstEventDateUtc,
             TimeSpan interval,
-            IReadOnlyDictionary<int, double>? milesByEvent = null)
+            IReadOnlyDictionary<int, double>? milesByEvent = null,
+            ISet<int>? evening10Events = null)
         {
             var numbers = eventNumbers.Distinct().OrderBy(n => n).ToArray();
             var events = new List<CalendarEvent>(numbers.Length);
@@ -27,7 +33,11 @@ namespace EventProcessor.Tests.Helpers
                 var miles = milesByEvent != null && milesByEvent.TryGetValue(numbers[i], out var m)
                     ? m
                     : 10.0; // default to 10 miles
-                events.Add(Create(numbers[i], dt, miles));
+
+                // mark as Evening10 if caller says so
+                var isEvening10 = evening10Events != null && evening10Events.Contains(numbers[i]);
+
+                events.Add(Create(numbers[i], dt, miles, isEvening10));
             }
 
             return events;
@@ -37,11 +47,12 @@ namespace EventProcessor.Tests.Helpers
             IEnumerable<Ride> rides,
             DateTime firstEventDateUtc,
             TimeSpan? interval = null,
-            IReadOnlyDictionary<int, double>? milesByEvent = null)
+            IReadOnlyDictionary<int, double>? milesByEvent = null,
+            ISet<int>? evening10Events = null)
         {
             interval ??= TimeSpan.FromDays(30);
             var eventNumbers = rides.Select(r => r.EventNumber).Distinct().OrderBy(n => n);
-            var events = CreateSequence(eventNumbers, firstEventDateUtc, interval.Value, milesByEvent);
+            var events = CreateSequence(eventNumbers, firstEventDateUtc, interval.Value, milesByEvent, evening10Events);
             return events.ToDictionary(e => e.EventNumber, e => e);
         }
 
