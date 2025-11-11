@@ -11,8 +11,7 @@ on:
     inputs:
       year:
         description: 'Year to process (e.g. 2025)'
-        required: true
-        default: ''
+        required: false
 
 jobs:
   build-site:
@@ -21,27 +20,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
       - name: Detect year
         id: detect
         run: |
           if [ -n "${{ github.event.inputs.year }}" ]; then
-            # Manual trigger provided a year
             YEAR="${{ github.event.inputs.year }}"
             echo "Manual trigger year: $YEAR"
           else
-            # Automatic trigger: detect latest year from changed files
             FILES=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep 'club_events_.*\.db' || true)
             YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1)
             echo "Detected year from commit: $YEAR"
           fi
           echo "YEAR=$YEAR" >> $GITHUB_ENV
 
-      - name: Run HTML generator
-        run: |
-          dotnet run --project src/ClubSiteGenerator \
-            --events data/club_events_${YEAR}.db \
-            --competitors data/club_competitors_${YEAR}.db \
-            --output docs/
+      - name: Run site generator
+        run: ./scripts/generate-site.sh $YEAR
 
       - name: Commit generated site
         run: |
