@@ -34,6 +34,8 @@ processor/logs/
 
 # 🧪 Test artifacts
 processor/ClubProcessor.Tests/test-data/
+# Ignore local test artefacts
+/TestOutput/
 
 # 🗃️ SQLite DBs transient files anywhere
 **/*.db-wal

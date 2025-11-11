@@ -4,6 +4,7 @@ using ClubProcessor.Context;
 using ClubProcessor.Models;
 using ClubProcessor.Models.Enums;
 using ClubProcessor.Services;
+using ClubProcessor.Tests.Helpers;
 using EventProcessor.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -57,8 +58,8 @@ namespace EventProcessor.Tests
 
         private string CreateTestFolderWithCsvs()
         {
-            // Root inside the test output directory so CI can always access it
-            var root = Path.Combine(AppContext.BaseDirectory, "TestExtracted_" + Guid.NewGuid());
+            // Use helper to get a clean output directory
+            var root = TestOutputHelper.GetOutputDirectory();
             var yearFolder = Path.Combine(root, "2025");
             var eventsFolder = Path.Combine(yearFolder, "events");
 
