@@ -72,6 +72,19 @@ WellandValleyCC.github.io/
 
 Each publish is atomic and traceable to its source commit.
 
+---
+## Site Generation Workflow
+
+The static site is generated automatically whenever a new `club_events_YYYY.db` file is committed to `master`.  
+A GitHub Actions workflow runs the generator and opens a pull request against `gh-pages`.
+
+You can also trigger the workflow manually from the **Actions** tab:
+
+- Select **Generate Static Site**
+- Click **Run workflow**
+- Supply a `year` (e.g. `2026`) to override automatic detection
+
+See [CI Workflows Guide](developer-docs/ci-workflows.md) for full details.
 
 ---
 
