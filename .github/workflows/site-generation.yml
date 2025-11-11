@@ -16,6 +16,10 @@ on:
 jobs:
   build-site:
     runs-on: ubuntu-latest
+    concurrency:
+      group: site-generation-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
