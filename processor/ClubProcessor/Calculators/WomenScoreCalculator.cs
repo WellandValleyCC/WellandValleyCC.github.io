@@ -20,11 +20,5 @@ namespace ClubProcessor.Calculators
             r.WomenPosition = position;
             r.WomenPoints = points;
         }
-
-        protected override void ClearPoints(Ride r)
-        {
-            r.WomenPosition = null;
-            r.WomenPoints = null;
-        }
     }
 }

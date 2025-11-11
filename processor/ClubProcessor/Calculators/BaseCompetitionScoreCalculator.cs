@@ -22,8 +22,6 @@ namespace ClubProcessor.Calculators
                 .OrderBy(GetOrderingTime)
                 .ToList();
 
-            ClearIneligibleRideScores(rides, eligibleRides);
-
             int position = 1;
             int i = 0;
 
@@ -67,22 +65,5 @@ namespace ClubProcessor.Calculators
         /// Returns the time value used for ranking. Override in derived classes to apply handicaps or alternate metrics.
         /// </summary>
         protected virtual double GetOrderingTime(Ride r) => r.TotalSeconds;
-
-        protected abstract void ClearPoints(Ride ride);
-
-        protected void ClearIneligibleRideScores(
-            IEnumerable<Ride> rides,
-            IEnumerable<Ride> eligibleRides)
-        {
-            var eligibleSet = eligibleRides.ToHashSet();
-
-            foreach (var ride in rides)
-            {
-                if (!eligibleSet.Contains(ride))
-                {
-                    ClearPoints(ride);
-                }
-            }
-        }
     }
 }

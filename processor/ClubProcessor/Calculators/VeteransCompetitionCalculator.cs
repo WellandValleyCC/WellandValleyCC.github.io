@@ -38,12 +38,6 @@ namespace ClubProcessor.Calculators
             r.VeteransPoints = points;
         }
 
-        protected override void ClearPoints(Ride r)
-        {
-            r.VeteransPosition = null;
-            r.VeteransPoints = null;
-        }
-
         protected override double GetOrderingTime(Ride r)
         {
             // Only validate if we need to calculate

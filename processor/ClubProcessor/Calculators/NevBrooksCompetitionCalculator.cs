@@ -27,11 +27,6 @@ namespace ClubProcessor.Calculators
             r.NevBrooksPoints = points;
         }
 
-        protected override void ClearPoints(Ride r)
-        {
-            r.NevBrooksPosition = null;
-            r.NevBrooksPoints = null;
-        }
         protected override double GetOrderingTime(Ride r)
         {
             if (!r.NevBrooksSecondsAdjustedTime.HasValue)

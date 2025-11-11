@@ -20,11 +20,5 @@ namespace ClubProcessor.Calculators
             r.JuniorsPosition = position;
             r.JuniorsPoints = points;
         }
-
-        protected override void ClearPoints(Ride r)
-        {
-            r.JuniorsPosition = null;
-            r.JuniorsPoints = null;
-        }
     }
 }

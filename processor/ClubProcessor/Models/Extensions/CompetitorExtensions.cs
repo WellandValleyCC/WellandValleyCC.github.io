@@ -22,7 +22,7 @@ namespace ClubProcessor.Models.Extensions
                 return true;
 
             return OverrideEligibleClubNumbers.Contains(competitor.ClubNumber);
-         }
+        }
 
         public static void LogOverrideEligibleCompetitors(IEnumerable<Competitor> competitors)
         {
