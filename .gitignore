@@ -76,7 +76,9 @@ artifacts/
 *.normalized.xlsx
 
 # Ignore site generator outputs
-/SiteOutput/
-/processor/SiteOutput/
+/SiteOutput/*
+!/SiteOutput/.gitkeep
+
+
 
 
