@@ -80,19 +80,11 @@ namespace ClubProcessor.Services
                 .ToList();
 
             Console.WriteLine($"[INFO] Parsed {incomingRows.Count} rows from {Path.GetFileName(csvPath)}");
+
             foreach (var row in incomingRows.Where(r => string.IsNullOrWhiteSpace(r.Name)))
             {
                 Console.WriteLine($"[WARN] Row with missing Name: NumberOrName={row.NumberOrName}, Time={row.ActualTime}");
             }
-
-            var existingRides = eventContext.Rides
-                .Where(r => r.EventNumber == eventNumber)
-                .ToList();
-
-            var incomingByName = incomingRides
-                .Where(r => !string.IsNullOrWhiteSpace(r.Name))
-                .GroupBy(r => r.Name!)
-                .ToDictionary(g => g.Key, g => g.First());
 
             foreach (var group in incomingRides.GroupBy(r => r.Name!))
             {
@@ -102,73 +94,15 @@ namespace ClubProcessor.Services
                 }
             }
 
-            var existingByName = existingRides.ToDictionary(r => r.Name!);
+            var existingRides = eventContext.Rides
+                .Where(r => r.EventNumber == eventNumber)
+                .ToList();
 
-            var toAdd = new List<Ride>();
-            var toUpdate = new List<Ride>();
-            var toDelete = new List<Ride>();
+            eventContext.Rides.RemoveRange(existingRides);
+            eventContext.Rides.AddRange(incomingRides);
 
-            foreach (var incoming in incomingRides)
-            {
-                if (existingByName.TryGetValue(incoming.Name!, out var existing))
-                {
-                    if (!RidesAreEqual(existing, incoming))
-                    {
-                        Console.WriteLine($"[UPDATE] Ride '{incoming.Name}' in Event {eventNumber}");
-                        LogRideDiff(existing, incoming);
-                        UpdateRide(existing, incoming);
-                        toUpdate.Add(existing);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"[ADD] Ride '{incoming.Name}' in Event {eventNumber}");
-                    toAdd.Add(incoming);
-                }
-            }
-
-            foreach (var existing in existingRides)
-            {
-                if (!incomingByName.ContainsKey(existing.Name!))
-                {
-                    Console.WriteLine($"[DELETE] Ride '{existing.Name}' in Event {eventNumber}");
-                    toDelete.Add(existing);
-                }
-            }
-
-            eventContext.Rides.RemoveRange(toDelete);
-            eventContext.Rides.UpdateRange(toUpdate);
-            eventContext.Rides.AddRange(toAdd);
+            Console.WriteLine($"[INFO] Replaced {existingRides.Count} existing rides with {incomingRides.Count} new rides for Event {eventNumber}");
         }
-
-        private void UpdateRide(Ride target, Ride source)
-        {
-            target.ClubNumber = source.ClubNumber;
-            target.TotalSeconds = source.TotalSeconds;
-            target.IsRoadBike = source.IsRoadBike;
-            target.Eligibility = source.Eligibility;
-        }
-
-        private bool RidesAreEqual(Ride a, Ride b)
-        {
-            return a.ClubNumber == b.ClubNumber &&
-                   a.TotalSeconds == b.TotalSeconds &&
-                   a.IsRoadBike == b.IsRoadBike &&
-                   a.Eligibility == b.Eligibility;
-        }
-
-        private void LogRideDiff(Ride old, Ride updated)
-        {
-            if (old.ClubNumber != updated.ClubNumber)
-                Console.WriteLine($"  - ClubNumber: {old.ClubNumber} → {updated.ClubNumber}");
-            if (old.TotalSeconds != updated.TotalSeconds)
-                Console.WriteLine($"  - TotalSeconds: {old.TotalSeconds} → {updated.TotalSeconds}");
-            if (old.IsRoadBike != updated.IsRoadBike)
-                Console.WriteLine($"  - IsRoadBike: {old.IsRoadBike} → {updated.IsRoadBike}");
-            if (old.Eligibility != updated.Eligibility)
-                Console.WriteLine($"  - Eligibility: {old.Eligibility} → {updated.Eligibility}");
-        }
-
 
         /// <remarks>
         ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
@@ -194,23 +128,6 @@ namespace ClubProcessor.Services
                 TotalSeconds = row.TotalSeconds,
                 IsRoadBike = row.IsRoadBike,
                 Eligibility = row.Eligibility,
-            };
-        }
-
-        private double ParseSeconds(string time)
-        {
-            // TODO: Support mm:ss.ss and hh:mm:ss formats
-            return TimeSpan.TryParse(time, out var ts) ? ts.TotalSeconds : 0;
-        }
-
-        private RideEligibility ParseEligibility(string status)
-        {
-            return status switch
-            {
-                "DNS" => RideEligibility.DNS,
-                "DQ" => RideEligibility.DQ,
-                "DNF" => RideEligibility.DNF,
-                _ => RideEligibility.Valid
             };
         }
     }
