@@ -8,7 +8,7 @@
             if (runningInCi)
                 return Path.Combine(Path.GetTempPath(), "wvcc-site");
 
-            var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
+            var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
             var dir = Path.Combine(repoRoot, "SiteOutput");
             Directory.CreateDirectory(dir);
             return dir;
