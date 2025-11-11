@@ -61,6 +61,22 @@ To change distances, edit the distances array in Program.cs:
 var distances = new[] { "5", "8.5", "9", "10" };
 ```
 
+## Versioning and File Management
+
+The scraper always outputs `vtta-standards-combined.csv` in the working directory. It is the responsibility of the time trial maintainer to rename and relocate this file as needed.
+
+For example:
+- Rename to `vtta-standards-combined.2024.csv` to reflect the first season year for which VTTA state the standards apply.
+- Move to `data/` folder alongside other club CSVs and SQLite files:
+
+```
+WellandValleyCC.github.io\data
+```
+
+This allows the scoring processor to select the correct standards file based on season logic.
+
+
+
 ## Status
 
 [x] Scrapes VTTA standards reliably
