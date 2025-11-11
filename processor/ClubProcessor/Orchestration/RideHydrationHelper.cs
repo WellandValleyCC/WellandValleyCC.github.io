@@ -28,10 +28,10 @@ namespace ClubProcessor.Orchestration
                     continue;
                 }
 
-                // Determine the event date to compare against. Prefer attached CalendarEvent, otherwise fall back to DateTime.UtcNow
-                var eventDateUtc = ride.CalendarEvent != null
-                    ? DateTime.SpecifyKind(ride.CalendarEvent.EventDate, DateTimeKind.Utc)
-                    : DateTime.UtcNow;
+                if (ride.CalendarEvent == null)
+                    throw new InvalidOperationException($"Ride '{ride.Name}' in Event {ride.EventNumber} is missing its CalendarEvent");
+
+                var eventDateUtc = DateTime.SpecifyKind(ride.CalendarEvent.EventDate, DateTimeKind.Utc);
 
                 // Find the latest snapshot whose CreatedUtc <= eventDateUtc
                 // snapshots are sorted ascending, so scan from the end
