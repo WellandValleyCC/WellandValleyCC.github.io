@@ -34,8 +34,10 @@ processor/logs/
 
 # 🧪 Test artifacts
 processor/ClubProcessor.Tests/test-data/
-# Ignore local test artefacts
+# Ignore test artefacts
 /TestOutput/
+/processor/TestOutput/
+/processor/**/TestExtracted_*/
 
 # 🗃️ SQLite DBs transient files anywhere
 **/*.db-wal
@@ -72,3 +74,9 @@ processor/ClubProcessor/data/*.db
 # extractor artifacts and normalized workbooks
 artifacts/
 *.normalized.xlsx
+
+# Ignore site generator outputs
+/SiteOutput/
+/processor/SiteOutput/
+
+
