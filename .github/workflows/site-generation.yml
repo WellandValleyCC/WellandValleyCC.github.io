@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: siteoutput
-          path: SiteOutput/       
+          path: SiteOutput/
         
   publish-site:
     runs-on: ubuntu-latest
