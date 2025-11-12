@@ -104,10 +104,11 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           base: gh-pages
-          branch: ${{ needs.publish-site.outputs.branch }}
+          branch: ${{ steps.commit.outputs.branch }}
           title: "Automated site generation for ${{ needs.build-site.outputs.year }}"
           body: |
             This PR contains static HTML generated for season ${{ needs.build-site.outputs.year }}.
             Source branch: ${{ github.ref_name }}
+
 
 
