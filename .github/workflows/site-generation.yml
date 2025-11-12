@@ -19,6 +19,8 @@ on:
 jobs:
   build-site:
     runs-on: ubuntu-latest
+    outputs:
+      year: ${{ steps.detect.outputs.year }}
     concurrency:
       group: site-generation-${{ github.ref }}
       cancel-in-progress: true
@@ -47,26 +49,62 @@ jobs:
             echo "Detected year from commit: $YEAR"
           fi
           echo "YEAR=$YEAR" >> $GITHUB_ENV
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
 
       - name: Run site generator
         run: ./scripts/generate-site.sh $YEAR
+        
+      - name: Upload SiteOutput
+        uses: actions/upload-artifact@v4
+        with:
+          name: siteoutput
+          path: SiteOutput/       
+        
+  publish-site:
+    runs-on: ubuntu-latest
+    needs: build-site 
+    outputs:
+      branch: ${{ steps.commit.outputs.branch }}
+    
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Download SiteOutput
+        uses: actions/download-artifact@v4
+        with:
+          name: siteoutput
+          path: SiteOutput/
+
+      - name: Sync generated output
+        run: |
+          rsync -av --delete \
+            --exclude 'legacy/' \
+            --exclude 'index.html' \
+            SiteOutput/ docs/
 
       - name: Commit generated site
+        id: commit 
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          branch="site-update-${YEAR}-$(date +'%Y%m%d%H%M%S')"
+          branch="site-update-${{ needs.build-site.outputs.year }}-$(date +'%Y%m%d%H%M%S')"
           git checkout -b "$branch"
           git add docs/
-          git commit -m "Automated site generation for $YEAR"
+          git commit -m "Automated site generation for ${{ needs.build-site.outputs.year }}"
           git push origin "$branch"
+          echo "branch=$branch" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           base: gh-pages
-          branch: ${{ github.ref_name }}-site-update-${{ env.YEAR }}
-          title: "Automated site generation for ${{ env.YEAR }}"
+          branch: ${{ needs.publish-site.outputs.branch }}
+          title: "Automated site generation for ${{ needs.build-site.outputs.year }}"
           body: |
-            This PR contains static HTML generated for season ${{ env.YEAR }}.
+            This PR contains static HTML generated for season ${{ needs.build-site.outputs.year }}.
             Source branch: ${{ github.ref_name }}
+
+
