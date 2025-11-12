@@ -1,6 +1,6 @@
 ﻿using ClubProcessor.Calculators;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
+using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubProcessor.Orchestration;
 using ClubProcessor.Services;
 using EventProcessor.Tests.Helpers;

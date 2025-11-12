@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ClubProcessor.Interfaces;
-using ClubProcessor.Utilities;
+using ClubCore.Utilities;
 
 namespace ClubProcessor.Services
 {
@@ -23,7 +23,7 @@ namespace ClubProcessor.Services
             _maleSeconds = new();
             _femaleSeconds = new();
 
-            var repoRoot = RepoLocator.FindGitRepoRoot();
+            var repoRoot = FolderLocator.FindGitRepoRoot();
             var dataFolder = Path.Combine(repoRoot, "data");
             var filePath = Path.Combine(dataFolder, $"vtta-standards-combined.{effectiveYear}.csv");
 

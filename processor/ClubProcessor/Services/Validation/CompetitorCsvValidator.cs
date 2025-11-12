@@ -1,5 +1,5 @@
-﻿using ClubProcessor.Models.Csv.ClubProcessor.Models.Csv;
-using ClubProcessor.Models.Enums;
+﻿using ClubCore.Models.Csv;
+using ClubCore.Models.Enums;
 
 static public class CompetitorCsvValidator
 {

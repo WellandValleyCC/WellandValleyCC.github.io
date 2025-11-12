@@ -1,5 +1,5 @@
-﻿using ClubProcessor.Models.Enums;
-using ClubProcessor.Models.Extensions;
+﻿using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 
 namespace ClubProcessor.Tests
 {

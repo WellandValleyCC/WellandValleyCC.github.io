@@ -1,5 +1,5 @@
 ﻿using ClubProcessor.Interfaces;
-using ClubProcessor.Models;
+using ClubCore.Models;
 using ClubProcessor.Orchestration;
 
 namespace ClubProcessor.Tests

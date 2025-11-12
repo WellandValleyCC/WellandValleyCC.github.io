@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Csv;
-using ClubProcessor.Models.Enums;
+using ClubCore.Models;
+using ClubCore.Models.Csv;
+using ClubCore.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

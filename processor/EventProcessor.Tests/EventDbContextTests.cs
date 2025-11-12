@@ -1,4 +1,4 @@
-﻿using ClubProcessor.Models;
+﻿using ClubCore.Models;
 using EventProcessor.Tests.Helpers;
 using FluentAssertions;
 using System;

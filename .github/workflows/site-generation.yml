@@ -1,0 +1,69 @@
+name: Generate Static Site
+
+on:
+  push:
+    branches:
+      - master
+      - ci-pipeline-scaffold
+    paths:
+      - 'data/club_events_*.db'
+  workflow_dispatch:
+    inputs:
+      year:
+        description: 'Year to process (e.g. 2025)'
+        required: false
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: site-generation-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build solution
+        run: dotnet build processor/ClubProcessor.sln --configuration Release
+        
+      - name: Detect year
+        id: detect
+        run: |
+          if [ -n "${{ github.event.inputs.year }}" ]; then
+            YEAR="${{ github.event.inputs.year }}"
+            echo "Manual trigger year: $YEAR"
+          else
+            FILES=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep 'club_events_.*\.db' || true)
+            YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1)
+            echo "Detected year from commit: $YEAR"
+          fi
+          echo "YEAR=$YEAR" >> $GITHUB_ENV
+
+      - name: Run site generator
+        run: ./scripts/generate-site.sh $YEAR
+
+      - name: Commit generated site
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="site-update-${YEAR}-$(date +'%Y%m%d%H%M%S')"
+          git checkout -b "$branch"
+          git add docs/
+          git commit -m "Automated site generation for $YEAR"
+          git push origin "$branch"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: gh-pages
+          branch: ${{ github.ref_name }}-site-update-${{ env.YEAR }}
+          title: "Automated site generation for ${{ env.YEAR }}"
+          body: |
+            This PR contains static HTML generated for season ${{ env.YEAR }}.
+            Source branch: ${{ github.ref_name }}

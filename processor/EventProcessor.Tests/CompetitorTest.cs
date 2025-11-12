@@ -1,5 +1,5 @@
-﻿using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
+﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
 using EventProcessor.Tests.Helpers; // for TestCompetitors
 using FluentAssertions;
 using System.Text.RegularExpressions;

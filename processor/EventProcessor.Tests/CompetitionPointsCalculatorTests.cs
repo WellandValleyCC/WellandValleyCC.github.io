@@ -1,8 +1,8 @@
 ﻿using AutoFixture.Xunit2;
 using ClubProcessor.Calculators;
 using ClubProcessor.Interfaces;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
+using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubProcessor.Orchestration;
 using EventProcessor.Tests.Helpers;
 using FluentAssertions;

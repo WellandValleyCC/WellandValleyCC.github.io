@@ -1,6 +1,6 @@
-﻿using ClubProcessor.Context;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
+﻿using ClubCore.Context;
+using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubProcessor.Services;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

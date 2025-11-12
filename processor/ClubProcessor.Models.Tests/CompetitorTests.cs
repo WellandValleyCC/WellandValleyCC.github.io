@@ -1,6 +1,6 @@
 using AutoFixture;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
+using ClubCore.Models;
+using ClubCore.Models.Enums;
 using FluentAssertions;
 
 public class CompetitorTests

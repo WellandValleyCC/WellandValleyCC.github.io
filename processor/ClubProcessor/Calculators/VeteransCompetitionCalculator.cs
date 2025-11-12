@@ -1,7 +1,7 @@
 ﻿using ClubProcessor.Interfaces;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
-using ClubProcessor.Models.Extensions;
+using ClubCore.Models;
+using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
