@@ -32,12 +32,13 @@ namespace ClubSiteGenerator
             DbContextHelper.Migrate(competitorDb);
             DbContextHelper.Migrate(eventDb);
 
-            // Hydrate rides (DataLoader internally pulls competitors + calendar events)
-            var rides = DataLoader.LoadRides(competitorDb, eventDb);
-
+            var eventCalendar = DataLoader.LoadCalendar(eventDb);
+            var allRides = DataLoader.LoadHydratedRides(competitorDb, eventDb);
+            
             // Orchestrate results generation
-            var orchestrator = new ResultsOrchestrator(rides);
+            var orchestrator = new ResultsOrchestrator(eventCalendar, allRides);
             orchestrator.GenerateAll();
+            orchestrator.GenerateIndex();
 
             // Still emit preview.html as a homepage stub
             var previewPath = Path.Combine(outputDir, "preview.html");
@@ -46,6 +47,7 @@ namespace ClubSiteGenerator
 <head>
     <meta charset=""UTF-8"">
     <title>Club Site</title>
+    <link rel=""stylesheet"" href=""./assets/csv/styles.css"">
 </head>
 <body>
     <h1>Welland Valley CC</h1>

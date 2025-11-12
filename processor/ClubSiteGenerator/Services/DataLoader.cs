@@ -5,7 +5,7 @@ namespace ClubSiteGenerator.Services
 {
     public static class DataLoader
     {
-        public static List<Ride> LoadRides(CompetitorDbContext competitorDb, EventDbContext eventDb)
+        public static List<Ride> LoadHydratedRides(CompetitorDbContext competitorDb, EventDbContext eventDb)
         {
             // Materialise all three sets
             var rides = eventDb.Rides.ToList();
@@ -20,6 +20,13 @@ namespace ClubSiteGenerator.Services
             }
 
             return rides;
+        }
+
+        internal static List<CalendarEvent> LoadCalendar(EventDbContext eventDb)
+        {
+            var calendarEvents = eventDb.CalendarEvents.ToList();
+
+            return calendarEvents;
         }
     }
 }

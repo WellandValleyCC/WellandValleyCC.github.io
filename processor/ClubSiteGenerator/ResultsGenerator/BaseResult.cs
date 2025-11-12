@@ -5,31 +5,43 @@ namespace ClubSiteGenerator.ResultsGenerator
 {
     public abstract class BaseResults
     {
-        protected readonly List<Ride> Rides;
+        protected readonly List<Ride> AllRides;
 
-        protected BaseResults(List<Ride> rides)
+        protected BaseResults(List<Ride> allRides)
         {
-            Rides = rides;
+            AllRides = allRides;
         }
 
+        // DisplayName for this result set
+        public abstract string DisplayName { get; }
+
         // Friendly name for output file
-        public abstract string Name { get; }
+        public abstract string FileName { get; }
+
+        public abstract string SubFolderName { get; }
 
         // Query logic: which rides belong in this result set
-        public abstract IEnumerable<Ride> Query();
+        public abstract IEnumerable<Ride> EventRides();
 
         // Shape into a table model
         public HtmlTable CreateTable()
         {
-            var headers = new List<string> { "Pos", "Name", "Club", "Time", "Points" };
-            var rows = Query()
+            var headers = new List<string> { "Name", "Position", "Road Bike", "Actual Time", "Avg. mph" };
+            var rows = EventRides()
                 .OrderBy(r => r.EventRank)
                 .Select(r =>
                 {
+                    var miles = r.CalendarEvent?.Miles ?? 0;
+                    var avgMph = r.TotalSeconds > 0 && miles > 0
+                        ? (miles / (r.TotalSeconds / 3600)).ToString("0.00")
+                        : "";
                     return new List<string>
                     {
                         r.Name ?? "Unknown",
-                        TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"mm\:ss")
+                        r.EventRank?.ToString() ?? "",
+                        r.EventRoadBikeRank?.ToString() ?? "",
+                        TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"mm\:ss"),
+                        avgMph
                     };
                 })
                 .ToList();

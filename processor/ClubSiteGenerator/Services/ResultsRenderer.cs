@@ -9,6 +9,18 @@ namespace ClubSiteGenerator.Services
         public static string RenderAsHtml(HtmlTable table)
         {
             var sb = new StringBuilder();
+
+            // Document scaffold
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine("  <title>Event Results</title>");
+            sb.AppendLine("  <link rel=\"stylesheet\" href=\"../assets/csv/styles.css\">");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+
+            // Results table
             sb.AppendLine("<table class=\"results\">");
 
             sb.AppendLine("<thead><tr>");
@@ -25,6 +37,10 @@ namespace ClubSiteGenerator.Services
                 sb.AppendLine("</tr>");
             }
             sb.AppendLine("</tbody></table>");
+
+            // Close document
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
 
             return sb.ToString();
         }

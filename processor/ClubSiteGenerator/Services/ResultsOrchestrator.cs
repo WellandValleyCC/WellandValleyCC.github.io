@@ -1,32 +1,49 @@
 ﻿using ClubCore.Models;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Utilities;
 
 namespace ClubSiteGenerator.Services
 {
     public class ResultsOrchestrator
     {
-        private readonly List<BaseResults> _resultsGenerators = new();
+        private readonly List<BaseResults> resultsGenerators = new();
 
-        public ResultsOrchestrator(List<Ride> rides)
+        public ResultsOrchestrator(List<CalendarEvent> eventCalendar, List<Ride> rides)
         {
             // Discover all event numbers dynamically
-            var eventNumbers = rides.Select(r => r.EventNumber).Distinct();
+            var eventNumbers = eventCalendar.Select(e => e.EventNumber);
             foreach (var e in eventNumbers)
-                _resultsGenerators.Add(new EventResults(e, rides));
+                resultsGenerators.Add(new EventResults(e, eventCalendar, rides));
 
             // Later: competitions auto‑discovered via reflection
+
         }
 
         public void GenerateAll()
         {
-            foreach (var generator in _resultsGenerators)
+            StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
+
+            foreach (var generator in resultsGenerators)
             {
                 var table = generator.CreateTable();
                 var html = ResultsRenderer.RenderAsHtml(table);
                 var outputDir = OutputLocator.GetOutputDirectory();
-                File.WriteAllText(Path.Combine(outputDir, $"{generator.Name}.html"), html);
+                var folderPath = Path.Combine(outputDir, generator.SubFolderName);
+                Directory.CreateDirectory(folderPath);
+                File.WriteAllText(Path.Combine(folderPath, $"{generator.FileName}.html"), html);
             }
         }
-    }
 
+        public void GenerateIndex()
+        {
+            var eventResults = resultsGenerators
+                .OfType<EventResults>()   // filters only EventResults
+                .OrderBy(ev => ev.EventDate) // optional: sort by date
+                .ToList();
+
+            var outputDir = OutputLocator.GetOutputDirectory();
+            var indexRenderer = new SiteIndexRenderer(eventResults, outputDir);
+            indexRenderer.RenderIndex();
+        }
+    }
 }
