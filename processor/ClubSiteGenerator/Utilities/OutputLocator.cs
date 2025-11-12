@@ -10,7 +10,7 @@ namespace ClubSiteGenerator.Services
             if (runningInCi)
                 return Path.Combine(Path.GetTempPath(), "wvcc-site");
 
-            var repoRoot = RepoLocator.FindGitRepoRoot();
+            var repoRoot = FolderLocator.FindGitRepoRoot();
             var dir = Path.Combine(repoRoot, "SiteOutput");
             Directory.CreateDirectory(dir);
 

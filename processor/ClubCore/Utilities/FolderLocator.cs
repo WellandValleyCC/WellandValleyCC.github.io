@@ -1,6 +1,6 @@
 ﻿namespace ClubCore.Utilities
 {
-    public static class RepoLocator
+    public static class FolderLocator
     {
         public static string FindGitRepoRoot()
         {
@@ -14,6 +14,17 @@
                 throw new DirectoryNotFoundException("Could not locate Git repo root (no .git folder found)");
 
             return dir.FullName;
+        }
+
+        public static string GetDataDirectory()
+        {
+            var repoRoot = FindGitRepoRoot();
+            var dataDir = Path.Combine(repoRoot, "data");
+
+            if (!Directory.Exists(dataDir))
+                throw new DirectoryNotFoundException($"Data directory not found at {dataDir}");
+
+            return dataDir;
         }
     }
 }

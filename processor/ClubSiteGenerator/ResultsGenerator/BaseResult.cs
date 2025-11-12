@@ -1,18 +1,15 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Models;
 
-namespace ClubSiteGenerator.Services
+namespace ClubSiteGenerator.ResultsGenerator
 {
     public abstract class BaseResults
     {
         protected readonly List<Ride> Rides;
-        protected readonly List<Competitor> Competitors;
-        protected readonly List<CalendarEvent> CalendarEvents;
 
-        protected BaseResults(List<Ride> rides, List<Competitor> competitors, List<CalendarEvent> calendarEvents)
+        protected BaseResults(List<Ride> rides)
         {
             Rides = rides;
-            Competitors = competitors;
-            CalendarEvents = calendarEvents;
         }
 
         // Friendly name for output file
@@ -26,17 +23,13 @@ namespace ClubSiteGenerator.Services
         {
             var headers = new List<string> { "Pos", "Name", "Club", "Time", "Points" };
             var rows = Query()
-                .OrderBy(r => r.Position)
+                .OrderBy(r => r.EventRank)
                 .Select(r =>
                 {
-                    var competitor = Competitors.FirstOrDefault(c => c.ClubNumber == r.ClubNumber);
                     return new List<string>
                     {
-                        r.Position.ToString(),
-                        competitor?.Name ?? "Unknown",
-                        competitor?.Club ?? "",
-                        TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"mm\:ss"),
-                        r.Points.ToString()
+                        r.Name ?? "Unknown",
+                        TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"mm\:ss")
                     };
                 })
                 .ToList();

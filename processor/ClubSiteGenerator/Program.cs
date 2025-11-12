@@ -1,4 +1,6 @@
-﻿using ClubSiteGenerator.Services;
+﻿using ClubCore.Context;
+using ClubCore.Utilities;
+using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator
 {
@@ -12,9 +14,19 @@ namespace ClubSiteGenerator
             var outputDir = OutputLocator.GetOutputDirectory();
             Console.WriteLine($"Writing site to: {outputDir}");
 
-            var htmlPath = Path.Combine(outputDir, "preview.html");
+            // Create DbContexts (connection strings configured in OnConfiguring or appsettings.json)
+            using var competitorDb = DbContextFactory.CreateCompetitorContext("2025");
+            using var eventDb = DbContextFactory.CreateEventContext("2025");
 
-            // Minimal HTML scaffold
+            // Hydrate rides (DataLoader internally pulls competitors + calendar events)
+            var rides = DataLoader.LoadRides(competitorDb, eventDb);
+
+            // Orchestrate results generation
+            var orchestrator = new ResultsOrchestrator(rides);
+            orchestrator.GenerateAll();
+
+            // Still emit preview.html as a homepage stub
+            var previewPath = Path.Combine(outputDir, "preview.html");
             var html = @"<!DOCTYPE html>
 <html lang=""en"">
 <head>
@@ -30,10 +42,9 @@ namespace ClubSiteGenerator
     </ul>
 </body>
 </html>";
+            File.WriteAllText(previewPath, html);
 
-            File.WriteAllText(htmlPath, html);
-
-            Console.WriteLine($"[OK] HTML written to {htmlPath}");
+            Console.WriteLine($"[OK] Preview written to {previewPath}");
         }
     }
 }

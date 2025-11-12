@@ -22,7 +22,7 @@ namespace ClubProcessor.Tests.Helpers
             }
             else
             {
-                var repoRoot = RepoLocator.FindGitRepoRoot();
+                var repoRoot = FolderLocator.FindGitRepoRoot();
                 root = Path.Combine(repoRoot, "TestOutput");
             }
 
