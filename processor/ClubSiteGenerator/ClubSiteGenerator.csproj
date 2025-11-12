@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClubProcessor\ClubProcessor.csproj" />
+    <ProjectReference Include="..\ClubCore\ClubCore.csproj" />
   </ItemGroup>
 
 </Project>

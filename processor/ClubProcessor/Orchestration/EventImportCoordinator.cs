@@ -1,6 +1,6 @@
 ﻿using ClubProcessor.Configuration;
-using ClubProcessor.Context;
-using ClubProcessor.Models.Extensions;
+using ClubCore.Context;
+using ClubCore.Models.Extensions;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
 

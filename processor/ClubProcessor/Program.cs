@@ -1,4 +1,4 @@
-using ClubProcessor.Context;
+using ClubCore.Context;
 using ClubProcessor.Orchestration;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;

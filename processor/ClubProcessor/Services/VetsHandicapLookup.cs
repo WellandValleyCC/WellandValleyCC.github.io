@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ClubProcessor.Interfaces;
-using ClubProcessor.Utilities;
+using ClubCore.Utilities;
 
 namespace ClubProcessor.Services
 {

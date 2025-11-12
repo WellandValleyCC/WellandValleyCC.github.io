@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
-using ClubProcessor.Context;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Enums;
+using ClubCore.Context;
+using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubProcessor.Services;
 using ClubProcessor.Tests.Helpers;
 using EventProcessor.Tests.Helpers;

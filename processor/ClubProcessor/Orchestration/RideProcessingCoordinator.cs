@@ -1,5 +1,5 @@
 ﻿using ClubProcessor.Interfaces;
-using ClubProcessor.Models;
+using ClubCore.Models;
 
 namespace ClubProcessor.Orchestration
 {
