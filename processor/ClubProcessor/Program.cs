@@ -1,4 +1,5 @@
 using ClubCore.Context;
+using ClubCore.Utilities;
 using ClubProcessor.Orchestration;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
@@ -64,15 +65,9 @@ class Program
 
     static void ImportCompetitors(string inputPath, string year)
     {
-        var dbPath = Path.Combine("data", $"club_competitors_{year}.db");
-        var options = new DbContextOptionsBuilder<CompetitorDbContext>()
-            .UseSqlite($"Data Source={dbPath}")
-            .Options;
+        using var context = DbContextHelper.CreateCompetitorContext(year);
 
-        using var context = new CompetitorDbContext(options);
-
-        context.Database.Migrate();
-        Console.WriteLine($"[INFO] Migration complete for: {dbPath}");
+        DbContextHelper.Migrate(context, $"club_competitors_{year}.db");
 
         var importer = new CompetitorImporter(context, DateTime.UtcNow);
         importer.Import(inputPath);

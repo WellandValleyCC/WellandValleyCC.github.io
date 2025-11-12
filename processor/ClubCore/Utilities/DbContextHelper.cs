@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClubCore.Utilities
 {
-    public static class DbContextFactory
+    public static class DbContextHelper
     {
         public static EventDbContext CreateEventContext(string year)
         {
@@ -32,6 +32,12 @@ namespace ClubCore.Utilities
                 .Options;
 
             return new CompetitorDbContext(options);
+        }
+
+        public static void Migrate(DbContext context, string dbName)
+        {
+            context.Database.Migrate();
+            Console.WriteLine($"[INFO] Migration complete for: data/{dbName}");
         }
     }
 }
