@@ -54,11 +54,14 @@ jobs:
       - name: Run site generator
         run: ./scripts/generate-site.sh $YEAR
         
+      - name: Verify generated output
+        run: ls -R /tmp/wvcc-site || echo "No files generated"
+        
       - name: Upload SiteOutput
         uses: actions/upload-artifact@v4
         with:
           name: siteoutput
-          path: SiteOutput/
+          path: /tmp/wvcc-site/
         
   publish-site:
     runs-on: ubuntu-latest
