@@ -10,7 +10,9 @@ namespace ClubSiteGenerator
 
             // Decide output folder (repo-rooted TestOutput or CI temp)
             var outputDir = OutputLocator.GetOutputDirectory();
-            var htmlPath = Path.Combine(outputDir, "index.html");
+            Console.WriteLine($"Writing site to: {outputDir}");
+
+            var htmlPath = Path.Combine(outputDir, "preview.html");
 
             // Minimal HTML scaffold
             var html = @"<!DOCTYPE html>

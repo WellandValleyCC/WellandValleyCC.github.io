@@ -86,6 +86,8 @@ You can also trigger the workflow manually from the **Actions** tab:
 
 See [CI Workflows Guide](developer-docs/ci-workflows.md) for full details.
 
+See [Site Preview Guide](developer-docs/site-preview.md) for details on staging the new homepage.
+
 ---
 
 ## Local Development

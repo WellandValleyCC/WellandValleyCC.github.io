@@ -1,4 +1,6 @@
-﻿namespace ClubSiteGenerator.Services
+﻿using ClubCore.Utilities;
+
+namespace ClubSiteGenerator.Services
 {
     public static class OutputLocator
     {
@@ -8,9 +10,10 @@
             if (runningInCi)
                 return Path.Combine(Path.GetTempPath(), "wvcc-site");
 
-            var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
+            var repoRoot = RepoLocator.FindGitRepoRoot();
             var dir = Path.Combine(repoRoot, "SiteOutput");
             Directory.CreateDirectory(dir);
+
             return dir;
         }
     }
