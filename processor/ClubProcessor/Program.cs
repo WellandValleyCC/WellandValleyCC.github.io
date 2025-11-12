@@ -67,7 +67,7 @@ class Program
     {
         using var context = DbContextHelper.CreateCompetitorContext(year);
 
-        DbContextHelper.Migrate(context, $"club_competitors_{year}.db");
+        DbContextHelper.Migrate(context);
 
         var importer = new CompetitorImporter(context, DateTime.UtcNow);
         importer.Import(inputPath);

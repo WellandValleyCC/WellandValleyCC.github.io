@@ -14,7 +14,4 @@ fi
 
 echo "[INFO] Generating site for year $YEAR"
 
-dotnet run --project src/ClubSiteGenerator \
-  --events data/club_events_${YEAR}.db \
-  --competitors data/club_competitors_${YEAR}.db \
-  --output docs/
+dotnet run --project src/ClubSiteGenerator --year "$YEAR"

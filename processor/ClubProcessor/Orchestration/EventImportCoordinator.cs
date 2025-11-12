@@ -20,8 +20,8 @@ namespace ClubProcessor.Orchestration
             using var eventContext = DbContextHelper.CreateEventContext(year);
             using var competitorContext = DbContextHelper.CreateCompetitorContext(year);
 
-            DbContextHelper.Migrate(eventContext, $"club_events_{year}.db");
-            DbContextHelper.Migrate(competitorContext, $"club_competitors_{year}.db");
+            DbContextHelper.Migrate(eventContext);
+            DbContextHelper.Migrate(competitorContext);
 
             ImportCalendar(eventContext, inputPath, year);
             ImportLeagues(competitorContext, inputPath, year);

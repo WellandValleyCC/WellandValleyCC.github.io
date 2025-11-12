@@ -1,7 +1,9 @@
 ﻿using ClubCore.Context;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,10 +36,16 @@ namespace ClubCore.Utilities
             return new CompetitorDbContext(options);
         }
 
-        public static void Migrate(DbContext context, string dbName)
+        public static void Migrate(DbContext context)
         {
             context.Database.Migrate();
-            Console.WriteLine($"[INFO] Migration complete for: data/{dbName}");
+
+            var relational = context.Database.GetDbConnection() as SqliteConnection;
+            var dbPath = relational?.DataSource ?? "(unknown)";
+            var folderName = new FileInfo(dbPath).Directory?.Name;
+            var dbName = new FileInfo(dbPath).Name;
+
+            Console.WriteLine($"[INFO] Migration complete for: {folderName}/{dbName}");
         }
     }
 }
