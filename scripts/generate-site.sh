@@ -14,4 +14,4 @@ fi
 
 echo "[INFO] Generating site for year $YEAR"
 
-dotnet run --project src/ClubSiteGenerator --year "$YEAR"
+dotnet run --project processor/ClubSiteGenerator/ClubSiteGenerator.csproj -- --year "$YEAR"
