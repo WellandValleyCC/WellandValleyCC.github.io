@@ -2,7 +2,8 @@ name: Generate Static Site
 
 permissions:
   contents: write
-
+  pull-requests: write
+  
 on:
   push:
     branches:
