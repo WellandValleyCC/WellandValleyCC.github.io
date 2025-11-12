@@ -1,4 +1,4 @@
-﻿using ClubProcessor.Context;
+﻿using ClubCore.Context;
 
 namespace ClubProcessor.Configuration;
 

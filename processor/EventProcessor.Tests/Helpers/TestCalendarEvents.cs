@@ -1,4 +1,4 @@
-﻿using ClubProcessor.Models;
+﻿using ClubCore.Models;
 
 namespace EventProcessor.Tests.Helpers
 {

@@ -1,4 +1,4 @@
-﻿using ClubProcessor.Context;
+﻿using ClubCore.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventProcessor.Tests.Helpers

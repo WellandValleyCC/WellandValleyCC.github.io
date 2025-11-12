@@ -1,5 +1,5 @@
-﻿using ClubProcessor.Models;
-using ClubProcessor.Models.Csv;
+﻿using ClubCore.Models;
+using ClubCore.Models.Csv;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

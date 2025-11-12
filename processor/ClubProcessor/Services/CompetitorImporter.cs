@@ -1,6 +1,6 @@
-using ClubProcessor.Context;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Csv.ClubProcessor.Models.Csv;
+using ClubCore.Context;
+using ClubCore.Models;
+using ClubCore.Models.Csv;
 using CsvHelper;
 using System.Globalization;
 

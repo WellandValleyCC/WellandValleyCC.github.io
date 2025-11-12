@@ -1,4 +1,4 @@
-﻿using ClubProcessor.Models;
+﻿using ClubCore.Models;
 
 namespace ClubProcessor.Orchestration
 {

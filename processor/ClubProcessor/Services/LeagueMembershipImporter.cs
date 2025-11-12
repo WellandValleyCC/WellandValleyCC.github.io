@@ -1,7 +1,7 @@
-﻿using ClubProcessor.Context;
-using ClubProcessor.Models;
-using ClubProcessor.Models.Csv;
-using ClubProcessor.Models.Enums;
+﻿using ClubCore.Context;
+using ClubCore.Models;
+using ClubCore.Models.Csv;
+using ClubCore.Models.Enums;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;

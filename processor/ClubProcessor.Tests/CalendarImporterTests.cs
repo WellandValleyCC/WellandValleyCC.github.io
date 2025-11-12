@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ClubProcessor.Services;
-using ClubProcessor.Context;
+using ClubCore.Context;
 
 namespace ClubProcessor.Tests
 {

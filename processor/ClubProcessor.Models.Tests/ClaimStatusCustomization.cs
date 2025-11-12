@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ClubProcessor.Models.Enums;
+using ClubCore.Models.Enums;
 
 public class ClaimStatusCustomization : ICustomization
 {

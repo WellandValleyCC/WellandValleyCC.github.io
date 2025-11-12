@@ -1,8 +1,9 @@
 ﻿using ClubProcessor.Configuration;
-using ClubProcessor.Context;
-using ClubProcessor.Models.Extensions;
+using ClubCore.Context;
+using ClubCore.Models.Extensions;
 using ClubProcessor.Services;
 using Microsoft.EntityFrameworkCore;
+using ClubCore.Utilities;
 
 namespace ClubProcessor.Orchestration
 {
@@ -16,11 +17,11 @@ namespace ClubProcessor.Orchestration
         {
             Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
 
-            using var eventContext = CreateEventContext(year);
-            using var competitorContext = CreateCompetitorContext(year);
+            using var eventContext = DbContextHelper.CreateEventContext(year);
+            using var competitorContext = DbContextHelper.CreateCompetitorContext(year);
 
-            Migrate(eventContext, $"club_events_{year}.db");
-            Migrate(competitorContext, $"club_competitors_{year}.db");
+            DbContextHelper.Migrate(eventContext);
+            DbContextHelper.Migrate(competitorContext);
 
             ImportCalendar(eventContext, inputPath, year);
             ImportLeagues(competitorContext, inputPath, year);
@@ -43,30 +44,6 @@ namespace ClubProcessor.Orchestration
 
             // Save changes
             eventContext.SaveChanges();
-        }
-
-        private EventDbContext CreateEventContext(string year)
-        {
-            var path = Path.Combine("data", $"club_events_{year}.db");
-            var options = new DbContextOptionsBuilder<EventDbContext>()
-                .UseSqlite($"Data Source={path}")
-                .Options;
-            return new EventDbContext(options);
-        }
-
-        private CompetitorDbContext CreateCompetitorContext(string year)
-        {
-            var path = Path.Combine("data", $"club_competitors_{year}.db");
-            var options = new DbContextOptionsBuilder<CompetitorDbContext>()
-                .UseSqlite($"Data Source={path}")
-                .Options;
-            return new CompetitorDbContext(options);
-        }
-
-        private void Migrate(DbContext context, string dbName)
-        {
-            context.Database.Migrate();
-            Console.WriteLine($"[INFO] Migration complete for: data/{dbName}");
         }
 
         private void ImportCalendar(EventDbContext context, string inputPath, string year)
