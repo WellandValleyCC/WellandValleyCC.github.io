@@ -36,7 +36,7 @@ namespace ClubSiteGenerator
             var allRides = DataLoader.LoadHydratedRides(competitorDb, eventDb);
             
             // Orchestrate results generation
-            var orchestrator = new ResultsOrchestrator(eventCalendar, allRides);
+            var orchestrator = new ResultsOrchestrator(allRides, eventCalendar);
             orchestrator.GenerateAll();
             orchestrator.GenerateIndex();
         }
