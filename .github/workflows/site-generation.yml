@@ -95,26 +95,23 @@ jobs:
           path: docs/
 
       - name: Commit generated site
-        id: commit 
+        id: commit
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          branch="site-update-${{ needs.build-site.outputs.year }}-$(date +'%Y%m%d%H%M%S')"
+          branch="site-update-${{ env.YEAR }}-$(date +'%Y%m%d%H%M%S')"
+          echo "branch=$branch" >> $GITHUB_ENV
           git checkout -b "$branch"
           git add docs/
-          git commit -m "Automated site generation for ${{ needs.build-site.outputs.year }}"
+          git commit -m "Automated site generation for ${{ env.YEAR }}" || echo "No changes to commit"
           git push origin "$branch"
-          echo "branch=$branch" >> $GITHUB_OUTPUT
-
+      
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           base: gh-pages
-          branch: ${{ steps.commit.outputs.branch }}
-          title: "Automated site generation for ${{ needs.build-site.outputs.year }}"
+          branch: ${{ env.branch }}
+          title: "Automated site generation for ${{ env.YEAR }}"
           body: |
-            This PR contains static HTML generated for season ${{ needs.build-site.outputs.year }}.
+            This PR contains static HTML generated for season ${{ env.YEAR }}.
             Source branch: ${{ github.ref_name }}
-
-
-
