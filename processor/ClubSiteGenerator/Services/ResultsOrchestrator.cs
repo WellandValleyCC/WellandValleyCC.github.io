@@ -46,7 +46,8 @@ namespace ClubSiteGenerator.Services
                     generator.DisplayName,
                     generator.EventNumber,
                     totalEvents,
-                    generator.EventDate);
+                    generator.EventDate,
+                    generator.CalendarEvent.Miles);
 
                 var outputDir = OutputLocator.GetOutputDirectory();
                 var folderPath = Path.Combine(outputDir, generator.SubFolderName);

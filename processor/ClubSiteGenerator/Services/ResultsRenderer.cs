@@ -6,11 +6,13 @@ namespace ClubSiteGenerator.Services
 {
     public static class ResultsRenderer
     {
-        public static string RenderAsHtml(HtmlTable table,
-                                          string eventTitle,
-                                          int eventNumber,
-                                          int totalEvents,
-                                          DateOnly eventDate)
+        public static string RenderAsHtml(
+            HtmlTable table,
+            string eventTitle,
+            int eventNumber,
+            int totalEvents,
+            DateOnly eventDate,
+            double eventMiles)
         {
             var sb = new StringBuilder();
 
@@ -27,6 +29,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<header>");
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(eventTitle)}</h1>");
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
+            sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
 
             int prev = eventNumber == 1 ? totalEvents : eventNumber - 1;
             int next = eventNumber == totalEvents ? 1 : eventNumber + 1;
@@ -52,8 +55,30 @@ namespace ClubSiteGenerator.Services
                 string cssClass = GetRowClass(row);
 
                 sb.AppendLine($"<tr class=\"{cssClass}\">");
-                foreach (var cell in row.Cells)
-                    sb.AppendLine($"<td>{WebUtility.HtmlEncode(cell)}</td>");
+
+                for (int i = 0; i < row.Cells.Count; i++)
+                {
+                    var cellValue = WebUtility.HtmlEncode(row.Cells[i]);
+                    var tdClass = string.Empty;
+
+                    // Apply podium class to the Position column (index 1)
+                    if (i == 1)
+                    {
+                        tdClass = GetPodiumClass(row.Ride.EventRank);
+                    }
+
+                    // Apply podium class to the Road Bike Position column (index 2)
+                    if (i == 2)
+                    {
+                        tdClass = GetPodiumClass(row.Ride.EventRoadBikeRank);
+                    }
+
+                    if (!string.IsNullOrEmpty(tdClass))
+                        sb.AppendLine($"<td class=\"{tdClass}\">{cellValue}</td>");
+                    else
+                        sb.AppendLine($"<td>{cellValue}</td>");
+                }
+
                 sb.AppendLine("</tr>");
             }
             sb.AppendLine("</tbody></table>");
@@ -63,6 +88,17 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</html>");
 
             return sb.ToString();
+        }
+
+        private static string GetPodiumClass(int? rank)
+        {
+            return rank switch
+            {
+                1 => "position-1",
+                2 => "position-2",
+                3 => "position-3",
+                _ => string.Empty
+            };
         }
 
         private static string GetRowClass(HtmlRow row)

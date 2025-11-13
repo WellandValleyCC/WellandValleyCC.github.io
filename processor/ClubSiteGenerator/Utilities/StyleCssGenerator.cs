@@ -26,6 +26,33 @@ table.results td:first-child { text-align: left; font-weight: 500; }
 table.results tr.claim-first   { background-color: #e0ffe0; } /* light green */
 table.results tr.claim-second  { background-color: #e0f0ff; } /* light blue */
 table.results tr.guest         { background-color: #fff0e0; } /* light orange */
+
+/* podium highlighting */
+table.results td.position-1 { background-color: #cfb53b; } /* gold */
+table.results td.position-2 { background-color: #c4c4c4; } /* silver */
+table.results td.position-3 { background-color: #a48347; color: #DDD9C4; } /* bronze */
+
+/* header date + navigation */
+header .event-date {
+  font-style: italic;
+  color: #555;
+  margin: 0.25em 0;
+}
+header .event-distance {
+  font-weight: 500;
+  color: #333;
+  margin: 0.25em 0;
+}
+.event-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em 0 1em 0;
+}
+.event-nav a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #004080;
+}
 ";
 
         public static void EnsureStylesheet(string outputDir)
