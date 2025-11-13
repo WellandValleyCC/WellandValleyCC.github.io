@@ -201,7 +201,7 @@ jobs:
             if [ -f "$dbPath" ]; then
               echo "[INFO] Found DB: $dbPath"
               echo "dbPath=$dbPath" >> $GITHUB_ENV
-              echo "commitMessage=Persisted ClubEvents DB for ${year} import [ci skip]" >> $GITHUB_ENV
+              echo "commitMessage=Persisted ClubEvents DB for ${year} import" >> $GITHUB_ENV
               echo "skipCommit=false" >> $GITHUB_ENV
             else
               echo "[INFO] DB not found: $dbPath — skipping commit"
