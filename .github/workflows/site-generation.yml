@@ -81,7 +81,8 @@ jobs:
     needs: build-site 
     outputs:
       branch: ${{ steps.commit.outputs.branch }}
-    
+    env:
+      YEAR: ${{ needs.build-site.outputs.year }}   
     steps:
       - name: Checkout gh-pages
         uses: actions/checkout@v4
@@ -94,17 +95,18 @@ jobs:
           name: siteoutput
           path: docs/
 
-      - name: Commit generated site
-        id: commit
+      - name: Prepare branch name
+        run: |
+          branch="site-update-${{ env.YEAR }}-$(date +'%Y%m%d%H%M%S')"
+          echo "branch=$branch" >> $GITHUB_ENV
+          echo "Using branch: $branch"
+      
+      - name: Stage generated site
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          branch="site-update-${{ env.YEAR }}-$(date +'%Y%m%d%H%M%S')"
-          echo "branch=$branch" >> $GITHUB_ENV
-          git checkout -b "$branch"
-          git add docs/
-          git commit -m "Automated site generation for ${{ env.YEAR }}" || echo "No changes to commit"
-          git push origin "$branch"
+          git add docs/ || true
+          git status --porcelain
       
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
@@ -115,3 +117,7 @@ jobs:
           body: |
             This PR contains static HTML generated for season ${{ env.YEAR }}.
             Source branch: ${{ github.ref_name }}
+          commit-message: "Automated site generation for ${{ env.YEAR }}"
+          add-paths: |
+            docs/**
+  
