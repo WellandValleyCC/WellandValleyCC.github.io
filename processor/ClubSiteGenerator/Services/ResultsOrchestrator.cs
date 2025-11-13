@@ -26,7 +26,7 @@ namespace ClubSiteGenerator.Services
             foreach (var generator in resultsGenerators)
             {
                 var table = generator.CreateTable();
-                var html = ResultsRenderer.RenderAsHtml(table);
+                var html = ResultsRenderer.RenderAsHtml(table, generator.DisplayName);
                 var outputDir = OutputLocator.GetOutputDirectory();
                 var folderPath = Path.Combine(outputDir, generator.SubFolderName);
                 Directory.CreateDirectory(folderPath);
