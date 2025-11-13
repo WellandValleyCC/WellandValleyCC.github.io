@@ -7,7 +7,7 @@ namespace ClubSiteGenerator.ResultsGenerator
     {
         public readonly CalendarEvent CalendarEvent;
 
-        public EventResults(int eventNumber, List<CalendarEvent> eventsCalendar, List<Ride> rides)
+        public EventResults(int eventNumber, IEnumerable<CalendarEvent> eventsCalendar, IEnumerable<Ride> rides)
             : base(rides)
         {
             CalendarEvent = eventsCalendar.Single(e => e.EventNumber == eventNumber);
