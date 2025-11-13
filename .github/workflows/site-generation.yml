@@ -29,7 +29,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+    
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -41,17 +43,36 @@ jobs:
       - name: Detect year
         id: detect
         run: |
+          set -euo pipefail
+      
+          # 1) Manual input, if present
           if [ -n "${{ github.event.inputs.year }}" ]; then
             YEAR="${{ github.event.inputs.year }}"
             echo "Manual trigger year: $YEAR"
           else
-            FILES=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep 'club_events_.*\.db' || true)
-            YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1)
-            echo "Detected year from commit: $YEAR"
+            # 2) Prefer files changed in the current commit (works with fetch-depth: 0)
+            FILES=$(git show --name-only --pretty="" "${{ github.sha }}" | grep -E 'club_events_[0-9]{4}\.db' || true)
+            YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1 || true)
+      
+            # 3) Fallback to scanning the data directory
+            if [ -z "${YEAR:-}" ]; then
+              FILES=$(ls -1 data/club_events_*.db 2>/dev/null || true)
+              YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1 || true)
+              [ -n "${YEAR:-}" ] && echo "Detected year from data directory: $YEAR"
+            else
+              echo "Detected year from commit: $YEAR"
+            fi
           fi
-          echo "YEAR=$YEAR" >> $GITHUB_ENV
-          echo "year=$YEAR" >> $GITHUB_OUTPUT
+      
+          if [ -z "${YEAR:-}" ]; then
+            echo "No year could be detected. Ensure a club_events_YYYY.db exists or provide the input."
+            exit 1
+          fi
+       
+          echo "YEAR=$YEAR" >> "$GITHUB_ENV"     # for later steps in this job
+          echo "year=$YEAR" >> "$GITHUB_OUTPUT"  # for downstream jobs via outputs
 
+       
       - name: Run site generator
         run: ./scripts/generate-site.sh $YEAR
         
@@ -79,8 +100,6 @@ jobs:
   publish-site:
     runs-on: ubuntu-latest
     needs: build-site 
-    outputs:
-      branch: ${{ steps.commit.outputs.branch }}
     env:
       YEAR: ${{ needs.build-site.outputs.year }}   
     steps:
