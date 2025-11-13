@@ -8,25 +8,46 @@ namespace ClubSiteGenerator.Services
     {
         private readonly List<BaseResults> resultsGenerators = new();
 
-        public ResultsOrchestrator(List<CalendarEvent> eventCalendar, List<Ride> rides)
+        private readonly IEnumerable<Ride> rides;
+        private readonly IEnumerable<CalendarEvent> eventsCalendar;
+
+        public ResultsOrchestrator(IEnumerable<Ride> rides,
+                                   IEnumerable<CalendarEvent> eventCalendar)
+        {
+            this.rides = rides;
+            //this.competitors = competitors;
+            this.eventsCalendar = eventCalendar;
+
+            InitializeGenerators();
+        }
+
+        private void InitializeGenerators()
         {
             // Discover all event numbers dynamically
-            var eventNumbers = eventCalendar.Select(e => e.EventNumber);
-            foreach (var e in eventNumbers)
-                resultsGenerators.Add(new EventResults(e, eventCalendar, rides));
-
+            var eventNumbers = eventsCalendar.Select(e => e.EventNumber); 
+            
+            foreach (var e in eventNumbers) 
+                resultsGenerators.Add(new EventResults(e, eventsCalendar, rides));
+            
             // Later: competitions auto‑discovered via reflection
-
         }
 
         public void GenerateAll()
         {
             StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
 
-            foreach (var generator in resultsGenerators)
+            var totalEvents = resultsGenerators.OfType<EventResults>().Count();
+
+            foreach (var generator in resultsGenerators.OfType<EventResults>())
             {
                 var table = generator.CreateTable();
-                var html = ResultsRenderer.RenderAsHtml(table, generator.DisplayName);
+                var html = ResultsRenderer.RenderAsHtml(
+                    table,
+                    generator.DisplayName,
+                    generator.EventNumber,
+                    totalEvents,
+                    generator.EventDate);
+
                 var outputDir = OutputLocator.GetOutputDirectory();
                 var folderPath = Path.Combine(outputDir, generator.SubFolderName);
                 Directory.CreateDirectory(folderPath);

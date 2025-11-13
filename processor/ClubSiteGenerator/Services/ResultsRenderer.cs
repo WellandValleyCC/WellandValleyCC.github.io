@@ -6,11 +6,14 @@ namespace ClubSiteGenerator.Services
 {
     public static class ResultsRenderer
     {
-        public static string RenderAsHtml(HtmlTable table, string eventTitle)
+        public static string RenderAsHtml(HtmlTable table,
+                                          string eventTitle,
+                                          int eventNumber,
+                                          int totalEvents,
+                                          DateOnly eventDate)
         {
             var sb = new StringBuilder();
 
-            // Document scaffold
             sb.AppendLine("<!DOCTYPE html>");
             sb.AppendLine("<html lang=\"en\">");
             sb.AppendLine("<head>");
@@ -20,10 +23,19 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
-            // Header + nav
+            // Header with title, date, and navigation
             sb.AppendLine("<header>");
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(eventTitle)}</h1>");
-            sb.AppendLine("  <nav><a href=\"../preview.html\">Index</a></nav>");
+            sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
+
+            int prev = eventNumber == 1 ? totalEvents : eventNumber - 1;
+            int next = eventNumber == totalEvents ? 1 : eventNumber + 1;
+
+            sb.AppendLine("  <nav class=\"event-nav\">");
+            sb.AppendLine($"    <a href=\"event-{prev:D2}.html\">&laquo; Previous</a>");
+            sb.AppendLine("    <a href=\"../preview.html\">Index</a>");
+            sb.AppendLine($"    <a href=\"event-{next:D2}.html\">Next &raquo;</a>");
+            sb.AppendLine("  </nav>");
             sb.AppendLine("</header>");
 
             // Results table
