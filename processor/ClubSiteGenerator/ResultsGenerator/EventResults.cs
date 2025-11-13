@@ -14,8 +14,8 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         public override string DisplayName => CalendarEvent.EventName;
-        public override string FileName => $"Event-{CalendarEvent.EventNumber:D2}";
-        public override string SubFolderName => "Events";
+        public override string FileName => $"event-{CalendarEvent.EventNumber:D2}";
+        public override string SubFolderName => "events";
 
         public int EventNumber => CalendarEvent.EventNumber;
         public DateOnly EventDate => DateOnly.FromDateTime(CalendarEvent.EventDate);

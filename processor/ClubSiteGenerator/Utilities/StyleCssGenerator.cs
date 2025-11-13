@@ -19,22 +19,24 @@ table.results th {
   background-color: #f4f4f4;
   font-weight: bold;
 }
-table.results tbody tr:nth-child(even) { background-color: #fafafa; }
 table.results tbody tr:hover { background-color: #f1f7ff; }
 table.results td:first-child { text-align: left; font-weight: 500; }
+
+/* claim status colouring */
+table.results tr.claim-first   { background-color: #e0ffe0; } /* light green */
+table.results tr.claim-second  { background-color: #e0f0ff; } /* light blue */
+table.results tr.guest         { background-color: #fff0e0; } /* light orange */
 ";
 
         public static void EnsureStylesheet(string outputDir)
         {
             // Drop into SiteOutput/assets/csv/
-            var assetsDir = Path.Combine(outputDir, "assets", "csv");
+            var assetsDir = Path.Combine(outputDir, "assets");
             Directory.CreateDirectory(assetsDir);
 
             var cssPath = Path.Combine(assetsDir, "styles.css");
-            if (!File.Exists(cssPath))
-            {
-                File.WriteAllText(cssPath, CssContent);
-            }
+
+            File.WriteAllText(cssPath, CssContent);
         }
     }
 }

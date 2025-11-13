@@ -26,7 +26,11 @@ namespace ClubSiteGenerator.ResultsGenerator
         // Shape into a table model
         public HtmlTable CreateTable()
         {
-            var headers = new List<string> { "Name", "Position", "Road Bike", "Actual Time", "Avg. mph" };
+            var headers = new List<string>
+            {
+                "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
+            };
+
             var rows = EventRides()
                 .OrderBy(r => r.EventRank)
                 .Select(r =>
@@ -35,18 +39,21 @@ namespace ClubSiteGenerator.ResultsGenerator
                     var avgMph = r.TotalSeconds > 0 && miles > 0
                         ? (miles / (r.TotalSeconds / 3600)).ToString("0.00")
                         : "";
-                    return new List<string>
+
+                    var cells = new List<string>
                     {
                         r.Name ?? "Unknown",
                         r.EventRank?.ToString() ?? "",
                         r.EventRoadBikeRank?.ToString() ?? "",
-                        TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"mm\:ss"),
+                        TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"hh\:mm\:ss"),
                         avgMph
                     };
-                })
-                .ToList();
+
+                    return new HtmlRow(cells, r); // attach Ride metadata
+                });
 
             return new HtmlTable(headers, rows);
         }
+
     }
 }

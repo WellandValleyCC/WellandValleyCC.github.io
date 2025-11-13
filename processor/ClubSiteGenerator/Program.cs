@@ -39,28 +39,6 @@ namespace ClubSiteGenerator
             var orchestrator = new ResultsOrchestrator(eventCalendar, allRides);
             orchestrator.GenerateAll();
             orchestrator.GenerateIndex();
-
-            // Still emit preview.html as a homepage stub
-            var previewPath = Path.Combine(outputDir, "preview.html");
-            var html = @"<!DOCTYPE html>
-<html lang=""en"">
-<head>
-    <meta charset=""UTF-8"">
-    <title>Club Site</title>
-    <link rel=""stylesheet"" href=""./assets/csv/styles.css"">
-</head>
-<body>
-    <h1>Welland Valley CC</h1>
-    <p>Static site generation stub working!</p>
-    <ul>
-        <li>Competitor: Theo Marlin</li>
-        <li>Event: TT01 (2025-05-01)</li>
-    </ul>
-</body>
-</html>";
-            File.WriteAllText(previewPath, html);
-
-            Console.WriteLine($"[OK] Preview written to {previewPath}");
         }
     }
 }
