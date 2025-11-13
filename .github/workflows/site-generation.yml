@@ -58,6 +58,18 @@ jobs:
       - name: Verify generated output
         run: ls -R /tmp/wvcc-site || echo "No files generated"
         
+      - name: Guard against excluded files
+        run: |
+          if [ -f /tmp/wvcc-site/index.htm ]; then
+            echo "::warning file=/tmp/wvcc-site/index.htm::index.htm was generated"
+          fi
+          if [ -f /tmp/wvcc-site/index.html ]; then
+            echo "::warning file=/tmp/wvcc-site/index.html::index.html was generated"
+          fi
+          if [ -d /tmp/wvcc-site/legacy ]; then
+            echo "::warning file=/tmp/wvcc-site/legacy::legacy/ folder was generated"
+          fi
+        
       - name: Upload SiteOutput
         uses: actions/upload-artifact@v4
         with:
@@ -80,14 +92,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: siteoutput
-          path: SiteOutput/
-
-      - name: Sync generated output
-        run: |
-          rsync -av --delete \
-            --exclude 'legacy/' \
-            --exclude 'index.html' \
-            SiteOutput/ docs/
+          path: docs/
 
       - name: Commit generated site
         id: commit 
