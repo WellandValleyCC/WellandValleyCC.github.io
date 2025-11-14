@@ -53,10 +53,9 @@ namespace ClubSiteGenerator.Tests
             var ordered = BaseResults.OrderedIneligibleRides(rides, RideEligibility.DNF).ToList();
 
             // Assert
-            ordered[0].Competitor.Surname.Should().Be("Smith");   // member first
+            ordered[0].Competitor?.Surname.Should().Be("Smith");   // member first
             ordered[1].Name.Should().Contain("SecondClaim");      // then 2nd claim
             ordered[2].Name.Should().Contain("Guest");            // then guest
         }
-
     }
 }
