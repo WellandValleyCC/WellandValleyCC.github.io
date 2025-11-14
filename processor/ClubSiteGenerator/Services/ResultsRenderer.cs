@@ -1,4 +1,5 @@
-﻿using ClubSiteGenerator.Models;
+﻿using ClubCore.Models;
+using ClubSiteGenerator.Models;
 using System.Net;
 using System.Text;
 
@@ -50,6 +51,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</tr></thead>");
 
             sb.AppendLine("<tbody>");
+
             foreach (var row in table.Rows)
             {
                 string cssClass = GetRowClass(row);
@@ -61,17 +63,11 @@ namespace ClubSiteGenerator.Services
                     var cellValue = WebUtility.HtmlEncode(row.Cells[i]);
                     var tdClass = string.Empty;
 
-                    // Apply podium class to the Position column (index 1)
                     if (i == 1)
-                    {
-                        tdClass = GetPodiumClass(row.Ride.EventRank);
-                    }
+                        tdClass = GetPodiumClass(row.Ride.EventEligibleRidersRank, row.Ride);
 
-                    // Apply podium class to the Road Bike Position column (index 2)
                     if (i == 2)
-                    {
-                        tdClass = GetPodiumClass(row.Ride.EventRoadBikeRank);
-                    }
+                        tdClass = GetPodiumClass(row.Ride.EventEligibleRoadBikeRidersRank, row.Ride);
 
                     if (!string.IsNullOrEmpty(tdClass))
                         sb.AppendLine($"<td class=\"{tdClass}\">{cellValue}</td>");
@@ -90,8 +86,16 @@ namespace ClubSiteGenerator.Services
             return sb.ToString();
         }
 
-        private static string GetPodiumClass(int? rank)
+        private static bool IsEligibleForPodium(Ride ride)
         {
+            return ride.SeniorsPosition.HasValue;
+        }
+
+        private static string GetPodiumClass(int? rank, Ride ride)
+        {
+            if (!IsEligibleForPodium(ride))
+                return string.Empty;
+   
             return rank switch
             {
                 1 => "position-1",
