@@ -57,7 +57,7 @@ namespace ClubSiteGenerator.Renderers
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("<div class=\"legend\">");
-            sb.AppendLine("  <span class=\"competition-eligible\">Competition eligible club member</span>");
+            sb.AppendLine("  <span class=\"competition-eligible\">Full member</span>");
             sb.AppendLine("  <span class=\"guest-second-claim\">2nd claim</span>");
             sb.AppendLine("  <span class=\"guest-non-club-member\">Guest</span>");
             sb.AppendLine("</div>");
