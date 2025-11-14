@@ -22,10 +22,22 @@ table.results th {
 table.results tbody tr:hover { background-color: #f1f7ff; }
 table.results td:first-child { text-align: left; font-weight: 500; }
 
-/* claim status colouring */
-table.results tr.claim-first   { background-color: #e0ffe0; } /* light green */
-table.results tr.claim-second  { background-color: #e0f0ff; } /* light blue */
-table.results tr.guest         { background-color: #fff0e0; } /* light orange */
+/* competition eligibility colour coding */
+table.results tr.competition-eligible,
+.legend .competition-eligible   { background-color: #e0ffe0; } /* light green */
+
+table.results tr.guest-second-claim,
+.legend .guest-second-claim     { background-color: #e0f0ff; } /* light blue */
+
+table.results tr.guest-non-club-member,
+.legend .guest-non-club-member  { background-color: #fff0e0; } /* light orange */
+
+.legend span {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  margin-right: 0.5em;
+  border-radius: 4px;
+}
 
 /* podium highlighting */
 table.results td.position-1 { background-color: #cfb53b; } /* gold */
