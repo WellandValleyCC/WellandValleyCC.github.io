@@ -1,12 +1,9 @@
-﻿using AutoFixture.Xunit2;
-using ClubProcessor.Calculators;
-using ClubProcessor.Interfaces;
-using ClubCore.Models;
+﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 using ClubProcessor.Orchestration;
 using EventProcessor.Tests.Helpers;
 using FluentAssertions;
-using System.Text;
 
 namespace EventProcessor.Tests
 {
@@ -611,6 +608,61 @@ namespace EventProcessor.Tests
 
         [Theory]
         [EventAutoData]
+        public void EligibleRidersEventRank_IsAssignedAccordingToTotalTime(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            // Include all eligible rides (club members only)
+            var validRides = allRides
+                .Where(r => r.Competitor?.IsEligible() == true &&
+                            r.Eligibility == RideEligibility.Valid)
+                .ToList();
+
+            // Act
+            scorer.ProcessAll(allRides, competitors, calendar);
+
+            // Group by event using the existing test helper
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: false);
+
+            // Assert overall EventRank for each event using "first position" tie semantics
+            foreach (var kv in ridesByEvent)
+            {
+                var evtNumber = kv.Key;
+                var ridesForEvent = kv.Value;
+                if (!ridesForEvent.Any()) continue;
+
+                var ordered = ridesForEvent
+                    .OrderBy(r => r.TotalSeconds)
+                    .ThenBy(r => r.Name) // deterministic iteration only
+                    .ToArray();
+
+                int lastRank = 0;
+                double? lastTime = null;
+                for (int i = 0; i < ordered.Length; i++)
+                {
+                    var ride = ordered[i];
+                    var time = ride.TotalSeconds;
+                    int expectedRank;
+                    if (i == 0) expectedRank = 1;
+                    else if (Nullable.Equals(time, lastTime)) expectedRank = lastRank;
+                    else expectedRank = i + 1;
+
+                    ride.EventEligibleRidersRank.Should().Be(expectedRank, because: $"overall position amongst club members for Event {evtNumber} rider {ride.Name}");
+
+                    lastRank = expectedRank;
+                    lastTime = time;
+                }
+            }
+        }
+
+        [Theory]
+        [EventAutoData]
         public void EventRoadBikeRank_IsAssignedAmongRoadBikeRidersOnly(
             List<Competitor> competitors,
             List<Ride> allRides,
@@ -621,6 +673,7 @@ namespace EventProcessor.Tests
             var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
+            // Include all eligible rides - i.e. not DNS, DNF, DQ
             var validRides = allRides
                 .Where(r => r.Eligibility == RideEligibility.Valid)
                 .ToList();
@@ -677,7 +730,75 @@ namespace EventProcessor.Tests
 
         [Theory]
         [EventAutoData]
-        public void EventScoring_RoadBikeRank_only_counts_roadbike_riders_and_matches_EventRank_where_applicable(
+        public void EventEligibleRoadBikeRank_IsAssignedAmongRoadBikeRidersOnly(
+            List<Competitor> competitors,
+            List<Ride> allRides,
+            List<CalendarEvent> calendar)
+        {
+            // Arrange
+            int competitionYear = allRides.FirstOrDefault()?.CalendarEvent?.EventDate.Year ?? DateTime.Now.Year;
+            var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), competitionYear);
+            var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
+
+            // Include all eligible rides (club members only)
+            var validRides = allRides
+                .Where(r => r.Competitor?.IsEligible() == true &&
+                            r.Eligibility == RideEligibility.Valid)
+                .ToList();
+
+            // Act
+            scorer.ProcessAll(allRides, competitors, calendar);
+
+            // Two groupings:
+            // - all eligible rides (for checking "no road riders" behaviour)
+            var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: false);
+            // - only eligible road-bike rides (for rank computation)
+            var roadRidesByEvent = TestHelpers.BuildRidesByEvent(validRides.Where(r => r.IsRoadBike).ToList(), onlyValidWithClubNumber: false);
+
+            // Assert EventRoadBikeRank computed only from road rides using same tie semantics
+            foreach (var kv in ridesByEvent)
+            {
+                var evtNumber = kv.Key;
+                var ridesForEvent = kv.Value;
+
+                var roadOrdered = roadRidesByEvent.TryGetValue(evtNumber, out var rr) && rr.Any()
+                    ? rr.OrderBy(r => r.TotalSeconds).ThenBy(r => r.Name).ToArray()
+                    : Array.Empty<Ride>();
+
+                if (roadOrdered.Length == 0)
+                {
+                    // no road-bike riders — expect EventRoadBikeRank not assigned (null) for all rides in event
+                    foreach (var r in ridesForEvent)
+                        r.EventRoadBikeRank.Should().BeNull(because: $"no road-bike riders in event {evtNumber}");
+                    continue;
+                }
+
+                int lastRank = 0;
+                double? lastTime = null;
+                for (int i = 0; i < roadOrdered.Length; i++)
+                {
+                    var ride = roadOrdered[i];
+                    var time = ride.TotalSeconds;
+                    int expectedRoadRank;
+                    if (i == 0) expectedRoadRank = 1;
+                    else if (Nullable.Equals(time, lastTime)) expectedRoadRank = lastRank;
+                    else expectedRoadRank = i + 1;
+
+                    ride.EventRoadBikeRank.Should().Be(expectedRoadRank, because: $"road-bike position for Event {evtNumber} rider {ride.Name}");
+
+                    lastRank = expectedRoadRank;
+                    lastTime = time;
+                }
+
+                // Optionally assert that non-road rides have no EventRoadBikeRank set
+                foreach (var nonRoad in ridesForEvent.Where(r => !r.IsRoadBike))
+                    nonRoad.EventRoadBikeRank.Should().BeNull(because: $"non-road rider should not receive EventRoadBikeRank in event {evtNumber}");
+            }
+        }
+
+        [Theory]
+        [EventAutoData]
+        public void EligibleRidersRoadBikeRank_only_counts_eligible_roadbike_riders_and_matches_EventRank_where_applicable(
             List<Competitor> competitors,
             List<Ride> allRides,
             List<CalendarEvent> calendar)
@@ -688,7 +809,9 @@ namespace EventProcessor.Tests
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
 
             var validRides = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r =>
+                    r.Competitor?.IsEligible() == true &&
+                    r.Eligibility == RideEligibility.Valid)
                 .ToList();
 
             // Act
@@ -728,8 +851,8 @@ namespace EventProcessor.Tests
                         expectedRoadRank = i + 1;
                     }
 
-                    ride.EventRoadBikeRank.Should().Be(expectedRoadRank,
-                        because: "EventRoadBikeRank should reflect sequential position among road-bike riders using the same overall order");
+                    ride.EventEligibleRoadBikeRidersRank.Should().Be(expectedRoadRank,
+                        because: "EventEligibleRoadBikeRidersRank should reflect sequential position among eligible road-bike riders using the same overall order");
 
                     lastRank = expectedRoadRank;
                     lastEventRankValue = eventRankVal;

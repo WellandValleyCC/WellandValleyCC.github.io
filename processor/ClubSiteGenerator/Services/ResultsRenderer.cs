@@ -1,4 +1,6 @@
-﻿using ClubSiteGenerator.Models;
+﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
+using ClubSiteGenerator.Models;
 using System.Net;
 using System.Text;
 
@@ -6,11 +8,13 @@ namespace ClubSiteGenerator.Services
 {
     public static class ResultsRenderer
     {
-        public static string RenderAsHtml(HtmlTable table,
-                                          string eventTitle,
-                                          int eventNumber,
-                                          int totalEvents,
-                                          DateOnly eventDate)
+        public static string RenderAsHtml(
+            HtmlTable table,
+            string eventTitle,
+            int eventNumber,
+            int totalEvents,
+            DateOnly eventDate,
+            double eventMiles)
         {
             var sb = new StringBuilder();
 
@@ -27,6 +31,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<header>");
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(eventTitle)}</h1>");
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
+            sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
 
             int prev = eventNumber == 1 ? totalEvents : eventNumber - 1;
             int next = eventNumber == totalEvents ? 1 : eventNumber + 1;
@@ -38,6 +43,12 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  </nav>");
             sb.AppendLine("</header>");
 
+            sb.AppendLine("<div class=\"legend\">");
+            sb.AppendLine("  <span class=\"competition-eligible\">Competition eligible club member</span>");
+            sb.AppendLine("  <span class=\"guest-second-claim\">2nd claim</span>");
+            sb.AppendLine("  <span class=\"guest-non-club-member\">Guest</span>");
+            sb.AppendLine("</div>");
+
             // Results table
             sb.AppendLine("<table class=\"results\">");
 
@@ -47,13 +58,30 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</tr></thead>");
 
             sb.AppendLine("<tbody>");
+
             foreach (var row in table.Rows)
             {
-                string cssClass = GetRowClass(row);
+                string cssClass = GetRowClass(row.Ride);
 
                 sb.AppendLine($"<tr class=\"{cssClass}\">");
-                foreach (var cell in row.Cells)
-                    sb.AppendLine($"<td>{WebUtility.HtmlEncode(cell)}</td>");
+
+                for (int i = 0; i < row.Cells.Count; i++)
+                {
+                    var cellValue = WebUtility.HtmlEncode(row.Cells[i]);
+                    var tdClass = string.Empty;
+
+                    if (i == 1)
+                        tdClass = GetPodiumClass(row.Ride.EventEligibleRidersRank, row.Ride);
+
+                    if (i == 2)
+                        tdClass = GetPodiumClass(row.Ride.EventEligibleRoadBikeRidersRank, row.Ride);
+
+                    if (!string.IsNullOrEmpty(tdClass))
+                        sb.AppendLine($"<td class=\"{tdClass}\">{cellValue}</td>");
+                    else
+                        sb.AppendLine($"<td>{cellValue}</td>");
+                }
+
                 sb.AppendLine("</tr>");
             }
             sb.AppendLine("</tbody></table>");
@@ -65,16 +93,29 @@ namespace ClubSiteGenerator.Services
             return sb.ToString();
         }
 
-        private static string GetRowClass(HtmlRow row)
+        public static string GetPodiumClass(int? rank, Ride ride)
         {
-            return row.Ride.Competitor?.ClaimStatus switch
+            return rank switch
             {
-                ClubCore.Models.Enums.ClaimStatus.Honorary => "claim-first",
-                ClubCore.Models.Enums.ClaimStatus.FirstClaim => "claim-first",
-                ClubCore.Models.Enums.ClaimStatus.SecondClaim => "claim-second",
-                null => "guest",
-                _ => string.Empty,
+                1 => "position-1",
+                2 => "position-2",
+                3 => "position-3",
+                _ => string.Empty
             };
+        }
+
+        public static string GetRowClass(Ride ride)
+        {
+            if (ride.EventEligibleRidersRank != null)
+                return "competition-eligible";
+
+            if (ride.ClubNumber == null)
+                return "guest-non-club-member";
+
+            if (ride.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
+                return "guest-second-claim";
+
+            return "competition-eligible";
         }
     }
 }
