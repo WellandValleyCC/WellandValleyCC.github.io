@@ -86,16 +86,8 @@ namespace ClubSiteGenerator.Services
             return sb.ToString();
         }
 
-        private static bool IsEligibleForPodium(Ride ride)
+        public static string GetPodiumClass(int? rank, Ride ride)
         {
-            return ride.SeniorsPosition.HasValue;
-        }
-
-        private static string GetPodiumClass(int? rank, Ride ride)
-        {
-            if (!IsEligibleForPodium(ride))
-                return string.Empty;
-   
             return rank switch
             {
                 1 => "position-1",
