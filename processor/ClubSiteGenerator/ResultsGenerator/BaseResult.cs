@@ -47,9 +47,9 @@ namespace ClubSiteGenerator.ResultsGenerator
                 .Select(r =>
                 {
                     var miles = r.CalendarEvent?.Miles ?? 0;
-                    var avgMph = r.TotalSeconds > 0 && miles > 0
+                    var avgMph = (r.Eligibility == RideEligibility.Valid && r.TotalSeconds > 0 && miles > 0)
                         ? (miles / (r.TotalSeconds / 3600)).ToString("0.00")
-                        : "";
+                        : string.Empty;
 
                     var timeCell = r.Eligibility switch
                     {
