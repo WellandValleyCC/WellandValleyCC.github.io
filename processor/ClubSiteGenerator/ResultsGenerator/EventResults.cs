@@ -1,5 +1,4 @@
 ﻿using ClubCore.Models;
-using ClubCore.Models.Enums;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
