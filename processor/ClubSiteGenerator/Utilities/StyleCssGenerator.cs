@@ -72,14 +72,14 @@ header .event-distance {
   text-decoration: none;
   font-weight: 500;
   color: #004080;
-  background-color: #f0f8ff;
+  background-color: #f8f8f8; /* Option A: neutral */
   padding: 0.4em 0.8em;
   border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
 .event-nav a:hover {
-  background-color: #e0ecff;
+  background-color: #e0e0e0;
 }
 
 .event-nav a.prev::before {
