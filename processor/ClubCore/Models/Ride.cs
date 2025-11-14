@@ -31,6 +31,16 @@ namespace ClubCore.Models
         /// </summary>
         public int? EventRoadBikeRank { get; set; }
 
+        /// <summary>
+        /// Eligible riders only: Gender-neutral overall rank for Event page position medal colour coding
+        /// </summary>
+        public int? EventEligibleRidersRank { get; set; }
+
+        /// <summary>
+        /// Eligible riders only: Gender-neutral RoadBike rank for Event page position medal colour coding
+        /// </summary>
+        public int? EventEligibleRoadBikeRidersRank { get; set; }
+
         public int? SeniorsPosition { get; set; }
         public double? SeniorsPoints { get; set; }
 

@@ -32,13 +32,14 @@ namespace ClubSiteGenerator.ResultsGenerator
                 "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
             };
 
-            var ranked = EventRides()
-                .Where(r => r.Eligibility == RideEligibility.Valid)
-                .OrderBy(r => r.EventRank);
+            var rides = EventRides().ToList();
 
-            var dnfs = EventRides().Where(r => r.Eligibility == RideEligibility.DNF);
-            var dnss = EventRides().Where(r => r.Eligibility == RideEligibility.DNS);
-            var dqs = EventRides().Where(r => r.Eligibility == RideEligibility.DQ);
+            var ranked = rides.Where(r => r.Eligibility == RideEligibility.Valid)
+                              .OrderBy(r => r.EventRank);
+
+            var dnfs = OrderedIneligibleRides(rides, RideEligibility.DNF);
+            var dnss = OrderedIneligibleRides(rides, RideEligibility.DNS);
+            var dqs = OrderedIneligibleRides(rides, RideEligibility.DQ);
 
             var ordered = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
 
@@ -71,6 +72,32 @@ namespace ClubSiteGenerator.ResultsGenerator
                 });
 
             return new HtmlTable(headers, rows);
+        }
+
+        public static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> eventRides, RideEligibility rideEligibility)
+        {
+            var dxxCompetitionEligible = eventRides
+                .Where(r =>
+                    r.Eligibility == rideEligibility &&
+                    r.EventEligibleRidersRank != null)
+                .OrderBy(dnf => dnf.Competitor!.Surname)
+                .ThenBy(dnf => dnf.Competitor!.GivenName);
+
+            var dxxSecondClaim = eventRides
+                .Where(r =>
+                    r.Eligibility == rideEligibility &&
+                    r.EventEligibleRidersRank == null &&
+                    r.ClubNumber != null)
+                .OrderBy(dnf => dnf.Name);
+
+            var dxxGuest = eventRides
+                .Where(r =>
+                    r.Eligibility == rideEligibility &&
+                    r.EventEligibleRidersRank == null &&
+                    r.ClubNumber == null)
+                .OrderBy(dnf => dnf.Name);
+
+            return dxxCompetitionEligible.Concat(dxxSecondClaim).Concat(dxxGuest);
         }
     }
 }
