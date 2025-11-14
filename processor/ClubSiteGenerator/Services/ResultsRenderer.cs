@@ -22,14 +22,14 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<html lang=\"en\">");
             sb.AppendLine("<head>");
             sb.AppendLine("  <meta charset=\"utf-8\">");
-            sb.AppendLine($"  <title>{WebUtility.HtmlEncode(eventTitle)}</title>");
+            sb.AppendLine($"  <title>Event {eventNumber}: {WebUtility.HtmlEncode(eventTitle)}</title>");
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"../assets/styles.css\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
             // Header with title, date, and navigation
             sb.AppendLine("<header>");
-            sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(eventTitle)}</h1>");
+            sb.AppendLine($"  <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
 
@@ -37,10 +37,11 @@ namespace ClubSiteGenerator.Services
             int next = eventNumber == totalEvents ? 1 : eventNumber + 1;
 
             sb.AppendLine("  <nav class=\"event-nav\">");
-            sb.AppendLine($"    <a href=\"event-{prev:D2}.html\">&laquo; Previous</a>");
-            sb.AppendLine("    <a href=\"../preview.html\">Index</a>");
-            sb.AppendLine($"    <a href=\"event-{next:D2}.html\">Next &raquo;</a>");
+            sb.AppendLine($"    <a class=\"prev\" href=\"event-{prev:D2}.html\">Previous</a>");
+            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\">Index</a>");
+            sb.AppendLine($"    <a class=\"next\" href=\"event-{next:D2}.html\">Next</a>");
             sb.AppendLine("  </nav>");
+
             sb.AppendLine("</header>");
 
             sb.AppendLine("<div class=\"legend\">");
