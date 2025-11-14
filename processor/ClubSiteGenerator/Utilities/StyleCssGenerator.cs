@@ -93,6 +93,16 @@ header .event-distance {
 .event-nav a.index {
   font-style: normal;
 }
+
+footer {
+  margin-top: 2em;
+  font-size: 0.8em;
+  color: #666;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  padding-top: 0.5em;
+}
+
 ";
 
         public static void EnsureStylesheet(string outputDir)
