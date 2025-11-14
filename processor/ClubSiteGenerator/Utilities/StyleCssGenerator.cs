@@ -91,9 +91,8 @@ header .event-distance {
 }
 
 .event-nav a.index {
-  font-style: italic;
+  font-style: normal;
 }
-
 ";
 
         public static void EnsureStylesheet(string outputDir)
