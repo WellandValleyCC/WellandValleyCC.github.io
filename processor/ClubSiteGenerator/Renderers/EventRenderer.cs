@@ -1,34 +1,48 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace ClubSiteGenerator.Services
+namespace ClubSiteGenerator.Renderers
 {
-    public static class ResultsRenderer
+    public class EventRenderer : HtmlRendererBase
     {
-        public static string RenderAsHtml(
-            HtmlTable table,
+        private readonly HtmlTable table;
+        private readonly string eventTitle;
+        private int eventNumber;
+        private int totalEvents;
+        private DateOnly eventDate; 
+        private double eventMiles;
+
+        public EventRenderer(HtmlTable table,
             string eventTitle,
             int eventNumber,
             int totalEvents,
             DateOnly eventDate,
             double eventMiles)
         {
-            var sb = new StringBuilder();
+            this.table = table;
+            this.eventTitle = eventTitle;
+            this.eventNumber = eventNumber;
+            this.totalEvents = totalEvents;
+            this.eventDate = eventDate;
+            this.eventMiles = eventMiles;
+        }
 
-            sb.AppendLine("<!DOCTYPE html>");
-            sb.AppendLine("<html lang=\"en\">");
-            sb.AppendLine("<head>");
-            sb.AppendLine("  <meta charset=\"utf-8\">");
-            sb.AppendLine($"  <title>Event {eventNumber}: {WebUtility.HtmlEncode(eventTitle)}</title>");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"../assets/styles.css\">");
-            sb.AppendLine("</head>");
-            sb.AppendLine("<body>");
+        protected override string TitleElement() => $"<title>Event {eventNumber}: {WebUtility.HtmlEncode(eventTitle)}</title>";
 
-            // Header with title, date, and navigation
-            sb.AppendLine("<header>");
+        protected override string HeaderHtml()
+        {
+            StringBuilder sb = new StringBuilder();
+
             sb.AppendLine($"  <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
@@ -43,7 +57,13 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine("  </nav>");
 
-            sb.AppendLine("</header>");
+            return sb.ToString();
+        }
+
+
+        protected override string LegendHtml()
+        {
+            StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("<div class=\"legend\">");
             sb.AppendLine("  <span class=\"competition-eligible\">Competition eligible club member</span>");
@@ -51,7 +71,13 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <span class=\"guest-non-club-member\">Guest</span>");
             sb.AppendLine("</div>");
 
-            // Results table
+            return sb.ToString();
+        }
+
+        protected override string ResultsTableHtml()
+        {
+            StringBuilder sb = new StringBuilder();
+
             sb.AppendLine("<table class=\"results\">");
 
             sb.AppendLine("<thead><tr>");
@@ -88,11 +114,42 @@ namespace ClubSiteGenerator.Services
             }
             sb.AppendLine("</tbody></table>");
 
-            // Close document
-            sb.AppendLine("</body>");
-            sb.AppendLine("</html>");
-
             return sb.ToString();
+        }
+
+
+        protected void AppendHeader(StringBuilder sb, string title, int? eventNumber, DateOnly? date, double? miles)
+        {
+            sb.AppendLine("<header>");
+
+            var fullTitle = eventNumber is not null
+                ? $"<span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(title)}"
+                : WebUtility.HtmlEncode(title);
+
+            sb.AppendLine($"  <h1>{fullTitle}</h1>");
+
+            if (date is not null)
+                sb.AppendLine($"  <p class=\"event-date\">{date:dddd, dd MMMM yyyy}</p>");
+
+            if (miles is not null)
+                sb.AppendLine($"  <p class=\"event-distance\">Distance: {miles:0.##} miles</p>");
+
+            sb.AppendLine("  <nav class=\"event-nav\">");
+            sb.AppendLine("    <a class=\"prev\" href=\"#\">Previous</a>");
+            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\">Index</a>");
+            sb.AppendLine("    <a class=\"next\" href=\"#\">Next</a>");
+            sb.AppendLine("  </nav>");
+
+            sb.AppendLine("</header>");
+        }
+
+        protected void AppendLegendHtml(StringBuilder sb)
+        {
+            sb.AppendLine("<div class=\"legend\">");
+            sb.AppendLine("  <span class=\"competition-eligible\">Competition eligible club member</span>");
+            sb.AppendLine("  <span class=\"guest-second-claim\">2nd claim</span>");
+            sb.AppendLine("  <span class=\"guest-non-club-member\">Guest</span>");
+            sb.AppendLine("</div>");
         }
 
         public static string GetPodiumClass(int? rank, Ride ride)

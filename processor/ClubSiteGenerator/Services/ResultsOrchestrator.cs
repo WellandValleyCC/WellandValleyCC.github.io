@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Utilities;
 
@@ -41,14 +42,14 @@ namespace ClubSiteGenerator.Services
             foreach (var generator in resultsGenerators.OfType<EventResults>())
             {
                 var table = generator.CreateTable();
-                var html = ResultsRenderer.RenderAsHtml(
+                var renderer = new EventRenderer(
                     table,
                     generator.DisplayName,
                     generator.EventNumber,
                     totalEvents,
                     generator.EventDate,
                     generator.CalendarEvent.Miles);
-
+                var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
                 var folderPath = Path.Combine(outputDir, generator.SubFolderName);
                 Directory.CreateDirectory(folderPath);

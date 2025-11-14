@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
 using ClubCore.Models;
 using ClubCore.Models.Enums;
-using ClubSiteGenerator.Services;
+using ClubSiteGenerator.Renderers;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Reflection.Emit;
 
 namespace ClubSiteGenerator.Tests
 {
@@ -22,7 +24,7 @@ namespace ClubSiteGenerator.Tests
             var ride = new Ride { EventEligibleRidersRank = rank };
 
             // Act
-            var result = ResultsRenderer.GetPodiumClass(rank, ride);
+            var result = EventRenderer.GetPodiumClass(rank, ride);
 
             // Assert
             result.Should().Be(expectedCss);
@@ -40,7 +42,7 @@ namespace ClubSiteGenerator.Tests
             var ride = new Ride { EventEligibleRoadBikeRidersRank = rank };
 
             // Act
-            var result = ResultsRenderer.GetPodiumClass(rank, ride);
+            var result = EventRenderer.GetPodiumClass(rank, ride);
 
             // Assert
             result.Should().Be(expectedCss);
@@ -57,7 +59,7 @@ namespace ClubSiteGenerator.Tests
         public void GetRowClass_ReturnsExpectedCss(int? eligibleRank, int? clubNumber, ClaimStatus claimStatus, RideEligibility rideEligibility, string expectedCss)
         {
             // Arrange
-            Competitor competitor = null;
+            Competitor? competitor = null;
 
             if (clubNumber != null)
             {
@@ -73,7 +75,6 @@ namespace ClubSiteGenerator.Tests
                 };
             };
 
-
             var ride = new Ride
             {
                 EventEligibleRidersRank = eligibleRank,
@@ -83,7 +84,7 @@ namespace ClubSiteGenerator.Tests
             };
 
             // Act
-            var result = ResultsRenderer.GetRowClass(ride);
+            var result = EventRenderer.GetRowClass(ride);
 
             // Assert
             result.Should().Be(expectedCss);
