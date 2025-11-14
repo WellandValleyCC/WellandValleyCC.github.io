@@ -37,9 +37,10 @@ namespace ClubSiteGenerator.Services
             int next = eventNumber == totalEvents ? 1 : eventNumber + 1;
 
             sb.AppendLine("  <nav class=\"event-nav\">");
-            sb.AppendLine($"    <a class=\"prev\" href=\"event-{prev:D2}.html\">Previous</a>");
-            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\">Index</a>");
-            sb.AppendLine($"    <a class=\"next\" href=\"event-{next:D2}.html\">Next</a>");
+            sb.AppendLine($"    <a class=\"prev\" href=\"event-{prev:D2}.html\" aria-label=\"Previous event\">Previous</a>");
+            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-label=\"Back to index\">Index</a>");
+            sb.AppendLine($"    <a class=\"next\" href=\"event-{next:D2}.html\" aria-label=\"Next event\">Next</a>");
+
             sb.AppendLine("  </nav>");
 
             sb.AppendLine("</header>");
@@ -105,18 +106,12 @@ namespace ClubSiteGenerator.Services
             };
         }
 
-        public static string GetRowClass(Ride ride)
+        public static string GetRowClass(Ride ride) => ride switch
         {
-            if (ride.EventEligibleRidersRank != null)
-                return "competition-eligible";
-
-            if (ride.ClubNumber == null)
-                return "guest-non-club-member";
-
-            if (ride.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
-                return "guest-second-claim";
-
-            return "competition-eligible";
-        }
+            { EventEligibleRidersRank: not null } => "competition-eligible",
+            { ClubNumber: null } => "guest-non-club-member",
+            { Competitor.ClaimStatus: ClaimStatus.SecondClaim } => "guest-second-claim",
+            _ => "competition-eligible"
+        };
     }
 }
