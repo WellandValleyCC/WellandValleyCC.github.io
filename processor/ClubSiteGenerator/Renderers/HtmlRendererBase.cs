@@ -12,6 +12,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("<html lang=\"en\">");
             sb.AppendLine("<head>");
             sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine($"  {TitleElement()}");
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"../assets/styles.css\">");
             var extras = HeadExtras();
