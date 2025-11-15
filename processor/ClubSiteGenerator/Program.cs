@@ -1,6 +1,7 @@
 ﻿using ClubCore.Context;
 using ClubCore.Utilities;
 using ClubSiteGenerator.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClubSiteGenerator
 {
@@ -28,9 +29,6 @@ namespace ClubSiteGenerator
             // Create DbContexts (connection strings configured in OnConfiguring or appsettings.json)
             using var competitorDb = DbContextHelper.CreateCompetitorContext("2025");
             using var eventDb = DbContextHelper.CreateEventContext("2025");
-
-            DbContextHelper.Migrate(competitorDb);
-            DbContextHelper.Migrate(eventDb);
 
             var eventCalendar = DataLoader.LoadCalendar(eventDb);
             var allRides = DataLoader.LoadHydratedRides(competitorDb, eventDb);

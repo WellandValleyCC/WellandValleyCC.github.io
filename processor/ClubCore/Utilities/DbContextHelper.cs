@@ -1,12 +1,5 @@
 ﻿using ClubCore.Context;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClubCore.Utilities
 {
@@ -21,7 +14,10 @@ namespace ClubCore.Utilities
                 .UseSqlite($"Data Source={path}")
                 .Options;
 
-            return new EventDbContext(options);
+            var dbContext = new EventDbContext(options);
+            ValidateSchema(dbContext, path);
+
+            return dbContext;
         }
 
         public static CompetitorDbContext CreateCompetitorContext(string year)
@@ -33,19 +29,21 @@ namespace ClubCore.Utilities
                 .UseSqlite($"Data Source={path}")
                 .Options;
 
-            return new CompetitorDbContext(options);
+            var dbContext = new CompetitorDbContext(options);
+            ValidateSchema(dbContext, path);
+
+            return dbContext;
         }
 
-        public static void Migrate(DbContext context)
+        private static void ValidateSchema(DbContext dbContext, string path)
         {
-            context.Database.Migrate();
+            if (dbContext.Database.GetPendingMigrations().Any())
+            {
+                throw new InvalidOperationException(
+                    $"Pending migrations detected for {path}. Read-only app expects schema to be pre-applied.");
+            }
 
-            var relational = context.Database.GetDbConnection() as SqliteConnection;
-            var dbPath = relational?.DataSource ?? "(unknown)";
-            var folderName = new FileInfo(dbPath).Directory?.Name;
-            var dbName = new FileInfo(dbPath).Name;
-
-            Console.WriteLine($"[INFO] Migration complete for: {folderName}/{dbName}");
+            Console.WriteLine($"[INFO] Schema validated for: {path}");
         }
     }
 }
