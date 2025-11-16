@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -16,47 +17,39 @@ namespace ClubSiteGenerator.Tests
         public void OrderedIneligibleRides_SortsMembersThenSecondClaimThenGuests()
         {
             // Arrange
-            var competitor = new Competitor
-            {
-                ClubNumber = 123,
-                ClaimStatus = ClaimStatus.FirstClaim, // whatever enum/value your domain expects
-                IsFemale = false,
-                AgeGroup = AgeGroup.Senior,           // again, pick a valid enum/value
-                Surname = "Smith",
-                GivenName = "Alice",
-                VetsBucket = null
-            };
+            var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
+1243,Smith,Alice,FirstClaim,true,Senior,
+1244,Smith,John,SecondClaim,false,Senior,";
 
-            var rides = new[]
-            {
-                new Ride
-                {
-                    Eligibility = RideEligibility.DNF,
-                    EventEligibleRidersRank = 1,
-                    Competitor = competitor
-                },
-                new Ride
-                {
-                    Eligibility = RideEligibility.DNF,
-                    ClubNumber = 123,
-                    Name = "Bob SecondClaim"
-                },
-                new Ride
-                {
-                    Eligibility = RideEligibility.DNF,
-                    ClubNumber = null,
-                    Name = "Charlie Guest"
-                }
-            };
+            var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
+
+            // Assemble: rides CSV with competitor + guest
+            var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
+1,1243,DNF,,,0,Alice Smith
+1,1244,DNF,,,0,John Smith
+1,,DNF,,,0,Guest Rider";
+
+            var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
+
+            var calendarEvent = new CalendarEvent { EventNumber = 1, EventName = "Test TT", EventDate = DateTime.Today, Miles = 10 };
+
+            var eventResults = new EventResultsSet(1, new[] { calendarEvent }, rides);
 
             // Act
             //var ordered = ResultsSet.OrderedIneligibleRides(rides, RideEligibility.DNF).ToList();
-            var ordered = new List<Ride> { };
+            var table = eventResults.CreateTable();
 
             // Assert
-            ordered[0].Competitor?.Surname.Should().Be("Smith");   // member first
-            ordered[1].Name.Should().Contain("SecondClaim");      // then 2nd claim
-            ordered[2].Name.Should().Contain("Guest");            // then guest
+            table.Headers.Should().ContainInOrder("Name", "Position", "Road Bike", "Actual Time", "Avg. mph");
+
+            table.Rows[0].Ride.Name.Should().Be("Alice Smith"); // FirstClaim member first
+            table.Rows[1].Ride.Name.Should().Be("John Smith");  // then SecondClaim
+            table.Rows[2].Ride.Name.Should().Be("Guest Rider"); // then guest
+
+            table.Rows[0].Cells[3].Should().Be("DNF"); // Alice Smith
+            table.Rows[1].Cells[3].Should().Be("DNF"); // John Smith
+            table.Rows[2].Cells[3].Should().Be("DNF"); // Guest Rider
+
         }
     }
 }
