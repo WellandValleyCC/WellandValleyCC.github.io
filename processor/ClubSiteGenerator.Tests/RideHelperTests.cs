@@ -19,8 +19,8 @@ namespace ClubSiteGenerator.Tests
             // Assemble: rides CSV with competitor + guest
             var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
 1,2001,Valid,1,1,1520,Elijah Thorne
-1,2002,DNF,,,0,Lila Marwick
-1,,DNS,,,0,Guest Rider";
+1,2002,DNF,,,,Lila Marwick
+1,,DNS,,,,Guest Rider";
 
             // Act
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);

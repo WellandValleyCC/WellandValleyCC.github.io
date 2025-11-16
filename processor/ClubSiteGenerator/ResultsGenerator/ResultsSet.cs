@@ -28,20 +28,20 @@ namespace ClubSiteGenerator.ResultsGenerator
         protected static IEnumerable<Ride> OrderedIneligibleRides(
             IEnumerable<Ride> rides, RideEligibility eligibility)
         {
-            var competitionEligible = rides
-                .Where(r => r.Eligibility == eligibility && r.EventEligibleRidersRank != null)
+            var firstClaimDxxRides = rides
+                .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.FirstClaim)
                 .OrderBy(r => r.Competitor!.Surname)
                 .ThenBy(r => r.Competitor!.GivenName);
 
-            var secondClaim = rides
-                .Where(r => r.Eligibility == eligibility && r.EventEligibleRidersRank == null && r.ClubNumber != null)
+            var secondClaimDxxRides = rides
+                .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
                 .OrderBy(r => r.Name);
 
-            var guest = rides
-                .Where(r => r.Eligibility == eligibility && r.EventEligibleRidersRank == null && r.ClubNumber == null)
+            var guestDxxRides = rides
+                .Where(r => r.Eligibility == eligibility && r.ClubNumber == null)
                 .OrderBy(r => r.Name);
 
-            return competitionEligible.Concat(secondClaim).Concat(guest);
+            return firstClaimDxxRides.Concat(secondClaimDxxRides).Concat(guestDxxRides);
         }
     }
 }
