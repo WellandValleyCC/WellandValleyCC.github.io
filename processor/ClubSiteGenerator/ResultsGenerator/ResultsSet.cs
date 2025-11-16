@@ -4,11 +4,11 @@ using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    public abstract class BaseResults
+    public abstract class ResultsSet
     {
         protected readonly IEnumerable<Ride> AllRides;
 
-        protected BaseResults(IEnumerable<Ride> allRides)
+        protected ResultsSet(IEnumerable<Ride> allRides)
         {
             AllRides = allRides;
         }

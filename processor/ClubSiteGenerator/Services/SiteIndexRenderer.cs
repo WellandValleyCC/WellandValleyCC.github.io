@@ -5,10 +5,10 @@ namespace ClubSiteGenerator.Services
 {
     public class SiteIndexRenderer
     {
-        private readonly IEnumerable<EventResults> events;
+        private readonly IEnumerable<EventResultsSet> events;
         private readonly string outputDir;
 
-        public SiteIndexRenderer(IEnumerable<EventResults> events, string outputDir)
+        public SiteIndexRenderer(IEnumerable<EventResultsSet> events, string outputDir)
         {
             this.events = events;
             this.outputDir = outputDir;

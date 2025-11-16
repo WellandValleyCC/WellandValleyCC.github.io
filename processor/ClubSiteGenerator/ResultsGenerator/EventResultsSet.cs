@@ -2,11 +2,11 @@
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    public class EventResults : BaseResults
+    public class EventResultsSet : ResultsSet
     {
         public readonly CalendarEvent CalendarEvent;
 
-        public EventResults(int eventNumber, IEnumerable<CalendarEvent> eventsCalendar, IEnumerable<Ride> rides)
+        public EventResultsSet(int eventNumber, IEnumerable<CalendarEvent> eventsCalendar, IEnumerable<Ride> rides)
             : base(rides)
         {
             CalendarEvent = eventsCalendar.Single(e => e.EventNumber == eventNumber);
