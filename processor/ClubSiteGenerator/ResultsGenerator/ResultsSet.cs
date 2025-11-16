@@ -23,25 +23,5 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         // Each subclass defines how to shape its table
         public abstract HtmlTable CreateTable();
-
-        // Shared helper for ordering ineligible rides
-        protected static IEnumerable<Ride> OrderedIneligibleRides(
-            IEnumerable<Ride> rides, RideEligibility eligibility)
-        {
-            var firstClaimDxxRides = rides
-                .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.FirstClaim)
-                .OrderBy(r => r.Competitor!.Surname)
-                .ThenBy(r => r.Competitor!.GivenName);
-
-            var secondClaimDxxRides = rides
-                .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
-                .OrderBy(r => r.Name);
-
-            var guestDxxRides = rides
-                .Where(r => r.Eligibility == eligibility && r.ClubNumber == null)
-                .OrderBy(r => r.Name);
-
-            return firstClaimDxxRides.Concat(secondClaimDxxRides).Concat(guestDxxRides);
-        }
     }
 }
