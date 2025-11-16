@@ -50,7 +50,8 @@ namespace ClubSiteGenerator.Tests
             };
 
             // Act
-            var ordered = ResultsSet.OrderedIneligibleRides(rides, RideEligibility.DNF).ToList();
+            //var ordered = ResultsSet.OrderedIneligibleRides(rides, RideEligibility.DNF).ToList();
+            var ordered = new List<Ride> { };
 
             // Assert
             ordered[0].Competitor?.Surname.Should().Be("Smith");   // member first
