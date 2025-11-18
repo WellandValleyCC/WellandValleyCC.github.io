@@ -7,7 +7,7 @@ namespace ClubSiteGenerator.Services
 {
     public class ResultsOrchestrator
     {
-        private readonly List<BaseResults> resultsGenerators = new();
+        private readonly List<ResultsSet> resultsGenerators = new();
 
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<CalendarEvent> eventsCalendar;
@@ -28,7 +28,7 @@ namespace ClubSiteGenerator.Services
             var eventNumbers = eventsCalendar.Select(e => e.EventNumber); 
             
             foreach (var e in eventNumbers) 
-                resultsGenerators.Add(new EventResults(e, eventsCalendar, rides));
+                resultsGenerators.Add(new EventResultsSet(e, eventsCalendar, rides));
             
             // Later: competitions auto‑discovered via reflection
         }
@@ -37,9 +37,9 @@ namespace ClubSiteGenerator.Services
         {
             StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
 
-            var totalEvents = resultsGenerators.OfType<EventResults>().Count();
+            var totalEvents = resultsGenerators.OfType<EventResultsSet>().Count();
 
-            foreach (var generator in resultsGenerators.OfType<EventResults>())
+            foreach (var generator in resultsGenerators.OfType<EventResultsSet>())
             {
                 var table = generator.CreateTable();
                 var renderer = new EventRenderer(
@@ -60,7 +60,7 @@ namespace ClubSiteGenerator.Services
         public void GenerateIndex()
         {
             var eventResults = resultsGenerators
-                .OfType<EventResults>()   // filters only EventResults
+                .OfType<EventResultsSet>()   // filters only EventResults
                 .OrderBy(ev => ev.EventDate) // optional: sort by date
                 .ToList();
 
