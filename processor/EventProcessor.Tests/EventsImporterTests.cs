@@ -53,7 +53,7 @@ namespace EventProcessor.Tests
             ride!.ClubNumber.Should().Be(101);
             ride.TotalSeconds.Should().Be(1458.0);
             ride.IsRoadBike.Should().BeTrue();
-            ride.Eligibility.Should().Be(RideEligibility.DNF);
+            ride.Status.Should().Be(RideStatus.DNF);
         }
 
         private string CreateTestFolderWithCsvs()

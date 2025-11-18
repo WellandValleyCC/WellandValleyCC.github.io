@@ -30,16 +30,16 @@ namespace ClubSiteGenerator.Tests
 
             var elijahRide = rides.Single(r => r.ClubNumber == 2001);
             elijahRide.Competitor.Should().NotBeNull();
-            elijahRide.Eligibility.Should().Be(RideEligibility.Valid);
+            elijahRide.Status.Should().Be(RideStatus.Valid);
             elijahRide.EventRank.Should().Be(1);
 
             var lilaRide = rides.Single(r => r.ClubNumber == 2002);
             lilaRide.Competitor.Should().NotBeNull();
-            lilaRide.Eligibility.Should().Be(RideEligibility.DNF);
+            lilaRide.Status.Should().Be(RideStatus.DNF);
 
             var guestRide = rides.Single(r => r.ClubNumber == null);
             guestRide.Competitor.Should().BeNull();
-            guestRide.Eligibility.Should().Be(RideEligibility.DNS);
+            guestRide.Status.Should().Be(RideStatus.DNS);
         }
 
         [Fact]

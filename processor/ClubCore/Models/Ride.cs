@@ -83,7 +83,7 @@ namespace ClubCore.Models
 
         public bool IsGuest => ClubNumber == null && !string.IsNullOrWhiteSpace(Name);
 
-        public RideEligibility Eligibility { get; set; } = RideEligibility.Undefined;
+        public RideStatus Status { get; set; } = RideStatus.Undefined;
         public string? Notes { get; set; }
 
         [NotMapped]

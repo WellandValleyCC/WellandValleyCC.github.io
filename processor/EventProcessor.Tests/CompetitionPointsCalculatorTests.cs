@@ -101,7 +101,7 @@ namespace EventProcessor.Tests
             var competitorsByClubNumber = competitors.ToDictionary(c => c.ClubNumber);
 
             var allEventRides = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.Status == RideStatus.Valid)
                 .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
@@ -206,7 +206,7 @@ namespace EventProcessor.Tests
 
             // Select event rides where the rider exists in our snapshots
             var allEventRides = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.Status == RideStatus.Valid)
                 .Where(r => r.ClubNumber.HasValue && competitorsByClubNumber.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
@@ -315,7 +315,7 @@ namespace EventProcessor.Tests
 
             // Filter rides for Event 2
             var eventRides = rides
-                .Where(r => r.EventNumber == eventNumber && r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.EventNumber == eventNumber && r.Status == RideStatus.Valid)
                 .Where(r => r.ClubNumber.HasValue)
                 .ToList();
 
@@ -566,7 +566,7 @@ namespace EventProcessor.Tests
 
             // Include all eligible rides (club members and guests)
             var validRides = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
             // Act
@@ -621,7 +621,7 @@ namespace EventProcessor.Tests
             // Include all eligible rides (club members only)
             var validRides = allRides
                 .Where(r => r.Competitor?.IsEligible() == true &&
-                            r.Eligibility == RideEligibility.Valid)
+                            r.Status == RideStatus.Valid)
                 .ToList();
 
             // Act
@@ -675,7 +675,7 @@ namespace EventProcessor.Tests
 
             // Include all eligible rides - i.e. not DNS, DNF, DQ
             var validRides = allRides
-                .Where(r => r.Eligibility == RideEligibility.Valid)
+                .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
             // Act
@@ -743,7 +743,7 @@ namespace EventProcessor.Tests
             // Include all eligible rides (club members only)
             var validRides = allRides
                 .Where(r => r.Competitor?.IsEligible() == true &&
-                            r.Eligibility == RideEligibility.Valid)
+                            r.Status == RideStatus.Valid)
                 .ToList();
 
             // Act
@@ -811,7 +811,7 @@ namespace EventProcessor.Tests
             var validRides = allRides
                 .Where(r =>
                     r.Competitor?.IsEligible() == true &&
-                    r.Eligibility == RideEligibility.Valid)
+                    r.Status == RideStatus.Valid)
                 .ToList();
 
             // Act

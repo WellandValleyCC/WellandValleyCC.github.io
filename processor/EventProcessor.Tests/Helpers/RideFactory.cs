@@ -16,7 +16,7 @@ namespace EventProcessor.Tests.Helpers
             string? name,
             double totalSeconds,
             bool isRoadBike = false,
-            RideEligibility eligibility = RideEligibility.Valid,
+            RideStatus eligibility = RideStatus.Valid,
             string? actualTime = null,
             double? avgSpeed = null,
             int? eventRank = null)
@@ -30,7 +30,7 @@ namespace EventProcessor.Tests.Helpers
                 ClubNumber = isClubMember ? clubNumber : null,
                 TotalSeconds = totalSeconds,
                 IsRoadBike = isRoadBike,
-                Eligibility = eligibility,
+                Status = eligibility,
                 AvgSpeed = avgSpeed,
                 EventRank = eventRank
             };
@@ -45,7 +45,7 @@ namespace EventProcessor.Tests.Helpers
             string? name,
             double totalSeconds,
             bool isRoadBike = false,
-            RideEligibility eligibility = RideEligibility.Valid,
+            RideStatus eligibility = RideStatus.Valid,
             string? actualTime = null,
             double? avgSpeed = null,
             int? eventRank = null)
@@ -70,7 +70,7 @@ namespace EventProcessor.Tests.Helpers
             string guestName,
             double totalSeconds,
             bool isRoadBike = false,
-            RideEligibility eligibility = RideEligibility.Valid,
+            RideStatus eligibility = RideStatus.Valid,
             string? actualTime = null,
             double? avgSpeed = null,
             int? eventRank = null)

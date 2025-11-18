@@ -67,7 +67,7 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMemberRide(2, 1061, "Helen Turner", totalSeconds: 980, isRoadBike: true)); // Vet F
             rides.Add(RideFactory.CreateClubMemberRide(2, 1062, "Alison Underwood", totalSeconds: 995, isRoadBike: false)); // Vet F
             rides.Add(RideFactory.CreateClubMemberRide(2, 1072, "Martin Xavier", totalSeconds: 965, isRoadBike: true)); // Vet M RB
-            rides.Add(RideFactory.CreateClubMemberRide(2, 1051, "James Quinn", totalSeconds: 0, isRoadBike: false, eligibility: RideEligibility.DNS)); // Sen M DNS
+            rides.Add(RideFactory.CreateClubMemberRide(2, 1051, "James Quinn", totalSeconds: 0, isRoadBike: false, eligibility: RideStatus.DNS)); // Sen M DNS
 
             // SecondClaim additions
             rides.Add(RideFactory.CreateClubMemberRide(2, 2002, "Ella Barker", totalSeconds: 925, isRoadBike: true)); // Juv F
@@ -99,7 +99,7 @@ namespace EventProcessor.Tests.Helpers
             rides.Add(RideFactory.CreateClubMemberRide(3, 1063, "Janet Vaughn", totalSeconds: 1020, isRoadBike: false)); // Vet F
             rides.Add(RideFactory.CreateClubMemberRide(3, 1071, "Peter Walker", totalSeconds: 990, isRoadBike: true)); // Vet M
             rides.Add(RideFactory.CreateClubMemberRide(3, 1073, "Colin Young", totalSeconds: 1005, isRoadBike: false)); // Vet M
-            rides.Add(RideFactory.CreateClubMemberRide(3, 1052, "Thomas Reid", totalSeconds: 0, isRoadBike: false, eligibility: RideEligibility.DNF)); // Sen M DNF
+            rides.Add(RideFactory.CreateClubMemberRide(3, 1052, "Thomas Reid", totalSeconds: 0, isRoadBike: false, eligibility: RideStatus.DNF)); // Sen M DNF
 
             // SecondClaim additions
             rides.Add(RideFactory.CreateClubMemberRide(3, 2003, "Ruby Carter", totalSeconds: 935, isRoadBike: true)); // Juv F
@@ -291,7 +291,7 @@ namespace EventProcessor.Tests.Helpers
                     guestName: guestName,
                     totalSeconds: totalSeconds,
                     isRoadBike: isRoadBike,
-                    eligibility: RideEligibility.Valid,
+                    eligibility: RideStatus.Valid,
                     actualTime: TimeSpan.FromSeconds(totalSeconds).ToString(@"hh\:mm\:ss")));
             }
         }

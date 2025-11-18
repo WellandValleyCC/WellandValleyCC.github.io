@@ -49,14 +49,14 @@ namespace ClubSiteGenerator.Tests
         }
 
         [Theory]
-        [InlineData(null, null, ClaimStatus.Unknown,     RideEligibility.Valid, "guest-non-club-member")]
-        [InlineData(null, 124,  ClaimStatus.SecondClaim, RideEligibility.Valid, "guest-second-claim")]
-        [InlineData(1, 123,     ClaimStatus.FirstClaim,  RideEligibility.Valid, "competition-eligible")]
+        [InlineData(null, null, ClaimStatus.Unknown,     RideStatus.Valid, "guest-non-club-member")]
+        [InlineData(null, 124,  ClaimStatus.SecondClaim, RideStatus.Valid, "guest-second-claim")]
+        [InlineData(1, 123,     ClaimStatus.FirstClaim,  RideStatus.Valid, "competition-eligible")]
 
-        [InlineData(null, null, ClaimStatus.Unknown,     RideEligibility.DNF, "guest-non-club-member")]
-        [InlineData(null, 123,  ClaimStatus.SecondClaim, RideEligibility.DNF, "guest-second-claim")]
-        [InlineData(null, 123,  ClaimStatus.FirstClaim,  RideEligibility.DNF, "competition-eligible")]
-        public void GetRowClass_ReturnsExpectedCss(int? eligibleRank, int? clubNumber, ClaimStatus claimStatus, RideEligibility rideEligibility, string expectedCss)
+        [InlineData(null, null, ClaimStatus.Unknown,     RideStatus.DNF, "guest-non-club-member")]
+        [InlineData(null, 123,  ClaimStatus.SecondClaim, RideStatus.DNF, "guest-second-claim")]
+        [InlineData(null, 123,  ClaimStatus.FirstClaim,  RideStatus.DNF, "competition-eligible")]
+        public void GetRowClass_ReturnsExpectedCss(int? eligibleRank, int? clubNumber, ClaimStatus claimStatus, RideStatus rideEligibility, string expectedCss)
         {
             // Arrange
             Competitor? competitor = null;
@@ -80,7 +80,7 @@ namespace ClubSiteGenerator.Tests
                 EventEligibleRidersRank = eligibleRank,
                 Competitor = competitor,
                 ClubNumber = clubNumber,
-                Eligibility = rideEligibility
+                Status = rideEligibility
             };
 
             // Act

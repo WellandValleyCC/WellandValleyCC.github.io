@@ -127,7 +127,7 @@ namespace ClubProcessor.Services
                 ClubNumber = isClubMember ? clubNumber : null,
                 TotalSeconds = row.TotalSeconds,
                 IsRoadBike = row.IsRoadBike,
-                Eligibility = row.Eligibility,
+                Status = row.Eligibility,
             };
         }
     }

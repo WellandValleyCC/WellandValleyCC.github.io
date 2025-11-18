@@ -53,7 +53,7 @@ namespace ClubSiteGenerator.Tests.Helpers
                 }
 
                 // Eligibility
-                var eligibility = Enum.Parse<RideEligibility>(parts[2], ignoreCase: true);
+                var eligibility = Enum.Parse<RideStatus>(parts[2], ignoreCase: true);
 
                 // Optional numeric fields
                 int? eventRank = string.IsNullOrWhiteSpace(parts[3]) ? null : int.Parse(parts[3]);
@@ -81,7 +81,7 @@ namespace ClubSiteGenerator.Tests.Helpers
                     EventNumber = int.Parse(parts[0]),
                     ClubNumber = clubNumber,
                     Competitor = competitor,
-                    Eligibility = eligibility,
+                    Status = eligibility,
                     EventRank = eventRank,
                     EventRoadBikeRank = eventRoadBikeRank,
                     TotalSeconds = totalSeconds,

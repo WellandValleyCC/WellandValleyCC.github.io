@@ -38,7 +38,7 @@ namespace EventProcessor.Tests.Helpers
                 Name = r.Name,
                 TotalSeconds = r.TotalSeconds,
                 IsRoadBike = r.IsRoadBike,
-                Eligibility = r.Eligibility,
+                Status = r.Status,
                 AvgSpeed = r.AvgSpeed,
                 EventRank = r.EventRank
             }).ToList();
@@ -109,7 +109,7 @@ namespace EventProcessor.Tests.Helpers
             });
 
             // Register RideFactory helper so AutoFixture can create Ride if requested
-            fixture.Register<Func<int, string?, string?, double, bool, RideEligibility, string?, Ride>>(
+            fixture.Register<Func<int, string?, string?, double, bool, RideStatus, string?, Ride>>(
                 () => (eventNumber, numberOrName, name, totalSeconds, isRoadBike, eligibility, actualTime) =>
                     RideFactory.Create(eventNumber, numberOrName, name, totalSeconds, isRoadBike, eligibility, actualTime)
             );

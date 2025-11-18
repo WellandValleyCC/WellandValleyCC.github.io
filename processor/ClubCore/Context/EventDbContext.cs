@@ -36,7 +36,7 @@ namespace ClubCore.Context
                 .HasKey(r => r.Id);
 
             modelBuilder.Entity<Ride>()
-                .Property(r => r.Eligibility)
+                .Property(r => r.Status)
                 .HasConversion<string>();
 
             // CalendarEvent configuration

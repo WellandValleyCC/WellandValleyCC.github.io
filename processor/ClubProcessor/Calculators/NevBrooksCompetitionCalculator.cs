@@ -18,7 +18,7 @@ namespace ClubProcessor.Calculators
 
         protected override bool IsEligible(Ride r) =>
             r.Competitor?.IsEligible() == true &&
-            r.Eligibility == RideEligibility.Valid &&
+            r.Status == RideStatus.Valid &&
             r.CalendarEvent?.IsEvening10 == true;
 
         protected override void AssignPoints(Ride r, int position, double points)
