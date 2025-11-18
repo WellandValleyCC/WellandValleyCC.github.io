@@ -38,7 +38,7 @@ namespace EventProcessor.Tests.Helpers
             var q = rides ?? Enumerable.Empty<Ride>();
             if (onlyValidWithClubNumber)
             {
-                q = q.Where(r => r.Eligibility == RideEligibility.Valid && r.ClubNumber.HasValue);
+                q = q.Where(r => r.Status == RideStatus.Valid && r.ClubNumber.HasValue);
             }
 
             return q.GroupBy(r => r.EventNumber)

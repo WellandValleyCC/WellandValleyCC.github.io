@@ -89,7 +89,7 @@ namespace EventProcessor.Tests
                 TotalSeconds = totalSeconds,
                 Competitor = competitor,
                 CalendarEvent = calendarEvent,
-                Eligibility = RideEligibility.Valid
+                Status = RideStatus.Valid
             };
 
             var rides = new List<Ride> { ride };

@@ -33,27 +33,27 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             var rides = FilteredRides().ToList();
 
-            var ranked = rides.Where(r => r.Eligibility == RideEligibility.Valid)
+            var ranked = rides.Where(r => r.Status == RideStatus.Valid)
                               .OrderBy(r => r.EventRank);
 
-            var dnfs = OrderedIneligibleRides(rides, RideEligibility.DNF);
-            var dnss = OrderedIneligibleRides(rides, RideEligibility.DNS);
-            var dqs = OrderedIneligibleRides(rides, RideEligibility.DQ);
+            var dnfs = OrderedIneligibleRides(rides, RideStatus.DNF);
+            var dnss = OrderedIneligibleRides(rides, RideStatus.DNS);
+            var dqs = OrderedIneligibleRides(rides, RideStatus.DQ);
 
             var ordered = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
 
             var rows = ordered.Select(r =>
             {
                 var miles = r.CalendarEvent?.Miles ?? 0;
-                var avgMph = (r.Eligibility == RideEligibility.Valid && r.TotalSeconds > 0 && miles > 0)
+                var avgMph = (r.Status == RideStatus.Valid && r.TotalSeconds > 0 && miles > 0)
                     ? (miles / (r.TotalSeconds / 3600)).ToString("0.00")
                     : string.Empty;
 
-                var timeCell = r.Eligibility switch
+                var timeCell = r.Status switch
                 {
-                    RideEligibility.DNF => "DNF",
-                    RideEligibility.DNS => "DNS",
-                    RideEligibility.DQ => "DQ",
+                    RideStatus.DNF => "DNF",
+                    RideStatus.DNS => "DNS",
+                    RideStatus.DQ => "DQ",
                     _ => TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"hh\:mm\:ss")
                 };
 
@@ -73,20 +73,20 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         protected static IEnumerable<Ride> OrderedIneligibleRides(
-            IEnumerable<Ride> rides, RideEligibility eligibility)
+            IEnumerable<Ride> rides, RideStatus eligibility)
         {
             var firstClaimDxxRides = rides
-                .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.FirstClaim)
+                .Where(r => r.Status == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.FirstClaim)
                 .OrderBy(r => r.Competitor!.Surname)
                 .ThenBy(r => r.Competitor!.GivenName);
 
             var secondClaimDxxRides = rides
-                .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
+                .Where(r => r.Status == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
                 .OrderBy(r => r.Competitor!.Surname)
                 .ThenBy(r => r.Competitor!.GivenName);
 
             var guestDxxRides = rides
-                .Where(r => r.Eligibility == eligibility && r.ClubNumber == null)
+                .Where(r => r.Status == eligibility && r.ClubNumber == null)
                 .OrderBy(r =>
                 {
                     var parts = (r.Name ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);

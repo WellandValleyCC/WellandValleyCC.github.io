@@ -9,7 +9,7 @@ namespace ClubProcessor.Calculators
         protected override bool IsEligible(Ride r) =>
             r.IsRoadBike &&
             r.Competitor?.IsEligible() == true &&
-            r.Eligibility == RideEligibility.Valid;
+            r.Status == RideStatus.Valid;
 
         protected override void AssignRank(Ride ride, int rank) => ride.EventEligibleRoadBikeRidersRank = rank;
     }

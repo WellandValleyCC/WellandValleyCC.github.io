@@ -2,7 +2,7 @@
 
 namespace ClubCore.Models.Enums
 {
-    public enum RideEligibility
+    public enum RideStatus
     {
         [Display(Name = "Undefined")]
         Undefined = 0,

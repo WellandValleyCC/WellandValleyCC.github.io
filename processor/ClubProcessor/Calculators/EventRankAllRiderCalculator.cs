@@ -5,7 +5,7 @@ namespace ClubProcessor.Calculators
 {
     public class EventRankAllRidersCalculator : BaseEventRankCalculator
     {
-        protected override bool IsEligible(Ride ride) => ride.Eligibility == RideEligibility.Valid;
+        protected override bool IsEligible(Ride ride) => ride.Status == RideStatus.Valid;
         protected override void AssignRank(Ride ride, int rank) => ride.EventRank = rank;
     }
 }

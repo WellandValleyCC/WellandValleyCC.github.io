@@ -30,7 +30,7 @@ namespace ClubProcessor.Calculators
         protected override bool IsEligible(Ride r) =>
             r.Competitor is { IsVeteran : true } c &&
             c.IsEligible() &&
-            r.Eligibility == RideEligibility.Valid;
+            r.Status == RideStatus.Valid;
 
         protected override void AssignPoints(Ride r, int position, double points)
         {

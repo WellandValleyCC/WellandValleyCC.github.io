@@ -63,7 +63,7 @@ namespace ClubCore.Models.Csv
         public bool IsRoadBike => string.Equals(RoadBike?.Trim(), "r", StringComparison.OrdinalIgnoreCase);
 
         [Ignore]
-        public RideEligibility Eligibility
+        public RideStatus Eligibility
         {
             get
             {
@@ -71,12 +71,12 @@ namespace ClubCore.Models.Csv
 
                 return raw switch
                 {
-                    "DNS" => RideEligibility.DNS,
-                    "DNF" => RideEligibility.DNF,
-                    "DQ" => RideEligibility.DQ,
-                    "" => RideEligibility.Valid,
-                    null => RideEligibility.Valid,
-                    _ => RideEligibility.Undefined
+                    "DNS" => RideStatus.DNS,
+                    "DNF" => RideStatus.DNF,
+                    "DQ" => RideStatus.DQ,
+                    "" => RideStatus.Valid,
+                    null => RideStatus.Valid,
+                    _ => RideStatus.Undefined
                 };
             }
         }
