@@ -82,11 +82,18 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             var secondClaimDxxRides = rides
                 .Where(r => r.Eligibility == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
-                .OrderBy(r => r.Name);
+                .OrderBy(r => r.Competitor!.Surname)
+                .ThenBy(r => r.Competitor!.GivenName);
 
             var guestDxxRides = rides
                 .Where(r => r.Eligibility == eligibility && r.ClubNumber == null)
-                .OrderBy(r => r.Name);
+                .OrderBy(r =>
+                {
+                    var parts = (r.Name ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    return parts.Length == 2
+                        ? $"{parts[1]} {parts[0]}"   // "Smith Alice"
+                        : r.Name ?? "";              // fallback if not exactly two parts
+                });
 
             return firstClaimDxxRides.Concat(secondClaimDxxRides).Concat(guestDxxRides);
         }

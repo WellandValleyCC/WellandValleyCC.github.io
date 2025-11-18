@@ -38,12 +38,15 @@ namespace ClubSiteGenerator.Tests
             // Assemble: rides CSV with competitor + guest
             var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
 1,,DQ,,,,Guest RiderDq
+1,,DQ,,,,zGuest AnotherRiderDq
 1,5002,DQ,,,,Lucas Turner
 1,5006,DQ,,,,Henry Carter
 1,,DNS,,,,Guest RiderDns
+1,,DNS,,,,zGuest AnotherRiderDns
 1,5001,DNS,,,,Grace Mitchell
 1,5004,DNS,,,,Oliver Bennett
 1,,DNF,,,,Guest Rider
+1,,DNF,,,,zGuest AnotherRiderDnf
 1,1244,DNF,,,,John Smith
 1,1243,DNF,,,,Alice Smith
 1,4004,Valid,12,8,995,Sophia Young
@@ -91,19 +94,25 @@ namespace ClubSiteGenerator.Tests
             table.Rows[i].Cells[3].Should().Be("DNF");
             table.Rows[i++].Ride.Name.Should().Be("John Smith");  // DNF then SecondClaim
             table.Rows[i].Cells[3].Should().Be("DNF");
-            table.Rows[i++].Ride.Name.Should().Be("Guest Rider"); // DNF then guest
+            table.Rows[i++].Ride.Name.Should().Be("zGuest AnotherRiderDnf"); // DNF then guest - sorted alphabetically surname firstname
+            table.Rows[i].Cells[3].Should().Be("DNF");
+            table.Rows[i++].Ride.Name.Should().Be("Guest Rider");
 
             table.Rows[i].Cells[3].Should().Be("DNS");
             table.Rows[i++].Ride.Name.Should().Be("Grace Mitchell"); // DNS FirstClaim member first
             table.Rows[i].Cells[3].Should().Be("DNS");
             table.Rows[i++].Ride.Name.Should().Be("Oliver Bennett");  // DNS then SecondClaim
             table.Rows[i].Cells[3].Should().Be("DNS");
-            table.Rows[i++].Ride.Name.Should().Be("Guest RiderDns"); // DNS then guest
+            table.Rows[i++].Ride.Name.Should().Be("zGuest AnotherRiderDns"); // DNS then guest - sorted alphabetically surname firstname
+            table.Rows[i].Cells[3].Should().Be("DNS");
+            table.Rows[i++].Ride.Name.Should().Be("Guest RiderDns");
 
             table.Rows[i].Cells[3].Should().Be("DQ");
             table.Rows[i++].Ride.Name.Should().Be("Lucas Turner"); // DQ FirstClaim member first
             table.Rows[i].Cells[3].Should().Be("DQ");
             table.Rows[i++].Ride.Name.Should().Be("Henry Carter");  // DQ then SecondClaim
+            table.Rows[i].Cells[3].Should().Be("DQ");
+            table.Rows[i++].Ride.Name.Should().Be("zGuest AnotherRiderDq"); // DNS then guest - sorted alphabetically surname firstname
             table.Rows[i].Cells[3].Should().Be("DQ");
             table.Rows[i++].Ride.Name.Should().Be("Guest RiderDq"); // DQ then guest
         }
