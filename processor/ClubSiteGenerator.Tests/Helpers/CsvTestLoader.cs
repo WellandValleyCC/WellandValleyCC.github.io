@@ -31,6 +31,14 @@ namespace ClubSiteGenerator.Tests.Helpers
 
         public static List<Ride> LoadRidesFromCsv(string csv, List<Competitor> competitors)
         {
+            // Points table (index = position-1)
+            int[] pointsTable = new[]
+            {
+        60,55,51,48,46,44,42,40,39,38,37,36,35,34,33,32,31,30,29,28,
+        27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,
+        7,6,5,4,3,2,1
+    };
+
             var lines = csv.Split(Environment.NewLine)
                            .Skip(1) // skip header
                            .Where(l => !string.IsNullOrWhiteSpace(l));
@@ -52,8 +60,8 @@ namespace ClubSiteGenerator.Tests.Helpers
                         ?? throw new InvalidOperationException($"No competitor found with ClubNumber {cn}");
                 }
 
-                // Eligibility
-                var eligibility = Enum.Parse<RideStatus>(parts[2], ignoreCase: true);
+                // Status
+                var status = Enum.Parse<RideStatus>(parts[2], ignoreCase: true);
 
                 // Optional numeric fields
                 int? eventRank = string.IsNullOrWhiteSpace(parts[3]) ? null : int.Parse(parts[3]);
@@ -76,17 +84,55 @@ namespace ClubSiteGenerator.Tests.Helpers
                     }
                 }
 
-                return new Ride
+                var ride = new Ride
                 {
                     EventNumber = int.Parse(parts[0]),
                     ClubNumber = clubNumber,
                     Competitor = competitor,
-                    Status = eligibility,
+                    Status = status,
                     EventRank = eventRank,
                     EventRoadBikeRank = eventRoadBikeRank,
                     TotalSeconds = totalSeconds,
                     Name = name
                 };
+
+                // 🏆 Assign positions & points based on AgeGroup
+                if (competitor != null && eventRank.HasValue)
+                {
+                    int pos = eventRank.Value;
+                    int pts = pos <= pointsTable.Length ? pointsTable[pos - 1] : 0;
+
+                    switch (competitor.AgeGroup)
+                    {
+                        case AgeGroup.Juvenile:
+                            ride.JuvenilesPosition = pos;
+                            ride.JuvenilesPoints = pts;
+                            ride.SeniorsPosition = pos;
+                            ride.SeniorsPoints = pts;
+                            break;
+
+                        case AgeGroup.Junior:
+                            ride.JuniorsPosition = pos;
+                            ride.JuniorsPoints = pts;
+                            ride.SeniorsPosition = pos;
+                            ride.SeniorsPoints = pts;
+                            break;
+
+                        case AgeGroup.Senior:
+                            ride.SeniorsPosition = pos;
+                            ride.SeniorsPoints = pts;
+                            break;
+
+                        case AgeGroup.Veteran:
+                            ride.VeteransPosition = pos;
+                            ride.VeteransPoints = pts;
+                            ride.SeniorsPosition = pos;
+                            ride.SeniorsPoints = pts;
+                            break;
+                    }
+                }
+
+                return ride;
             }).ToList();
         }
     }
