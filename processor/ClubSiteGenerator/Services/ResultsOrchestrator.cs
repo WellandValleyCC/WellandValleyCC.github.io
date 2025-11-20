@@ -24,12 +24,9 @@ namespace ClubSiteGenerator.Services
 
         private void InitializeGenerators()
         {
-            // Discover all event numbers dynamically
-            var eventNumbers = eventsCalendar.Select(e => e.EventNumber); 
-            
-            foreach (var e in eventNumbers) 
-                resultsGenerators.Add(new EventResultsSet(e, eventsCalendar, rides));
-            
+            foreach (var ev in eventsCalendar)
+                resultsGenerators.Add(EventResultsSet.CreateFrom(ev, rides));
+
             // Later: competitions auto‑discovered via reflection
         }
 
