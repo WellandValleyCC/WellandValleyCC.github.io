@@ -66,7 +66,7 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvent = new CalendarEvent { EventNumber = 1, EventName = "Test TT", EventDate = DateTime.Today, Miles = 10 };
 
-            var eventResults = new EventResultsSet(1, new[] { calendarEvent }, rides);
+            var eventResults = EventResultsSet.CreateFrom(calendarEvent, rides);
 
             // Act
             //var ordered = ResultsSet.OrderedIneligibleRides(rides, RideEligibility.DNF).ToList();
@@ -149,11 +149,10 @@ namespace ClubSiteGenerator.Tests
                 new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
             };
 
-            var juvenilesCompetition = new JuvenilesCompetitionResultsSet(rides, calendarEvents);
-
+            var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Act
-            var table = juvenilesCompetition.CreateTable();
+            var table = juvenilesCompetitionResults.CreateTable();
 
             // Assert: headers include event columns + totals
             table.Headers.Should().ContainInOrder("Name", "Event 1", "Event 2", "Event 3", "Total (Best 11)");
