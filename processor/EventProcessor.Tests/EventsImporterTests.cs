@@ -21,7 +21,17 @@ namespace EventProcessor.Tests
             // Arrange
             using var eventContext = DbContextFactory.CreateEventContext();
             using var competitorContext = DbContextFactory.CreateCompetitorContext();
-            var importer = new EventsImporter(eventContext, competitorContext);
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent
+                {
+                    EventNumber = 1,
+                    EventName   = "Test TT",
+                    EventDate   = new DateTime(2025, 5, 10, 19, 0, 0, DateTimeKind.Utc),
+                    Miles       = 10
+                }
+            };
+            var importer = new EventsImporter(eventContext, competitorContext, calendar);
             var folderPath = CreateTestFolderWithCsvs();
 
             Console.WriteLine($"[TEST] Using folder path: {folderPath}");
@@ -39,7 +49,19 @@ namespace EventProcessor.Tests
             // Arrange
             using var eventContext = DbContextFactory.CreateEventContext();
             using var competitorContext = DbContextFactory.CreateCompetitorContext();
-            var importer = new EventsImporter(eventContext, competitorContext);
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent
+                {
+                    EventNumber = 1,
+                    EventName   = "Test TT",
+                    EventDate   = new DateTime(2025, 5, 10, 19, 0, 0, DateTimeKind.Utc),
+                    Miles       = 10
+                }
+            };
+
+            var importer = new EventsImporter(eventContext, competitorContext, calendar);
             var folderPath = CreateTestFolderWithCsvs();
 
             Console.WriteLine($"[TEST] Using folder path: {folderPath}");

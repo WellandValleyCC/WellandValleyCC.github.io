@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.ResultsGenerator;
 
 namespace ClubSiteGenerator.Models
 {
@@ -17,12 +18,12 @@ namespace ClubSiteGenerator.Models
     public class HtmlRow
     {
         public List<string> Cells { get; }
-        public Ride Ride { get; }
+        public object Payload { get; }
 
-        public HtmlRow(IEnumerable<string> cells, Ride ride)
-        {
+        public HtmlRow(IEnumerable<string> cells, object payload)
+        { 
             Cells = cells.ToList();
-            Ride = ride;
+            Payload = payload;
         }
     }
 }

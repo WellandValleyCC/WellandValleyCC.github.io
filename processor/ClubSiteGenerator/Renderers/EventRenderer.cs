@@ -80,7 +80,8 @@ namespace ClubSiteGenerator.Renderers
 
             foreach (var row in table.Rows)
             {
-                string cssClass = GetRowClass(row.Ride);
+                var ride = EnsureRide(row);
+                var cssClass = GetRowClass(ride);
 
                 sb.AppendLine($"<tr class=\"{cssClass}\">");
 
@@ -90,10 +91,10 @@ namespace ClubSiteGenerator.Renderers
                     var tdClass = string.Empty;
 
                     if (i == 1)
-                        tdClass = GetPodiumClass(row.Ride.EventEligibleRidersRank, row.Ride);
+                        tdClass = GetPodiumClass(ride.EventEligibleRidersRank, ride);
 
                     if (i == 2)
-                        tdClass = GetPodiumClass(row.Ride.EventEligibleRoadBikeRidersRank, row.Ride);
+                        tdClass = GetPodiumClass(ride.EventEligibleRoadBikeRidersRank, ride);
 
                     sb.AppendLine(string.IsNullOrEmpty(tdClass)
                         ? $"<td>{cellValue}</td>"
@@ -105,6 +106,21 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("</tbody></table>");
 
             return sb.ToString();
+        }
+
+        private static Ride EnsureRide(HtmlRow row)
+        {
+            if (row.Payload is Ride ride)
+                return ride;
+
+            var rsType = row.Payload?.GetType().Name ?? "<null ResultsSet>";
+            var payloadType = row.Payload?.GetType().Name ?? "<null Payload>";
+            var preview = string.Join(" | ", row.Cells?.Take(5) ?? Enumerable.Empty<string>());
+
+            throw new InvalidOperationException(
+                $"Expected HtmlRow.Payload to be Ride for Event rendering, but got {payloadType}. " +
+                $"ResultsSet={rsType}. CellsPreview=[{preview}]. " +
+                $"Renderer expects event rows to carry Ride payloads; check CreateTable() for {rsType}.");
         }
 
         public static string GetPodiumClass(int? rank, Ride ride)

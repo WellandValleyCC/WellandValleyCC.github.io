@@ -36,15 +36,15 @@ namespace ClubSiteGenerator.ResultsGenerator
         public DateOnly EventDate => DateOnly.FromDateTime(calendarEvent.EventDate);
 
         public override string DisplayName => $"Results for {calendarEvent.EventName}";
-        public override string FileName => $"event-{calendarEvent.EventNumber}.html";
+        public override string FileName => $"event-{calendarEvent.EventNumber:D2}";
         public override string SubFolderName => "events";
 
         public override HtmlTable CreateTable()
         {
             var headers = new List<string>
-        {
-            "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
-        };
+            {
+                "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
+            };
 
             var rides = Rides.ToList();
 
@@ -71,13 +71,13 @@ namespace ClubSiteGenerator.ResultsGenerator
                 };
 
                 var cells = new List<string>
-            {
-                r.Name ?? "Unknown",
-                r.EventRank?.ToString() ?? "",
-                r.EventRoadBikeRank?.ToString() ?? "",
-                timeCell,
-                avgMph
-            };
+                {
+                    r.Name ?? "Unknown",
+                    r.EventRank?.ToString() ?? "",
+                    r.EventRoadBikeRank?.ToString() ?? "",
+                    timeCell,
+                    avgMph
+                };
 
                 return new HtmlRow(cells, r);
             });
@@ -141,7 +141,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             : base(rides, events) { }
 
         public override string DisplayName => "Juveniles Competition";
-        public override string FileName => "juveniles.html";
+        public override string FileName => "juveniles";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Juvenile;
         public override string CompetitionCode => "JUV";
@@ -163,7 +163,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             : base(rides, events) { }
 
         public override string DisplayName => "Juniors Competition";
-        public override string FileName => "juniors.html";
+        public override string FileName => "juniors";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Junior;
         public override string CompetitionCode => "JNR";

@@ -2,17 +2,13 @@
 using ClubCore.Context;
 using ClubCore.Models.Extensions;
 using ClubProcessor.Services;
-using Microsoft.EntityFrameworkCore;
 using ClubCore.Utilities;
+using ClubCore.Models;
 
 namespace ClubProcessor.Orchestration
 {
     public class EventImportCoordinator
     {
-        public EventImportCoordinator()
-        {
-        }
-
         public void Run(string inputPath, string year)
         {
             Console.WriteLine($"[INFO] Starting events ingestion for: {inputPath}");
@@ -20,14 +16,15 @@ namespace ClubProcessor.Orchestration
             using var eventContext = DbContextHelper.CreateEventContext(year);
             using var competitorContext = DbContextHelper.CreateCompetitorContext(year);
 
-            ImportCalendar(eventContext, inputPath, year);
-            ImportLeagues(competitorContext, inputPath, year);
-            ImportEvents(eventContext, competitorContext, inputPath);
+            var calendar = ImportCalendar(eventContext, inputPath, year);
+            if (calendar == null) return;
 
-            // Load all rides, competitors and the event calendar for scoring
-            var rides = eventContext.Rides.ToList();
-            var competitors = competitorContext.Competitors.ToList();
-            var calendar = eventContext.CalendarEvents.ToList();
+            var competitors = ImportLeagues(competitorContext, inputPath, year);
+            if (competitors == null) return;
+
+            var rides = ImportEvents(eventContext, competitorContext, inputPath, calendar);
+            if (rides == null) return;
+
             var pointsForPosition = CompetitionConfig.LoadPointsForPosition(eventContext);
             var competitionYear = int.Parse(year);
 
@@ -43,7 +40,7 @@ namespace ClubProcessor.Orchestration
             eventContext.SaveChanges();
         }
 
-        private void ImportCalendar(EventDbContext context, string inputPath, string year)
+        private IEnumerable<CalendarEvent>? ImportCalendar(EventDbContext context, string inputPath, string year)
         {
             var calendarCsvPath = Path.Combine(inputPath, $"Calendar_{year}.csv");
             if (File.Exists(calendarCsvPath))
@@ -52,14 +49,15 @@ namespace ClubProcessor.Orchestration
                 var importer = new CalendarImporter(context);
                 importer.ImportFromCsv(calendarCsvPath);
                 Console.WriteLine("[OK] Calendar import complete");
+
+                return context.CalendarEvents.ToList();
             }
-            else
-            {
-                Console.WriteLine($"[WARN] Calendar CSV not found: {calendarCsvPath}");
-            }
+
+            Console.WriteLine($"[ERROR] Calendar CSV not found: {calendarCsvPath}");
+            return default;
         }
 
-        private void ImportLeagues(CompetitorDbContext competitorContext, string inputPath, string year)
+        private IEnumerable<Competitor>? ImportLeagues(CompetitorDbContext competitorContext, string inputPath, string year)
         {
             var leaguesCsvPath = Path.Combine(inputPath, $"Leagues_{year}.csv");
             if (File.Exists(leaguesCsvPath))
@@ -71,17 +69,25 @@ namespace ClubProcessor.Orchestration
                 var (updatedCount, clearedCount) = importer.Import(leaguesCsvPath);
 
                 Console.WriteLine($"[OK] League import complete: {updatedCount} updated, {clearedCount} cleared");
+                
+                return competitorContext.Competitors.ToList();
             }
-            else
-            {
-                Console.WriteLine($"[WARN] Leagues CSV not found: {leaguesCsvPath}");
-            }
+
+            Console.WriteLine($"[WARN] Leagues CSV not found: {leaguesCsvPath}");
+            return null;
         }
 
-        private void ImportEvents(EventDbContext eventContext, CompetitorDbContext competitorContext, string inputPath)
+        private IEnumerable<Ride>? ImportEvents(
+            EventDbContext eventContext, 
+            CompetitorDbContext competitorContext, 
+            string inputPath,
+            IEnumerable<CalendarEvent> calendar)
         {
-            var processor = new EventsImporter(eventContext, competitorContext);
-            processor.ImportFromFolder(inputPath);
+            var processor = new EventsImporter(eventContext, competitorContext, calendar);
+            if (processor.ImportFromFolder(inputPath))
+                return eventContext.Rides.ToList();
+
+            return null;
         }
     }
 }

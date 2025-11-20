@@ -28,7 +28,10 @@ namespace ClubProcessor.Orchestration
         /// <param name="rides">All rides for the event.</param>
         /// <param name="competitors">All registered competitors.</param>
         /// <param name="calendarEvents">All events in the calendar.</param>
-        public void ProcessAll(List<Ride> rides, List<Competitor> competitors, List<CalendarEvent> calendarEvents)
+        public void ProcessAll(
+            IEnumerable<Ride> rides, 
+            IEnumerable<Competitor> competitors, 
+            IEnumerable<CalendarEvent> calendarEvents)
         {
             RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
             RideHydrationHelper.HydrateCompetitors(rides, competitors);
