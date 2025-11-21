@@ -6,12 +6,12 @@ namespace ClubSiteGenerator.ResultsGenerator
 
     public abstract class CompetitionResultsSet : ResultsSet
     {
-        protected readonly IEnumerable<CalendarEvent> CalendarEvents;
+        protected readonly IEnumerable<CalendarEvent> Calendar;
 
-        protected CompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> events)
+        protected CompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> calendar)
             : base(rides)
         {
-            CalendarEvents = events;
+            Calendar = calendar;
         }
 
         public abstract AgeGroup? AgeGroupFilter { get; }

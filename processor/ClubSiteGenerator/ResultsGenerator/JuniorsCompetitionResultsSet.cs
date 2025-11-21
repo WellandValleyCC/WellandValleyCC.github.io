@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -19,7 +20,11 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static JuniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {
-            var juniorRides = allRides.Where(r => r.Competitor.AgeGroup == AgeGroup.Junior);
+            var juniorRides = allRides
+                .Where(r =>
+                    r.Competitor != null
+                    && r.Competitor.IsJunior
+                    && r.Status == RideStatus.Valid);
             return new JuniorsCompetitionResultsSet(juniorRides, events);
         }
     }
