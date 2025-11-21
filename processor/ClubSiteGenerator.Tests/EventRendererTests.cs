@@ -14,7 +14,12 @@ namespace ClubSiteGenerator.Tests
         public void Render_IncludesTitleAndHeader()
         {
             var table = new HtmlTable(
-                new List<string> { "Name", "Position", "Road Bike", "Time" },
+                new List<HtmlHeaderRow> 
+                { 
+                    new HtmlHeaderRow(
+                        new List<string> { "Name", "Position", "Road Bike", "Time" }
+                        )
+                },
                 new List<HtmlRow>
                 {
                     new HtmlRow(
@@ -75,7 +80,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void Render_EventOnePrevWrapsToTotalEvents()
         {
-            var table = new HtmlTable(new List<string>(), new List<HtmlRow>());
+            var table = new HtmlTable(new List<HtmlHeaderRow>(), new List<HtmlRow>());
             var renderer = new EventRenderer(table, "Dummy", 1, 20, new DateOnly(2025, 1, 1), 10);
             var html = renderer.Render();
 
@@ -86,7 +91,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void Render_LastEventNextWrapsToOne()
         {
-            var table = new HtmlTable(new List<string>(), new List<HtmlRow>());
+            var table = new HtmlTable(new List<HtmlHeaderRow>(), new List<HtmlRow>());
             var renderer = new EventRenderer(table, "Dummy", 20, 20, new DateOnly(2025, 1, 1), 10);
             var html = renderer.Render();
 

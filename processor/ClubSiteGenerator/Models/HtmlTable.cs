@@ -5,13 +5,23 @@ namespace ClubSiteGenerator.Models
 {
     public class HtmlTable
     {
-        public List<string> Headers { get; }
+        public List<HtmlHeaderRow> Headers { get; }
         public List<HtmlRow> Rows { get; }
 
-        public HtmlTable(IEnumerable<string> headers, IEnumerable<HtmlRow> rows)
+        public HtmlTable(IEnumerable<HtmlHeaderRow> headers, IEnumerable<HtmlRow> rows)
         {
             Headers = headers.ToList();
             Rows = rows.ToList();
+        }
+    }
+
+    public class HtmlHeaderRow
+    {
+        public List<string> Cells { get; }
+
+        public HtmlHeaderRow(IEnumerable<string> cells)
+        {
+            Cells = cells.ToList();
         }
     }
 

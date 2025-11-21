@@ -71,10 +71,15 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("<table class=\"results\">");
 
-            sb.AppendLine("<thead><tr>");
-            foreach (var h in table.Headers)
-                sb.AppendLine($"<th>{WebUtility.HtmlEncode(h)}</th>");
-            sb.AppendLine("</tr></thead>");
+            sb.AppendLine("<thead>");
+            foreach (var headerRow in table.Headers)
+            {
+                sb.AppendLine("<tr>");
+                foreach (var h in headerRow.Cells)
+                    sb.AppendLine($"<th>{WebUtility.HtmlEncode(h)}</th>");
+                sb.AppendLine("</tr>");
+            }
+            sb.AppendLine("</thead>");
 
             sb.AppendLine("<tbody>");
 

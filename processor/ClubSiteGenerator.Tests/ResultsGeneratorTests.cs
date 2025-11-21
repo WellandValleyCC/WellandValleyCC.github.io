@@ -81,7 +81,8 @@ namespace ClubSiteGenerator.Tests
             var table = eventResults.CreateTable();
 
             // Assert
-            table.Headers.Should().ContainInOrder("Name", "Position", "Road Bike", "Actual Time", "Avg. mph");
+            table.Headers.Should().HaveCount(1);
+            table.Headers[0].Cells.Should().ContainInOrder("Name", "Position", "Road Bike", "Actual Time", "Avg. mph");
 
             var i = 0;
             table.Rows[i].Cells[1].Should().Be("1");
@@ -167,7 +168,9 @@ namespace ClubSiteGenerator.Tests
             var table = juvenilesCompetitionResults.CreateTable();
 
             // Assert: headers include event columns + totals
-            table.Headers.Should().ContainInOrder("Name", "Event 1", "Event 2", "Event 3", "Total (Best 11)");
+            table.Headers.Should().HaveCount(2);
+            table.Headers[0].Cells.Should().ContainInOrder("", "", "", "", "", "1", "2", "3");
+            table.Headers[1].Cells.Should().ContainInOrder("Name", "Current rank", "Events completed", "10-mile TTs Best 8", "Scoring 11", "Medbourne 9.5mile Hardride TT", "Medbourne 9.5 mile NDCA Hardride TT", "Hallaton 5 mile TT");
 
             var i = 0;
             ((Ride)table.Rows[i].Payload).Name.Should().Be("Emily Brown");
