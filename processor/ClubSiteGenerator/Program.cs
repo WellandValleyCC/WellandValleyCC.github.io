@@ -31,10 +31,12 @@ namespace ClubSiteGenerator
             using var eventDb = DbContextHelper.CreateEventContext("2025");
 
             var eventCalendar = DataLoader.LoadCalendar(eventDb);
-            var allRides = DataLoader.LoadHydratedRides(competitorDb, eventDb);
-            
+            var allRides = DataLoader.LoadRides(eventDb);
+            var allCompetitors = DataLoader.LoadCompetitors(competitorDb);
+            DataLoader.AttachReferencesToRides(allRides, allCompetitors, eventCalendar);
+
             // Orchestrate results generation
-            var orchestrator = new ResultsOrchestrator(allRides, eventCalendar);
+            var orchestrator = new ResultsOrchestrator(allRides, allCompetitors, eventCalendar);
             orchestrator.GenerateAll();
             orchestrator.GenerateIndex();
         }
