@@ -1,5 +1,4 @@
 ﻿using ClubCore.Models;
-using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -14,8 +13,6 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => null;
         public override string CompetitionCode => "SNR";
-
-        public override HtmlTable CreateTable() => throw new NotImplementedException();
 
         public static SeniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {

@@ -1,6 +1,5 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
-using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -15,8 +14,6 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Junior;
         public override string CompetitionCode => "JNR";
-
-        public override HtmlTable CreateTable() => throw new NotImplementedException();
 
         public static JuniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {

@@ -1,10 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
-using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Net;
-using System.Reflection.Emit;
 using System.Text;
 
 namespace ClubSiteGenerator.Renderers

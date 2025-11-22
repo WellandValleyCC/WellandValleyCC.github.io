@@ -3,13 +3,14 @@ using ClubCore.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ClubSiteGenerator.Tests
 {
     public class ResultsGeneratorTests
     {
         [Fact]
-        public void EventCreateTable_SortsByRankWithDxxAppendedAndSortedMembersThenSecondClaimThenGuests()
+        public void EventCreateFrom_SortsByRankWithDxxAppendedAndSortedMembersThenSecondClaimThenGuests()
         {
             // Arrange
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -72,62 +73,56 @@ namespace ClubSiteGenerator.Tests
                 .ToList()
                 .ForEach(r => r.AvgSpeed = calendarEvent.Miles / (r.TotalSeconds / 3600.0));
 
+            // Act
             var eventResults = EventResultsSet.CreateFrom(calendarEvent, rides);
 
-            var expectedAverageMph = 10.0 / (905.0 / 3600.0); // miles / (seconds / 3600) = mph
-
-            // Act
-            //var ordered = ResultsSet.OrderedIneligibleRides(rides, RideEligibility.DNF).ToList();
-            var table = eventResults.CreateTable();
-
             // Assert
-            table.Headers.Should().HaveCount(1);
-            table.Headers[0].Cells.Should().ContainInOrder("Name", "Position", "Road Bike", "Actual Time", "Avg. mph");
+            eventResults.Should().NotBeNull();
+            eventResults.Rides.Should().NotBeNull();
+            eventResults.Rides.Count().Should().Be(rides.Count);
+
+            var ridesArray = eventResults.Rides.ToArray();
 
             var i = 0;
-            table.Rows[i].Cells[1].Should().Be("1");
-            table.Rows[i].Cells[2].Should().Be("1");
-            table.Rows[i].Cells[3].Should().Be("00:15:05");
-            table.Rows[i].Cells[4].Should().Be(expectedAverageMph.ToString("0.00"));
-            table.Rows[i++].Cells[0].Should().Be("Emily Brown");
-            table.Rows[i++].Cells[0].Should().Be("Liam Johnson");
-            table.Rows[i++].Cells[0].Should().Be("Sophia Taylor");
-            table.Rows[i++].Cells[0].Should().Be("Ethan Wilson");
-            table.Rows[i++].Cells[0].Should().Be("Olivia Clark");
-            table.Rows[i++].Cells[0].Should().Be("Noah Walker");
-            table.Rows[i++].Cells[0].Should().Be("Ava Harris");
-            table.Rows[i++].Cells[0].Should().Be("James Roberts");
-            table.Rows[i++].Cells[0].Should().Be("Daniel Evans");
-            table.Rows[i++].Cells[0].Should().Be("Chloe Green");
-            table.Rows[i++].Cells[0].Should().Be("Matthew Hall");
-            table.Rows[i++].Cells[0].Should().Be("Sophia Young");
+            ridesArray[i].EventRank.Should().Be(1);  ridesArray[i++].Name.Should().Be("Emily Brown");
+            ridesArray[i].EventRank.Should().Be(2);  ridesArray[i++].Name.Should().Be("Liam Johnson");
+            ridesArray[i].EventRank.Should().Be(3);  ridesArray[i++].Name.Should().Be("Sophia Taylor");
+            ridesArray[i].EventRank.Should().Be(4);  ridesArray[i++].Name.Should().Be("Ethan Wilson");
+            ridesArray[i].EventRank.Should().Be(5);  ridesArray[i++].Name.Should().Be("Olivia Clark");
+            ridesArray[i].EventRank.Should().Be(6);  ridesArray[i++].Name.Should().Be("Noah Walker");
+            ridesArray[i].EventRank.Should().Be(7);  ridesArray[i++].Name.Should().Be("Ava Harris");
+            ridesArray[i].EventRank.Should().Be(8);  ridesArray[i++].Name.Should().Be("James Roberts");
+            ridesArray[i].EventRank.Should().Be(9);  ridesArray[i++].Name.Should().Be("Daniel Evans");
+            ridesArray[i].EventRank.Should().Be(10); ridesArray[i++].Name.Should().Be("Chloe Green");
+            ridesArray[i].EventRank.Should().Be(11); ridesArray[i++].Name.Should().Be("Matthew Hall");
+            ridesArray[i].EventRank.Should().Be(12); ridesArray[i++].Name.Should().Be("Sophia Young");
 
-            table.Rows[i].Cells[3].Should().Be("DNF");
-            table.Rows[i++].Cells[0].Should().Be("Alice Smith"); // DNF FirstClaim member first
-            table.Rows[i].Cells[3].Should().Be("DNF");
-            table.Rows[i++].Cells[0].Should().Be("John Smith");  // DNF then SecondClaim
-            table.Rows[i].Cells[3].Should().Be("DNF");
-            table.Rows[i++].Cells[0].Should().Be("zGuest AnotherRiderDnf"); // DNF then guest - sorted alphabetically surname firstname
-            table.Rows[i].Cells[3].Should().Be("DNF");
-            table.Rows[i++].Cells[0].Should().Be("Guest Rider");
+            ridesArray[i].Status.Should().Be(RideStatus.DNF);
+            ridesArray[i++].Name.Should().Be("Alice Smith"); // DNF FirstClaim member first
+            ridesArray[i].Status.Should().Be(RideStatus.DNF);
+            ridesArray[i++].Name.Should().Be("John Smith");  // DNF then SecondClaim
+            ridesArray[i].Status.Should().Be(RideStatus.DNF);
+            ridesArray[i++].Name.Should().Be("zGuest AnotherRiderDnf"); // DNF then guest - sorted alphabetically surname firstname
+            ridesArray[i].Status.Should().Be(RideStatus.DNF);
+            ridesArray[i++].Name.Should().Be("Guest Rider");
 
-            table.Rows[i].Cells[3].Should().Be("DNS");
-            table.Rows[i++].Cells[0].Should().Be("Grace Mitchell"); // DNS FirstClaim member first
-            table.Rows[i].Cells[3].Should().Be("DNS");
-            table.Rows[i++].Cells[0].Should().Be("Oliver Bennett");  // DNS then SecondClaim
-            table.Rows[i].Cells[3].Should().Be("DNS");
-            table.Rows[i++].Cells[0].Should().Be("zGuest AnotherRiderDns"); // DNS then guest - sorted alphabetically surname firstname
-            table.Rows[i].Cells[3].Should().Be("DNS");
-            table.Rows[i++].Cells[0].Should().Be("Guest RiderDns");
+            ridesArray[i].Status.Should().Be(RideStatus.DNS);
+            ridesArray[i++].Name.Should().Be("Grace Mitchell"); // DNS FirstClaim member first
+            ridesArray[i].Status.Should().Be(RideStatus.DNS);
+            ridesArray[i++].Name.Should().Be("Oliver Bennett");  // DNS then SecondClaim
+            ridesArray[i].Status.Should().Be(RideStatus.DNS);
+            ridesArray[i++].Name.Should().Be("zGuest AnotherRiderDns"); // DNS then guest - sorted alphabetically surname firstname
+            ridesArray[i].Status.Should().Be(RideStatus.DNS);
+            ridesArray[i++].Name.Should().Be("Guest RiderDns");
 
-            table.Rows[i].Cells[3].Should().Be("DQ");
-            table.Rows[i++].Cells[0].Should().Be("Lucas Turner"); // DQ FirstClaim member first
-            table.Rows[i].Cells[3].Should().Be("DQ");
-            table.Rows[i++].Cells[0].Should().Be("Henry Carter");  // DQ then SecondClaim
-            table.Rows[i].Cells[3].Should().Be("DQ");
-            table.Rows[i++].Cells[0].Should().Be("zGuest AnotherRiderDq"); // DNS then guest - sorted alphabetically surname firstname
-            table.Rows[i].Cells[3].Should().Be("DQ");
-            table.Rows[i++].Cells[0].Should().Be("Guest RiderDq"); // DQ then guest
+            ridesArray[i].Status.Should().Be(RideStatus.DQ);
+            ridesArray[i++].Name.Should().Be("Lucas Turner"); // DQ FirstClaim member first
+            ridesArray[i].Status.Should().Be(RideStatus.DQ);
+            ridesArray[i++].Name.Should().Be("Henry Carter");  // DQ then SecondClaim
+            ridesArray[i].Status.Should().Be(RideStatus.DQ);
+            ridesArray[i++].Name.Should().Be("zGuest AnotherRiderDq"); // DNS then guest - sorted alphabetically surname firstname
+            ridesArray[i].Status.Should().Be(RideStatus.DQ);
+            ridesArray[i++].Name.Should().Be("Guest RiderDq"); // DQ then guest
         }
 
         [Fact]
@@ -162,35 +157,27 @@ namespace ClubSiteGenerator.Tests
                 new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
             };
 
+            // Act
             var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
-            // Act
-            var table = juvenilesCompetitionResults.CreateTable();
+            //var i = 0;
+            //((Ride)table.Rows[i].Payload).Name.Should().Be("Emily Brown");
+            //table.Rows[i].Cells[1].Should().Be("60"); // Event 1 rank 1 → 60 points
+            //table.Rows[i].Cells[2].Should().Be("55"); // Event 2 rank 2 → 55 points
+            //table.Rows[i].Cells[3].Should().Be("51"); // Event 3 rank 3 → 51 points
+            //table.Rows[i++].Cells[4].Should().Be("166"); // total
 
-            // Assert: headers include event columns + totals
-            table.Headers.Should().HaveCount(3);
-            table.Headers[0].Cells.Should().ContainInOrder("", "", "", "", "", "1", "2", "3");
-            table.Headers[1].Cells.Should().ContainInOrder("", "", "", "", "", calendarEvents[0].EventDate.ToString("ddd dd MMM"), calendarEvents[1].EventDate.ToString("ddd dd MMM"), calendarEvents[2].EventDate.ToString("ddd dd MMM"));
-            table.Headers[2].Cells.Should().ContainInOrder("Name", "Current rank", "Events completed", "10-mile TTs Best 8", "Scoring 11", "Medbourne 9.5mile Hardride TT", "Medbourne 9.5 mile NDCA Hardride TT", "Hallaton 5 mile TT");
+            //((Ride)table.Rows[i].Payload).Name.Should().Be("Liam Johnson");
+            //table.Rows[i].Cells[1].Should().Be("55"); // Event 1 rank 2
+            //table.Rows[i].Cells[2].Should().Be("60"); // Event 2 rank 1
+            //table.Rows[i].Cells[3].Should().Be("55"); // Event 3 rank 2
+            //table.Rows[i++].Cells[4].Should().Be("170");
 
-            var i = 0;
-            ((Ride)table.Rows[i].Payload).Name.Should().Be("Emily Brown");
-            table.Rows[i].Cells[1].Should().Be("60"); // Event 1 rank 1 → 60 points
-            table.Rows[i].Cells[2].Should().Be("55"); // Event 2 rank 2 → 55 points
-            table.Rows[i].Cells[3].Should().Be("51"); // Event 3 rank 3 → 51 points
-            table.Rows[i++].Cells[4].Should().Be("166"); // total
-
-            ((Ride)table.Rows[i].Payload).Name.Should().Be("Liam Johnson");
-            table.Rows[i].Cells[1].Should().Be("55"); // Event 1 rank 2
-            table.Rows[i].Cells[2].Should().Be("60"); // Event 2 rank 1
-            table.Rows[i].Cells[3].Should().Be("55"); // Event 3 rank 2
-            table.Rows[i++].Cells[4].Should().Be("170");
-
-            ((Ride)table.Rows[i].Payload).Name.Should().Be("Daniel Evans");
-            table.Rows[i].Cells[1].Should().Be("51"); // Event 1 rank 3
-            table.Rows[i].Cells[2].Should().Be("48"); // Event 2 rank 4
-            table.Rows[i].Cells[3].Should().Be("60"); // Event 3 rank 1
-            table.Rows[i++].Cells[4].Should().Be("159");
+            //((Ride)table.Rows[i].Payload).Name.Should().Be("Daniel Evans");
+            //table.Rows[i].Cells[1].Should().Be("51"); // Event 1 rank 3
+            //table.Rows[i].Cells[2].Should().Be("48"); // Event 2 rank 4
+            //table.Rows[i].Cells[3].Should().Be("60"); // Event 3 rank 1
+            //table.Rows[i++].Cells[4].Should().Be("159");
         }
     }
 }

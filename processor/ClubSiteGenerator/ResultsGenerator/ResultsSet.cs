@@ -1,5 +1,4 @@
 ﻿using ClubCore.Models;
-using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -15,7 +14,5 @@ namespace ClubSiteGenerator.ResultsGenerator
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
         public abstract string SubFolderName { get; }
-
-        public abstract HtmlTable CreateTable();
     }
 }

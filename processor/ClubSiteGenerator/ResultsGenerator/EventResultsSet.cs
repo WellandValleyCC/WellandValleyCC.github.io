@@ -1,6 +1,5 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
-using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -19,56 +18,9 @@ namespace ClubSiteGenerator.ResultsGenerator
         public int EventNumber => calendarEvent.EventNumber;
         public DateOnly EventDate => DateOnly.FromDateTime(calendarEvent.EventDate);
 
-        public override string DisplayName => $"Results for {calendarEvent.EventName}";
+        public override string DisplayName => $"{calendarEvent.EventName}";
         public override string FileName => $"event-{calendarEvent.EventNumber:D2}";
         public override string SubFolderName => "events";
-
-        public override HtmlTable CreateTable()
-        {
-            var headerRow = new List<string>
-            {
-                "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
-            };
-            var headers = new List<HtmlHeaderRow> { new HtmlHeaderRow(headerRow) };
-
-            var rides = Rides.ToList();
-
-            var ranked = rides.Where(r => r.Status == RideStatus.Valid)
-                              .OrderBy(r => r.EventRank);
-
-            var dnfs = OrderedIneligibleRides(rides, RideStatus.DNF);
-            var dnss = OrderedIneligibleRides(rides, RideStatus.DNS);
-            var dqs = OrderedIneligibleRides(rides, RideStatus.DQ);
-
-            var ordered = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
-
-            var rows = ordered.Select(r =>
-            {
-                var miles = r.CalendarEvent?.Miles ?? 0;
-                var avgMph = r.AvgSpeed?.ToString("0.00") ?? string.Empty;
-
-                var timeCell = r.Status switch
-                {
-                    RideStatus.DNF => "DNF",
-                    RideStatus.DNS => "DNS",
-                    RideStatus.DQ => "DQ",
-                    _ => TimeSpan.FromSeconds(r.TotalSeconds).ToString(@"hh\:mm\:ss")
-                };
-
-                var cells = new List<string>
-                {
-                    r.Name ?? "Unknown",
-                    r.EventRank?.ToString() ?? "",
-                    r.EventRoadBikeRank?.ToString() ?? "",
-                    timeCell,
-                    avgMph
-                };
-
-                return new HtmlRow(cells, r);
-            });
-
-            return new HtmlTable(headers, rows);
-        }
 
         private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus eligibility)
         {
