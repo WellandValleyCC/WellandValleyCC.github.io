@@ -1,102 +1,106 @@
-﻿using System;
-using Xunit;
-using ClubSiteGenerator.Models;
-using ClubSiteGenerator.Renderers;
-using ClubCore.Models;
+﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
-using System.Collections.Generic;
+using ClubSiteGenerator.Renderers;
+using ClubSiteGenerator.ResultsGenerator;
+using FluentAssertions;
 
-namespace ClubSiteGenerator.Tests
+public class EventRendererTests
 {
-    public class EventRendererTests
+    [Fact]
+    public void Render_IncludesTitleAndHeader()
     {
-        [Fact]
-        public void Render_IncludesTitleAndHeader()
+        // Arrange: calendar event
+        var ev = new CalendarEvent
         {
-            var table = new HtmlTable(
-                new List<HtmlHeaderRow> 
-                { 
-                    new HtmlHeaderRow(
-                        new List<string> { "Name", "Position", "Road Bike", "Time" }
-                        )
-                },
-                new List<HtmlRow>
-                {
-                    new HtmlRow(
-                        new List<string> { "John Smith", "1", "", "00:57:08" },
-                        new Ride
-                        {
-                            EventEligibleRidersRank = 1,
-                            ClubNumber = 123,
-                            Competitor = new Competitor
-                            {
-                                ClubNumber = 123,
-                                ClaimStatus = ClaimStatus.FirstClaim,
-                                IsFemale = false,
-                                AgeGroup = AgeGroup.Senior,
-                                Surname = "Smith",
-                                GivenName = "John"
-                            }
-                        })
-                });
+            EventNumber = 11,
+            EventName = "Walcote Interclub 25mile Hardride TT",
+            EventDate = new DateTime(2025, 6, 15),
+            Miles = 25
+        };
 
-            var renderer = new EventRenderer(
-                table,
-                "Walcote Interclub 25mile Hardride TT",
-                eventNumber: 11,
-                totalEvents: 20,
-                eventDate: new DateOnly(2025, 6, 15),
-                eventMiles: 25);
-
-            var html = renderer.Render();
-
-            // Title element
-            Assert.Contains("<title>Event 11: Walcote Interclub 25mile Hardride TT</title>", html);
-
-            // Header with event number
-            Assert.Contains("<span class=\"event-number\">Event 11:</span>", html);
-
-            // Date and distance
-            Assert.Contains("Sunday, 15 June 2025", html);
-            Assert.Contains("Distance: 25 miles", html);
-
-            // Navigation links
-            Assert.Contains("href=\"event-10.html\"", html); // prev
-            Assert.Contains("href=\"../preview.html\"", html); // index
-            Assert.Contains("href=\"event-12.html\"", html); // next
-
-            // Legend spans
-            Assert.Contains("competition-eligible", html);
-            Assert.Contains("guest-second-claim", html);
-            Assert.Contains("guest-non-club-member", html);
-
-            // Podium class applied
-            Assert.Contains("class=\"position-1\"", html);
-
-            // Row classification
-            Assert.Contains("<tr class=\"competition-eligible\">", html);
-        }
-
-        [Fact]
-        public void Render_EventOnePrevWrapsToTotalEvents()
+        // Arrange: competitor + ride
+        var competitor = new Competitor
         {
-            var table = new HtmlTable(new List<HtmlHeaderRow>(), new List<HtmlRow>());
-            var renderer = new EventRenderer(table, "Dummy", 1, 20, new DateOnly(2025, 1, 1), 10);
-            var html = renderer.Render();
+            ClubNumber = 123,
+            ClaimStatus = ClaimStatus.FirstClaim,
+            IsFemale = false,
+            AgeGroup = AgeGroup.Senior,
+            Surname = "Smith",
+            GivenName = "John",
+            CreatedUtc = DateTime.UtcNow,
+            LastUpdatedUtc = DateTime.UtcNow,
+            League = League.Undefined,
+            VetsBucket = null
+        };
 
-            Assert.Contains("href=\"event-20.html\"", html); // prev wraps
-            Assert.Contains("href=\"event-02.html\"", html); // next
-        }
-
-        [Fact]
-        public void Render_LastEventNextWrapsToOne()
+        var ride = new Ride
         {
-            var table = new HtmlTable(new List<HtmlHeaderRow>(), new List<HtmlRow>());
-            var renderer = new EventRenderer(table, "Dummy", 20, 20, new DateOnly(2025, 1, 1), 10);
-            var html = renderer.Render();
+            EventNumber = 11,
+            EventRank = 1,
+            Status = RideStatus.Valid,
+            Competitor = competitor,
+            ClubNumber = competitor.ClubNumber,
+            EventEligibleRidersRank = 1
+        };
 
-            Assert.Contains("href=\"event-19.html\"", html); // prev
-            Assert.Contains("href=\"event-01.html\"", html); // next wraps
-        }
+        var resultsSet = EventResultsSet.CreateFrom(ev, new[] { ride });
+        var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
+
+        // Act
+        var html = renderer.Render();
+
+        // Assert
+        html.Should().Contain("<title>Event 11: Walcote Interclub 25mile Hardride TT</title>");
+        html.Should().Contain("<span class=\"event-number\">Event 11:</span>");
+        html.Should().Contain("Sunday, 15 June 2025");
+        html.Should().Contain("Distance: 25 miles");
+        html.Should().Contain("href=\"event-10.html\"");
+        html.Should().Contain("href=\"../preview.html\"");
+        html.Should().Contain("href=\"event-12.html\"");
+        html.Should().Contain("competition-eligible");
+        html.Should().Contain("guest-second-claim");
+        html.Should().Contain("guest-non-club-member");
+        html.Should().Contain("class=\"position-1\"");
+        html.Should().Contain("<tr class=\"competition-eligible\">");
+    }
+
+    [Fact]
+    public void Render_EventOnePrevWrapsToTotalEvents()
+    {
+        var ev = new CalendarEvent
+        {
+            EventNumber = 1,
+            EventName = "Dummy",
+            EventDate = new DateTime(2025, 1, 1),
+            Miles = 10
+        };
+
+        var resultsSet = EventResultsSet.CreateFrom(ev, Array.Empty<Ride>());
+        var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
+
+        var html = renderer.Render();
+
+        html.Should().Contain("href=\"event-20.html\""); // prev wraps
+        html.Should().Contain("href=\"event-02.html\""); // next
+    }
+
+    [Fact]
+    public void Render_LastEventNextWrapsToOne()
+    {
+        var ev = new CalendarEvent
+        {
+            EventNumber = 20,
+            EventName = "Dummy",
+            EventDate = new DateTime(2025, 1, 1),
+            Miles = 10
+        };
+
+        var resultsSet = EventResultsSet.CreateFrom(ev, Array.Empty<Ride>());
+        var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
+
+        var html = renderer.Render();
+
+        html.Should().Contain("href=\"event-19.html\""); // prev
+        html.Should().Contain("href=\"event-01.html\""); // next wraps
     }
 }

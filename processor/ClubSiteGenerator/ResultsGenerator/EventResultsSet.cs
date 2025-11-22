@@ -87,10 +87,16 @@ namespace ClubSiteGenerator.ResultsGenerator
                 .OrderBy(r =>
                 {
                     var parts = (r.Name ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    return parts.Length == 2
-                        ? $"{parts[1]} {parts[0]}"   // "Smith Alice"
-                        : r.Name ?? "";              // fallback if not exactly two parts
+                    return parts.Length > 0 ? parts[^1] : "";   // surname = last token
+                })
+                .ThenBy(r =>
+                {
+                    var parts = (r.Name ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    return parts.Length > 1
+                        ? string.Join(" ", parts.Take(parts.Length - 1)) // given names = everything before surname
+                        : r.Name ?? "";
                 });
+
 
             return firstClaim.Concat(secondClaim).Concat(guests);
         }
@@ -98,8 +104,17 @@ namespace ClubSiteGenerator.ResultsGenerator
         // Factory: single CalendarEvent
         public static EventResultsSet CreateFrom(CalendarEvent ev, IEnumerable<Ride> allRides)
         {
-            var ridesForEvent = allRides.Where(r => r.EventNumber == ev.EventNumber);
-            return new EventResultsSet(ev, ridesForEvent);
+            var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == ev.EventNumber);
+
+            var ranked = hydratedRidesForEvent.Where(r => r.Status == RideStatus.Valid)
+                  .OrderBy(r => r.EventRank);
+            var dnfs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNF);
+            var dnss = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNS);
+            var dqs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DQ);
+
+            var orderedHydratedRidesForEvent = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
+
+            return new EventResultsSet(ev, orderedHydratedRidesForEvent);
         }
     }
 

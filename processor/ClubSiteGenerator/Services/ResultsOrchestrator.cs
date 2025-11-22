@@ -13,7 +13,11 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<Competitor> competitors;   
         private readonly IEnumerable<CalendarEvent> calendar;
+        
 
+        /// <param name="rides">These rides have been hydrated - i.e. Competitors (where applicable) attached and CalendarEvent attached.</param>
+        /// <param name="competitors"></param>
+        /// <param name="calendar"></param>
         public ResultsOrchestrator(
             IEnumerable<Ride> rides,
             IEnumerable<Competitor> competitors,
@@ -42,21 +46,14 @@ namespace ClubSiteGenerator.Services
 
             var totalEvents = resultsSets.OfType<EventResultsSet>().Count();
 
-            foreach (var generator in resultsSets.OfType<EventResultsSet>())
+            foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())
             {
-                var table = generator.CreateTable();
-                var renderer = new EventRenderer(
-                    table,
-                    generator.DisplayName,
-                    generator.EventNumber,
-                    totalEvents,
-                    generator.EventDate,
-                    generator.CalendarEvent.Miles);
+                var renderer = new EventRenderer(resultsSet, totalEvents);
                 var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
-                var folderPath = Path.Combine(outputDir, generator.SubFolderName);
+                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
-                File.WriteAllText(Path.Combine(folderPath, $"{generator.FileName}.html"), html);
+                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
             }
         }
 

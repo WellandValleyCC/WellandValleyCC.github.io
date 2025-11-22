@@ -5,7 +5,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 {
     public abstract class ResultsSet
     {
-        protected readonly IEnumerable<Ride> Rides;
+        public readonly IEnumerable<Ride> Rides;
 
         protected ResultsSet(IEnumerable<Ride> rides)
         {

@@ -1,34 +1,38 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.ResultsGenerator;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Net;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace ClubSiteGenerator.Renderers
 {
     public class EventRenderer : HtmlRendererBase
     {
-        private readonly HtmlTable table;
+        private readonly EventResultsSet resultsSet;
         private readonly string eventTitle;
         private readonly int eventNumber;
-        private readonly int totalEvents;
+        private readonly int numberOfEvents;
         private readonly DateOnly eventDate; 
         private readonly double eventMiles;
 
-        public EventRenderer(HtmlTable table,
-            string eventTitle,
-            int eventNumber,
-            int totalEvents,
-            DateOnly eventDate,
-            double eventMiles)
+        public EventRenderer(EventResultsSet resultsSet, int numberOfEvents)
         {
-            this.table = table;
-            this.eventTitle = eventTitle;
-            this.eventNumber = eventNumber;
-            this.totalEvents = totalEvents;
-            this.eventDate = eventDate;
-            this.eventMiles = eventMiles;
+            this.resultsSet = resultsSet;
+
+            this.eventTitle = resultsSet.DisplayName;
+            this.eventNumber = resultsSet.EventNumber;
+            this.numberOfEvents = numberOfEvents;
+            this.eventDate = resultsSet.EventDate;
+            this.eventMiles = resultsSet.CalendarEvent.Miles;
         }
+
+        internal readonly List<string> columnTitles = new()
+        {
+            "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
+        };
 
         protected override string TitleElement() => $"<title>Event {eventNumber}: {WebUtility.HtmlEncode(eventTitle)}</title>";
 
@@ -40,8 +44,8 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
 
-            int prev = eventNumber == 1 ? totalEvents : eventNumber - 1;
-            int next = eventNumber == totalEvents ? 1 : eventNumber + 1;
+            int prev = eventNumber == 1 ? numberOfEvents : eventNumber - 1;
+            int next = eventNumber == numberOfEvents ? 1 : eventNumber + 1;
 
             sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
             sb.AppendLine($"    <a class=\"prev\" href=\"event-{prev:D2}.html\" aria-label=\"Previous event\">Previous</a>");
@@ -71,28 +75,42 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("<table class=\"results\">");
 
-            sb.AppendLine("<thead>");
-            foreach (var headerRow in table.Headers)
-            {
-                sb.AppendLine("<tr>");
-                foreach (var h in headerRow.Cells)
-                    sb.AppendLine($"<th>{WebUtility.HtmlEncode(h)}</th>");
-                sb.AppendLine("</tr>");
-            }
-            sb.AppendLine("</thead>");
+            sb.AppendLine("<thead><tr>");
+            foreach (var ct in columnTitles)
+                sb.AppendLine($"<th>{WebUtility.HtmlEncode(ct)}</th>");
+            sb.AppendLine("</tr></thead>");
 
             sb.AppendLine("<tbody>");
 
-            foreach (var row in table.Rows)
+            foreach (var ride in resultsSet.Rides)
             {
-                var ride = EnsureRide(row);
                 var cssClass = GetRowClass(ride);
 
                 sb.AppendLine($"<tr class=\"{cssClass}\">");
 
-                for (int i = 0; i < row.Cells.Count; i++)
+                var miles = ride.CalendarEvent?.Miles ?? 0;
+                var avgMph = ride.AvgSpeed?.ToString("0.00") ?? string.Empty;
+
+                var timeCell = ride.Status switch
                 {
-                    var cellValue = WebUtility.HtmlEncode(row.Cells[i]);
+                    RideStatus.DNF => "DNF",
+                    RideStatus.DNS => "DNS",
+                    RideStatus.DQ => "DQ",
+                    _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
+                };
+
+                var cells = new List<string>
+                {
+                    ride.Name ?? "Unknown",
+                    ride.EventRank?.ToString() ?? "",
+                    ride.EventRoadBikeRank?.ToString() ?? "",
+                    timeCell,
+                    avgMph
+                };
+
+                for (int i = 0; i < cells.Count; i++)
+                {
+                    var cellValue = WebUtility.HtmlEncode(cells[i]);
                     var tdClass = string.Empty;
 
                     if (i == 1)
@@ -111,21 +129,6 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("</tbody></table>");
 
             return sb.ToString();
-        }
-
-        private static Ride EnsureRide(HtmlRow row)
-        {
-            if (row.Payload is Ride ride)
-                return ride;
-
-            var rsType = row.Payload?.GetType().Name ?? "<null ResultsSet>";
-            var payloadType = row.Payload?.GetType().Name ?? "<null Payload>";
-            var preview = string.Join(" | ", row.Cells?.Take(5) ?? Enumerable.Empty<string>());
-
-            throw new InvalidOperationException(
-                $"Expected HtmlRow.Payload to be Ride for Event rendering, but got {payloadType}. " +
-                $"ResultsSet={rsType}. CellsPreview=[{preview}]. " +
-                $"Renderer expects event rows to carry Ride payloads; check CreateTable() for {rsType}.");
         }
 
         public static string GetPodiumClass(int? rank, Ride ride)
