@@ -42,7 +42,8 @@ namespace ClubSiteGenerator.Tests
                 Status = RideStatus.Valid,
                 Competitor = competitor,
                 ClubNumber = competitor.ClubNumber,
-                EventEligibleRidersRank = 1
+                EventEligibleRidersRank = 1,
+                CalendarEvent = ev
             };
 
             var resultsSet = EventResultsSet.CreateFrom(ev, new[] { ride });

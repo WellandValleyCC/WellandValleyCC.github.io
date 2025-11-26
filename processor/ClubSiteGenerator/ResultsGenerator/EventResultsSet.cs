@@ -56,6 +56,20 @@ namespace ClubSiteGenerator.ResultsGenerator
         // Factory: single CalendarEvent
         public static EventResultsSet CreateFrom(CalendarEvent ev, IEnumerable<Ride> allRides)
         {
+            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
+            {
+                throw new ArgumentException(
+                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
+                    nameof(allRides));
+            }
+
+            if (allRides.Any(r => r.CalendarEvent is null))
+            {
+                throw new ArgumentException(
+                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
+                    nameof(allRides));
+            }
+
             var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == ev.EventNumber);
 
             var ranked = hydratedRidesForEvent.Where(r => r.Status == RideStatus.Valid)

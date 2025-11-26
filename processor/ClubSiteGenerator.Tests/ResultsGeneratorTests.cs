@@ -69,6 +69,11 @@ namespace ClubSiteGenerator.Tests
             var calendarEvent = new CalendarEvent { EventNumber = 1, EventName = "Test TT", EventDate = DateTime.Today, Miles = 10 };
 
             rides
+                .Where(r => r.EventNumber == calendarEvent.EventNumber)
+                .ToList()
+                .ForEach(r => r.CalendarEvent = calendarEvent);
+
+            rides
                 .Where(r => r.Status == RideStatus.Valid && r.TotalSeconds > 0)
                 .ToList()
                 .ForEach(r => r.AvgSpeed = calendarEvent.Miles / (r.TotalSeconds / 3600.0));
