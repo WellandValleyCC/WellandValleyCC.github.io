@@ -1,11 +1,10 @@
 ﻿using ClubCore.Models;
-using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
     public abstract class ResultsSet
     {
-        protected readonly IEnumerable<Ride> Rides;
+        public readonly IEnumerable<Ride> Rides;
 
         protected ResultsSet(IEnumerable<Ride> rides)
         {
@@ -15,7 +14,5 @@ namespace ClubSiteGenerator.ResultsGenerator
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
         public abstract string SubFolderName { get; }
-
-        public abstract HtmlTable CreateTable();
     }
 }
