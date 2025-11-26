@@ -1,13 +1,13 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    // Juniors
     public sealed class JuniorsCompetitionResultsSet : CompetitionResultsSet
     {
-        private JuniorsCompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> events)
-            : base(rides, events) { }
+        private JuniorsCompetitionResultsSet(IEnumerable<CompetitorResult> scoredRides, IEnumerable<CalendarEvent> events)
+            : base(scoredRides, events) { }
 
         public override string DisplayName => "Juniors Competition";
         public override string FileName => "juniors";
@@ -36,7 +36,8 @@ namespace ClubSiteGenerator.ResultsGenerator
                     r.Competitor != null
                     && r.Competitor.IsJunior
                     && r.Status == RideStatus.Valid);
-            return new JuniorsCompetitionResultsSet(juniorRides, events);
+
+            return null; // new JuniorsCompetitionResultsSet(juniorRides, events);
         }
     }
 

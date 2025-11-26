@@ -3,15 +3,15 @@ using ClubCore.Models.Enums;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    // -------------------- Event Results --------------------
-
     public sealed class EventResultsSet : ResultsSet
     {
         private readonly CalendarEvent calendarEvent;
+        public readonly IEnumerable<Ride> Rides;
 
-        private EventResultsSet(CalendarEvent ev, IEnumerable<Ride> rides) : base(rides)
+        private EventResultsSet(CalendarEvent ev, IEnumerable<Ride> rides) 
         {
             this.calendarEvent = ev;
+            this.Rides = rides;
         }
 
         public CalendarEvent CalendarEvent => calendarEvent;

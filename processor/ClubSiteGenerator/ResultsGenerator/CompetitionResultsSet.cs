@@ -1,15 +1,13 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    // -------------------- Competition Results --------------------
-
     public abstract class CompetitionResultsSet : ResultsSet
     {
         protected readonly IEnumerable<CalendarEvent> Calendar;
 
-        protected CompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> calendar)
-            : base(rides)
+        protected CompetitionResultsSet(IEnumerable<CompetitorResult> scoredRides, IEnumerable<CalendarEvent> calendar)
         {
             Calendar = calendar;
         }
