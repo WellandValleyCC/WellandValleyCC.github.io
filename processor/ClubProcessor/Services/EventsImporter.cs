@@ -12,14 +12,19 @@ namespace ClubProcessor.Services
     {
         private readonly EventDbContext eventContext;
         private readonly CompetitorDbContext competitorContext;
+        private readonly IEnumerable<CalendarEvent> calendar;
 
-        public EventsImporter(EventDbContext eventContext, CompetitorDbContext competitorContext)
+        public EventsImporter(
+            EventDbContext eventContext, 
+            CompetitorDbContext competitorContext,
+            IEnumerable<CalendarEvent> calendar)
         {
             this.eventContext = eventContext;
             this.competitorContext = competitorContext;
+            this.calendar = calendar;
         }
 
-        public void ImportFromFolder(string folderPath)
+        public bool ImportFromFolder(string folderPath)
         {
             var folderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
             var yearMatch = Regex.Match(folderName, @"\b(20\d{2})\b"); // Matches 2000–2099
@@ -27,27 +32,19 @@ namespace ClubProcessor.Services
             if (!yearMatch.Success)
             {
                 Console.WriteLine($"[ERROR] Could not extract year from folder name: {folderName}");
-                return;
+                return false;
             }
 
             var year = yearMatch.Groups[1].Value;
-            var calendarPath = Path.Combine(folderPath, $"Calendar_{year}.csv");
             var eventsDir = Path.Combine(folderPath, "events");
-
-            if (!File.Exists(calendarPath))
-            {
-                Console.WriteLine($"[ERROR] Missing calendar file: {calendarPath}");
-                return;
-            }
 
             if (!Directory.Exists(eventsDir))
             {
                 Console.WriteLine($"[ERROR] Events folder not found: {eventsDir}");
-                return;
+                return false;
             }
 
             Console.WriteLine($"[INFO] Processing year: {year}");
-            Console.WriteLine($"[INFO] Loading calendar: {calendarPath}");
             Console.WriteLine($"[INFO] Processing events in: {eventsDir}");
 
             var csvFiles = Directory.GetFiles(eventsDir, "Event_*.csv");
@@ -59,7 +56,9 @@ namespace ClubProcessor.Services
             }
 
             eventContext.SaveChanges();
-        }
+
+            return true;
+         }
 
         private int ExtractEventNumber(string path)
         {
@@ -72,11 +71,21 @@ namespace ClubProcessor.Services
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
+            var eventMiles = calendar
+                .Single(ev => ev.EventNumber == eventNumber).Miles;
+
             var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
             var incomingRides = incomingRows
                 .Select(row => ParseRide(row, eventNumber))
                 .Where(ride => ride != null)
                 .Cast<Ride>() // assert non-null
+                    .Select(r =>
+                    {
+                        r.AvgSpeed = (r.Status == RideStatus.Valid && r.TotalSeconds > 0 && eventMiles > 0)
+                            ? eventMiles / (r.TotalSeconds / 3600.0)
+                            : null;
+                        return r;
+                    })
                 .ToList();
 
             Console.WriteLine($"[INFO] Parsed {incomingRows.Count} rows from {Path.GetFileName(csvPath)}");
@@ -126,6 +135,7 @@ namespace ClubProcessor.Services
                 Name = row.Name,
                 ClubNumber = isClubMember ? clubNumber : null,
                 TotalSeconds = row.TotalSeconds,
+                AvgSpeed = row.TotalSeconds > 0 ? 25.0 * 1000 / row.TotalSeconds * 3.6 : null, // Example: 25 km course
                 IsRoadBike = row.IsRoadBike,
                 Status = row.Eligibility,
             };

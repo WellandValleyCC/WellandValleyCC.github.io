@@ -4,7 +4,9 @@ namespace ClubProcessor.Orchestration
 {
     public static class RideHydrationHelper
     {
-        public static void HydrateCompetitors(List<Ride> rides, List<Competitor> competitors)
+        public static void HydrateCompetitors(
+            IEnumerable<Ride> rides, 
+            IEnumerable<Competitor> competitors)
         {
             if (rides == null) throw new ArgumentNullException(nameof(rides));
             if (competitors == null) throw new ArgumentNullException(nameof(competitors));
@@ -71,7 +73,9 @@ namespace ClubProcessor.Orchestration
             }
         }
 
-        public static void HydrateCalendarEvents(List<Ride> rides, IEnumerable<CalendarEvent> calendarEvents)
+        public static void HydrateCalendarEvents(
+            IEnumerable<Ride> rides, 
+            IEnumerable<CalendarEvent> calendarEvents)
         {
             if (rides == null) throw new ArgumentNullException(nameof(rides));
             if (calendarEvents == null) throw new ArgumentNullException(nameof(calendarEvents));

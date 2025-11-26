@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Csv;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Utilities;
@@ -7,29 +8,35 @@ namespace ClubSiteGenerator.Services
 {
     public class ResultsOrchestrator
     {
-        private readonly List<ResultsSet> resultsGenerators = new();
+        private readonly List<ResultsSet> resultsSets = new();
 
         private readonly IEnumerable<Ride> rides;
-        private readonly IEnumerable<CalendarEvent> eventsCalendar;
+        private readonly IEnumerable<Competitor> competitors;   
+        private readonly IEnumerable<CalendarEvent> calendar;
+        
 
-        public ResultsOrchestrator(IEnumerable<Ride> rides,
-                                   IEnumerable<CalendarEvent> eventCalendar)
+        /// <param name="rides">These rides have been hydrated - i.e. Competitors (where applicable) attached and CalendarEvent attached.</param>
+        /// <param name="competitors"></param>
+        /// <param name="calendar"></param>
+        public ResultsOrchestrator(
+            IEnumerable<Ride> rides,
+            IEnumerable<Competitor> competitors,
+            IEnumerable<CalendarEvent> calendar)
         {
             this.rides = rides;
-            //this.competitors = competitors;
-            this.eventsCalendar = eventCalendar;
+            this.competitors = competitors;
+            this.calendar = calendar;
 
-            InitializeGenerators();
+            InitializeResultsSets();
         }
 
-        private void InitializeGenerators()
+
+
+        private void InitializeResultsSets()
         {
-            // Discover all event numbers dynamically
-            var eventNumbers = eventsCalendar.Select(e => e.EventNumber); 
-            
-            foreach (var e in eventNumbers) 
-                resultsGenerators.Add(new EventResultsSet(e, eventsCalendar, rides));
-            
+            foreach (var ev in calendar)
+                resultsSets.Add(EventResultsSet.CreateFrom(ev, rides));
+
             // Later: competitions auto‑discovered via reflection
         }
 
@@ -37,29 +44,22 @@ namespace ClubSiteGenerator.Services
         {
             StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
 
-            var totalEvents = resultsGenerators.OfType<EventResultsSet>().Count();
+            var totalEvents = resultsSets.OfType<EventResultsSet>().Count();
 
-            foreach (var generator in resultsGenerators.OfType<EventResultsSet>())
+            foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())
             {
-                var table = generator.CreateTable();
-                var renderer = new EventRenderer(
-                    table,
-                    generator.DisplayName,
-                    generator.EventNumber,
-                    totalEvents,
-                    generator.EventDate,
-                    generator.CalendarEvent.Miles);
+                var renderer = new EventRenderer(resultsSet, totalEvents);
                 var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
-                var folderPath = Path.Combine(outputDir, generator.SubFolderName);
+                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
-                File.WriteAllText(Path.Combine(folderPath, $"{generator.FileName}.html"), html);
+                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
             }
         }
 
         public void GenerateIndex()
         {
-            var eventResults = resultsGenerators
+            var eventResults = resultsSets
                 .OfType<EventResultsSet>()   // filters only EventResults
                 .OrderBy(ev => ev.EventDate) // optional: sort by date
                 .ToList();

@@ -177,7 +177,7 @@ namespace ClubProcessor.Services
                 return null;
             }
 
-            Console.WriteLine($"[DEBUG] Event {row.EventNumber}: ClubChamp='{row.ClubChampRaw}', NonStd10='{row.NonStd10Raw}', Evening10='{row.Evening10Raw}', HardRide='{row.HardRideRaw}', Cancelled='{row.CancelledRaw}'");
+            // Console.WriteLine($"[DEBUG] Event {row.EventNumber}: ClubChamp='{row.ClubChampRaw}', NonStd10='{row.NonStd10Raw}', Evening10='{row.Evening10Raw}', HardRide='{row.HardRideRaw}', Cancelled='{row.CancelledRaw}'");
 
             return new CalendarEvent
             {
