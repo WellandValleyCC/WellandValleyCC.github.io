@@ -162,6 +162,17 @@ namespace ClubSiteGenerator.Tests
                 new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
             };
 
+            var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
+
+            // Hydrate rides with their matching CalendarEvent
+            foreach (var ride in rides)
+            {
+                if (eventsByNumber.TryGetValue(ride.EventNumber, out var ev))
+                {
+                    ride.CalendarEvent = ev;
+                }
+            }
+
             // Act
             var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 

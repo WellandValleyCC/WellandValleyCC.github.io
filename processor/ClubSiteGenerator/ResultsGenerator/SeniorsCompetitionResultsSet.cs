@@ -16,6 +16,20 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static SeniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {
+            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
+            {
+                throw new ArgumentException(
+                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
+                    nameof(allRides));
+            }
+
+            if (allRides.Any(r => r.CalendarEvent is null))
+            {
+                throw new ArgumentException(
+                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
+                    nameof(allRides));
+            }
+
             return new SeniorsCompetitionResultsSet(allRides, events);
         }
     }
