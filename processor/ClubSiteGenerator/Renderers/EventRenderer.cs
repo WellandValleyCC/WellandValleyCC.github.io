@@ -68,64 +68,84 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string ResultsTableHtml()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine("<table class=\"results\">");
+            sb.AppendLine(RenderHeader());
+            sb.AppendLine(RenderBody());
+            sb.AppendLine("</table>");
 
+            return sb.ToString();
+        }
+
+        private string RenderHeader()
+        {
+            var sb = new StringBuilder();
             sb.AppendLine("<thead><tr>");
-            foreach (var ct in columnTitles)
-                sb.AppendLine($"<th>{WebUtility.HtmlEncode(ct)}</th>");
-            sb.AppendLine("</tr></thead>");
 
+            foreach (var title in columnTitles)
+                sb.AppendLine($"<th>{WebUtility.HtmlEncode(title)}</th>");
+
+            sb.AppendLine("</tr></thead>");
+            return sb.ToString();
+        }
+
+        private string RenderBody()
+        {
+            var sb = new StringBuilder();
             sb.AppendLine("<tbody>");
 
             foreach (var ride in resultsSet.Rides)
-            {
-                var cssClass = GetRowClass(ride);
+                sb.AppendLine(RenderRow(ride));
 
-                sb.AppendLine($"<tr class=\"{cssClass}\">");
-
-                var miles = ride.CalendarEvent?.Miles ?? 0;
-                var avgMph = ride.AvgSpeed?.ToString("0.00") ?? string.Empty;
-
-                var timeCell = ride.Status switch
-                {
-                    RideStatus.DNF => "DNF",
-                    RideStatus.DNS => "DNS",
-                    RideStatus.DQ => "DQ",
-                    _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
-                };
-
-                var cells = new List<string>
-                {
-                    ride.Name ?? "Unknown",
-                    ride.EventRank?.ToString() ?? "",
-                    ride.EventRoadBikeRank?.ToString() ?? "",
-                    timeCell,
-                    avgMph
-                };
-
-                for (int i = 0; i < cells.Count; i++)
-                {
-                    var cellValue = WebUtility.HtmlEncode(cells[i]);
-                    var tdClass = string.Empty;
-
-                    if (i == 1)
-                        tdClass = GetPodiumClass(ride.EventEligibleRidersRank, ride);
-
-                    if (i == 2)
-                        tdClass = GetPodiumClass(ride.EventEligibleRoadBikeRidersRank, ride);
-
-                    sb.AppendLine(string.IsNullOrEmpty(tdClass)
-                        ? $"<td>{cellValue}</td>"
-                        : $"<td class=\"{tdClass}\">{cellValue}</td>");
-                }
-
-                sb.AppendLine("</tr>");
-            }
-            sb.AppendLine("</tbody></table>");
-
+            sb.AppendLine("</tbody>");
             return sb.ToString();
+        }
+
+        private string RenderRow(Ride ride)
+        {
+            var sb = new StringBuilder();
+            var cssClass = GetRowClass(ride);
+
+            sb.AppendLine($"<tr class=\"{cssClass}\">");
+
+            foreach (var cell in BuildCells(ride).Select((value, index) => RenderCell(value, index, ride)))
+                sb.AppendLine(cell);
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private IEnumerable<string> BuildCells(Ride ride)
+        {
+            var timeCell = ride.Status switch
+            {
+                RideStatus.DNF => "DNF",
+                RideStatus.DNS => "DNS",
+                RideStatus.DQ => "DQ",
+                _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
+            };
+
+            yield return ride.Name ?? "Unknown";
+            yield return ride.EventRank?.ToString() ?? "";
+            yield return ride.EventRoadBikeRank?.ToString() ?? "";
+            yield return timeCell;
+            yield return ride.AvgSpeed?.ToString("0.00") ?? string.Empty;
+        }
+
+        private string RenderCell(string value, int index, Ride ride)
+        {
+            var encoded = WebUtility.HtmlEncode(value);
+            var tdClass = index switch
+            {
+                1 => GetPodiumClass(ride.EventEligibleRidersRank, ride),
+                2 => GetPodiumClass(ride.EventEligibleRoadBikeRidersRank, ride),
+                _ => string.Empty
+            };
+
+            return string.IsNullOrEmpty(tdClass)
+                ? $"<td>{encoded}</td>"
+                : $"<td class=\"{tdClass}\">{encoded}</td>";
         }
 
         public static string GetPodiumClass(int? rank, Ride ride)
