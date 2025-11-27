@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.Services
@@ -13,18 +14,27 @@ namespace ClubSiteGenerator.Services
             IGrouping<Competitor, Ride> group,
             IEnumerable<CalendarEvent> calendar)
         {
-            // Best 8 ten‑mile rides
-            var best8TenMileRides = group
-                .Where(r => calendar.First(ev => ev.EventNumber == r.EventNumber).IsEvening10)
+            // Precompute lookup for event type
+            var isTenMileByEvent = calendar
+                .ToDictionary(ev => ev.EventNumber, ev => ev.IsEvening10);
+
+            // Only valid rides contribute to scoring
+            var validRides = group
+                .Where(r => r.Status == RideStatus.Valid)
+                .ToList();
+
+            // Best 8 ten‑mile rides (valid only)
+            var best8TenMileRides = validRides
+                .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && isTen)
                 .OrderByDescending(r => r.JuvenilesPoints)
                 .Take(8)
                 .ToList();
 
             var best8TenMile = best8TenMileRides.Sum(r => r.JuvenilesPoints);
 
-            // Best 2 non‑10 rides
-            var nonTenMileBest2Rides = group
-                .Where(r => !calendar.Single(ev => ev.EventNumber == r.EventNumber).IsEvening10)
+            // Best 2 non‑ten rides (valid only)
+            var nonTenMileBest2Rides = validRides
+                .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && !isTen)
                 .OrderByDescending(r => r.JuvenilesPoints)
                 .Take(2)
                 .ToList();
@@ -32,8 +42,8 @@ namespace ClubSiteGenerator.Services
             var nonTenMileBest2 = nonTenMileBest2Rides.Sum(r => r.JuvenilesPoints);
             var consumedEventNumbers = nonTenMileBest2Rides.Select(r => r.EventNumber).ToHashSet();
 
-            // Best 9 of remaining rides
-            var remainingBest9Rides = group
+            // Best 9 of remaining valid rides (excluding the 2 non‑ten already consumed)
+            var remainingBest9Rides = validRides
                 .Where(r => !consumedEventNumbers.Contains(r.EventNumber))
                 .OrderByDescending(r => r.JuvenilesPoints)
                 .Take(9)
@@ -41,13 +51,14 @@ namespace ClubSiteGenerator.Services
 
             var remainingBest9 = remainingBest9Rides.Sum(r => r.JuvenilesPoints);
 
-            // Combine into Scoring‑11
+            // Combine into Scoring‑11 (only if 2 valid non‑ten exist)
             var scoring11Rides = nonTenMileBest2Rides.Concat(remainingBest9Rides).ToList();
-            var scoring11 = nonTenMileBest2 + remainingBest9;
+            var scoring11 = nonTenMileBest2Rides.Count == 2 ? nonTenMileBest2 + remainingBest9 : (double?)null;
 
+            // Per‑event data for rendering
             var eventPoints = group.ToDictionary(
                 r => r.EventNumber,
-                r => r.JuvenilesPoints // may be null
+                r => r.Status == RideStatus.Valid ? r.JuvenilesPoints : null
             );
 
             var eventStatuses = group.ToDictionary(
@@ -61,12 +72,59 @@ namespace ClubSiteGenerator.Services
                 Rides = group.ToList(),
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
-                EventsCompleted = group.Count(),
+                // Count only valid rides as completed
+                EventsCompleted = validRides.Count,
                 Best8TenMile = best8TenMile,
                 Best8TenMileRides = best8TenMileRides,
-                Scoring11 = nonTenMileBest2Rides.Count == 2 ? scoring11 : null,
+                Scoring11 = scoring11,
                 Scoring11Rides = scoring11Rides
             };
+        }
+
+        /// <summary>
+        /// Assigns ranks to a list of results, tie‑aware, stopping once Scoring11 is null.
+        /// </summary>
+        public static void AssignRanks(List<CompetitorResult> results)
+        {
+            int currentRank = 1;
+            double? lastScore = null;
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                var score = results[i].Scoring11;
+
+                if (score == null)
+                {
+                    results[i].Rank = null;
+                    continue;
+                }
+
+                if (lastScore != null && score == lastScore)
+                {
+                    results[i].Rank = results[i - 1].Rank;
+                }
+                else
+                {
+                    results[i].Rank = currentRank;
+                }
+
+                lastScore = score;
+                currentRank++;
+            }
+        }
+
+        /// <summary>
+        /// Sorts results: Scoring11 first (desc), then Best8TenMile (desc), then surname/given name.
+        /// </summary>
+        public static IEnumerable<CompetitorResult> SortResults(IEnumerable<CompetitorResult> results)
+        {
+            return results
+                .OrderByDescending(r => r.Scoring11.HasValue)
+                .ThenByDescending(r => r.Scoring11)
+                .ThenByDescending(r => r.Best8TenMile.HasValue)
+                .ThenByDescending(r => r.Best8TenMile)
+                .ThenBy(r => r.Competitor.Surname)
+                .ThenBy(r => r.Competitor.GivenName);
         }
     }
 }

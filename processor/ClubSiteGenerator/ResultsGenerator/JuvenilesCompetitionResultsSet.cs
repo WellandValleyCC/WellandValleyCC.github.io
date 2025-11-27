@@ -59,7 +59,9 @@ namespace ClubSiteGenerator.ResultsGenerator
         //};
 
 
-        public static JuvenilesCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> calendar)
+        public static JuvenilesCompetitionResultsSet CreateFrom(
+            IEnumerable<Ride> allRides,
+            IEnumerable<CalendarEvent> calendar)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -75,68 +77,29 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
+            // filter juvenile rides
             var juvenileRides = allRides
                 .Where(r =>
                     r.Competitor != null &&
                     r.Competitor.IsJuvenile &&
                     r.Status == RideStatus.Valid);
 
+            // group by competitor
             var groups = juvenileRides
                 .GroupBy(r => r.Competitor!)
                 .ToList();
 
+            // build results
             var results = groups
                 .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group, calendar))
-                .OrderByDescending(r => r.Scoring11.HasValue)               // tier 1: Scoring11 present first
-                .ThenByDescending(r => r.Scoring11)                         // within tier 1, sort by score
-                .ThenByDescending(r => r.Best8TenMile.HasValue)             // tier 2: Best8TenMile present next
-                .ThenByDescending(r => r.Best8TenMile)                      // within tier 2, sort by score
-                .ThenBy(r => ExtractSurname(r.Competitor.FullName))         // tier 3: surname
-                .ThenBy(r => ExtractGivenName(r.Competitor.FullName))       // then given name
                 .ToList();
 
-            int currentRank = 1;
-            double? lastScore = null;
+            results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            for (int i = 0; i < results.Count; i++)
-            {
-                var score = results[i].Scoring11;
-
-                if (score == null)
-                {
-                    // once we hit a competitor with no valid score, stop assigning ranks
-                    results[i].Rank = null;
-                    continue;
-                }
-
-                if (lastScore != null && score == lastScore)
-                {
-                    // tie --> same rank as previous competitor
-                    results[i].Rank = results[i - 1].Rank;
-                }
-                else
-                {
-                    // new score --> assign current rank
-                    results[i].Rank = currentRank;
-                }
-
-                lastScore = score;
-                currentRank++;
-            }
+            CompetitionResultsCalculator.AssignRanks(results);
 
             return new JuvenilesCompetitionResultsSet(calendar, results);
         }
 
-        private static string ExtractSurname(string fullName)
-        {
-            var parts = (fullName ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            return parts.Length >= 2 ? parts[^1] : fullName ?? string.Empty;
-        }
-
-        private static string ExtractGivenName(string fullName)
-        {
-            var parts = (fullName ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            return parts.Length >= 2 ? string.Join(' ', parts.Take(parts.Length - 1)) : fullName ?? string.Empty;
-        }
     }
 }

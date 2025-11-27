@@ -8,7 +8,7 @@ using ClubSiteGenerator.Utilities;
 
 namespace ClubSiteGenerator.Renderers
 {
-    internal class CompetitionRenderer : HtmlRendererBase
+    public class CompetitionRenderer : HtmlRendererBase
     {
         private readonly CompetitionResultsSet resultsSet;
         private readonly IEnumerable<CalendarEvent> calendar;
