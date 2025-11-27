@@ -5,16 +5,15 @@ namespace ClubSiteGenerator.ResultsGenerator
 {
     public abstract class CompetitionResultsSet : ResultsSet
     {
-        protected readonly IEnumerable<CalendarEvent> Calendar;
 
         /// <summary>
         /// All scored rides contributing to this competition.
         /// </summary>
         public IReadOnlyList<CompetitorResult> ScoredRides { get; }
 
-        protected CompetitionResultsSet(IEnumerable<CompetitorResult> scoredRides, IEnumerable<CalendarEvent> calendar)
+        protected CompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar)        
         {
-            Calendar = calendar;
             ScoredRides = scoredRides.ToList().AsReadOnly();
         }
 

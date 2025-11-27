@@ -46,7 +46,7 @@ namespace ClubSiteGenerator.Tests
                 CalendarEvent = ev
             };
 
-            var resultsSet = EventResultsSet.CreateFrom(ev, new[] { ride });
+            var resultsSet = EventResultsSet.CreateFrom(new[] { ev }, new[] { ride }, 11);
             var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
 
             // Act
@@ -78,7 +78,7 @@ namespace ClubSiteGenerator.Tests
                 Miles = 10
             };
 
-            var resultsSet = EventResultsSet.CreateFrom(ev, Array.Empty<Ride>());
+            var resultsSet = EventResultsSet.CreateFrom(new[] { ev }, Array.Empty<Ride>(), 1);
             var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
 
             var html = renderer.Render();
@@ -98,7 +98,7 @@ namespace ClubSiteGenerator.Tests
                 Miles = 10
             };
 
-            var resultsSet = EventResultsSet.CreateFrom(ev, Array.Empty<Ride>());
+            var resultsSet = EventResultsSet.CreateFrom(new[] { ev }, Array.Empty<Ride>(), 20);
             var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
 
             var html = renderer.Render();

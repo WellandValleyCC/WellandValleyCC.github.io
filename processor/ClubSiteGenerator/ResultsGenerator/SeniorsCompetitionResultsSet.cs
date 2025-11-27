@@ -6,8 +6,9 @@ namespace ClubSiteGenerator.ResultsGenerator
     // Seniors
     public sealed class SeniorsCompetitionResultsSet : CompetitionResultsSet
     {
-        private SeniorsCompetitionResultsSet(IEnumerable<CompetitorResult> scoredRides, IEnumerable<CalendarEvent> events)
-            : base(scoredRides, events) { }
+        private SeniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar, scoredRides) 
+        { }
 
         public override string DisplayName => "Seniors Competition";
         public override string FileName => "seniors.html";

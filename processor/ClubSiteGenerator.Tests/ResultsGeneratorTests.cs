@@ -79,7 +79,7 @@ namespace ClubSiteGenerator.Tests
                 .ForEach(r => r.AvgSpeed = calendarEvent.Miles / (r.TotalSeconds / 3600.0));
 
             // Act
-            var eventResults = EventResultsSet.CreateFrom(calendarEvent, rides);
+            var eventResults = EventResultsSet.CreateFrom(new[] { calendarEvent }, rides, 1);
 
             // Assert
             eventResults.Should().NotBeNull();

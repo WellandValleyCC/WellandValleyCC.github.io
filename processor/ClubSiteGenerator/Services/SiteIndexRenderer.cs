@@ -33,7 +33,7 @@ namespace ClubSiteGenerator.Services
 
             foreach (var ev in events)
             {
-                var fileName = $"event-{ev.EventNumber:D2}.html"; // two‑digit formatting
+                var fileName = $"{ev.EventDate.Year}-event-{ev.EventNumber:D2}.html"; // two‑digit formatting
                 sb.AppendLine($"  <li><a href=\"events/{fileName}\">TT{ev.EventNumber:D2} – {ev.EventDate:yyyy-MM-dd}</a></li>");
             }
 

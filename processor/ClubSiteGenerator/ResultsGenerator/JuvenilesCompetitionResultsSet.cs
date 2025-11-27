@@ -9,11 +9,12 @@ namespace ClubSiteGenerator.ResultsGenerator
 {
     public sealed class JuvenilesCompetitionResultsSet : CompetitionResultsSet
     {
-        private JuvenilesCompetitionResultsSet(IEnumerable<CompetitorResult> scoredRides, IEnumerable<CalendarEvent> calendar)
-            : base(scoredRides, calendar) { }
+        private JuvenilesCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar, scoredRides) { }
 
         public override string DisplayName => "Juveniles Competition";
-        public override string FileName => "juveniles";
+
+        public override string FileName => $"{Year}-juveniles";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Juvenile;
         public override string CompetitionCode => "JUV";
@@ -123,7 +124,7 @@ namespace ClubSiteGenerator.ResultsGenerator
                 currentRank++;
             }
 
-            return new JuvenilesCompetitionResultsSet(results, calendar);
+            return new JuvenilesCompetitionResultsSet(calendar, results);
         }
 
         private static string ExtractSurname(string fullName)

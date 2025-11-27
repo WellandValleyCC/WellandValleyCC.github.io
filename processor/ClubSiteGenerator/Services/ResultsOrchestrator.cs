@@ -35,7 +35,7 @@ namespace ClubSiteGenerator.Services
         private void InitializeResultsSets()
         {
             foreach (var ev in calendar)
-                resultsSets.Add(EventResultsSet.CreateFrom(ev, rides));
+                resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
             // Later: competitions auto‑discovered via reflection
             resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar));
@@ -64,7 +64,9 @@ namespace ClubSiteGenerator.Services
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
-                File.WriteAllText(Path.Combine(outputDir, $"{resultsSet.FileName}.html"), html);
+                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
+                Directory.CreateDirectory(folderPath);
+                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
             }
         }
 

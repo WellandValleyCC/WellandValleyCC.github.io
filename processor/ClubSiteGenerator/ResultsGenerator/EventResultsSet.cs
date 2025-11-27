@@ -8,9 +8,10 @@ namespace ClubSiteGenerator.ResultsGenerator
         private readonly CalendarEvent calendarEvent;
         public readonly IEnumerable<Ride> Rides;
 
-        private EventResultsSet(CalendarEvent ev, IEnumerable<Ride> rides) 
+        private EventResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<Ride> rides, int eventNumber) 
+            : base(calendar)
         {
-            this.calendarEvent = ev;
+            this.calendarEvent = calendar.Single(ev => ev.EventNumber == eventNumber);
             this.Rides = rides;
         }
 
@@ -18,8 +19,10 @@ namespace ClubSiteGenerator.ResultsGenerator
         public int EventNumber => calendarEvent.EventNumber;
         public DateOnly EventDate => DateOnly.FromDateTime(calendarEvent.EventDate);
 
+        public int year => calendarEvent.EventDate.Year;
+
         public override string DisplayName => $"{calendarEvent.EventName}";
-        public override string FileName => $"event-{calendarEvent.EventNumber:D2}";
+        public override string FileName => $"{year}-event-{calendarEvent.EventNumber:D2}";
         public override string SubFolderName => "events";
 
         private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus eligibility)
@@ -54,7 +57,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         // Factory: single CalendarEvent
-        public static EventResultsSet CreateFrom(CalendarEvent ev, IEnumerable<Ride> allRides)
+        public static EventResultsSet CreateFrom(IEnumerable<CalendarEvent> calendar, IEnumerable<Ride> allRides, int eventNumber)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -70,7 +73,7 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == ev.EventNumber);
+            var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == eventNumber);
 
             var ranked = hydratedRidesForEvent.Where(r => r.Status == RideStatus.Valid)
                   .OrderBy(r => r.EventRank);
@@ -80,7 +83,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             var orderedHydratedRidesForEvent = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
 
-            return new EventResultsSet(ev, orderedHydratedRidesForEvent);
+            return new EventResultsSet(calendar, orderedHydratedRidesForEvent, eventNumber);
         }
     }
 
