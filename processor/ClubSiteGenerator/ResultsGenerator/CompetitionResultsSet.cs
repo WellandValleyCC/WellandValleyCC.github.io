@@ -1,21 +1,24 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    // -------------------- Competition Results --------------------
-
     public abstract class CompetitionResultsSet : ResultsSet
     {
-        protected readonly IEnumerable<CalendarEvent> Calendar;
 
-        protected CompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> calendar)
-            : base(rides)
+        /// <summary>
+        /// All scored rides contributing to this competition.
+        /// </summary>
+        public IReadOnlyList<CompetitorResult> ScoredRides { get; }
+
+        protected CompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar)        
         {
-            Calendar = calendar;
+            ScoredRides = scoredRides.ToList().AsReadOnly();
         }
 
         public abstract AgeGroup? AgeGroupFilter { get; }
-        public abstract string CompetitionCode { get; }
+        public abstract string CompetitionType { get; }
     }
 
 }

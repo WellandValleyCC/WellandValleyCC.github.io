@@ -1,4 +1,5 @@
-﻿using ClubSiteGenerator.ResultsGenerator;
+﻿using ClubSiteGenerator.Interfaces;
+using ClubSiteGenerator.ResultsGenerator;
 using System.Text;
 
 namespace ClubSiteGenerator.Services
@@ -6,18 +7,33 @@ namespace ClubSiteGenerator.Services
     public class SiteIndexRenderer
     {
         private readonly IEnumerable<EventResultsSet> events;
+        private readonly IEnumerable<CompetitionResultsSet> competitions;
         private readonly string outputDir;
 
-        public SiteIndexRenderer(IEnumerable<EventResultsSet> events, string outputDir)
+        public SiteIndexRenderer(IEnumerable<EventResultsSet> events,
+                                 IEnumerable<CompetitionResultsSet> competitions,
+                                 string outputDir)
         {
             this.events = events;
+            this.competitions = competitions;
             this.outputDir = outputDir;
         }
 
         public void RenderIndex()
         {
-            // Ensure output directory exists
             Directory.CreateDirectory(outputDir);
+
+            // Order events by EventNumber
+            var orderedEvents = events.OrderBy(ev => ev.EventNumber).Cast<IResultsSet>().ToList();
+
+            // Order competitions by fixed sequence
+            var orderedCompetitions = competitions
+                .OrderBy(c => Array.IndexOf(CompetitionOrder, c.DisplayName))
+                .Cast<IResultsSet>()
+                .ToList();
+
+            // Unified sequence
+            var allResults = orderedEvents.Concat(orderedCompetitions).ToList();
 
             var sb = new StringBuilder();
             sb.AppendLine("<!DOCTYPE html>");
@@ -31,17 +47,26 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<h1>Season Overview</h1>");
             sb.AppendLine("<ul>");
 
-            foreach (var ev in events)
+            foreach (var rs in allResults)
             {
-                var fileName = $"event-{ev.EventNumber:D2}.html"; // two‑digit formatting
-                sb.AppendLine($"  <li><a href=\"events/{fileName}\">TT{ev.EventNumber:D2} – {ev.EventDate:yyyy-MM-dd}</a></li>");
+                sb.AppendLine($"  <li><a href=\"{rs.SubFolderName}/{rs.FileName}.html\">{rs.DisplayName}</a></li>");
             }
 
             sb.AppendLine("</ul>");
+
             sb.AppendLine("</body></html>");
 
             var path = Path.Combine(outputDir, "preview.html");
             File.WriteAllText(path, sb.ToString());
         }
+
+        public static readonly string[] CompetitionOrder =
+        {
+            "Seniors", "Veterans", "Juveniles", "Juniors",
+            "Women", "RoadBikeMen", "RoadBikeWomen",
+            "Premier", "League1", "League2", "League3", "League4",
+            "NevBrooks"
+        };
     }
+
 }

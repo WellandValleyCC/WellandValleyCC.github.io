@@ -46,8 +46,10 @@ namespace ClubSiteGenerator.Tests
                 CalendarEvent = ev
             };
 
-            var resultsSet = EventResultsSet.CreateFrom(ev, new[] { ride });
-            var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
+            var resultsSet = EventResultsSet.CreateFrom(new[] { ev }, new[] { ride }, 11);
+            resultsSet.PrevLink = "2025-event-10.html";
+            resultsSet.NextLink = "2025-event-12.html";
+            var renderer = new EventRenderer(resultsSet);
 
             // Act
             var html = renderer.Render();
@@ -57,54 +59,14 @@ namespace ClubSiteGenerator.Tests
             html.Should().Contain("<span class=\"event-number\">Event 11:</span>");
             html.Should().Contain("Sunday, 15 June 2025");
             html.Should().Contain("Distance: 25 miles");
-            html.Should().Contain("href=\"event-10.html\"");
+            html.Should().Contain("href=\"2025-event-10.html\"");
             html.Should().Contain("href=\"../preview.html\"");
-            html.Should().Contain("href=\"event-12.html\"");
+            html.Should().Contain("href=\"2025-event-12.html\"");
             html.Should().Contain("competition-eligible");
             html.Should().Contain("guest-second-claim");
             html.Should().Contain("guest-non-club-member");
             html.Should().Contain("class=\"position-1\"");
             html.Should().Contain("<tr class=\"competition-eligible\">");
-        }
-
-        [Fact]
-        public void Render_EventOnePrevWrapsToTotalEvents()
-        {
-            var ev = new CalendarEvent
-            {
-                EventNumber = 1,
-                EventName = "Dummy",
-                EventDate = new DateTime(2025, 1, 1),
-                Miles = 10
-            };
-
-            var resultsSet = EventResultsSet.CreateFrom(ev, Array.Empty<Ride>());
-            var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
-
-            var html = renderer.Render();
-
-            html.Should().Contain("href=\"event-20.html\""); // prev wraps
-            html.Should().Contain("href=\"event-02.html\""); // next
-        }
-
-        [Fact]
-        public void Render_LastEventNextWrapsToOne()
-        {
-            var ev = new CalendarEvent
-            {
-                EventNumber = 20,
-                EventName = "Dummy",
-                EventDate = new DateTime(2025, 1, 1),
-                Miles = 10
-            };
-
-            var resultsSet = EventResultsSet.CreateFrom(ev, Array.Empty<Ride>());
-            var renderer = new EventRenderer(resultsSet, numberOfEvents: 20);
-
-            var html = renderer.Render();
-
-            html.Should().Contain("href=\"event-19.html\""); // prev
-            html.Should().Contain("href=\"event-01.html\""); // next wraps
         }
     }
 }

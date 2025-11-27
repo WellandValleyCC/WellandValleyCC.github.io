@@ -1,18 +1,20 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
     // Seniors
     public sealed class SeniorsCompetitionResultsSet : CompetitionResultsSet
     {
-        private SeniorsCompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> events)
-            : base(rides, events) { }
+        private SeniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar, scoredRides) 
+        { }
 
         public override string DisplayName => "Seniors Competition";
         public override string FileName => "seniors.html";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => null;
-        public override string CompetitionCode => "SNR";
+        public override string CompetitionType => "SNR";
 
         public static SeniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {
@@ -30,7 +32,7 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            return new SeniorsCompetitionResultsSet(allRides, events);
+            return null; // new SeniorsCompetitionResultsSet(allRides, events);
         }
     }
 

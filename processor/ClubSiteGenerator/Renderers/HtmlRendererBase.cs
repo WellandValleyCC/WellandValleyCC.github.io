@@ -49,7 +49,6 @@ namespace ClubSiteGenerator.Renderers
             var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
             return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
         }
-
     }
 }
 

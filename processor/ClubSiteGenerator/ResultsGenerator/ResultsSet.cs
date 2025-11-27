@@ -1,18 +1,23 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Interfaces;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    public abstract class ResultsSet
+    public abstract class ResultsSet : IResultsSet
     {
-        public readonly IEnumerable<Ride> Rides;
+        protected readonly IEnumerable<CalendarEvent> Calendar;
 
-        protected ResultsSet(IEnumerable<Ride> rides)
+        protected ResultsSet(IEnumerable<CalendarEvent> calendar)
         {
-            Rides = rides;
+            Calendar = calendar;
+            Year = calendar.First().EventDate.Year;
         }
 
+        protected int Year { get; }
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
         public abstract string SubFolderName { get; }
+        public string? PrevLink { get; set; }
+        public string? NextLink { get; set; }
     }
 }

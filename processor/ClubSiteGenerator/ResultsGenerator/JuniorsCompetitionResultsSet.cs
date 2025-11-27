@@ -1,19 +1,21 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Models;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    // Juniors
     public sealed class JuniorsCompetitionResultsSet : CompetitionResultsSet
     {
-        private JuniorsCompetitionResultsSet(IEnumerable<Ride> rides, IEnumerable<CalendarEvent> events)
-            : base(rides, events) { }
+        private JuniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar, scoredRides) 
+        { 
+        }
 
         public override string DisplayName => "Juniors Competition";
         public override string FileName => "juniors";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Junior;
-        public override string CompetitionCode => "JNR";
+        public override string CompetitionType => "JNR";
 
         public static JuniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {
@@ -36,7 +38,8 @@ namespace ClubSiteGenerator.ResultsGenerator
                     r.Competitor != null
                     && r.Competitor.IsJunior
                     && r.Status == RideStatus.Valid);
-            return new JuniorsCompetitionResultsSet(juniorRides, events);
+
+            return null; // new JuniorsCompetitionResultsSet(juniorRides, events);
         }
     }
 
