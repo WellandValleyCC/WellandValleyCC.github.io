@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string FileName => $"{Year}-juveniles";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Juvenile;
-        public override string CompetitionCode => "JUV";
+        public override string CompetitionType => "Juveniles";
 
 
         //// Project event numbers, dates, and names from the calendar

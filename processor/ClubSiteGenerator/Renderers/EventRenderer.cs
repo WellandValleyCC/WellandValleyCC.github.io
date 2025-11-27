@@ -11,17 +11,15 @@ namespace ClubSiteGenerator.Renderers
         private readonly EventResultsSet resultsSet;
         private readonly string eventTitle;
         private readonly int eventNumber;
-        private readonly int numberOfEvents;
         private readonly DateOnly eventDate; 
         private readonly double eventMiles;
 
-        public EventRenderer(EventResultsSet resultsSet, int numberOfEvents)
+        public EventRenderer(EventResultsSet resultsSet)
         {
             this.resultsSet = resultsSet;
 
             this.eventTitle = resultsSet.DisplayName;
             this.eventNumber = resultsSet.EventNumber;
-            this.numberOfEvents = numberOfEvents;
             this.eventDate = resultsSet.EventDate;
             this.eventMiles = resultsSet.CalendarEvent.Miles;
         }
@@ -41,13 +39,10 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
 
-            int prev = eventNumber == 1 ? numberOfEvents : eventNumber - 1;
-            int next = eventNumber == numberOfEvents ? 1 : eventNumber + 1;
-
             sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
-            sb.AppendLine($"    <a class=\"prev\" href=\"event-{prev:D2}.html\" aria-label=\"Previous event\">Previous</a>");
+            sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">Previous</a>");
             sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
-            sb.AppendLine($"    <a class=\"next\" href=\"event-{next:D2}.html\" aria-label=\"Next event\">Next</a>");
+            sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">Next</a>");
             sb.AppendLine("  </nav>");
 
             return sb.ToString();

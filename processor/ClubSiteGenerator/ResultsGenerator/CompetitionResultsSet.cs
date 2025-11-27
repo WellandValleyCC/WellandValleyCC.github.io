@@ -18,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         public abstract AgeGroup? AgeGroupFilter { get; }
-        public abstract string CompetitionCode { get; }
+        public abstract string CompetitionType { get; }
     }
 
 }

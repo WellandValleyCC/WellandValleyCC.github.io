@@ -1,8 +1,9 @@
 ﻿using ClubCore.Models;
-using ClubCore.Models.Csv;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Utilities;
+
 
 namespace ClubSiteGenerator.Services
 {
@@ -45,11 +46,34 @@ namespace ClubSiteGenerator.Services
         {
             StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
 
-            var totalEvents = resultsSets.OfType<EventResultsSet>().Count();
+            // Build unified ordering and assign Prev/Next
+            var orderedEvents = resultsSets.OfType<EventResultsSet>()
+                .OrderBy(ev => ev.EventNumber)
+                .Cast<IResultsSet>()
+                .ToList();
+
+            var orderedCompetitions = resultsSets.OfType<CompetitionResultsSet>()
+                .OrderBy(comp => SiteIndexRenderer.CompetitionOrder
+                    .ToList()
+                    .IndexOf(comp.CompetitionType.ToString()))
+                .Cast<IResultsSet>()
+                .ToList();
+
+            var allResults = orderedEvents.Concat(orderedCompetitions).ToList();
+
+            for (int i = 0; i < allResults.Count; i++)
+            {
+                var current = allResults[i];
+                var prev = allResults[(i - 1 + allResults.Count) % allResults.Count];
+                var next = allResults[(i + 1) % allResults.Count];
+
+                current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
+                current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
+            }
 
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())
             {
-                var renderer = new EventRenderer(resultsSet, totalEvents);
+                var renderer = new EventRenderer(resultsSet);
                 Console.WriteLine($"Generating results for event: {resultsSet.FileName}");
                 var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
@@ -77,8 +101,15 @@ namespace ClubSiteGenerator.Services
                 .OrderBy(ev => ev.EventDate) // optional: sort by date
                 .ToList();
 
+            var competitionResults = resultsSets
+                .OfType<CompetitionResultsSet>()
+                .OrderBy(comp => SiteIndexRenderer.CompetitionOrder
+                    .ToList()
+                    .IndexOf(comp.CompetitionType.ToString()))
+                .ToList();
+
             var outputDir = OutputLocator.GetOutputDirectory();
-            var indexRenderer = new SiteIndexRenderer(eventResults, outputDir);
+            var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
             indexRenderer.RenderIndex();
         }
     }

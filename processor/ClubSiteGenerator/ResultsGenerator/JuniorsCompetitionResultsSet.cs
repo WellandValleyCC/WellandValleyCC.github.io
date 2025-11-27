@@ -15,7 +15,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string FileName => "juniors";
         public override string SubFolderName => "competitions";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Junior;
-        public override string CompetitionCode => "JNR";
+        public override string CompetitionType => "JNR";
 
         public static JuniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {
