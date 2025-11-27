@@ -7,9 +7,15 @@ namespace ClubSiteGenerator.ResultsGenerator
     {
         protected readonly IEnumerable<CalendarEvent> Calendar;
 
+        /// <summary>
+        /// All scored rides contributing to this competition.
+        /// </summary>
+        public IReadOnlyList<CompetitorResult> ScoredRides { get; }
+
         protected CompetitionResultsSet(IEnumerable<CompetitorResult> scoredRides, IEnumerable<CalendarEvent> calendar)
         {
             Calendar = calendar;
+            ScoredRides = scoredRides.ToList().AsReadOnly();
         }
 
         public abstract AgeGroup? AgeGroupFilter { get; }

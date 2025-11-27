@@ -45,13 +45,26 @@ namespace ClubSiteGenerator.Services
             var scoring11Rides = nonTenMileBest2Rides.Concat(remainingBest9Rides).ToList();
             var scoring11 = nonTenMileBest2 + remainingBest9;
 
+            var eventPoints = group.ToDictionary(
+                r => r.EventNumber,
+                r => r.JuvenilesPoints // may be null
+            );
+
+            var eventStatuses = group.ToDictionary(
+                r => r.EventNumber,
+                r => r.Status
+            );
+
             return new CompetitorResult
             {
                 Competitor = group.Key,
                 Rides = group.ToList(),
+                EventPoints = eventPoints,
+                EventStatuses = eventStatuses,
+                EventsCompleted = group.Count(),
                 Best8TenMile = best8TenMile,
                 Best8TenMileRides = best8TenMileRides,
-                Scoring11 = scoring11,
+                Scoring11 = nonTenMileBest2Rides.Count == 2 ? scoring11 : null,
                 Scoring11Rides = scoring11Rides
             };
         }

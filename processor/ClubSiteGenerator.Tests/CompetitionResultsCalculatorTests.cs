@@ -28,14 +28,14 @@ namespace ClubSiteGenerator.Tests
             };
 
             var rides = new List<Ride>
-        {
-            new Ride { Competitor = competitor, EventNumber = 1, JuvenilesPoints = 60, Status = RideStatus.Valid },
-            new Ride { Competitor = competitor, EventNumber = 2, JuvenilesPoints = 55, Status = RideStatus.Valid },
-            new Ride { Competitor = competitor, EventNumber = 3, JuvenilesPoints = 50, Status = RideStatus.Valid },
-            new Ride { Competitor = competitor, EventNumber = 4, JuvenilesPoints = 45, Status = RideStatus.Valid }
-        };
+            {
+                new Ride { Competitor = competitor, EventNumber = 1, JuvenilesPoints = 60, Status = RideStatus.Valid },
+                new Ride { Competitor = competitor, EventNumber = 2, JuvenilesPoints = 55, Status = RideStatus.Valid },
+                new Ride { Competitor = competitor, EventNumber = 3, JuvenilesPoints = 50, Status = RideStatus.Valid },
+                new Ride { Competitor = competitor, EventNumber = 4, JuvenilesPoints = 45, Status = RideStatus.Valid }
+            };
 
-            var group = rides.GroupBy(r => r.Competitor).Single();
+            var group = rides.GroupBy(r => r.Competitor!).Single();
 
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group, _calendar);
 
@@ -75,7 +75,7 @@ namespace ClubSiteGenerator.Tests
             new Ride { Competitor = competitor, EventNumber = 4, JuvenilesPoints = 25, Status = RideStatus.Valid }
         };
 
-            var group = rides.GroupBy(r => r.Competitor).Single();
+            var group = rides.GroupBy(r => r.Competitor!).Single();
 
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group, _calendar);
 
