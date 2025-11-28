@@ -11,9 +11,9 @@ namespace ClubSiteGenerator.Tests
     public class CompetitionRendererTest
     {
         [Fact]
-        public void Render_ShouldIncludeCompetitionTitleAndCode()
+        public void Render_ShouldIncludeCompetitionTitleAndPoints()
         {
-            // Arrange: minimal calendar + competitors
+            // Arrange
             var calendar = new[]
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
@@ -30,7 +30,6 @@ namespace ClubSiteGenerator.Tests
 2,1,DNS,,,,Alice Smith";
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
@@ -39,16 +38,16 @@ namespace ClubSiteGenerator.Tests
             // Act
             var html = renderer.Render();
 
-            // Assert: check key elements
+            // Assert: title, competitor, and points appear
             html.Should().Contain("<title>")
                 .And.Contain("Alice Smith")
-                .And.Contain("60"); // points from position 1 in points table
+                .And.Contain("60"); // points from position 1
         }
 
         [Fact]
         public async Task Render_ShouldIncludeLegendWithCorrectEntries()
         {
-            // Arrange: renderer setup (same as before)
+            // Arrange
             var calendar = new[]
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1 - ten", IsEvening10 = true },
@@ -60,10 +59,8 @@ namespace ClubSiteGenerator.Tests
 1,Smith,Alice,FirstClaim,true,Juvenile,";
 
             var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
-
             var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
 1,1,Valid,1,,,Alice Smith";
-
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
@@ -72,82 +69,41 @@ namespace ClubSiteGenerator.Tests
 
             // Act
             var html = renderer.Render();
-
-            // Parse HTML
             var context = BrowsingContext.New(Configuration.Default);
             var document = await context.OpenAsync(req => req.Content(html));
 
-            // Assert: legend structure
+            // Assert: legend structure and text
             var legend = document.QuerySelector("div.legend");
-            legend.Should().NotBeNull("the legend div should be present");
+            legend.Should().NotBeNull();
 
             var spans = legend!.QuerySelectorAll("span");
-            spans.Should().HaveCount(2, "legend should contain exactly two entries");
+            spans.Should().HaveCount(2);
 
-            // Assert: first entry
             spans[0].ClassList.Should().Contain("ten-mile-event");
             spans[0].TextContent.Should().Be("10‑mile events");
 
-            // Assert: second entry
             spans[1].ClassList.Should().Contain("non-ten-mile-event");
             spans[1].TextContent.Should().Be("Other events");
         }
 
         [Fact]
-        public void Render_ShouldIncludeStatusAndPoints()
+        public async Task Render_ShouldIncludeCompetitorRow_WithCorrectClasses()
         {
-            // Arrange: minimal calendar + competitors
+            // Arrange
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1 - ten", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2 - 25mile", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3 - 9.5mile hardride", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 1,Smith,Alice,FirstClaim,true,Juvenile,";
 
             var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
-
             var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
 1,1,Valid,1,,,Alice Smith
 2,1,DNS,,,,Alice Smith";
-
-            var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
-
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
-            var renderer = new CompetitionRenderer(resultsSet, calendar);
-
-            // Act
-            var html = renderer.Render();
-
-            // Assert: check key elements
-            html.Should().Contain("Alice Smith"); // competitor name
-            html.Should().Contain("60");          // points for Event 1
-        }
-
-        [Fact]
-        public async Task Render_ShouldIncludeCompetitorRow_WithCorrectClasses()
-        {
-            // Arrange: renderer setup (same as your test)
-            var calendar = new[]
-            {
-            new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
-            new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
-            new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
-        };
-
-            var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
-1,Smith,Alice,FirstClaim,true,Juvenile,";
-
-            var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
-
-            var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
-1,1,Valid,1,,,Alice Smith
-2,1,DNS,,,,Alice Smith";
-
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
@@ -156,51 +112,45 @@ namespace ClubSiteGenerator.Tests
 
             // Act
             var html = renderer.Render();
-
-            // Parse HTML
             var context = BrowsingContext.New(Configuration.Default);
             var document = await context.OpenAsync(req => req.Content(html));
 
-            // Target the results table
             var table = document.QuerySelector("table.results");
             table.Should().NotBeNull();
 
-            var headers = table!.QuerySelectorAll("thead th");
-            headers.Should().NotBeEmpty();
+            var headerRows = table!.QuerySelectorAll("thead tr");
+            var lastHeaderRow = headerRows.Last();
+            var headerCells = lastHeaderRow.QuerySelectorAll("th");
 
-            // Map header text -> column index
-            var headerIndex = headers
+            var headerIndex = headerCells
                 .Select((h, i) => (Text: h.TextContent.Trim(), Index: i))
                 .ToDictionary(x => x.Text, x => x.Index);
 
-            // Find the row for "Alice Smith"
             var row = table.QuerySelectorAll("tbody tr")
                            .FirstOrDefault(r => r.Children.Any(c => c.TextContent.Trim() == "Alice Smith"));
-            row.Should().NotBeNull("Alice Smith row should be present");
+            row.Should().NotBeNull();
 
-            // Competitor name cell (anchored)
+            // Name column
             var nameCell = row!.Children[headerIndex["Name"]];
             nameCell.TextContent.Trim().Should().Be("Alice Smith");
-            nameCell.ClassName.Should().BeNullOrEmpty("Name column should not carry event classes");
+            nameCell.ClassName.Should().BeNullOrEmpty();
 
-            // Event 1 (10-mile): should be ten-mile-event and show 60
+            // Event cells
             var event1Cell = row.Children[headerIndex["Event 1"]];
             event1Cell.TextContent.Trim().Should().Be("60");
             event1Cell.ClassList.Should().Contain("ten-mile-event");
 
-            // Event 2 (non-10): should be non-ten-mile-event and show "-" (DNS)
             var event2Cell = row.Children[headerIndex["Event 2"]];
             event2Cell.TextContent.Trim().Should().Be("-");
             event2Cell.ClassList.Should().Contain("non-ten-mile-event");
 
-            // Event 3 (non-10): should be non-ten-mile-event and show "-" (no ride)
             var event3Cell = row.Children[headerIndex["Event 3"]];
             event3Cell.TextContent.Trim().Should().Be("-");
             event3Cell.ClassList.Should().Contain("non-ten-mile-event");
 
-            // Optional: verify the "10-mile TTs Best 8" summary is classless (fixed column)
+            // Summary column
             var ttBest8Cell = row.Children[headerIndex["10-mile TTs Best 8"]];
-            ttBest8Cell.ClassName.Should().BeNullOrEmpty("Summary columns should not carry event classes");
+            ttBest8Cell.ClassName.Should().BeNullOrEmpty();
 
             // Footer timestamp
             var footer = document.QuerySelector("footer p.generated");
@@ -209,9 +159,9 @@ namespace ClubSiteGenerator.Tests
         }
 
         [Fact]
-        public async Task Render_ShouldAlignAllHeaderAndBodyClasses()
+        public async Task Render_ShouldUseSemanticClassesForMultiRowHeaders()
         {
-            // Arrange: same setup as before
+            // Arrange
             var calendar = new[]
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
@@ -236,64 +186,44 @@ namespace ClubSiteGenerator.Tests
 
             // Act
             var html = renderer.Render();
-
-            // Parse HTML
             var context = BrowsingContext.New(Configuration.Default);
             var document = await context.OpenAsync(req => req.Content(html));
 
-            // Assert: header vs body class alignment
-            var headers = document.QuerySelectorAll("table.results thead th");
-            var rows = document.QuerySelectorAll("table.results tbody tr");
+            // Assert
+            var headerRows = document.QuerySelectorAll("table.results thead tr");
+            headerRows.Should().HaveCount(3, "There should be three header rows: number, date, title");
 
-            headers.Should().NotBeEmpty();
-            rows.Should().NotBeEmpty();
+            // Row 1: event numbers
+            foreach (var th in headerRows[0].Children.Skip(5)) // skip fixed columns
+                th.ClassList.Should().Contain("event-number");
 
-            // 1. Check header class rules
+            // Row 2: event dates
+            foreach (var th in headerRows[1].Children.Skip(5))
+                th.ClassList.Should().Contain("event-date");
+
+            // Row 3: event titles
+            foreach (var th in headerRows[2].Children.Skip(5))
+                th.ClassList.Should().Contain("event-title");
+
+            // Row 3: fixed columns
             var fixedHeaders = new[] { "Name", "Current rank", "Events completed", "10-mile TTs Best 8", "Scoring 11" };
             foreach (var fixedHeader in fixedHeaders)
             {
-                var th = headers.First(h => h.TextContent.Trim() == fixedHeader);
-                th.ClassName.Should().BeNullOrEmpty($"'{fixedHeader}' should not have a CSS class");
-            }
-
-            foreach (var ev in calendar)
-            {
-                var th = headers.First(h => h.TextContent.Trim() == ev.EventName);
-
-                if (ev.IsEvening10)
-                {
-                    th.ClassList.Should().Contain("ten-mile-event", $"'{ev.EventName}' should be marked as a ten-mile-event");
-                }
-                else
-                {
-                    th.ClassList.Should().Contain("non-ten-mile-event", $"'{ev.EventName}' should be marked as a non-ten-mile-event");
-                }
-            }
-
-            // 2. For each column, check that all body cells share the same class as the header
-            for (int col = 0; col < headers.Length; col++)
-            {
-                var expectedClass = headers[col].ClassName;
-
-                foreach (var row in rows)
-                {
-                    var cell = row.Children[col];
-                    cell.ClassName.Should().Be(expectedClass,
-                        $"Column '{headers[col].TextContent.Trim()}' should align class between header and body");
-                }
+                var th = headerRows[2].Children.First(h => h.TextContent.Trim() == fixedHeader);
+                th.ClassList.Should().Contain("fixed-column-title");
             }
         }
 
         [Fact]
-        public async Task Render_ShouldKeepLegendConsistentWithHeaderClasses()
+        public async Task Render_ShouldApplyLegendClassesToBodyCells()
         {
-            // Arrange: same setup as before
+            // Arrange
             var calendar = new[]
             {
-        new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
-        new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
-        new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
-    };
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
+            };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 1,Smith,Alice,FirstClaim,true,Juvenile,";
@@ -311,7 +241,6 @@ namespace ClubSiteGenerator.Tests
 
             // Act
             var html = renderer.Render();
-
             var context = BrowsingContext.New(Configuration.Default);
             var document = await context.OpenAsync(req => req.Content(html));
 
@@ -320,15 +249,22 @@ namespace ClubSiteGenerator.Tests
             legendSpans.Should().HaveCount(2);
 
             var legendClasses = legendSpans.Select(s => s.ClassName).ToList();
+            legendClasses.Should().Contain(new[] { "ten-mile-event", "non-ten-mile-event" });
 
-            // Assert: headers use only classes present in legend
-            var headerClasses = document.QuerySelectorAll("table.results thead th")
-                                        .Select(h => h.ClassName)
-                                        .Where(c => !string.IsNullOrEmpty(c))
-                                        .Distinct();
+            // Assert: body event cells use only classes present in legend
+            var rows = document.QuerySelectorAll("table.results tbody tr");
+            rows.Should().NotBeEmpty();
 
-            headerClasses.Should().OnlyContain(c => legendClasses.Contains(c),
-                "All header classes should be represented in the legend");
+            foreach (var row in rows)
+            {
+                // skip fixed columns
+                for (int col = 5; col < row.Children.Length; col++)
+                {
+                    var cell = row.Children[col];
+                    cell.ClassList.Should().IntersectWith(legendClasses,
+                        $"Body cell '{cell.TextContent.Trim()}' should use a class represented in the legend");
+                }
+            }
         }
     }
 }
