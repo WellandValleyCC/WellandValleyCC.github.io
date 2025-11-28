@@ -84,13 +84,21 @@ table.results tr.guest-second-claim,
 table.results tr.guest-non-club-member,
 .legend .guest-non-club-member  { background-color: #fff0e0; } /* light orange */
 
-/* Competition (cell-level) */
+/* Ten vs Non-Ten events (cell-level) */
 table.results td.ten-mile-event,
-.legend .ten-mile-event         { background-color: #e0ffe0; } /* light green */
+.legend .ten-mile-event         { background-color: #FDE9D9; } /* Ten */
 
 table.results td.non-ten-mile-event,
-.legend .non-ten-mile-event     { background-color: #fff0e0; } /* light orange */
+.legend .non-ten-mile-event     { background-color: #DCE6F1; } /* Non-Ten */
+
+/* Scoring columns (cell-level) */
+table.results td.scoring-11,
+.legend .scoring-11             { background-color: #CCFFCC; } /* Scoring 11 */
+
+table.results td.best-8,
+.legend .best-8                 { background-color: #EBF1DE; } /* Best 8 */
 ");
+
 
             /* ===========================
                Legend Styling
@@ -112,9 +120,30 @@ table.results td.non-ten-mile-event,
                Podium Highlighting
                =========================== */
             builder.AppendLine(@"
-table.results td.position-1 { background-color: #cfb53b; }
-table.results td.position-2 { background-color: #c4c4c4; }
-table.results td.position-3 { background-color: #a48347; color: #DDD9C4; }
+/* Gold */
+table.results td.scoring-11.position-1,
+table.results td.best-8.position-1,
+table.results td.position-1,
+.legend .position-1 {
+  background-color: #cfb53b;
+}
+
+/* Silver */
+table.results td.scoring-11.position-2,
+table.results td.best-8.position-2,
+table.results td.position-2,
+.legend .position-2 {
+  background-color: #c4c4c4;
+}
+
+/* Bronze */
+table.results td.scoring-11.position-3,
+table.results td.best-8.position-3,
+table.results td.position-3,
+.legend .position-3 {
+  background-color: #a48347;
+  color: #DDD9C4; /* contrast text */
+}
 ");
 
             /* ===========================
