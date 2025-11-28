@@ -71,24 +71,68 @@ namespace ClubSiteGenerator.Renderers
         private string RenderHeader()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<thead><tr>");
-
-            // Fixed columns: no class
-            foreach (var title in fixedColumnTitles)
-            {
-                sb.AppendLine($"<th>{WebUtility.HtmlEncode(title)}</th>");
-            }
-
-            // Event columns: class based on CalendarEvent.IsEvening10
-            foreach (var ev in calendar)
-            {
-                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-                sb.AppendLine($"<th class=\"{cssClass}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
-            }
-
-            sb.AppendLine("</tr></thead>");
+            sb.AppendLine("<thead>");
+            sb.AppendLine(RenderEventNumberRow());
+            sb.AppendLine(RenderEventDateRow());
+            sb.AppendLine(RenderTitleRow());
+            sb.AppendLine("</thead>");
             return sb.ToString();
         }
+
+        private string RenderEventNumberRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
+
+            foreach (var _ in fixedColumnTitles)
+                sb.AppendLine("<th class=\"fixed-column-title\"></th>");
+
+            foreach (var ev in calendar.OrderBy(e => e.EventNumber))
+            {
+                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                sb.AppendLine($"<th class=\"event-number {cssClass}\">{ev.EventNumber}</th>");
+            }
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private string RenderEventDateRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
+
+            foreach (var _ in fixedColumnTitles)
+                sb.AppendLine("<th class=\"fixed-column-title\"></th>");
+
+            foreach (var ev in calendar.OrderBy(e => e.EventNumber))
+            {
+                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                sb.AppendLine($"<th class=\"event-date {cssClass}\">{ev.EventDate:ddd dd/MM/yy}</th>");
+            }
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private string RenderTitleRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
+
+            foreach (var title in fixedColumnTitles)
+                sb.AppendLine($"<th class=\"fixed-column-title\">{WebUtility.HtmlEncode(title)}</th>");
+
+            foreach (var ev in calendar.OrderBy(e => e.EventNumber))
+            {
+                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                sb.AppendLine($"<th class=\"event-title {cssClass}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
+            }
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
 
         private string RenderBody()
         {
