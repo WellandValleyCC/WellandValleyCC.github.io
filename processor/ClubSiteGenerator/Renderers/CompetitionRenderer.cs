@@ -1,28 +1,30 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Utilities;
 using System.Net;
 using System.Text;
-using ClubSiteGenerator.Utilities;
 
 namespace ClubSiteGenerator.Renderers
 {
     public class CompetitionRenderer : HtmlRendererBase
     {
         private readonly CompetitionResultsSet resultsSet;
-        private readonly IEnumerable<CalendarEvent> calendar;
+        private readonly IReadOnlyList<CalendarEvent> calendar;
         private readonly string competitionTitle;
 
+        internal readonly List<string> fixedColumnTitles;
         internal readonly List<string> columnTitles;
 
         public CompetitionRenderer(CompetitionResultsSet resultsSet, IEnumerable<CalendarEvent> calendar)
         {
             this.resultsSet = resultsSet;
-            this.calendar = calendar;
+            this.calendar = calendar.OrderBy(ev => ev.EventNumber).ToList();
             this.competitionTitle = resultsSet.DisplayName;
 
-            columnTitles = new List<string>
+            fixedColumnTitles = new List<string>
             {
                 "Name",
                 "Current rank",
@@ -31,9 +33,8 @@ namespace ClubSiteGenerator.Renderers
                 "Scoring 11"
             };
 
-            columnTitles.AddRange(
-                calendar.Select(ev => ev.EventName).ToList()
-            );
+            // columnTitles = fixed + event names
+            columnTitles = fixedColumnTitles.Concat(calendar.Select(ev => ev.EventName)).ToList();
         }
 
         protected override string TitleElement()
@@ -72,11 +73,17 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<thead><tr>");
 
-            foreach (var title in columnTitles)
+            // Fixed columns: no class
+            foreach (var title in fixedColumnTitles)
             {
-                // decide class based on whether this is a 10‑mile event column
-                var cssClass = IsTenMileColumn(title) ? "ten-mile-event" : "non-ten-mile-event";
-                sb.AppendLine($"<th class=\"{cssClass}\">{WebUtility.HtmlEncode(title)}</th>");
+                sb.AppendLine($"<th>{WebUtility.HtmlEncode(title)}</th>");
+            }
+
+            // Event columns: class based on CalendarEvent.IsEvening10
+            foreach (var ev in calendar)
+            {
+                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                sb.AppendLine($"<th class=\"{cssClass}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
             }
 
             sb.AppendLine("</tr></thead>");
@@ -144,22 +151,19 @@ namespace ClubSiteGenerator.Renderers
 
         private string RenderCell(string value, int index)
         {
-            var encoded = WebUtility.HtmlEncode(value);
-            // first 5 columns are fixed, event columns start at index 5
-            var cssClass = index >= 5 && IsTenMileColumn(columnTitles[index])
-                ? "ten-mile-event"
-                : index >= 5 ? "non-ten-mile-event" : string.Empty;
+            var encodedValue = WebUtility.HtmlEncode(value);
 
-            return string.IsNullOrEmpty(cssClass)
-                ? $"<td>{encoded}</td>"
-                : $"<td class=\"{cssClass}\">{encoded}</td>";
-        }
+            // Fixed columns (0..fixedColumnTitles.Count-1): no class
+            if (index < fixedColumnTitles.Count)
+            {
+                return $"<td>{encodedValue}</td>";
+            }
 
-        private static bool IsTenMileColumn(string title)
-        {
-            // crude check: if the event name contains "10" or is flagged in Calendar
-            return title.Contains("10");
+            // Event columns: look up corresponding CalendarEvent
+            var ev = calendar[index - fixedColumnTitles.Count];
+            var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+
+            return $"<td class=\"{cssClass}\">{encodedValue}</td>";
         }
     }
-
 }

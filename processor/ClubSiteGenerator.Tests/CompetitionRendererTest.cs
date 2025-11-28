@@ -283,5 +283,52 @@ namespace ClubSiteGenerator.Tests
                 }
             }
         }
+
+        [Fact]
+        public async Task Render_ShouldKeepLegendConsistentWithHeaderClasses()
+        {
+            // Arrange: same setup as before
+            var calendar = new[]
+            {
+        new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
+        new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
+        new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
+    };
+
+            var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
+1,Smith,Alice,FirstClaim,true,Juvenile,";
+
+            var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
+
+            var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
+1,1,Valid,1,,,Alice Smith";
+
+            var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
+            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var renderer = new CompetitionRenderer(resultsSet, calendar);
+
+            // Act
+            var html = renderer.Render();
+
+            var context = BrowsingContext.New(Configuration.Default);
+            var document = await context.OpenAsync(req => req.Content(html));
+
+            // Assert: legend entries exist
+            var legendSpans = document.QuerySelectorAll("div.legend span");
+            legendSpans.Should().HaveCount(2);
+
+            var legendClasses = legendSpans.Select(s => s.ClassName).ToList();
+
+            // Assert: headers use only classes present in legend
+            var headerClasses = document.QuerySelectorAll("table.results thead th")
+                                        .Select(h => h.ClassName)
+                                        .Where(c => !string.IsNullOrEmpty(c))
+                                        .Distinct();
+
+            headerClasses.Should().OnlyContain(c => legendClasses.Contains(c),
+                "All header classes should be represented in the legend");
+        }
     }
 }
