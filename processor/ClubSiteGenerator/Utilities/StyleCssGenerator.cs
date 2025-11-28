@@ -53,6 +53,16 @@ table.results th {
   background-color: #f4f4f4;
   font-weight: bold;
 }
+table.results thead th.invisible-cell {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+  line-height: 0;
+  height: 0;
+}
 table.results td:first-child {
   text-align: left;
   font-weight: 500;
@@ -61,15 +71,25 @@ table.results tbody tr:hover { background-color: #f1f7ff; }
 ");
 
             /* ===========================
-               Eligibility Colour Coding
+               Results & Legend Colour Coding
                =========================== */
             builder.AppendLine(@"
+/* Eligibility (row-level) */
 table.results tr.competition-eligible,
-.legend .competition-eligible   { background-color: #e0ffe0; }
+.legend .competition-eligible   { background-color: #e0ffe0; } /* light green */
+
 table.results tr.guest-second-claim,
-.legend .guest-second-claim     { background-color: #e0f0ff; }
+.legend .guest-second-claim     { background-color: #e0f0ff; } /* light blue */
+
 table.results tr.guest-non-club-member,
-.legend .guest-non-club-member  { background-color: #fff0e0; }
+.legend .guest-non-club-member  { background-color: #fff0e0; } /* light orange */
+
+/* Competition (cell-level) */
+table.results td.ten-mile-event,
+.legend .ten-mile-event         { background-color: #e0ffe0; } /* light green */
+
+table.results td.non-ten-mile-event,
+.legend .non-ten-mile-event     { background-color: #fff0e0; } /* light orange */
 ");
 
             /* ===========================
