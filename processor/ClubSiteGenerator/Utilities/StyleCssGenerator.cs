@@ -53,6 +53,16 @@ table.results th {
   background-color: #f4f4f4;
   font-weight: bold;
 }
+table.results thead th.invisible-cell {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+  line-height: 0;
+  height: 0;
+}
 table.results td:first-child {
   text-align: left;
   font-weight: 500;

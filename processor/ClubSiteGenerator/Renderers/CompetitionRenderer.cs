@@ -85,7 +85,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("<tr>");
 
             foreach (var _ in fixedColumnTitles)
-                sb.AppendLine("<th class=\"fixed-column-title\"></th>");
+                sb.AppendLine("<th class=\"invisible-cell\"></th>");
 
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
             {
@@ -103,7 +103,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("<tr>");
 
             foreach (var _ in fixedColumnTitles)
-                sb.AppendLine("<th class=\"fixed-column-title\"></th>");
+                sb.AppendLine("<th class=\"invisible-cell\"></th>");
 
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
             {
