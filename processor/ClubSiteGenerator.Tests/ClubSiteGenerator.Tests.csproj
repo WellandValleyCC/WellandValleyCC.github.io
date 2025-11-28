@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.17.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ClubProcessor\ClubProcessor.csproj" />
     <ProjectReference Include="..\ClubCore\ClubCore.csproj" />
     <ProjectReference Include="..\ClubSiteGenerator\ClubSiteGenerator.csproj" />
