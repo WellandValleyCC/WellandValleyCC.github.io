@@ -1,5 +1,4 @@
 ﻿using ClubCore.Models;
-using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
@@ -196,17 +195,39 @@ namespace ClubSiteGenerator.Renderers
         {
             var encodedValue = WebUtility.HtmlEncode(value);
 
-            // Fixed columns (0..fixedColumnTitles.Count-1): no class
-            if (index < fixedColumnTitles.Count)
+            // Column indices (zero-based)
+            const int firstFixedIndexEnd = 2;   // 0..2 => fixed columns (no class)
+            const int best8Index = 3;           // column 4
+            const int scoring11Index = 4;       // column 5
+            const int firstEventIndex = 5;      // column 6 onwards
+
+            // Fixed columns: 0..2
+            if (index <= firstFixedIndexEnd)
             {
                 return $"<td>{encodedValue}</td>";
             }
 
-            // Event columns: look up corresponding CalendarEvent
-            var ev = calendar[index - fixedColumnTitles.Count];
+            // Best 8: index 3
+            if (index == best8Index)
+            {
+                return $"<td class=\"best-8\">{encodedValue}</td>";
+            }
+
+            // Scoring 11: index 4
+            if (index == scoring11Index)
+            {
+                return $"<td class=\"scoring-11\">{encodedValue}</td>";
+            }
+
+            // Event columns: index 5+
+            // Map to calendar by subtracting the number of non-event columns (5).
+            var calendarIndex = index - firstEventIndex;
+            var ev = calendar[calendarIndex];
             var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
 
             return $"<td class=\"{cssClass}\">{encodedValue}</td>";
         }
+
+
     }
 }
