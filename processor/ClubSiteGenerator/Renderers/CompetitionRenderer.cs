@@ -44,7 +44,6 @@ namespace ClubSiteGenerator.Renderers
         {
             var sb = new StringBuilder();
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(competitionTitle)}</h1>");
-            sb.AppendLine($"  <p class=\"competition-code\">Code: {resultsSet.CompetitionType}</p>");
             return sb.ToString();
         }
 
