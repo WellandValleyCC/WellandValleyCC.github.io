@@ -44,51 +44,101 @@ table.results tbody tr:hover { background-color: #f1f7ff; }
 
 /* Eligibility (row-level) */
 table.results tr.competition-eligible,
-.legend .competition-eligible   { background-color: #e0ffe0; } /* light green */
+.legend .competition-eligible   { background-color: #e0ffe0; }
 
 table.results tr.guest-second-claim,
-.legend .guest-second-claim     { background-color: #e0f0ff; } /* light blue */
+.legend .guest-second-claim     { background-color: #e0f0ff; }
 
 table.results tr.guest-non-club-member,
-.legend .guest-non-club-member  { background-color: #fff0e0; } /* light orange */
+.legend .guest-non-club-member  { background-color: #fff0e0; }
 
-/* Competition (cell-level) */
+/* Ten vs Non-Ten events (cell-level) */
 table.results td.ten-mile-event,
-.legend .ten-mile-event         { background-color: #e0ffe0; } /* light green */
+.legend .ten-mile-event         { background-color: #FDE9D9; }
 
 table.results td.non-ten-mile-event,
-.legend .non-ten-mile-event     { background-color: #fff0e0; } /* light orange */
+.legend .non-ten-mile-event     { background-color: #DCE6F1; }
+
+/* Scoring columns (cell-level) */
+table.results td.scoring-11,
+.legend .scoring-11             { background-color: #CCFFCC; }
+
+table.results td.best-8,
+.legend .best-8                 { background-color: #EBF1DE; }
 
 
 .legend {
-  font-size: 1rem; /* explicit baseline */
+  font-size: 1rem;
 }
 .legend span {
   display: inline-block;
   padding: 0.25em 0.5em;
   margin-right: 0.5em;
   border-radius: 4px;
-  font-size: 1rem; /* explicit pill size */
+  font-size: 1rem;
 }
 
 
-table.results td.position-1 { background-color: #cfb53b; }
-table.results td.position-2 { background-color: #c4c4c4; }
-table.results td.position-3 { background-color: #a48347; color: #DDD9C4; }
+
+/* Gold */
+table.results td.scoring-11.gold,
+table.results td.best-8.gold,
+table.results td.gold,
+.legend .gold {
+  background-color: #cfb53b;
+}
+
+/* Silver */
+table.results td.scoring-11.silver,
+table.results td.best-8.silver,
+table.results td.silver,
+.legend .silver {
+  background-color: #c4c4c4;
+}
+
+/* Bronze */
+table.results td.scoring-11.bronze,
+table.results td.best-8.bronze,
+table.results td.bronze,
+.legend .bronze {
+  background-color: #a48347;
+  color: #DDD9C4;
+}
+
 
 
 header {
-  font-size: 1.25rem; /* explicit baseline */
+  font-size: 1.25rem;
 }
 .event-number { color: #666; font-weight: normal; font-size: 1.5rem; margin-right: 0.25em; }
 header .event-date { font-style: italic; font-size: 1.25rem; color: #555; margin: 0.25em 0; }
 header .event-distance { font-size: 1.25rem; font-weight: 500; color: #333; margin: 0.25em 0; }
 
+/* Explicit header row controls */
+table.results thead .event-number {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+}
+table.results thead .event-date {
+  font-size: 0.9rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #555;
+  white-space: nowrap; 
+}
+table.results thead .event-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+  text-align: center;
+}
+
 .event-nav {
   display: flex;
   justify-content: space-between;
   margin: 0.5em 0 1em 0;
-  font-size: 1rem; /* explicit baseline */
+  font-size: 1rem;
 }
 .event-nav a {
   flex: 0 0 auto;
@@ -100,7 +150,7 @@ header .event-distance { font-size: 1.25rem; font-weight: 500; color: #333; marg
   font-weight: 500;
   text-decoration: none;
   transition: background-color 0.2s ease;
-  font-size: 1rem; /* explicit link size */
+  font-size: 1rem;
 }
 .event-nav a.prev { text-align: left; }
 .event-nav a.index { text-align: center; }
@@ -121,7 +171,7 @@ footer {
 
 
 @media (max-width: 600px) {
-  html, body { font-size: 1rem; } /* reset baseline */
+  html, body { font-size: 1rem; }
 
   table.results { font-size: 0.9rem; }
   table.results th, table.results td { padding: 0.25em 0.5em; line-height: 1.2; }
@@ -133,6 +183,11 @@ footer {
   .event-number { font-size: 1.2rem; }
   header .event-date { font-size: 0.9rem; }
   header .event-distance { font-size: 0.9rem; }
+
+  /* Mobile header row overrides */
+  table.results thead .event-number { font-size: 1rem; font-weight: 500; }
+  table.results thead .event-date   { font-size: 0.85rem; font-weight: 400; }
+  table.results thead .event-title  { font-size: 0.85rem; font-weight: 500; }
 
   .event-nav {
     font-size: 0.9rem;
