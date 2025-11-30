@@ -64,11 +64,11 @@ namespace ClubSiteGenerator.Tests
             CompetitionResultsCalculator.AssignRanks(results);
 
             // Assert
-            results.Single(r => r.Competitor.Surname == "Smith").FullCompetitionRank.Should().Be(1);
-            results.Single(r => r.Competitor.Surname == "Jones").FullCompetitionRank.Should().Be(1);
-            results.Single(r => r.Competitor.Surname == "Adams").FullCompetitionRank.Should().Be(3);
-            results.Single(r => r.Competitor.Surname == "Brown").FullCompetitionRank.Should().BeNull("because Dan Brown has two non-ten-mile rides, but one is a DNS");
-            results.Single(r => r.Competitor.Surname == "Green").FullCompetitionRank.Should().BeNull("because Emily has not done two non-ten events");
+            results.Single(r => r.Competitor.Surname == "Smith").FullCompetition.Rank.Should().Be(1);
+            results.Single(r => r.Competitor.Surname == "Jones").FullCompetition.Rank.Should().Be(1);
+            results.Single(r => r.Competitor.Surname == "Adams").FullCompetition.Rank.Should().Be(3);
+            results.Single(r => r.Competitor.Surname == "Brown").FullCompetition.Rank.Should().BeNull("because Dan Brown has two non-ten-mile rides, but one is a DNS");
+            results.Single(r => r.Competitor.Surname == "Green").FullCompetition.Rank.Should().BeNull("because Emily has not done two non-ten events");
         }
 
         [Theory]
@@ -77,8 +77,11 @@ namespace ClubSiteGenerator.Tests
         [InlineData(null, "n/a")]
         public void Best8TenMileDisplay_RoundsOrShowsNa(double? input, string expected)
         {
-            var result = new CompetitorResult { TenMileCompetitionPoints = input };
-            result.TenMileCompetitionPointsDisplay.Should().Be(expected);
+            var result = new CompetitorResult
+            {
+                TenMileCompetition = new CompetitionScore { Points = input }
+            };
+            result.TenMileCompetition.PointsDisplay.Should().Be(expected);
         }
 
         [Fact]

@@ -74,38 +74,61 @@ namespace ClubSiteGenerator.Services
                 EventStatuses = eventStatuses,
                 // Count only valid rides as completed
                 EventsCompleted = validRides.Count,
-                TenMileCompetitionPoints = best8TenMile,
-                TenMileCompetitionRides = best8TenMileRides,
-                FullCompetitionPoints = scoring11,
-                FullCompetitionRides = scoring11Rides
+
+                // All events view
+                AllEvents = new CompetitionScore
+                {
+                    Points = validRides.Sum(r => r.JuvenilesPoints),
+                    Rides = validRides
+                },
+
+                // Ten‑mile competition view
+                TenMileCompetition = new CompetitionScore
+                {
+                    Points = best8TenMile,
+                    Rides = best8TenMileRides
+                },
+
+                // Full competition view
+                FullCompetition = new CompetitionScore
+                {
+                    Points = scoring11,
+                    Rides = scoring11Rides
+                }
             };
+
         }
 
-        /// <summary>
-        /// Assigns ranks to a list of results, tie‑aware, stopping once Scoring11 is null.
-        /// </summary>
-        public static void AssignRanks(List<CompetitorResult> results)
+        private static void AssignRanksByScore(
+            List<CompetitorResult> results,
+            Func<CompetitorResult, double?> scoreSelector,
+            Action<CompetitorResult, int?> assignRank)
         {
+            if (assignRank is null) throw new ArgumentNullException(nameof(assignRank));
+
             int currentRank = 1;
             double? lastScore = null;
+            int? lastAssignedRank = null;
 
             for (int i = 0; i < results.Count; i++)
             {
-                var score = results[i].FullCompetitionPoints;
+                var score = scoreSelector(results[i]);
 
                 if (score == null)
                 {
-                    results[i].FullCompetitionRank = null;
+                    assignRank(results[i], null);
                     continue;
                 }
 
                 if (lastScore != null && score == lastScore)
                 {
-                    results[i].FullCompetitionRank = results[i - 1].FullCompetitionRank;
+                    // tie: reuse last assigned rank
+                    assignRank(results[i], lastAssignedRank);
                 }
                 else
                 {
-                    results[i].FullCompetitionRank = currentRank;
+                    assignRank(results[i], currentRank);
+                    lastAssignedRank = currentRank;
                 }
 
                 lastScore = score;
@@ -113,16 +136,45 @@ namespace ClubSiteGenerator.Services
             }
         }
 
+        public static void AssignRanks(List<CompetitorResult> results)
+        {
+            // All events
+            AssignRanksByScore(
+                results,
+                r => r.AllEvents.Points,
+                (r, rank) => r.AllEvents.Rank = rank
+            );
+
+            // Ten‑mile competition
+            AssignRanksByScore(
+                results,
+                r => r.TenMileCompetition.Points,
+                (r, rank) => r.TenMileCompetition.Rank = rank
+            );
+
+            // Full competition
+            AssignRanksByScore(
+                results,
+                r => r.FullCompetition.Points,
+                (r, rank) => r.FullCompetition.Rank = rank
+            );
+        }
+
         /// <summary>
-        /// Sorts results: Scoring11 first (desc), then Best8TenMile (desc), then surname/given name.
+        /// Sorts results: Full competition first (desc),
+        /// then Ten-mile competition (desc),
+        /// then All-events (desc),
+        /// then surname/given name.
         /// </summary>
         public static IEnumerable<CompetitorResult> SortResults(IEnumerable<CompetitorResult> results)
         {
             return results
-                .OrderByDescending(r => r.FullCompetitionPoints.HasValue)
-                .ThenByDescending(r => r.FullCompetitionPoints)
-                .ThenByDescending(r => r.TenMileCompetitionPoints.HasValue)
-                .ThenByDescending(r => r.TenMileCompetitionPoints)
+                .OrderByDescending(r => r.FullCompetition.Points.HasValue)
+                .ThenByDescending(r => r.FullCompetition.Points)
+                .ThenByDescending(r => r.TenMileCompetition.Points.HasValue)
+                .ThenByDescending(r => r.TenMileCompetition.Points)
+                .ThenByDescending(r => r.AllEvents.Points.HasValue)
+                .ThenByDescending(r => r.AllEvents.Points)
                 .ThenBy(r => r.Competitor.Surname)
                 .ThenBy(r => r.Competitor.GivenName);
         }

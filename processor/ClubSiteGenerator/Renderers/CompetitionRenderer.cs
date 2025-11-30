@@ -159,10 +159,10 @@ namespace ClubSiteGenerator.Renderers
         private IEnumerable<string> BuildCells(CompetitorResult result)
         {
             yield return result.Competitor.FullName;
-            yield return result.FullCompetitionRankDisplay;
+            yield return result.FullCompetition.RankDisplay;
             yield return result.EventsCompleted.ToString();
-            yield return result.TenMileCompetitionPointsDisplay;
-            yield return result.FullCompetitionPointsDisplay;
+            yield return result.TenMileCompetition.PointsDisplay;
+            yield return result.FullCompetition.PointsDisplay;
 
             // per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))

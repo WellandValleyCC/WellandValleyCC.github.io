@@ -40,16 +40,16 @@ namespace ClubSiteGenerator.Tests
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group, _calendar);
 
             // Assert totals
-            Assert.Equal(115, result.TenMileCompetitionPoints); // 60 + 55
-            Assert.Equal(210, result.FullCompetitionPoints);    // 60 + 55 + 50 + 45
+            Assert.Equal(115, result.TenMileCompetition.Points); // 60 + 55
+            Assert.Equal(210, result.FullCompetition.Points);    // 60 + 55 + 50 + 45
 
             // Assert contributing rides
-            Assert.Contains(result.TenMileCompetitionRides, r => r.EventNumber == 1);
-            Assert.Contains(result.TenMileCompetitionRides, r => r.EventNumber == 2);
+            Assert.Contains(result.TenMileCompetition.Rides, r => r.EventNumber == 1);
+            Assert.Contains(result.TenMileCompetition.Rides, r => r.EventNumber == 2);
 
-            Assert.Equal(4, result.FullCompetitionRides.Count);
-            Assert.Contains(result.FullCompetitionRides, r => r.EventNumber == 3);
-            Assert.Contains(result.FullCompetitionRides, r => r.EventNumber == 4);
+            Assert.Equal(4, result.FullCompetition.Rides.Count);
+            Assert.Contains(result.FullCompetition.Rides, r => r.EventNumber == 3);
+            Assert.Contains(result.FullCompetition.Rides, r => r.EventNumber == 4);
         }
 
         [Theory]
@@ -79,8 +79,8 @@ namespace ClubSiteGenerator.Tests
 
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group, _calendar);
 
-            Assert.True(result.FullCompetitionPoints > 0, $"{label} scoring should be positive");
-            Assert.NotEmpty(result.FullCompetitionRides);
+            Assert.True(result.FullCompetition.Points > 0, $"{label} scoring should be positive");
+            Assert.NotEmpty(result.FullCompetition.Rides);
         }
     }
 }
