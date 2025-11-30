@@ -95,17 +95,17 @@ namespace ClubSiteGenerator.Services
 
                 if (score == null)
                 {
-                    results[i].Rank = null;
+                    results[i].FullCompetitionRank = null;
                     continue;
                 }
 
                 if (lastScore != null && score == lastScore)
                 {
-                    results[i].Rank = results[i - 1].Rank;
+                    results[i].FullCompetitionRank = results[i - 1].FullCompetitionRank;
                 }
                 else
                 {
-                    results[i].Rank = currentRank;
+                    results[i].FullCompetitionRank = currentRank;
                 }
 
                 lastScore = score;

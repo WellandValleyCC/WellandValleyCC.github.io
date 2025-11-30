@@ -9,9 +9,19 @@ namespace ClubSiteGenerator.Models
         public IReadOnlyList<Ride> Rides { get; set; } = Array.Empty<Ride>();
 
         /// <summary>
-        /// Assigned rank within the competition (null if not ranked).
+        /// Assigned rank including all events (null if not ranked).
         /// </summary>
-        public int? Rank { get; set; }
+        public int? AllEventsRank { get; set; }
+
+        /// <summary>
+        /// Assigned rank for the Ten-mile events subject to competition limits (best 8 events in 2025) (null if not ranked).
+        /// </summary>
+        public int? TenMileCompetitionRank { get; set; }
+
+        /// <summary>
+        /// Assigned rank for the full competition subject to competition limits (best 11 events in 2025) (null if not ranked).
+        /// </summary>
+        public int? FullCompetitionRank { get; set; }
 
         /// <summary>
         /// Points scored per event number. If competitor did not ride, entry is absent. May be null if DNS/DNF/DQ.
@@ -46,7 +56,13 @@ namespace ClubSiteGenerator.Models
         public string Scoring11Display =>
             Scoring11.HasValue ? Math.Round(Scoring11.Value, MidpointRounding.AwayFromZero).ToString() : "n/a";
 
-        public string RankDisplay =>
-            Rank.HasValue ? Rank.Value.ToString() : "n/a";
+        public string AllEventsRankDisplay =>
+            AllEventsRank.HasValue ? AllEventsRank.Value.ToString() : "n/a";
+
+        public string TenMileCompetitionRankDisplay =>
+            TenMileCompetitionRank.HasValue ? TenMileCompetitionRank.Value.ToString() : "n/a";
+
+        public string FullCompetitionRankDisplay =>
+            FullCompetitionRank.HasValue ? FullCompetitionRank.Value.ToString() : "n/a";
     }
 }

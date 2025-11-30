@@ -149,7 +149,7 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            foreach (var cell in BuildCells(result).Select((value, index) => RenderCell(value, index)))
+            foreach (var cell in BuildCells(result).Select((value, index) => RenderCell(value, index, result.Competitor)))
                 sb.AppendLine(cell);
 
             sb.AppendLine("</tr>");
@@ -159,7 +159,7 @@ namespace ClubSiteGenerator.Renderers
         private IEnumerable<string> BuildCells(CompetitorResult result)
         {
             yield return result.Competitor.FullName;
-            yield return result.RankDisplay;
+            yield return result.FullCompetitionRankDisplay;
             yield return result.EventsCompleted.ToString();
             yield return result.Best8TenMileDisplay;
             yield return result.Scoring11Display;
@@ -191,7 +191,7 @@ namespace ClubSiteGenerator.Renderers
             }
         }
 
-        private string RenderCell(string value, int index)
+        private string RenderCell(string value, int index, Competitor competitor)
         {
             var encodedValue = WebUtility.HtmlEncode(value);
 
@@ -207,16 +207,24 @@ namespace ClubSiteGenerator.Renderers
                 return $"<td>{encodedValue}</td>";
             }
 
-            // Best 8: index 3
             if (index == best8Index)
             {
-                return $"<td class=\"best-8\">{encodedValue}</td>";
+                var podiumClass = GetPodiumClassForBest8(competitor);
+                var best8CssClass = string.IsNullOrEmpty(podiumClass)
+                    ? "best-8"
+                    : $"best-8 {podiumClass}";
+
+                return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
             }
 
-            // Scoring 11: index 4
             if (index == scoring11Index)
             {
-                return $"<td class=\"scoring-11\">{encodedValue}</td>";
+                var podiumClass = GetPodiumClassForScoring11(competitor);
+                var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
+                    ? "scoring-11"
+                    : $"scoring-11 {podiumClass}";
+
+                return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
             }
 
             // Event columns: index 5+
@@ -228,6 +236,14 @@ namespace ClubSiteGenerator.Renderers
             return $"<td class=\"{cssClass}\">{encodedValue}</td>";
         }
 
+        private string? GetPodiumClassForScoring11(Competitor competitor)
+        {
+            return string.Empty;
+        }
 
+        private string? GetPodiumClassForBest8(Competitor competitor)
+        {
+            return string.Empty;
+        }
     }
 }

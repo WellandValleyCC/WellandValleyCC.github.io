@@ -64,11 +64,11 @@ namespace ClubSiteGenerator.Tests
             CompetitionResultsCalculator.AssignRanks(results);
 
             // Assert
-            results.Single(r => r.Competitor.Surname == "Smith").Rank.Should().Be(1);
-            results.Single(r => r.Competitor.Surname == "Jones").Rank.Should().Be(1);
-            results.Single(r => r.Competitor.Surname == "Adams").Rank.Should().Be(3);
-            results.Single(r => r.Competitor.Surname == "Brown").Rank.Should().BeNull("because Dan Brown has two non-ten-mile rides, but one is a DNS");
-            results.Single(r => r.Competitor.Surname == "Green").Rank.Should().BeNull("because Emily has not done two non-ten events");
+            results.Single(r => r.Competitor.Surname == "Smith").FullCompetitionRank.Should().Be(1);
+            results.Single(r => r.Competitor.Surname == "Jones").FullCompetitionRank.Should().Be(1);
+            results.Single(r => r.Competitor.Surname == "Adams").FullCompetitionRank.Should().Be(3);
+            results.Single(r => r.Competitor.Surname == "Brown").FullCompetitionRank.Should().BeNull("because Dan Brown has two non-ten-mile rides, but one is a DNS");
+            results.Single(r => r.Competitor.Surname == "Green").FullCompetitionRank.Should().BeNull("because Emily has not done two non-ten events");
         }
 
         [Theory]
