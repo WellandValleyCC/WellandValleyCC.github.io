@@ -238,12 +238,26 @@ namespace ClubSiteGenerator.Renderers
 
         private string? GetPodiumClassForScoring11(Competitor competitor)
         {
-            return string.Empty;
+            var result = resultsSet.ScoredRides.FirstOrDefault(r => r.Competitor == competitor);
+            return result?.FullCompetition.Rank switch
+            {
+                1 => "gold",
+                2 => "silver",
+                3 => "bronze",
+                _ => string.Empty
+            };
         }
 
         private string? GetPodiumClassForBest8(Competitor competitor)
         {
-            return string.Empty;
+            var result = resultsSet.ScoredRides.FirstOrDefault(r => r.Competitor == competitor);
+            return result?.TenMileCompetition.Rank switch
+            {
+                1 => "gold",
+                2 => "silver",
+                3 => "bronze",
+                _ => string.Empty
+            };
         }
     }
 }

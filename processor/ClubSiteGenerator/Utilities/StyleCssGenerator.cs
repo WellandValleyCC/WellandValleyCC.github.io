@@ -117,30 +117,32 @@ table.results td.best-8,
                Podium Highlighting
                =========================== */
             builder.AppendLine(@"
+
 /* Gold */
-table.results td.scoring-11.position-1,
-table.results td.best-8.position-1,
-table.results td.position-1,
-.legend .position-1 {
+table.results td.scoring-11.gold,
+table.results td.best-8.gold,
+table.results td.gold,
+.legend .gold {
   background-color: #cfb53b;
 }
 
 /* Silver */
-table.results td.scoring-11.position-2,
-table.results td.best-8.position-2,
-table.results td.position-2,
-.legend .position-2 {
+table.results td.scoring-11.silver,
+table.results td.best-8.silver,
+table.results td.silver,
+.legend .silver {
   background-color: #c4c4c4;
 }
 
 /* Bronze */
-table.results td.scoring-11.position-3,
-table.results td.best-8.position-3,
-table.results td.position-3,
-.legend .position-3 {
+table.results td.scoring-11.bronze,
+table.results td.best-8.bronze,
+table.results td.bronze,
+.legend .bronze {
   background-color: #a48347;
   color: #DDD9C4;
 }
+
 ");
 
             /* ===========================
