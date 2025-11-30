@@ -1,5 +1,4 @@
 ﻿using ClubCore.Models;
-using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
@@ -150,7 +149,7 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            foreach (var cell in BuildCells(result).Select((value, index) => RenderCell(value, index)))
+            foreach (var cell in BuildCells(result).Select((value, index) => RenderCell(value, index, result.Competitor)))
                 sb.AppendLine(cell);
 
             sb.AppendLine("</tr>");
@@ -160,10 +159,10 @@ namespace ClubSiteGenerator.Renderers
         private IEnumerable<string> BuildCells(CompetitorResult result)
         {
             yield return result.Competitor.FullName;
-            yield return result.RankDisplay;
+            yield return result.FullCompetition.RankDisplay;
             yield return result.EventsCompleted.ToString();
-            yield return result.Best8TenMileDisplay;
-            yield return result.Scoring11Display;
+            yield return result.TenMileCompetition.PointsDisplay;
+            yield return result.FullCompetition.PointsDisplay;
 
             // per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
@@ -192,21 +191,73 @@ namespace ClubSiteGenerator.Renderers
             }
         }
 
-        private string RenderCell(string value, int index)
+        private string RenderCell(string value, int index, Competitor competitor)
         {
             var encodedValue = WebUtility.HtmlEncode(value);
 
-            // Fixed columns (0..fixedColumnTitles.Count-1): no class
-            if (index < fixedColumnTitles.Count)
+            // Column indices (zero-based)
+            const int firstFixedIndexEnd = 2;   // 0..2 => fixed columns (no class)
+            const int best8Index = 3;           // column 4
+            const int scoring11Index = 4;       // column 5
+            const int firstEventIndex = 5;      // column 6 onwards
+
+            // Fixed columns: 0..2
+            if (index <= firstFixedIndexEnd)
             {
                 return $"<td>{encodedValue}</td>";
             }
 
-            // Event columns: look up corresponding CalendarEvent
-            var ev = calendar[index - fixedColumnTitles.Count];
+            if (index == best8Index)
+            {
+                var podiumClass = GetPodiumClassForBest8(competitor);
+                var best8CssClass = string.IsNullOrEmpty(podiumClass)
+                    ? "best-8"
+                    : $"best-8 {podiumClass}";
+
+                return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
+            }
+
+            if (index == scoring11Index)
+            {
+                var podiumClass = GetPodiumClassForScoring11(competitor);
+                var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
+                    ? "scoring-11"
+                    : $"scoring-11 {podiumClass}";
+
+                return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
+            }
+
+            // Event columns: index 5+
+            // Map to calendar by subtracting the number of non-event columns (5).
+            var calendarIndex = index - firstEventIndex;
+            var ev = calendar[calendarIndex];
             var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
 
             return $"<td class=\"{cssClass}\">{encodedValue}</td>";
+        }
+
+        private string? GetPodiumClassForScoring11(Competitor competitor)
+        {
+            var result = resultsSet.ScoredRides.FirstOrDefault(r => r.Competitor == competitor);
+            return result?.FullCompetition.Rank switch
+            {
+                1 => "gold",
+                2 => "silver",
+                3 => "bronze",
+                _ => string.Empty
+            };
+        }
+
+        private string? GetPodiumClassForBest8(Competitor competitor)
+        {
+            var result = resultsSet.ScoredRides.FirstOrDefault(r => r.Competitor == competitor);
+            return result?.TenMileCompetition.Rank switch
+            {
+                1 => "gold",
+                2 => "silver",
+                3 => "bronze",
+                _ => string.Empty
+            };
         }
     }
 }

@@ -147,9 +147,9 @@ namespace ClubSiteGenerator.Renderers
         {
             return rank switch
             {
-                1 => "position-1",
-                2 => "position-2",
-                3 => "position-3",
+                1 => "gold",
+                2 => "silver",
+                3 => "bronze",
                 _ => string.Empty
             };
         }
