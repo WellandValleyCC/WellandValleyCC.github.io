@@ -19,46 +19,6 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override AgeGroup? AgeGroupFilter => AgeGroup.Juvenile;
         public override string CompetitionType => "Juveniles";
 
-
-        //// Project event numbers, dates, and names from the calendar
-        //var eventNumbers = Calendar
-        //    .Select(e => e.EventNumber.ToString())
-        //    .ToList();
-
-        //var eventDates = Calendar
-        //    .Select(e => e.EventDate.ToString("ddd d MMM", CultureInfo.InvariantCulture))
-        //    .ToList();
-
-        //var eventNames = Calendar
-        //    .Select(e => e.EventName)
-        //    .ToList();
-
-        //var headers = new List<HtmlHeaderRow>
-        //{
-        //    // Row 1: event numbers
-        //    new(new List<string>
-        //    {
-        //        "", "", "", "", "" // blanks for the fixed columns
-        //    }.Concat(eventNumbers).ToList()),
-
-        //    // Row 2: event dates
-        //    new(new List<string>
-        //    {
-        //        "", "", "", "", "" // blanks for the fixed columns
-        //    }.Concat(eventDates).ToList()),
-
-        //    // Row 3: labels (fixed columns + optional event names)
-        //    new(new List<string>
-        //    {
-        //        "Name",
-        //        "Current rank",
-        //        "Events completed",
-        //        "10-mile TTs Best 8",
-        //        "Scoring 11"
-        //    }.Concat(eventNames).ToList())
-        //};
-
-
         public static JuvenilesCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> calendar)
@@ -96,10 +56,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            CompetitionResultsCalculator.AssignRanks(results);
-
             return new JuvenilesCompetitionResultsSet(calendar, results);
         }
-
     }
 }

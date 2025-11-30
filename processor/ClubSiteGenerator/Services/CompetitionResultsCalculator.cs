@@ -30,7 +30,10 @@ namespace ClubSiteGenerator.Services
                 .Take(8)
                 .ToList();
 
-            var best8TenMile = best8TenMileRides.Sum(r => r.JuvenilesPoints);
+            // If no ten‑mile rides, mark as null (n/a)
+            double? best8TenMile = best8TenMileRides.Any()
+                ? best8TenMileRides.Sum(r => r.JuvenilesPoints)
+                : (double?)null;
 
             // Best 2 non‑ten rides (valid only)
             var nonTenMileBest2Rides = validRides
@@ -96,7 +99,6 @@ namespace ClubSiteGenerator.Services
                     Rides = scoring11Rides
                 }
             };
-
         }
 
         private static void AssignRanksByScore(
@@ -136,47 +138,53 @@ namespace ClubSiteGenerator.Services
             }
         }
 
-        public static void AssignRanks(List<CompetitorResult> results)
+        public static IList<CompetitorResult> SortResults(IList<CompetitorResult> results)
         {
-            // All events
-            AssignRanksByScore(
-                results,
+            // 1. All-events ordering + ranks
+            var allEventsOrdered = OrderByAllEvents(results).ToList();
+            AssignRanksByScore(allEventsOrdered,
                 r => r.AllEvents.Points,
-                (r, rank) => r.AllEvents.Rank = rank
-            );
+                (r, rank) => r.AllEvents.Rank = rank);
 
-            // Ten‑mile competition
-            AssignRanksByScore(
-                results,
+            // 2. Ten-mile ordering + ranks
+            var tensOrdered = OrderByTenMile(results).ToList();
+            AssignRanksByScore(tensOrdered,
                 r => r.TenMileCompetition.Points,
-                (r, rank) => r.TenMileCompetition.Rank = rank
-            );
+                (r, rank) => r.TenMileCompetition.Rank = rank);
 
-            // Full competition
-            AssignRanksByScore(
-                results,
+            // 3. Full competition ordering + ranks
+            var fullOrdered = OrderByFull(results).ToList();
+            AssignRanksByScore(fullOrdered,
                 r => r.FullCompetition.Points,
-                (r, rank) => r.FullCompetition.Rank = rank
-            );
+                (r, rank) => r.FullCompetition.Rank = rank);
+
+            // 4. Return final order for rendering (Full competition)
+            return fullOrdered;
         }
 
-        /// <summary>
-        /// Sorts results: Full competition first (desc),
-        /// then Ten-mile competition (desc),
-        /// then All-events (desc),
-        /// then surname/given name.
-        /// </summary>
-        public static IEnumerable<CompetitorResult> SortResults(IEnumerable<CompetitorResult> results)
-        {
-            return results
+        private static IEnumerable<CompetitorResult> OrderByAllEvents(IEnumerable<CompetitorResult> results) =>
+            results.OrderByDescending(r => r.AllEvents.Points.HasValue)
+                   .ThenByDescending(r => r.AllEvents.Points)
+                   .ThenBy(r => r.Competitor.Surname)
+                   .ThenBy(r => r.Competitor.GivenName);
+
+        private static IEnumerable<CompetitorResult> OrderByTenMile(IEnumerable<CompetitorResult> results) =>
+            results.OrderByDescending(r => r.TenMileCompetition.Points.HasValue)
+                   .ThenByDescending(r => r.TenMileCompetition.Points)
+                   .ThenBy(r => r.Competitor.Surname)
+                   .ThenBy(r => r.Competitor.GivenName);
+
+        private static IEnumerable<CompetitorResult> OrderByFull(IEnumerable<CompetitorResult> results) =>
+            results
+                // First: eligible competitors (those with a full score) come before ineligible
                 .OrderByDescending(r => r.FullCompetition.Points.HasValue)
+                // Then: order by full competition points (for eligible competitors)
                 .ThenByDescending(r => r.FullCompetition.Points)
+                // For ineligible competitors, use ten-mile points as a secondary key
                 .ThenByDescending(r => r.TenMileCompetition.Points.HasValue)
                 .ThenByDescending(r => r.TenMileCompetition.Points)
-                .ThenByDescending(r => r.AllEvents.Points.HasValue)
-                .ThenByDescending(r => r.AllEvents.Points)
+                // Finally: stable tie-break by name
                 .ThenBy(r => r.Competitor.Surname)
                 .ThenBy(r => r.Competitor.GivenName);
-        }
     }
 }
