@@ -161,8 +161,8 @@ namespace ClubSiteGenerator.Renderers
             yield return result.Competitor.FullName;
             yield return result.FullCompetitionRankDisplay;
             yield return result.EventsCompleted.ToString();
-            yield return result.Best8TenMileDisplay;
-            yield return result.Scoring11Display;
+            yield return result.TenMileCompetitionPointsDisplay;
+            yield return result.FullCompetitionPointsDisplay;
 
             // per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))

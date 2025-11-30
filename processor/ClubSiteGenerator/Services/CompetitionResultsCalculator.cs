@@ -74,10 +74,10 @@ namespace ClubSiteGenerator.Services
                 EventStatuses = eventStatuses,
                 // Count only valid rides as completed
                 EventsCompleted = validRides.Count,
-                Best8TenMile = best8TenMile,
-                Best8TenMileRides = best8TenMileRides,
-                Scoring11 = scoring11,
-                Scoring11Rides = scoring11Rides
+                TenMileCompetitionPoints = best8TenMile,
+                TenMileCompetitionRides = best8TenMileRides,
+                FullCompetitionPoints = scoring11,
+                FullCompetitionRides = scoring11Rides
             };
         }
 
@@ -91,7 +91,7 @@ namespace ClubSiteGenerator.Services
 
             for (int i = 0; i < results.Count; i++)
             {
-                var score = results[i].Scoring11;
+                var score = results[i].FullCompetitionPoints;
 
                 if (score == null)
                 {
@@ -119,10 +119,10 @@ namespace ClubSiteGenerator.Services
         public static IEnumerable<CompetitorResult> SortResults(IEnumerable<CompetitorResult> results)
         {
             return results
-                .OrderByDescending(r => r.Scoring11.HasValue)
-                .ThenByDescending(r => r.Scoring11)
-                .ThenByDescending(r => r.Best8TenMile.HasValue)
-                .ThenByDescending(r => r.Best8TenMile)
+                .OrderByDescending(r => r.FullCompetitionPoints.HasValue)
+                .ThenByDescending(r => r.FullCompetitionPoints)
+                .ThenByDescending(r => r.TenMileCompetitionPoints.HasValue)
+                .ThenByDescending(r => r.TenMileCompetitionPoints)
                 .ThenBy(r => r.Competitor.Surname)
                 .ThenBy(r => r.Competitor.GivenName);
         }

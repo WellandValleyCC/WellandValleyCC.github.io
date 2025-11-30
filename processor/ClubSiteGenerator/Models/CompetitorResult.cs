@@ -38,23 +38,30 @@ namespace ClubSiteGenerator.Models
         /// </summary>
         public int EventsCompleted { get; set; }
 
-        public double? Best8TenMile { get; set; }
-        public IReadOnlyList<Ride> Best8TenMileRides { get; set; } = Array.Empty<Ride>();
+        public double? AllEventsPoints { get; set; }
+        public double? TenMileCompetitionPoints { get; set; }
+        public IReadOnlyList<Ride> TenMileCompetitionRides { get; set; } = Array.Empty<Ride>();
 
-        public double? Scoring11 { get; set; }
-        public IReadOnlyList<Ride> Scoring11Rides { get; set; } = Array.Empty<Ride>();
-
-        /// <summary>
-        /// Returns a formatted string for Best8TenMile (rounded or "n/a").
-        /// </summary>
-        public string Best8TenMileDisplay =>
-            Best8TenMile.HasValue ? Math.Round(Best8TenMile.Value, MidpointRounding.AwayFromZero).ToString() : "n/a";
+        public double? FullCompetitionPoints { get; set; }
+        public IReadOnlyList<Ride> FullCompetitionRides { get; set; } = Array.Empty<Ride>();
 
         /// <summary>
-        /// Returns a formatted string for Scoring11 (rounded or "n/a").
+        /// Returns a formatted string for all ridden events points - no best-n behaviour (rounded or "n/a").
         /// </summary>
-        public string Scoring11Display =>
-            Scoring11.HasValue ? Math.Round(Scoring11.Value, MidpointRounding.AwayFromZero).ToString() : "n/a";
+        public string AllEventsPointsDisplay =>
+            AllEventsPoints.HasValue ? Math.Round(AllEventsPoints.Value, MidpointRounding.AwayFromZero).ToString() : "n/a";
+
+        /// <summary>
+        /// Returns a formatted string for TenMileCompetitionPoints (rounded or "n/a").
+        /// </summary>
+        public string TenMileCompetitionPointsDisplay =>
+            TenMileCompetitionPoints.HasValue ? Math.Round(TenMileCompetitionPoints.Value, MidpointRounding.AwayFromZero).ToString() : "n/a";
+
+        /// <summary>
+        /// Returns a formatted string for FullCompetitionPoints (rounded or "n/a").
+        /// </summary>
+        public string FullCompetitionPointsDisplay =>
+            FullCompetitionPoints.HasValue ? Math.Round(FullCompetitionPoints.Value, MidpointRounding.AwayFromZero).ToString() : "n/a";
 
         public string AllEventsRankDisplay =>
             AllEventsRank.HasValue ? AllEventsRank.Value.ToString() : "n/a";

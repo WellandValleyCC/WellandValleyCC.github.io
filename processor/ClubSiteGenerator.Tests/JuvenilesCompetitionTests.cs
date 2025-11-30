@@ -77,8 +77,8 @@ namespace ClubSiteGenerator.Tests
         [InlineData(null, "n/a")]
         public void Best8TenMileDisplay_RoundsOrShowsNa(double? input, string expected)
         {
-            var result = new CompetitorResult { Best8TenMile = input };
-            result.Best8TenMileDisplay.Should().Be(expected);
+            var result = new CompetitorResult { TenMileCompetitionPoints = input };
+            result.TenMileCompetitionPointsDisplay.Should().Be(expected);
         }
 
         [Fact]
