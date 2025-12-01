@@ -1,5 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
+using ClubSiteGenerator.Models.Extensions;
 using ClubSiteGenerator.ResultsGenerator;
 using System.Net;
 using System.Text;
@@ -133,25 +135,14 @@ namespace ClubSiteGenerator.Renderers
             var encoded = WebUtility.HtmlEncode(value);
             var tdClass = index switch
             {
-                1 => GetPodiumClass(ride.EventEligibleRidersRank, ride),
-                2 => GetPodiumClass(ride.EventEligibleRoadBikeRidersRank, ride),
+                1 => ride.GetEventEligibleRidersRankClass(),
+                2 => ride.GetEventEligibleRoadBikeRidersRankClass(),
                 _ => string.Empty
             };
 
             return string.IsNullOrEmpty(tdClass)
                 ? $"<td>{encoded}</td>"
                 : $"<td class=\"{tdClass}\">{encoded}</td>";
-        }
-
-        public static string GetPodiumClass(int? rank, Ride ride)
-        {
-            return rank switch
-            {
-                1 => "gold",
-                2 => "silver",
-                3 => "bronze",
-                _ => string.Empty
-            };
         }
 
         public static string GetRowClass(Ride ride) => ride switch
