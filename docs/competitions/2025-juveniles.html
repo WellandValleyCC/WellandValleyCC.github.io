@@ -6,7 +6,7 @@
   <title>Juveniles Competition</title>
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
-<body>
+<body class="competition-page">
 <header>
   <h1>Juveniles Competition</h1>
   <nav class="competition-nav" aria-label="Competition navigation">
@@ -14,14 +14,13 @@
     <a class="index" href="../preview.html" aria-current="page" aria-label="Back to index">Index</a>
     <a class="next" href="../events/2025-event-01.html" aria-label="Next">Event 1</a>
   </nav>
-  <section class="competition-rules">
-    <p>
-      You must compete in at least two TTs which are not standard 10 mile events.
-      When you have met this requirement, your score will be based on the best two
-      scores from these events, plus the scores from your best 9 other events
-      (any distance).
-    </p>
-  </section>
+<section class="competition-rules">
+<p>
+You become eligible for this competition when you have ridden at least two non-ten TTs - e.g. 9.5 mile hard-ride, 25 mile TT, etc.
+<br/>
+Your competition score is the total of the scores from your two highest scoring non-ten events, plus your best 9 other events of any distance.
+</p>
+</section>
 </header>
 <div class="legend">
   <span class="ten-mile-event">10‑mile events</span>
@@ -30,11 +29,11 @@
 <table class="results">
 <thead>
 <tr>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
+<th rowspan="3" class="fixed-column-title">Name</th>
+<th rowspan="2" colspan="2" class="fixed-column-title">Current rank</th>
+<th rowspan="2" colspan="2" class="fixed-column-title">Events completed</th>
+<th rowspan="3" class="fixed-column-title">Scoring 11</th>
+<th rowspan="3" class="fixed-column-title">10-mile TTs Best 8</th>
 <th class="event-number non-ten-mile-event">1</th>
 <th class="event-number non-ten-mile-event">2</th>
 <th class="event-number non-ten-mile-event">3</th>
@@ -64,11 +63,39 @@
 </tr>
 
 <tr>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
-<th class="invisible-cell"></th>
+<th class="event-title non-ten-mile-event" data-col-index="7">Medbourne 9.5mile Hardride TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="8">Medbourne 9.5mile NDCA Hardride TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="9">Hallaton 5 5mile TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="10">Kibworth 25mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="11">Tour of Langtons 10mile TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="12">Tur Langton/Hallaton 5+5mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="13">Tour of Langtons 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="14">Kibworth 10mile TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="15">Kibworth 25mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="16">Kibworth 10mile TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="17">Walcote Interclub 25mile Hardride TT</th>
+<th class="event-title ten-mile-event" data-col-index="18">Kibworth 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="19">Kibworth 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="20">Kibworth 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="21">Caldecott 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="22">Lubenham 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="23">Caldecott 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="24">Lubenham 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="25">Wolvey 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="26">Wymeswold 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="27">Wolvey 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="28">Tour of Langtons 10mile TT</th>
+<th class="event-title non-ten-mile-event" data-col-index="29">Interclub Hillclimb RFW</th>
+<th class="event-title ten-mile-event" data-col-index="30">Thorpe Langton 10mile TT</th>
+<th class="event-title ten-mile-event" data-col-index="31">Cancelled</th>
+<th class="event-title ten-mile-event" data-col-index="32">Cancelled</th>
+</tr>
+
+<tr>
+<th data-col-index="1">Competition</th>
+<th data-col-index="2">Tens</th>
+<th data-col-index="3">Tens</th>
+<th data-col-index="4">Non-tens</th>
 <th class="event-date non-ten-mile-event">Tue 01/04/25</th>
 <th class="event-date non-ten-mile-event">Sun 06/04/25</th>
 <th class="event-date non-ten-mile-event">Tue 15/04/25</th>
@@ -97,49 +124,17 @@
 <th class="event-date ten-mile-event">Sat 01/11/25</th>
 </tr>
 
-<tr>
-<th class="fixed-column-title">Name</th>
-<th class="fixed-column-title">Current rank</th>
-<th class="fixed-column-title">Events completed</th>
-<th class="fixed-column-title">10-mile TTs Best 8</th>
-<th class="fixed-column-title">Scoring 11</th>
-<th class="event-title non-ten-mile-event">Medbourne 9.5mile Hardride TT</th>
-<th class="event-title non-ten-mile-event">Medbourne 9.5mile NDCA Hardride TT</th>
-<th class="event-title non-ten-mile-event">Hallaton 5 5mile TT</th>
-<th class="event-title non-ten-mile-event">Kibworth 25mile TT</th>
-<th class="event-title ten-mile-event">Tour of Langtons 10mile TT</th>
-<th class="event-title non-ten-mile-event">Tur Langton/Hallaton 5+5mile TT</th>
-<th class="event-title ten-mile-event">Tour of Langtons 10mile TT</th>
-<th class="event-title ten-mile-event">Kibworth 10mile TT</th>
-<th class="event-title non-ten-mile-event">Kibworth 25mile TT</th>
-<th class="event-title ten-mile-event">Kibworth 10mile TT</th>
-<th class="event-title non-ten-mile-event">Walcote Interclub 25mile Hardride TT</th>
-<th class="event-title ten-mile-event">Kibworth 10mile TT</th>
-<th class="event-title ten-mile-event">Kibworth 10mile TT</th>
-<th class="event-title ten-mile-event">Kibworth 10mile TT</th>
-<th class="event-title ten-mile-event">Caldecott 10mile TT</th>
-<th class="event-title ten-mile-event">Lubenham 10mile TT</th>
-<th class="event-title ten-mile-event">Caldecott 10mile TT</th>
-<th class="event-title ten-mile-event">Lubenham 10mile TT</th>
-<th class="event-title ten-mile-event">Wolvey 10mile TT</th>
-<th class="event-title ten-mile-event">Wymeswold 10mile TT</th>
-<th class="event-title ten-mile-event">Wolvey 10mile TT</th>
-<th class="event-title ten-mile-event">Tour of Langtons 10mile TT</th>
-<th class="event-title non-ten-mile-event">Interclub Hillclimb RFW</th>
-<th class="event-title ten-mile-event">Thorpe Langton 10mile TT</th>
-<th class="event-title ten-mile-event">Cancelled</th>
-<th class="event-title ten-mile-event">Cancelled</th>
-</tr>
-
 </thead>
 
 <tbody>
 <tr>
-<td>Charlie Hardwicke</td>
-<td>1</td>
-<td>12</td>
-<td class="best-8 gold">460</td>
+<td class="competitor-name">Charlie Hardwicke</td>
+<td class="rank-full">1</td>
+<td class="rank-tens">1</td>
+<td class="events-tens">8</td>
+<td class="events-other">4</td>
 <td class="scoring-11 gold">635</td>
+<td class="best-8 gold">460</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
@@ -169,11 +164,13 @@
 </tr>
 
 <tr>
-<td>Jax Roberts</td>
-<td>2</td>
-<td>3</td>
-<td class="best-8">n/a</td>
+<td class="competitor-name">Jax Roberts</td>
+<td class="rank-full">2</td>
+<td class="rank-tens">n/a</td>
+<td class="events-tens">0</td>
+<td class="events-other">3</td>
 <td class="scoring-11 silver">180</td>
+<td class="best-8">n/a</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">60</td>
@@ -203,11 +200,13 @@
 </tr>
 
 <tr>
-<td>Mea Moore</td>
-<td>n/a</td>
-<td>6</td>
-<td class="best-8 silver">319</td>
+<td class="competitor-name">Mea Moore</td>
+<td class="rank-full">n/a</td>
+<td class="rank-tens">2</td>
+<td class="events-tens">6</td>
+<td class="events-other">0</td>
 <td class="scoring-11">n/a</td>
+<td class="best-8 silver">319</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
@@ -237,11 +236,13 @@
 </tr>
 
 <tr>
-<td>Evan Collett</td>
-<td>n/a</td>
-<td>5</td>
-<td class="best-8 bronze">240</td>
+<td class="competitor-name">Evan Collett</td>
+<td class="rank-full">n/a</td>
+<td class="rank-tens">3</td>
+<td class="events-tens">4</td>
+<td class="events-other">1</td>
 <td class="scoring-11">n/a</td>
+<td class="best-8 bronze">240</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
@@ -271,11 +272,13 @@
 </tr>
 
 <tr>
-<td>Aubrey Elmer</td>
-<td>n/a</td>
-<td>2</td>
-<td class="best-8">55</td>
+<td class="competitor-name">Aubrey Elmer</td>
+<td class="rank-full">n/a</td>
+<td class="rank-tens">4</td>
+<td class="events-tens">1</td>
+<td class="events-other">1</td>
 <td class="scoring-11">n/a</td>
+<td class="best-8">55</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
 <td class="non-ten-mile-event">-</td>
@@ -307,5 +310,5 @@
 </tbody>
 
 </table>
-<footer><p class="generated">Generated Monday, 01 December 2025 11:13 UTC</p></footer></body>
+<footer><p class="generated">Generated Monday, 01 December 2025 17:32 UTC</p></footer></body>
 </html>
