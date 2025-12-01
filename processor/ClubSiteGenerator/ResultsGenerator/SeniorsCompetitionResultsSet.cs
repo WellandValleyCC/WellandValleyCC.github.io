@@ -13,6 +13,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Seniors Competition";
         public override string FileName => "seniors.html";
         public override string SubFolderName => "competitions";
+        public override string GenericName => "Seniors";
         public override AgeGroup? AgeGroupFilter => null;
         public override string CompetitionType => "SNR";
 

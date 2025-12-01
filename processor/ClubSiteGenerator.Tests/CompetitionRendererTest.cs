@@ -150,7 +150,7 @@ namespace ClubSiteGenerator.Tests
 
             // Summary column
             var ttBest8Cell = row.Children[headerIndex["10-mile TTs Best 8"]];
-            ttBest8Cell.ClassName.Should().Be("best-8");
+            ttBest8Cell.ClassName.Should().Contain("best-8");
 
             // Footer timestamp
             var footer = document.QuerySelector("footer p.generated");

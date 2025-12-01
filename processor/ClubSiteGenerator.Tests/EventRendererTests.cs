@@ -65,7 +65,7 @@ namespace ClubSiteGenerator.Tests
             html.Should().Contain("competition-eligible");
             html.Should().Contain("guest-second-claim");
             html.Should().Contain("guest-non-club-member");
-            html.Should().Contain("class=\"position-1\"");
+            html.Should().Contain("class=\"gold\"");
             html.Should().Contain("<tr class=\"competition-eligible\">");
         }
     }

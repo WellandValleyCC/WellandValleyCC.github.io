@@ -98,6 +98,22 @@ table.results td.best-8,
 ");
 
             /* ===========================
+            Column Widths
+            =========================== */
+            builder.AppendLine(@"
+/* Explicit column widths */
+table.results th.best-8,
+table.results td.best-8 {
+  min-width: 130px;   /* wider than Scoring 11 */
+}
+
+table.results th.scoring-11,
+table.results td.scoring-11 {
+  min-width: 110px;   /* baseline width for Scoring 11 */
+}
+");
+
+            /* ===========================
                Legend Styling
                =========================== */
             builder.AppendLine(@"
@@ -152,15 +168,32 @@ table.results td.bronze,
 header {
   font-size: 1.25rem;
 }
-.event-number { color: #666; font-weight: normal; font-size: 1.5rem; margin-right: 0.25em; }
-header .event-date { font-style: italic; font-size: 1.25rem; color: #555; margin: 0.25em 0; }
-header .event-distance { font-size: 1.25rem; font-weight: 500; color: #333; margin: 0.25em 0; }
+.event-number { 
+  color: #666; 
+  font-weight: normal; 
+  font-size: 1.5rem; 
+  margin-right: 0.25em; 
+}
+header .event-date { 
+  font-style: italic; 
+  font-size: 1.25rem; 
+  color: #555; 
+  margin: 0.25em 0; 
+}
+header .event-distance { 
+  font-size: 1.25rem; 
+  font-weight: 500; 
+  color: #333; 
+  margin: 0.25em 0; 
+}
 
 /* Explicit header row controls */
 table.results thead .event-number {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #444;
+  padding: 1px 6px;
+  line-height: 1.1;
 }
 table.results thead .event-date {
   font-size: 0.9rem;
@@ -168,21 +201,29 @@ table.results thead .event-date {
   font-style: italic;
   color: #555;
   white-space: nowrap; 
+  padding: 2px 6px;
+  line-height: 1.2;
 }
 table.results thead .event-title {
   font-size: 1rem;
   font-weight: 500;
   color: #222;
   text-align: center;
+  padding: 2px 6px;
+  line-height: 1.2;
 }
 
-.event-nav {
+/* Shared navigation styling for events and competitions */
+.event-nav,
+.competition-nav {
   display: flex;
   justify-content: space-between;
   margin: 0.5em 0 1em 0;
   font-size: 1rem;
 }
-.event-nav a {
+
+.event-nav a,
+.competition-nav a {
   flex: 0 0 auto;
   text-align: center;
   padding: 0.4em 0.8em;
@@ -194,12 +235,24 @@ table.results thead .event-title {
   transition: background-color 0.2s ease;
   font-size: 1rem;
 }
-.event-nav a.prev { text-align: left; }
-.event-nav a.index { text-align: center; }
-.event-nav a.next { text-align: right; }
-.event-nav a.prev::before { content: ""←""; }
-.event-nav a.next::after  { content: ""→""; }
-.event-nav a:hover { background-color: #e0e0e0; }
+
+.event-nav a.prev,
+.competition-nav a.prev { text-align: left; }
+
+.event-nav a.index,
+.competition-nav a.index { text-align: center; }
+
+.event-nav a.next,
+.competition-nav a.next { text-align: right; }
+
+.event-nav a.prev::before,
+.competition-nav a.prev::before { content: ""←""; }
+
+.event-nav a.next::after,
+.competition-nav a.next::after { content: ""→""; }
+
+.event-nav a:hover,
+.competition-nav a:hover { background-color: #e0e0e0; }
 ");
 
             /* ===========================

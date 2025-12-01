@@ -5,9 +5,12 @@
         string DisplayName { get; }
         string FileName { get; }
         string SubFolderName { get; }
+        string GenericName { get; }
 
 
         string? PrevLink { get; set; }
         string? NextLink { get; set; }
+        string? PrevLabel { get; set; }
+        string? NextLabel { get; set; }
     }
 }
