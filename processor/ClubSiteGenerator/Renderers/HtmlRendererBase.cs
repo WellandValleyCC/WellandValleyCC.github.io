@@ -4,6 +4,8 @@ namespace ClubSiteGenerator.Renderers
 {
     public abstract class HtmlRendererBase
     {
+        protected abstract string PageTypeClass { get; }
+
         public string Render()
         {
             var sb = new StringBuilder();
@@ -18,7 +20,7 @@ namespace ClubSiteGenerator.Renderers
             var extras = HeadExtras();
             if (!string.IsNullOrEmpty(extras)) sb.AppendLine(extras);
             sb.AppendLine("</head>");
-            sb.AppendLine("<body>");
+            sb.AppendLine($"<body class=\"{PageTypeClass}\">");
 
             // Header with title, date, and navigation
             sb.AppendLine("<header>");

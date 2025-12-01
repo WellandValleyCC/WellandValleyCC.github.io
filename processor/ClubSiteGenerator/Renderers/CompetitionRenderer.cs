@@ -16,6 +16,8 @@ namespace ClubSiteGenerator.Renderers
 
         internal readonly List<string> columnTitles;
 
+        protected override string PageTypeClass => "competition-page";
+
         public CompetitionRenderer(CompetitionResultsSet resultsSet, IEnumerable<CalendarEvent> calendar)
         {
             this.resultsSet = resultsSet;

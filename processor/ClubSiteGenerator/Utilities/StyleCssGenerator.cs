@@ -117,19 +117,29 @@ table.results td.scoring-11 {
                Legend Styling
                =========================== */
             builder.AppendLine(@"
+/* Default legend styling (shared baseline) */
 .legend {
   font-size: 1rem;
-  margin-left: 30em;   /* fixed offset */
   margin-bottom: 0.5em;
-  display: flex;       /* lay out pills in a row */
-  flex-wrap: nowrap;   /* prevent wrapping */
-  gap: 0.5em;          /* spacing between pills */
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5em;
 }
 
 .legend span {
   padding: 0.25em 0.5em;
   border-radius: 4px;
   font-size: 1rem;
+}
+
+/* Competition-specific offset (body has class=""competition-page"") */
+body.competition-page .legend {
+  margin-left: 30em;
+}
+
+/* Event-specific offset (body has class=""event-page"") */
+body.event-page .legend {
+  margin-left: 0;
 }
 ");
 

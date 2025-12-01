@@ -16,6 +16,8 @@ namespace ClubSiteGenerator.Renderers
         private readonly DateOnly eventDate; 
         private readonly double eventMiles;
 
+        protected override string PageTypeClass => "event-page";
+
         public EventRenderer(EventResultsSet resultsSet)
         {
             this.resultsSet = resultsSet;
