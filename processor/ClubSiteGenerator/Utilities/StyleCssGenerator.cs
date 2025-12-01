@@ -256,6 +256,21 @@ table.results thead .event-title {
 ");
 
             /* ===========================
+            Competition Rules Block
+            =========================== */
+            builder.AppendLine(@"
+.competition-rules {
+  background: #f9f9f9;
+  border-left: 4px solid #ccc;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #333;
+}
+");
+
+            /* ===========================
                Footer
                =========================== */
             builder.AppendLine(@"

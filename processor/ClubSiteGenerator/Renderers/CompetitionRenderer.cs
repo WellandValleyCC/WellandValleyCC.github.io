@@ -51,6 +51,15 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
+            sb.AppendLine("  <section class=\"competition-rules\">");
+            sb.AppendLine("    <p>");
+            sb.AppendLine("      You must compete in at least two TTs which are not standard 10 mile events.");
+            sb.AppendLine("      When you have met this requirement, your score will be based on the best two");
+            sb.AppendLine("      scores from these events, plus the scores from your best 9 other events");
+            sb.AppendLine("      (any distance).");
+            sb.AppendLine("    </p>");
+            sb.AppendLine("  </section>");
+
             return sb.ToString();
         }
 
