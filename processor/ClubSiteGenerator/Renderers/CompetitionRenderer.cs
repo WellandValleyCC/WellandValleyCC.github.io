@@ -57,14 +57,13 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
-            sb.AppendLine("  <section class=\"competition-rules\">");
-            sb.AppendLine("    <p>");
-            sb.AppendLine("      You must compete in at least two TTs which are not standard 10 mile events.");
-            sb.AppendLine("      When you have met this requirement, your score will be based on the best two");
-            sb.AppendLine("      scores from these events, plus the scores from your best 9 other events");
-            sb.AppendLine("      (any distance).");
-            sb.AppendLine("    </p>");
-            sb.AppendLine("  </section>");
+            sb.AppendLine("<section class=\"competition-rules\">");
+            sb.AppendLine("<p>");
+            sb.AppendLine("You become eligible for this competition when you have ridden at least two non-ten TTs - e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
+            sb.AppendLine("</p><p>"); 
+            sb.AppendLine("Your competition score is the total of the scores from your two highest scoring non-ten events, plus your best 9 other events of any distance.");
+            sb.AppendLine("</p>");
+            sb.AppendLine("</section>");
 
             return sb.ToString();
         }
@@ -108,9 +107,9 @@ namespace ClubSiteGenerator.Renderers
             foreach (var (group, subs) in groupedFixedColumns)
             {
                 if (subs.Count == 0)
-                    sb.AppendLine($"<th rowspan=\"3\">{WebUtility.HtmlEncode(group)}</th>");
+                    sb.AppendLine($"<th rowspan=\"3\" class=\"fixed-column-title\">{WebUtility.HtmlEncode(group)}</th>");
                 else
-                    sb.AppendLine($"<th rowspan=\"2\" colspan=\"{subs.Count}\">{WebUtility.HtmlEncode(group)}</th>");
+                    sb.AppendLine($"<th rowspan=\"2\" colspan=\"{subs.Count}\" class=\"fixed-column-title\">{WebUtility.HtmlEncode(group)}</th>");
             }
 
             foreach (var ev in calendar)
@@ -128,10 +127,13 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
+            // Absolute start index for events in the body: Name(0), Rank(1,2), Events(3,4), Best8(5), Scoring11(6) => firstEventIndex = 7
+            var colIndex = 7;
             foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-                sb.AppendLine($"<th class=\"event-title {cssClass}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
+                sb.AppendLine($"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
+                colIndex++;
             }
 
             sb.AppendLine("</tr>");
@@ -143,15 +145,22 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            foreach (var (_, subs) in groupedFixedColumns)
-            {
-                foreach (var sub in subs)
-                    sb.AppendLine($"<th>{WebUtility.HtmlEncode(sub)}</th>");
-            }
+            // Emit leaf sub-headers with absolute indices
+            // Name doesn’t need a sub-header; it spans 3 rows.
+            // Current rank: Competitin(1), Tens(2)
+            sb.AppendLine("<th data-col-index=\"1\">Competition</th>");
+            sb.AppendLine("<th data-col-index=\"2\">Tens</th>");
+
+            // Events completed: Tens(3), Other(4)
+            sb.AppendLine("<th data-col-index=\"3\">Tens</th>");
+            sb.AppendLine("<th data-col-index=\"4\">Non-tens</th>");
+
+            // Best 8 (5) and Scoring 11 (6) have no sub-header cells; they’re already spanning all rows in row 1.
 
             foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                // event date cells don’t need data-col-index; event titles already carry it
                 sb.AppendLine($"<th class=\"event-date {cssClass}\">{ev.EventDate:ddd dd/MM/yy}</th>");
             }
 

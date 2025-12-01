@@ -281,12 +281,11 @@ table.results thead tr:nth-child(3) th {
 .competition-rules {
   background: #f9f9f9;
   border-left: 4px solid #ccc;
-  padding: 0.75em 1em;
-  margin: 1em 0;
+  padding: 0.15em 2em;
+  margin: 0.5em 3em;
   font-style: italic;
   font-size: 0.95rem;
   color: #333;
-}
 ");
 
             /* ===========================
