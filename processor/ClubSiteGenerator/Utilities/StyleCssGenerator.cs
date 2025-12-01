@@ -300,6 +300,7 @@ table.results thead tr:nth-child(3) th {
   font-style: italic;
   font-size: 0.95rem;
   color: #333;
+}
 ");
 
             /* ===========================
@@ -323,10 +324,13 @@ footer {
 @media (max-width: 600px) {
   html, body { font-size: 1rem; }
 
+  body header h1 {
+    font-size: 1.2rem;
+  }
+
   table.results { font-size: 0.9rem; }
   table.results th, table.results td { padding: 0.25em 0.5em; line-height: 1.2; }
 
-  header { font-size: 0.9rem; }
   .event-number { font-size: 1.2rem; }
   header .event-date { font-size: 0.9rem; }
   header .event-distance { font-size: 0.9rem; }
