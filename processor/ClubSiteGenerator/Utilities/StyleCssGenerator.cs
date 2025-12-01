@@ -152,15 +152,32 @@ table.results td.bronze,
 header {
   font-size: 1.25rem;
 }
-.event-number { color: #666; font-weight: normal; font-size: 1.5rem; margin-right: 0.25em; }
-header .event-date { font-style: italic; font-size: 1.25rem; color: #555; margin: 0.25em 0; }
-header .event-distance { font-size: 1.25rem; font-weight: 500; color: #333; margin: 0.25em 0; }
+.event-number { 
+  color: #666; 
+  font-weight: normal; 
+  font-size: 1.5rem; 
+  margin-right: 0.25em; 
+}
+header .event-date { 
+  font-style: italic; 
+  font-size: 1.25rem; 
+  color: #555; 
+  margin: 0.25em 0; 
+}
+header .event-distance { 
+  font-size: 1.25rem; 
+  font-weight: 500; 
+  color: #333; 
+  margin: 0.25em 0; 
+}
 
 /* Explicit header row controls */
 table.results thead .event-number {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #444;
+  padding: 1px 6px;
+  line-height: 1.1;
 }
 table.results thead .event-date {
   font-size: 0.9rem;
@@ -168,12 +185,16 @@ table.results thead .event-date {
   font-style: italic;
   color: #555;
   white-space: nowrap; 
+  padding: 2px 6px;
+  line-height: 1.2;
 }
 table.results thead .event-title {
   font-size: 1rem;
   font-weight: 500;
   color: #222;
   text-align: center;
+  padding: 2px 6px;
+  line-height: 1.2;
 }
 
 .event-nav {
