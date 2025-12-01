@@ -98,6 +98,22 @@ table.results td.best-8,
 ");
 
             /* ===========================
+            Column Widths
+            =========================== */
+            builder.AppendLine(@"
+/* Explicit column widths */
+table.results th.best-8,
+table.results td.best-8 {
+  min-width: 130px;   /* wider than Scoring 11 */
+}
+
+table.results th.scoring-11,
+table.results td.scoring-11 {
+  min-width: 110px;   /* baseline width for Scoring 11 */
+}
+");
+
+            /* ===========================
                Legend Styling
                =========================== */
             builder.AppendLine(@"
