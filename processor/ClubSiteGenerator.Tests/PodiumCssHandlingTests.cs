@@ -122,8 +122,8 @@ namespace ClubSiteGenerator.Tests
             // defensive check
             cells.Length.Should().BeGreaterThan(4);
 
-            // pick the 5th cell (index 3)
-            var tdClass = cells[4].GetAttribute("class") ?? string.Empty;
+            // pick the 6th cell (index 5)
+            var tdClass = cells[5].GetAttribute("class") ?? string.Empty;
 
             if (string.IsNullOrEmpty(expectedClass))
             {
@@ -196,10 +196,10 @@ namespace ClubSiteGenerator.Tests
             var cells = row!.QuerySelectorAll("td");
 
             // defensive check
-            cells.Length.Should().BeGreaterThan(3);
+            cells.Length.Should().BeGreaterThan(6);
 
-            // pick the 4th cell (index 3)
-            var tdClass = cells[3].GetAttribute("class") ?? string.Empty;
+            // pick the 7th cell (index 6)
+            var tdClass = cells[6].GetAttribute("class") ?? string.Empty;
 
             if (string.IsNullOrEmpty(expectedClass))
             {

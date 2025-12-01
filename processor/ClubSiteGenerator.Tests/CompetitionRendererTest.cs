@@ -118,38 +118,48 @@ namespace ClubSiteGenerator.Tests
             var table = document.QuerySelector("table.results");
             table.Should().NotBeNull();
 
-            var headerRows = table!.QuerySelectorAll("thead tr");
-            var lastHeaderRow = headerRows.Last();
-            var headerCells = lastHeaderRow.QuerySelectorAll("th");
+            var headerCells = table!.QuerySelectorAll("thead th");
 
+            // Build index from data-col-index (leaf headers only)
             var headerIndex = headerCells
-                .Select((h, i) => (Text: h.TextContent.Trim(), Index: i))
-                .ToDictionary(x => x.Text, x => x.Index);
+                .Where(h => h.HasAttribute("data-col-index"))
+                .Select(h => (Key: h.GetAttribute("data-col-index")!, Index: int.Parse(h.GetAttribute("data-col-index")!)))
+                .ToDictionary(x => x.Key, x => x.Index);
+
+            // Convenience lookups
+            int idx(string key) => headerIndex[key];
+
+            // Name/Best8/Scoring11 aren’t emitted in row 3 as leaf headers,
+            // but their indices are deterministic:
+            headerIndex["0"] = 0; // Name
+            headerIndex["5"] = 6; // Scoring 11
+            headerIndex["6"] = 5; // 10-mile TTs Best 8
 
             var row = table.QuerySelectorAll("tbody tr")
                            .FirstOrDefault(r => r.Children.Any(c => c.TextContent.Trim() == "Alice Smith"));
             row.Should().NotBeNull();
 
             // Name column
-            var nameCell = row!.Children[headerIndex["Name"]];
+            var nameCell = row!.Children[idx("0")];
             nameCell.TextContent.Trim().Should().Be("Alice Smith");
-            nameCell.ClassName.Should().BeNullOrEmpty();
+            nameCell.ClassName.Should().Be("competitor-name");
 
             // Event cells
-            var event1Cell = row.Children[headerIndex["Event 1"]];
+            // Use idx("7").. for events, etc.
+            var event1Cell = row!.Children[idx("7")];
             event1Cell.TextContent.Trim().Should().Be("60");
             event1Cell.ClassList.Should().Contain("ten-mile-event");
 
-            var event2Cell = row.Children[headerIndex["Event 2"]];
+            var event2Cell = row!.Children[idx("8")];
             event2Cell.TextContent.Trim().Should().Be("-");
             event2Cell.ClassList.Should().Contain("non-ten-mile-event");
 
-            var event3Cell = row.Children[headerIndex["Event 3"]];
+            var event3Cell = row!.Children[idx("9")];
             event3Cell.TextContent.Trim().Should().Be("-");
             event3Cell.ClassList.Should().Contain("non-ten-mile-event");
 
             // Summary column
-            var ttBest8Cell = row.Children[headerIndex["10-mile TTs Best 8"]];
+            var ttBest8Cell = row.Children[idx("5")];
             ttBest8Cell.ClassName.Should().Contain("best-8");
 
             // Footer timestamp
@@ -197,19 +207,19 @@ namespace ClubSiteGenerator.Tests
             foreach (var th in headerRows[0].Children.Skip(5)) // skip fixed columns
                 th.ClassList.Should().Contain("event-number");
 
-            // Row 2: event dates
-            foreach (var th in headerRows[1].Children.Skip(5))
-                th.ClassList.Should().Contain("event-date");
-
-            // Row 3: event titles
-            foreach (var th in headerRows[2].Children.Skip(5))
+            // Row 2: event titles
+            foreach (var th in headerRows[1].Children.Skip(0))
                 th.ClassList.Should().Contain("event-title");
 
-            // Row 3: fixed columns
+            // Row 3: event dates
+            foreach (var th in headerRows[2].Children.Skip(5))
+                th.ClassList.Should().Contain("event-date");
+
+            // Row 1: fixed columns
             var fixedHeaders = new[] { "Name", "Current rank", "Events completed", "10-mile TTs Best 8", "Scoring 11" };
             foreach (var fixedHeader in fixedHeaders)
             {
-                var th = headerRows[2].Children.First(h => h.TextContent.Trim() == fixedHeader);
+                var th = headerRows[0].Children.First(h => h.TextContent.Trim() == fixedHeader);
                 th.ClassList.Should().Contain("fixed-column-title");
             }
         }
@@ -258,7 +268,7 @@ namespace ClubSiteGenerator.Tests
             foreach (var row in rows)
             {
                 // skip fixed columns
-                for (int col = 5; col < row.Children.Length; col++)
+                for (int col = 7; col < row.Children.Length; col++)
                 {
                     var cell = row.Children[col];
                     cell.ClassList.Should().IntersectWith(legendClasses,
