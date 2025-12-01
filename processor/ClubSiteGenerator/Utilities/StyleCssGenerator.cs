@@ -104,12 +104,12 @@ table.results td.best-8,
 /* Explicit column widths */
 table.results th.best-8,
 table.results td.best-8 {
-  min-width: 130px;   /* wider than Scoring 11 */
+  min-width: 70px;   /* wider than Scoring 11 */
 }
 
 table.results th.scoring-11,
 table.results td.scoring-11 {
-  min-width: 110px;   /* baseline width for Scoring 11 */
+  min-width: 65px;   /* baseline width for Scoring 11 */
 }
 ");
 
@@ -211,6 +211,25 @@ table.results thead .event-title {
   text-align: center;
   padding: 2px 6px;
   line-height: 1.2;
+}
+
+/* Header row spacing and font control */
+table.results thead tr:nth-child(1) th,
+table.results thead tr:nth-child(2) th {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+table.results thead tr:nth-child(3) th {
+  font-size: 0.8rem;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-weight: normal;
+  color: #555;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ccc;
 }
 
 /* Shared navigation styling for events and competitions */

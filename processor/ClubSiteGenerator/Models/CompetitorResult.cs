@@ -19,9 +19,19 @@ namespace ClubSiteGenerator.Models
         public Dictionary<int, RideStatus> EventStatuses { get; set; } = new();
 
         /// <summary>
-        /// Number of events completed by this competitor.
+        /// Number of 10‑mile events completed by this competitor.
         /// </summary>
-        public int EventsCompleted { get; set; }
+        public int EventsCompletedTens { get; set; }
+
+        /// <summary>
+        /// Number of non‑10‑mile events completed by this competitor.
+        /// </summary>
+        public int EventsCompletedOther { get; set; }
+
+        /// <summary>
+        /// Total number of events completed (Tens + Other).
+        /// </summary>
+        public int EventsCompleted => EventsCompletedTens + EventsCompletedOther;
 
         // Three different views of the competitor’s results
         public CompetitionScore AllEvents { get; set; } = new CompetitionScore();

@@ -23,6 +23,13 @@ namespace ClubSiteGenerator.Services
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
+            // Split counts: only valid rides
+            var eventsCompletedTens = validRides.Count(r =>
+                isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && isTen);
+
+            var eventsCompletedOther = validRides.Count(r =>
+                isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && !isTen);
+
             // Best 8 ten‑mile rides (valid only)
             var best8TenMileRides = validRides
                 .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && isTen)
@@ -75,8 +82,10 @@ namespace ClubSiteGenerator.Services
                 Rides = group.ToList(),
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
-                // Count only valid rides as completed
-                EventsCompleted = validRides.Count,
+
+                // Split counts: only valid rides
+                EventsCompletedTens  = eventsCompletedTens,
+                EventsCompletedOther = eventsCompletedOther,
 
                 // All events view
                 AllEvents = new CompetitionScore

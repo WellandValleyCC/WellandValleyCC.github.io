@@ -68,12 +68,12 @@ namespace ClubSiteGenerator.Tests
             };
 
             var rides = new List<Ride>
-        {
-            new Ride { Competitor = competitor, EventNumber = 1, JuvenilesPoints = 40, Status = RideStatus.Valid },
-            new Ride { Competitor = competitor, EventNumber = 2, JuvenilesPoints = 35, Status = RideStatus.Valid },
-            new Ride { Competitor = competitor, EventNumber = 3, JuvenilesPoints = 30, Status = RideStatus.Valid },
-            new Ride { Competitor = competitor, EventNumber = 4, JuvenilesPoints = 25, Status = RideStatus.Valid }
-        };
+            {
+                new Ride { Competitor = competitor, EventNumber = 1, JuvenilesPoints = 40, Status = RideStatus.Valid },
+                new Ride { Competitor = competitor, EventNumber = 2, JuvenilesPoints = 35, Status = RideStatus.Valid },
+                new Ride { Competitor = competitor, EventNumber = 3, JuvenilesPoints = 30, Status = RideStatus.Valid },
+                new Ride { Competitor = competitor, EventNumber = 4, JuvenilesPoints = 25, Status = RideStatus.Valid }
+            };
 
             var group = rides.GroupBy(r => r.Competitor!).Single();
 
@@ -81,6 +81,88 @@ namespace ClubSiteGenerator.Tests
 
             Assert.True(result.FullCompetition.Points > 0, $"{label} scoring should be positive");
             Assert.NotEmpty(result.FullCompetition.Rides);
+        }
+
+        [Fact]
+        public void BuildCompetitorResult_SplitsEventsCompletedIntoTensAndOther()
+        {
+            // Arrange: competitor with 2 valid ten‑mile rides, 1 valid non‑ten, and 1 DNS
+            var competitor = new Competitor
+            {
+                ClubNumber = 1,
+                Surname = "Smith",
+                GivenName = "Alice",
+                ClaimStatus = ClaimStatus.FirstClaim,
+                IsFemale = false,
+                AgeGroup = AgeGroup.Juvenile
+            };
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent { EventNumber = 1, IsEvening10 = true },
+                new CalendarEvent { EventNumber = 2, IsEvening10 = true },
+                new CalendarEvent { EventNumber = 3, IsEvening10 = false },
+                new CalendarEvent { EventNumber = 4, IsEvening10 = false }
+            };
+
+            var rides = new List<Ride>
+            {
+                new Ride { Competitor = competitor, EventNumber = 1, Status = RideStatus.Valid, JuvenilesPoints = 10 },
+                new Ride { Competitor = competitor, EventNumber = 2, Status = RideStatus.Valid, JuvenilesPoints = 12 },
+                new Ride { Competitor = competitor, EventNumber = 3, Status = RideStatus.Valid, JuvenilesPoints = 8 },
+                new Ride { Competitor = competitor, EventNumber = 4, Status = RideStatus.DNS, JuvenilesPoints = 0 }
+            };
+
+            var group = rides.GroupBy(r => r.Competitor).First();
+
+            // Act
+            var result = CompetitionResultsCalculator.BuildCompetitorResult(group, calendar);
+
+            // Assert
+            Assert.Equal(2, result.EventsCompletedTens);   // two valid ten‑mile rides
+            Assert.Equal(1, result.EventsCompletedOther);  // one valid non‑ten ride
+            Assert.Equal(3, result.EventsCompleted);       // total = 2 + 1
+        }
+
+        [Fact]
+        public void BuildCompetitorResult_AllNonTenRides_CountsOnlyOther()
+        {
+            // Arrange: competitor with 3 valid non‑ten rides and 1 DNF
+            var competitor = new Competitor
+            {
+                ClubNumber = 2,
+                Surname = "Jones",
+                GivenName = "Ben",
+                ClaimStatus = ClaimStatus.FirstClaim,
+                IsFemale = true,
+                AgeGroup = AgeGroup.Juvenile
+            };
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent { EventNumber = 10, IsEvening10 = false },
+                new CalendarEvent { EventNumber = 11, IsEvening10 = false },
+                new CalendarEvent { EventNumber = 12, IsEvening10 = false },
+                new CalendarEvent { EventNumber = 13, IsEvening10 = false }
+            };
+
+            var rides = new List<Ride>
+            {
+                new Ride { Competitor = competitor, EventNumber = 10, Status = RideStatus.Valid, JuvenilesPoints = 15 },
+                new Ride { Competitor = competitor, EventNumber = 11, Status = RideStatus.Valid, JuvenilesPoints = 14 },
+                new Ride { Competitor = competitor, EventNumber = 12, Status = RideStatus.Valid, JuvenilesPoints = 13 },
+                new Ride { Competitor = competitor, EventNumber = 13, Status = RideStatus.DNF, JuvenilesPoints = 0 }
+            };
+
+            var group = rides.GroupBy(r => r.Competitor).First();
+
+            // Act
+            var result = CompetitionResultsCalculator.BuildCompetitorResult(group, calendar);
+
+            // Assert
+            Assert.Equal(0, result.EventsCompletedTens);   // no ten‑mile rides
+            Assert.Equal(3, result.EventsCompletedOther);  // three valid non‑ten rides
+            Assert.Equal(3, result.EventsCompleted);       // total = 0 + 3
         }
     }
 }

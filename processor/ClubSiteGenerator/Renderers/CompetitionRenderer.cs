@@ -14,7 +14,6 @@ namespace ClubSiteGenerator.Renderers
         private readonly IReadOnlyList<CalendarEvent> calendar;
         private readonly string competitionTitle;
 
-        internal readonly List<string> fixedColumnTitles;
         internal readonly List<string> columnTitles;
 
         public CompetitionRenderer(CompetitionResultsSet resultsSet, IEnumerable<CalendarEvent> calendar)
@@ -23,18 +22,25 @@ namespace ClubSiteGenerator.Renderers
             this.calendar = calendar.OrderBy(ev => ev.EventNumber).ToList();
             this.competitionTitle = resultsSet.DisplayName;
 
-            fixedColumnTitles = new List<string>
-            {
-                "Name",
-                "Current rank",
-                "Events completed",
-                "10-mile TTs Best 8",
-                "Scoring 11"
-            };
-
             // columnTitles = fixed + event names
-            columnTitles = fixedColumnTitles.Concat(calendar.Select(ev => ev.EventName)).ToList();
+            columnTitles = groupedFixedColumns
+                .SelectMany(group =>
+                    group.SubTitles.Count == 0
+                        ? new[] { group.GroupTitle }
+                        : group.SubTitles.Select(sub => $"{group.GroupTitle}: {sub}")
+                )
+                .Concat(this.calendar.Select(ev => ev.EventName))
+                .ToList();
         }
+
+        internal readonly List<(string GroupTitle, List<string> SubTitles)> groupedFixedColumns = new()
+        {
+            ("Name", new List<string>()), // no sub-columns
+            ("Current rank", new List<string> { "Competition", "Tens" }),
+            ("Events completed", new List<string> { "Tens", "Non-tens" }),
+            ("10-mile TTs Best 8", new List<string>()),
+            ("Scoring 11", new List<string>())
+        };
 
         protected override string TitleElement()
             => $"<title>{WebUtility.HtmlEncode(competitionTitle)}</title>";
@@ -87,9 +93,9 @@ namespace ClubSiteGenerator.Renderers
         {
             var sb = new StringBuilder();
             sb.AppendLine("<thead>");
-            sb.AppendLine(RenderEventNumberRow());
-            sb.AppendLine(RenderEventDateRow());
-            sb.AppendLine(RenderTitleRow());
+            sb.AppendLine(RenderEventNumberRow()); // Row 1
+            sb.AppendLine(RenderEventTitleRow());  // Row 2
+            sb.AppendLine(RenderEventDateRow());   // Row 3
             sb.AppendLine("</thead>");
             return sb.ToString();
         }
@@ -99,13 +105,33 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            foreach (var _ in fixedColumnTitles)
-                sb.AppendLine("<th class=\"invisible-cell\"></th>");
+            foreach (var (group, subs) in groupedFixedColumns)
+            {
+                if (subs.Count == 0)
+                    sb.AppendLine($"<th rowspan=\"3\">{WebUtility.HtmlEncode(group)}</th>");
+                else
+                    sb.AppendLine($"<th rowspan=\"2\" colspan=\"{subs.Count}\">{WebUtility.HtmlEncode(group)}</th>");
+            }
 
-            foreach (var ev in calendar.OrderBy(e => e.EventNumber))
+            foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
                 sb.AppendLine($"<th class=\"event-number {cssClass}\">{ev.EventNumber}</th>");
+            }
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private string RenderEventTitleRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
+
+            foreach (var ev in calendar)
+            {
+                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                sb.AppendLine($"<th class=\"event-title {cssClass}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
             }
 
             sb.AppendLine("</tr>");
@@ -117,10 +143,13 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            foreach (var _ in fixedColumnTitles)
-                sb.AppendLine("<th class=\"invisible-cell\"></th>");
+            foreach (var (_, subs) in groupedFixedColumns)
+            {
+                foreach (var sub in subs)
+                    sb.AppendLine($"<th>{WebUtility.HtmlEncode(sub)}</th>");
+            }
 
-            foreach (var ev in calendar.OrderBy(e => e.EventNumber))
+            foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
                 sb.AppendLine($"<th class=\"event-date {cssClass}\">{ev.EventDate:ddd dd/MM/yy}</th>");
@@ -129,25 +158,6 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("</tr>");
             return sb.ToString();
         }
-
-        private string RenderTitleRow()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("<tr>");
-
-            foreach (var title in fixedColumnTitles)
-                sb.AppendLine($"<th class=\"fixed-column-title\">{WebUtility.HtmlEncode(title)}</th>");
-
-            foreach (var ev in calendar.OrderBy(e => e.EventNumber))
-            {
-                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-                sb.AppendLine($"<th class=\"event-title {cssClass}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
-            }
-
-            sb.AppendLine("</tr>");
-            return sb.ToString();
-        }
-
 
         private string RenderBody()
         {
@@ -175,20 +185,30 @@ namespace ClubSiteGenerator.Renderers
 
         private IEnumerable<string> BuildCells(CompetitorResult result)
         {
+            // Name
             yield return result.Competitor.FullName;
-            yield return result.FullCompetition.RankDisplay;
-            yield return result.EventsCompleted.ToString();
+
+            // Current rank split
+            yield return result.FullCompetition.RankDisplay;   // Full
+            yield return result.TenMileCompetition.RankDisplay; // Tens
+
+            // Events completed split
+            yield return result.EventsCompletedTens.ToString();   // Tens
+            yield return result.EventsCompletedOther.ToString();  // Other
+
+            // Best 8
             yield return result.TenMileCompetition.PointsDisplay;
+
+            // Scoring 11
             yield return result.FullCompetition.PointsDisplay;
 
-            // per-event columns
+            // Per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
             {
                 var hasStatus = result.EventStatuses.TryGetValue(ev.EventNumber, out var status);
                 var hasPoints = result.EventPoints.TryGetValue(ev.EventNumber, out var points);
 
                 string display;
-
                 if (!hasStatus)
                 {
                     display = "-";
@@ -213,16 +233,29 @@ namespace ClubSiteGenerator.Renderers
             var encodedValue = WebUtility.HtmlEncode(value);
 
             // Column indices (zero-based)
-            const int firstFixedIndexEnd = 2;   // 0..2 => fixed columns (no class)
-            const int best8Index = 3;           // column 4
-            const int scoring11Index = 4;       // column 5
-            const int firstEventIndex = 5;      // column 6 onwards
+            const int nameIndex = 0;
+            const int rankFullIndex = 1;
+            const int rankTensIndex = 2;
+            const int eventsTensIndex = 3;
+            const int eventsOtherIndex = 4;
+            const int best8Index = 5;
+            const int scoring11Index = 6;
+            const int firstEventIndex = 7; // events start here
 
-            // Fixed columns: 0..2
-            if (index <= firstFixedIndexEnd)
-            {
-                return $"<td>{encodedValue}</td>";
-            }
+            if (index == nameIndex)
+                return $"<td class=\"competitor-name\">{encodedValue}</td>";
+
+            if (index == rankFullIndex)
+                return $"<td class=\"rank-full\">{encodedValue}</td>";
+
+            if (index == rankTensIndex)
+                return $"<td class=\"rank-tens\">{encodedValue}</td>";
+
+            if (index == eventsTensIndex)
+                return $"<td class=\"events-tens\">{encodedValue}</td>";
+
+            if (index == eventsOtherIndex)
+                return $"<td class=\"events-other\">{encodedValue}</td>";
 
             if (index == best8Index)
             {
@@ -230,7 +263,6 @@ namespace ClubSiteGenerator.Renderers
                 var best8CssClass = string.IsNullOrEmpty(podiumClass)
                     ? "best-8"
                     : $"best-8 {podiumClass}";
-
                 return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
             }
 
@@ -240,12 +272,10 @@ namespace ClubSiteGenerator.Renderers
                 var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
                     ? "scoring-11"
                     : $"scoring-11 {podiumClass}";
-
                 return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
             }
 
-            // Event columns: index 5+
-            // Map to calendar by subtracting the number of non-event columns (5).
+            // Event columns: index >= 7
             var calendarIndex = index - firstEventIndex;
             var ev = calendar[calendarIndex];
             var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
