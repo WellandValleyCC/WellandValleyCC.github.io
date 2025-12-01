@@ -197,13 +197,17 @@ table.results thead .event-title {
   line-height: 1.2;
 }
 
-.event-nav {
+/* Shared navigation styling for events and competitions */
+.event-nav,
+.competition-nav {
   display: flex;
   justify-content: space-between;
   margin: 0.5em 0 1em 0;
   font-size: 1rem;
 }
-.event-nav a {
+
+.event-nav a,
+.competition-nav a {
   flex: 0 0 auto;
   text-align: center;
   padding: 0.4em 0.8em;
@@ -215,12 +219,24 @@ table.results thead .event-title {
   transition: background-color 0.2s ease;
   font-size: 1rem;
 }
-.event-nav a.prev { text-align: left; }
-.event-nav a.index { text-align: center; }
-.event-nav a.next { text-align: right; }
-.event-nav a.prev::before { content: ""←""; }
-.event-nav a.next::after  { content: ""→""; }
-.event-nav a:hover { background-color: #e0e0e0; }
+
+.event-nav a.prev,
+.competition-nav a.prev { text-align: left; }
+
+.event-nav a.index,
+.competition-nav a.index { text-align: center; }
+
+.event-nav a.next,
+.competition-nav a.next { text-align: right; }
+
+.event-nav a.prev::before,
+.competition-nav a.prev::before { content: ""←""; }
+
+.event-nav a.next::after,
+.competition-nav a.next::after { content: ""→""; }
+
+.event-nav a:hover,
+.competition-nav a:hover { background-color: #e0e0e0; }
 ");
 
             /* ===========================

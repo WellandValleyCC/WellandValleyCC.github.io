@@ -42,7 +42,15 @@ namespace ClubSiteGenerator.Renderers
         protected override string HeaderHtml()
         {
             var sb = new StringBuilder();
+
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(competitionTitle)}</h1>");
+
+            sb.AppendLine("  <nav class=\"competition-nav\" aria-label=\"Competition navigation\">");
+            sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");
+            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
+            sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
+            sb.AppendLine("  </nav>");
+
             return sb.ToString();
         }
 
