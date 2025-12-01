@@ -42,9 +42,9 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
 
             sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
-            sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">Previous</a>");
+            sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");
             sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
-            sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">Next</a>");
+            sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
             return sb.ToString();
