@@ -38,8 +38,8 @@ namespace ClubSiteGenerator.Renderers
             ("Name", new List<string>()), // no sub-columns
             ("Current rank", new List<string> { "Competition", "Tens" }),
             ("Events completed", new List<string> { "Tens", "Non-tens" }),
-            ("10-mile TTs Best 8", new List<string>()),
-            ("Scoring 11", new List<string>())
+            ("Scoring 11", new List<string>()),
+            ("10-mile TTs Best 8", new List<string>())
         };
 
         protected override string TitleElement()
@@ -60,7 +60,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("<section class=\"competition-rules\">");
             sb.AppendLine("<p>");
             sb.AppendLine("You become eligible for this competition when you have ridden at least two non-ten TTs - e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
-            sb.AppendLine("</p><p>"); 
+            sb.AppendLine("<br/>"); 
             sb.AppendLine("Your competition score is the total of the scores from your two highest scoring non-ten events, plus your best 9 other events of any distance.");
             sb.AppendLine("</p>");
             sb.AppendLine("</section>");
@@ -155,7 +155,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("<th data-col-index=\"3\">Tens</th>");
             sb.AppendLine("<th data-col-index=\"4\">Non-tens</th>");
 
-            // Best 8 (5) and Scoring 11 (6) have no sub-header cells; they’re already spanning all rows in row 1.
+            // Scoring 11 (5) and Best 8 (6) have no sub-header cells; they’re already spanning all rows in row 1.
 
             foreach (var ev in calendar)
             {
@@ -205,11 +205,11 @@ namespace ClubSiteGenerator.Renderers
             yield return result.EventsCompletedTens.ToString();   // Tens
             yield return result.EventsCompletedOther.ToString();  // Other
 
-            // Best 8
-            yield return result.TenMileCompetition.PointsDisplay;
-
             // Scoring 11
             yield return result.FullCompetition.PointsDisplay;
+            
+            // Best 8
+            yield return result.TenMileCompetition.PointsDisplay;
 
             // Per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
@@ -247,8 +247,8 @@ namespace ClubSiteGenerator.Renderers
             const int rankTensIndex = 2;
             const int eventsTensIndex = 3;
             const int eventsOtherIndex = 4;
-            const int best8Index = 5;
-            const int scoring11Index = 6;
+            const int scoring11Index = 5;
+            const int best8Index = 6;
             const int firstEventIndex = 7; // events start here
 
             if (index == nameIndex)
@@ -266,15 +266,6 @@ namespace ClubSiteGenerator.Renderers
             if (index == eventsOtherIndex)
                 return $"<td class=\"events-other\">{encodedValue}</td>";
 
-            if (index == best8Index)
-            {
-                var podiumClass = GetPodiumClassForBest8(competitor);
-                var best8CssClass = string.IsNullOrEmpty(podiumClass)
-                    ? "best-8"
-                    : $"best-8 {podiumClass}";
-                return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
-            }
-
             if (index == scoring11Index)
             {
                 var podiumClass = GetPodiumClassForScoring11(competitor);
@@ -284,6 +275,15 @@ namespace ClubSiteGenerator.Renderers
                 return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
             }
 
+            if (index == best8Index)
+            {
+                var podiumClass = GetPodiumClassForBest8(competitor);
+                var best8CssClass = string.IsNullOrEmpty(podiumClass)
+                    ? "best-8"
+                    : $"best-8 {podiumClass}";
+                return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
+            }
+            
             // Event columns: index >= 7
             var calendarIndex = index - firstEventIndex;
             var ev = calendar[calendarIndex];

@@ -132,8 +132,8 @@ namespace ClubSiteGenerator.Tests
             // Name/Best8/Scoring11 aren’t emitted in row 3 as leaf headers,
             // but their indices are deterministic:
             headerIndex["0"] = 0; // Name
-            headerIndex["5"] = 5; // 10-mile TTs Best 8
-            headerIndex["6"] = 6; // Scoring 11
+            headerIndex["5"] = 6; // Scoring 11
+            headerIndex["6"] = 5; // 10-mile TTs Best 8
 
             var row = table.QuerySelectorAll("tbody tr")
                            .FirstOrDefault(r => r.Children.Any(c => c.TextContent.Trim() == "Alice Smith"));

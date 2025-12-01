@@ -119,11 +119,15 @@ table.results td.scoring-11 {
             builder.AppendLine(@"
 .legend {
   font-size: 1rem;
+  margin-left: 30em;   /* fixed offset */
+  margin-bottom: 0.5em;
+  display: flex;       /* lay out pills in a row */
+  flex-wrap: nowrap;   /* prevent wrapping */
+  gap: 0.5em;          /* spacing between pills */
 }
+
 .legend span {
-  display: inline-block;
   padding: 0.25em 0.5em;
-  margin-right: 0.5em;
   border-radius: 4px;
   font-size: 1rem;
 }
@@ -311,9 +315,6 @@ footer {
 
   table.results { font-size: 0.9rem; }
   table.results th, table.results td { padding: 0.25em 0.5em; line-height: 1.2; }
-
-  .legend { font-size: 0.9rem; justify-content: space-around; gap: 0.4em; }
-  .legend span { font-size: 0.8rem; padding: 0.25em 0.4em; margin-right: 0; }
 
   header { font-size: 0.9rem; }
   .event-number { font-size: 1.2rem; }
