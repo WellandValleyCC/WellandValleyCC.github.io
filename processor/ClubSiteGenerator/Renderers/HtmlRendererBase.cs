@@ -22,16 +22,12 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("</head>");
             sb.AppendLine($"<body class=\"{PageTypeClass}\">");
 
-            // Header with title, date, and navigation
+            // Header with title, nav, and rules (includes legend if needed)
             sb.AppendLine("<header>");
             sb.Append(HeaderHtml());
             sb.AppendLine("</header>");
 
-            // Class specific page legend
-            sb.Append(LegendHtml());
-
             sb.Append(ResultsTableHtml());
-            
             sb.Append(FooterHtml());
             
             // Close document
@@ -44,7 +40,6 @@ namespace ClubSiteGenerator.Renderers
         protected abstract string TitleElement();
         protected abstract string HeaderHtml();
         protected virtual string HeadExtras() => string.Empty;
-        protected abstract string LegendHtml();
         protected abstract string ResultsTableHtml();
         protected virtual string FooterHtml()
         {
