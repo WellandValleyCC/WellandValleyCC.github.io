@@ -181,17 +181,27 @@ header .event-distance {
 /* Championship layout (desktop) */
 .rules-and-legend {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;        /* keep rules + legend in one row */
   gap: 1em;
-  align-items: flex-end; /* or flex-start */
+  align-items: flex-end;
   margin-bottom: 1em;
+  overflow-x: visible;      /* allow legend to spill */
 }
-.rules-and-legend .competition-rules {
-  flex: 1 1 300px;
-  min-width: 250px;
-}
-.rules-and-legend .legend { flex-wrap: nowrap; }
 
+.rules-and-legend .competition-rules {
+  flex: 1 1 auto;           /* allow flexbox to size naturally */
+  min-width: 250px;         /* don’t shrink below 250px */
+  max-width: 540px;         /* cap at 540px */
+}
+
+.rules-and-legend .legend {
+  flex: 0 0 auto;           /* don’t shrink legend */
+  display: flex;
+  flex-wrap: nowrap;        /* keep pills in one line */
+  gap: 0.5em;
+  overflow-x: auto;         /* pills can scroll horizontally */
+  white-space: nowrap;      /* prevent wrapping */
+}
 
 /* Header row controls */
 table.results thead .event-number {
@@ -379,35 +389,33 @@ footer {
   /* Championship pages */
   .rules-and-legend {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: flex-end;
+    flex-wrap: nowrap;       /* keep rules + legend side by side */
     gap: 1em;
+    align-items: flex-end;   /* align children along their bottom edge */
     margin-bottom: 1em;
+    overflow: visible;       /* allow legend to spill offscreen */
   }
+  
   .rules-and-legend .competition-rules {
-    flex: 1 1 30em;
-    min-width: 0;
-    margin: 0;
-    padding: 0.5em;
-    line-height: 1.4;
+    flex: 0 0 85vw;          /* predictable slice of viewport */
+    min-width: 85vw;
+    max-width: 85vw;
   }
+  
   .rules-and-legend .legend {
     flex: 0 0 auto;
     display: flex;
     flex-wrap: nowrap;
     gap: 0.5em;
-    overflow-x: auto;
-    font-size: 0.85rem;
-    padding: 0.25em 0;
-    max-width: 100%;
-    align-self: flex-end;
+    white-space: nowrap;
+    overflow: visible;       /* let pills extend beyond viewport */
   }
+
   .rules-and-legend .legend span {
     display: inline-block;
     padding: 0.2em 0.4em;
-    white-space: nowrap;
     border-radius: 4px;
+    white-space: nowrap;
     color: #333;
   }
 }
