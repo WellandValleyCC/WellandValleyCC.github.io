@@ -47,6 +47,9 @@ namespace ClubSiteGenerator.Renderers
         protected override string TitleElement()
             => $"<title>{WebUtility.HtmlEncode(competitionTitle)}</title>";
 
+
+        protected virtual string ChampionshipEligibilityStatement => string.Empty;
+        
         protected override string HeaderHtml()
         {
             var sb = new StringBuilder();
@@ -59,27 +62,26 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
-            sb.AppendLine("<section class=\"competition-rules\">");
-            sb.AppendLine("<p>");
-            sb.AppendLine("You become eligible for this competition when you have ridden at least two non-ten TTs - e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
-            sb.AppendLine("<br/>"); 
-            sb.AppendLine("Your competition score is the total of the scores from your two highest scoring non-ten events, plus your best 9 other events of any distance.");
-            sb.AppendLine("</p>");
-            sb.AppendLine("</section>");
+            sb.AppendLine("<div class=\"rules-and-legend\">");
 
-            return sb.ToString();
-        }
+            sb.AppendLine("  <section class=\"competition-rules\">");
+            sb.AppendLine("    <p>");
+            sb.AppendLine($"      {WebUtility.HtmlEncode(resultsSet.EligibilityStatement)}");
+            sb.AppendLine("      You qualify for the championship when you have ridden at least two non-ten TTs – e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
+            sb.AppendLine("      <br/>");
+            sb.AppendLine("      Your championship score is the total of the points from your two highest scoring non-ten events, plus your best 9 other events of any distance.");
+            sb.AppendLine("    </p>");
+            sb.AppendLine("  </section>");
 
-        protected override string LegendHtml()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("<div class=\"legend\">");
-            sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
-            sb.AppendLine("  <span class=\"non-ten-mile-event\">Other events</span>");
+            sb.AppendLine("  <div class=\"legend\">");
+            sb.AppendLine("    <span class=\"ten-mile-event\">10‑mile events</span>");
+            sb.AppendLine("    <span class=\"non-ten-mile-event\">Other events</span>");
+            sb.AppendLine("  </div>");
+
             sb.AppendLine("</div>");
+
             return sb.ToString();
         }
-
         protected override string ResultsTableHtml()
         {
             var sb = new StringBuilder();

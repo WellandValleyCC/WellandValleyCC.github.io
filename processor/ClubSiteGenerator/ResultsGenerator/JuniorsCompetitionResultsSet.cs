@@ -11,13 +11,15 @@ namespace ClubSiteGenerator.ResultsGenerator
         { 
         }
 
-        public override string DisplayName => "Juniors Competition";
+        public override string DisplayName => "Juniors Championship";
         public override string FileName => "juniors";
         public override string SubFolderName => "competitions";
 
         public override string GenericName => "Juniors";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Junior;
         public override string CompetitionType => "JNR";
+
+        public override string EligibilityStatement => "All first claim junior members of the club are eligible for this championship.";
 
         public static JuniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
         {

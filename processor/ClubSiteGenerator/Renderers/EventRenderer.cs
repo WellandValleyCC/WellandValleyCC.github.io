@@ -39,6 +39,8 @@ namespace ClubSiteGenerator.Renderers
         {
             var sb = new StringBuilder();
 
+            sb.AppendLine("<div class=\"header-and-legend\">");
+
             sb.AppendLine($"  <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
             sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
@@ -49,17 +51,12 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
-            return sb.ToString();
-        }
+            sb.AppendLine("  <div class=\"legend\">");
+            sb.AppendLine("    <span class=\"competition-eligible\">Full member</span>");
+            sb.AppendLine("    <span class=\"guest-second-claim\">2nd claim</span>");
+            sb.AppendLine("    <span class=\"guest-non-club-member\">Guest</span>");
+            sb.AppendLine("  </div>");
 
-        protected override string LegendHtml()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine("<div class=\"legend\">");
-            sb.AppendLine("  <span class=\"competition-eligible\">Full member</span>");
-            sb.AppendLine("  <span class=\"guest-second-claim\">2nd claim</span>");
-            sb.AppendLine("  <span class=\"guest-non-club-member\">Guest</span>");
             sb.AppendLine("</div>");
 
             return sb.ToString();
