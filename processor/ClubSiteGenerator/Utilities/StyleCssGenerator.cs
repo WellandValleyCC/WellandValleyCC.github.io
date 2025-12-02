@@ -124,6 +124,8 @@ table.results td.scoring-11 {
   display: flex;
   flex-wrap: nowrap;
   gap: 0.5em;
+  overflow-x: auto;
+  padding-top: 0.25em;
 }
 
 .legend span {
@@ -132,16 +134,24 @@ table.results td.scoring-11 {
   font-size: 1rem;
 }
 
-/* Competition-specific offset (body has class=""competition-page"") */
-body.competition-page .legend {
-  margin-left: 30em;
+/* Shared flex wrapper for intro + legend */
+.header-and-legend,
+.rules-and-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  align-items: flex-start;
+  margin-bottom: 1em;
 }
 
-/* Event-specific offset (body has class=""event-page"") */
-body.event-page .legend {
-  margin-left: 0;
+/* Intro block grows, legend stays compact */
+.header-and-legend h1,
+.rules-and-legend .competition-rules {
+  flex: 1 1 300px;
+  min-width: 250px;
 }
 ");
+
 
             /* ===========================
                Podium Highlighting
@@ -201,7 +211,36 @@ header .event-distance {
   margin: 0.25em 0; 
 }
 
-/* Explicit header row controls */
+/* Event page layout (desktop) */
+.header-and-legend {
+  display: block;
+  margin-bottom: 1em;
+}
+.header-and-legend h1,
+.header-and-legend .event-date,
+.header-and-legend .event-distance,
+.header-and-legend .event-nav,
+.header-and-legend .legend {
+  margin: 0.25em 0;
+}
+.header-and-legend .legend { flex-wrap: wrap; }
+
+/* Championship layout (desktop) */
+.rules-and-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  align-items: flex-end; /* or flex-start */
+  margin-bottom: 1em;
+}
+.rules-and-legend .competition-rules {
+  flex: 1 1 300px;
+  min-width: 250px;
+}
+.rules-and-legend .legend { flex-wrap: nowrap; }
+
+
+/* Header row controls */
 table.results thead .event-number {
   font-size: 0.9rem;
   font-weight: 600;
@@ -226,8 +265,6 @@ table.results thead .event-title {
   padding: 2px 6px;
   line-height: 1.2;
 }
-
-/* Header row spacing and font control */
 table.results thead tr:nth-child(1) th,
 table.results thead tr:nth-child(2) th {
   padding-top: 4px;
@@ -235,7 +272,6 @@ table.results thead tr:nth-child(2) th {
   font-size: 0.9rem;
   vertical-align: middle;
 }
-
 table.results thead tr:nth-child(3) th {
   font-size: 0.8rem;
   padding-top: 2px;
@@ -246,7 +282,7 @@ table.results thead tr:nth-child(3) th {
   border-top: 1px solid #ccc;
 }
 
-/* Shared navigation styling for events and competitions */
+/* Navigation buttons */
 .event-nav,
 .competition-nav {
   display: flex;
@@ -254,7 +290,6 @@ table.results thead tr:nth-child(3) th {
   margin: 0.5em 0 1em 0;
   font-size: 1rem;
 }
-
 .event-nav a,
 .competition-nav a {
   flex: 0 0 auto;
@@ -268,25 +303,20 @@ table.results thead tr:nth-child(3) th {
   transition: background-color 0.2s ease;
   font-size: 1rem;
 }
-
 .event-nav a.prev,
 .competition-nav a.prev { text-align: left; }
-
 .event-nav a.index,
 .competition-nav a.index { text-align: center; }
-
 .event-nav a.next,
 .competition-nav a.next { text-align: right; }
-
 .event-nav a.prev::before,
 .competition-nav a.prev::before { content: ""←""; }
-
 .event-nav a.next::after,
 .competition-nav a.next::after { content: ""→""; }
-
 .event-nav a:hover,
 .competition-nav a:hover { background-color: #e0e0e0; }
 ");
+
 
             /* ===========================
             Competition Rules Block
@@ -354,9 +384,94 @@ footer {
   }
 
   footer { font-size: 0.6rem; }
+
+  .competition-rules {
+    flex: 1 1 30em;            /* allow growth, but not too wide */
+    min-width: 0;
+    margin: 0;
+    padding: 0.5em;
+    line-height: 1.4;
+  }
+
+  /* Event pages */
+.header-and-legend {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 1em;
+}
+.header-and-legend h1,
+.header-and-legend .event-date,
+.header-and-legend .event-distance,
+.header-and-legend .event-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.header-and-legend h1,
+.header-and-legend .event-date,
+.header-and-legend .event-distance,
+.header-and-legend .event-nav,
+.header-and-legend .legend  {
+  margin: 0.25em 0;
+}
+.header-and-legend .legend {
+  flex: 0 0 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5em;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  padding: 0.25em 0;
+  max-width: 100%;
+}
+.header-and-legend .legend span {
+  display: inline-block;
+  padding: 0.2em 0.4em;
+  white-space: nowrap;
+  border-radius: 4px;
+  color: #333;
+}
+
+
+  /* Championship pages */
+  .rules-and-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 1em;
+    margin-bottom: 1em;
+  }
+  .rules-and-legend .competition-rules {
+    flex: 1 1 30em;
+    min-width: 0;
+    margin: 0;
+    padding: 0.5em;
+    line-height: 1.4;
+  }
+  .rules-and-legend .legend {
+    flex: 0 0 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5em;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    padding: 0.25em 0;
+    max-width: 100%;
+    align-self: flex-end;
+  }
+  .rules-and-legend .legend span {
+    display: inline-block;
+    padding: 0.2em 0.4em;
+    white-space: nowrap;
+    border-radius: 4px;
+    color: #333;
+  }
 }
 ");
-
             return builder.ToString();
         }
     }
