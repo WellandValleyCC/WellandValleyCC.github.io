@@ -67,7 +67,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("  <section class=\"competition-rules\">");
             sb.AppendLine("    <p>");
             sb.AppendLine($"      {WebUtility.HtmlEncode(resultsSet.EligibilityStatement)}");
-            sb.AppendLine("      You qualify for the championship when you have ridden at least two non-ten TTs – e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
+            sb.AppendLine("      To qualify, you must ride at least two non-ten TTs – e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
             sb.AppendLine("      <br/>");
             sb.AppendLine("      Your championship score is the total of the points from your two highest scoring non-ten events, plus your best 9 other events of any distance.");
             sb.AppendLine("    </p>");
