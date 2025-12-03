@@ -12,7 +12,8 @@ namespace ClubSiteGenerator.Services
         /// </summary>
         public static CompetitorResult BuildCompetitorResult(
             IGrouping<Competitor, Ride> group,
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            Func<Ride, double?> pointsSelector)
         {
             // Precompute lookup for event type
             var isTenMileByEvent = calendar
@@ -33,33 +34,33 @@ namespace ClubSiteGenerator.Services
             // Best 8 ten‑mile rides (valid only)
             var best8TenMileRides = validRides
                 .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && isTen)
-                .OrderByDescending(r => r.JuvenilesPoints)
+                .OrderByDescending(r => pointsSelector(r) ?? 0)
                 .Take(8)
                 .ToList();
 
             // If no ten‑mile rides, mark as null (n/a)
             double? best8TenMile = best8TenMileRides.Any()
-                ? best8TenMileRides.Sum(r => r.JuvenilesPoints)
+                ? best8TenMileRides.Sum(r => pointsSelector(r) ?? 0)
                 : (double?)null;
 
             // Best 2 non‑ten rides (valid only)
             var nonTenMileBest2Rides = validRides
                 .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && !isTen)
-                .OrderByDescending(r => r.JuvenilesPoints)
+                .OrderByDescending(r => pointsSelector(r) ?? 0)
                 .Take(2)
                 .ToList();
 
-            var nonTenMileBest2 = nonTenMileBest2Rides.Sum(r => r.JuvenilesPoints);
+            var nonTenMileBest2 = nonTenMileBest2Rides.Sum(r => pointsSelector(r) ?? 0);
             var consumedEventNumbers = nonTenMileBest2Rides.Select(r => r.EventNumber).ToHashSet();
 
             // Best 9 of remaining valid rides (excluding the 2 non‑ten already consumed)
             var remainingBest9Rides = validRides
                 .Where(r => !consumedEventNumbers.Contains(r.EventNumber))
-                .OrderByDescending(r => r.JuvenilesPoints)
+                .OrderByDescending(r => pointsSelector(r) ?? 0)
                 .Take(9)
                 .ToList();
 
-            var remainingBest9 = remainingBest9Rides.Sum(r => r.JuvenilesPoints);
+            var remainingBest9 = remainingBest9Rides.Sum(r => pointsSelector(r) ?? 0);
 
             // Combine into Scoring‑11 (only if 2 valid non‑ten exist)
             var scoring11Rides = nonTenMileBest2Rides.Concat(remainingBest9Rides).ToList();
@@ -68,7 +69,7 @@ namespace ClubSiteGenerator.Services
             // Per‑event data for rendering
             var eventPoints = group.ToDictionary(
                 r => r.EventNumber,
-                r => r.Status == RideStatus.Valid ? r.JuvenilesPoints : null
+                r => r.Status == RideStatus.Valid ? pointsSelector(r) : null
             );
 
             var eventStatuses = group.ToDictionary(
@@ -84,13 +85,13 @@ namespace ClubSiteGenerator.Services
                 EventStatuses = eventStatuses,
 
                 // Split counts: only valid rides
-                EventsCompletedTens  = eventsCompletedTens,
+                EventsCompletedTens = eventsCompletedTens,
                 EventsCompletedOther = eventsCompletedOther,
 
                 // All events view
                 AllEvents = new CompetitionScore
                 {
-                    Points = validRides.Sum(r => r.JuvenilesPoints),
+                    Points = validRides.Sum(r => pointsSelector(r) ?? 0),
                     Rides = validRides
                 },
 
