@@ -5,24 +5,23 @@ using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    public sealed class JuniorsCompetitionResultsSet : CompetitionResultsSet
+    public sealed class WomenCompetitionResultsSet : CompetitionResultsSet
     {
-        private JuniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
-            : base(calendar, scoredRides) 
-        { 
+        private WomenCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar, scoredRides)
+        {
         }
 
-        public override string DisplayName => "Juniors Championship";
-        public override string FileName => $"{Year}-juniors";
+        public override string DisplayName => "Club Championship - Women";
+        public override string FileName => $"{Year}-women";
         public override string SubFolderName => "competitions";
+        public override string GenericName => "Women";
+        public override string CompetitionType => "Women";
 
-        public override string GenericName => "Juniors";
-        public override string CompetitionType => "Juniors";
+        public override string EligibilityStatement => "All first claim female members of the club are eligible for this championship.";
 
-        public override string EligibilityStatement => "All first claim junior members of the club are eligible for this championship.";
-
-        public static JuniorsCompetitionResultsSet CreateFrom(
-            IEnumerable<Ride> allRides, 
+        public static WomenCompetitionResultsSet CreateFrom(
+            IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> calendar)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
@@ -39,26 +38,27 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            // filter junior rides
-            var juniorRides = allRides
+            // filter women rides
+            var championshipRides = allRides
                 .Where(r =>
                     r.Competitor != null &&
-                    r.Competitor.IsJunior &&
+                    r.Competitor.IsFemale == true &&
                     r.Status == RideStatus.Valid);
 
             // group by ClubNumber
-            var groups = juniorRides
+            var groups = championshipRides
                 .GroupBy(r => r.Competitor!.ClubNumber)
                 .ToList();
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuniorsPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.WomenPoints))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            return new JuniorsCompetitionResultsSet(calendar, results);
+            return new WomenCompetitionResultsSet(calendar, results);
         }
     }
 }
+

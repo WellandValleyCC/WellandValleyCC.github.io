@@ -11,11 +11,9 @@ namespace ClubSiteGenerator.ResultsGenerator
             : base(calendar, scoredRides) { }
 
         public override string DisplayName => "Juveniles Championship";
-
         public override string FileName => $"{Year}-juveniles";
         public override string SubFolderName => "competitions";
         public override string GenericName => "Juveniles";
-        public override AgeGroup? AgeGroupFilter => AgeGroup.Juvenile;
         public override string CompetitionType => "Juveniles";
 
         public override string EligibilityStatement => "All first claim juvenile members of the club are eligible for this championship.";
