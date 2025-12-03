@@ -18,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string GenericName => "Seniors";
         public override string CompetitionType => "Seniors";
 
-        public override string EligibilityStatement => "All first claim senior members of the club are eligible for this championship.";
+        public override string EligibilityStatement => "All first claim members of the club are eligible for this championship - any age group.";
 
         public static SeniorsCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
