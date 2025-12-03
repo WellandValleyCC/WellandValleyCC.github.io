@@ -2,8 +2,6 @@
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Services;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -46,15 +44,15 @@ namespace ClubSiteGenerator.ResultsGenerator
                     r.Competitor != null &&
                     r.Competitor.IsJuvenile &&
                     r.Status == RideStatus.Valid);
-
-            // group by competitor
+ 
+            // group by ClubNumber
             var groups = juvenileRides
-                .GroupBy(r => r.Competitor!)
+                .GroupBy(r => r.Competitor!.ClubNumber)
                 .ToList();
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group, calendar, r => r.JuvenilesPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();

@@ -50,7 +50,7 @@ namespace ClubSiteGenerator.Tests
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
 
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g, calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
                 .ToList();
 
             // Act  
@@ -103,7 +103,7 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g, calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
                 .ToList();
 
             var ordered = CompetitionResultsCalculator.SortResults(results).ToList();
@@ -152,7 +152,7 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g, calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
                 .ToList();
 
             // Add Zoe manually with no rides
