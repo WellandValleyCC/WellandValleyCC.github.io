@@ -40,8 +40,11 @@ namespace ClubSiteGenerator.Services
 
             // Later: competitions auto‑discovered via reflection
             resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(rides, calendar));
             resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar));
         }
 
         public void GenerateAll()

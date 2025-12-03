@@ -38,11 +38,12 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            // filter women rides
+            // filter men rides on a road bike
             var championshipRides = allRides
                 .Where(r =>
                     r.Competitor != null &&
-                    r.Competitor.IsFemale == true &&
+                    r.Competitor.IsFemale == false &&
+                    r.IsRoadBike &&
                     r.Status == RideStatus.Valid);
 
             // group by ClubNumber
