@@ -1,23 +1,28 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    // Seniors
     public sealed class SeniorsCompetitionResultsSet : CompetitionResultsSet
     {
         private SeniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
-            : base(calendar, scoredRides) 
-        { }
+            : base(calendar, scoredRides)
+        {
+        }
 
         public override string DisplayName => "Seniors Championship";
-        public override string FileName => "seniors.html";
+        public override string FileName => $"{Year}-seniors";
         public override string SubFolderName => "competitions";
         public override string GenericName => "Seniors";
-        public override string CompetitionType => "SNR";
-        public override string EligibilityStatement => "All first claim members of the club are eligible for this championship - all age groups.";
+        public override string CompetitionType => "Seniors";
 
-        public static SeniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
+        public override string EligibilityStatement => "All first claim senior members of the club are eligible for this championship.";
+
+        public static SeniorsCompetitionResultsSet CreateFrom(
+            IEnumerable<Ride> allRides,
+            IEnumerable<CalendarEvent> calendar)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -33,8 +38,26 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            return null; // new SeniorsCompetitionResultsSet(allRides, events);
+            // filter rides m- must be Valid, but any ageGroup
+            var Championship = allRides
+                .Where(r =>
+                    r.Competitor != null &&
+                    r.Status == RideStatus.Valid);
+
+            // group by ClubNumber
+            var groups = Championship
+                .GroupBy(r => r.Competitor!.ClubNumber)
+                .ToList();
+
+            // build results
+            var results = groups
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.SeniorsPoints))
+                .ToList();
+
+            results = CompetitionResultsCalculator.SortResults(results).ToList();
+
+            return new SeniorsCompetitionResultsSet(calendar, results);
         }
     }
-
 }
+

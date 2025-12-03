@@ -545,5 +545,87 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
         }
 
+        [Fact]
+        public void SeniorsCompetitionCreateTable_SortsByScoreBest11Events_WithMixedAgeGroups()
+        {
+            // Arrange: competitors from mixed age groups (all eligible for Seniors)
+            var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
+7001,Brown,Emily,FirstClaim,true,Juvenile,
+7002,Johnson,Liam,FirstClaim,false,Junior,
+8001,Evans,Daniel,SecondClaim,false,Senior,";
+
+            var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
+
+            // Assemble: rides CSV with multiple events for each competitor
+            var ridesCsv = @"EventNumber,ClubNumber,Status,EventRank,EventRoadBikeRank,TotalSeconds,Name
+1,7001,Valid,1,,905,Emily Brown
+1,7002,Valid,2,,912,Liam Johnson
+1,8001,Valid,3,,918,Daniel Evans
+2,7001,Valid,2,,910,Emily Brown
+2,7002,Valid,1,,902,Liam Johnson
+2,8001,Valid,4,,930,Daniel Evans
+3,7001,Valid,3,,920,Emily Brown
+3,7002,Valid,2,,915,Liam Johnson
+3,8001,Valid,1,,900,Daniel Evans";
+
+            var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
+
+            var calendarEvents = new[]
+            {
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+            };
+
+            var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
+
+            // Hydrate rides with their matching CalendarEvent
+            foreach (var ride in rides)
+            {
+                if (eventsByNumber.TryGetValue(ride.EventNumber, out var ev))
+                {
+                    ride.CalendarEvent = ev;
+                }
+            }
+
+            // Act
+            var competitionResults = SeniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+
+            // Assert: metadata
+            competitionResults.CompetitionType.Should().Be("Seniors");
+            competitionResults.DisplayName.Should().Be("Seniors Championship");
+            competitionResults.EligibilityStatement.Should().Contain("senior");
+            competitionResults.EligibilityStatement.Should().NotContain("juvenile");
+            competitionResults.EligibilityStatement.Should().NotContain("junior");
+            competitionResults.EligibilityStatement.Should().NotContain("veteran");
+            competitionResults.FileName.Should().Be("2025-seniors");
+            competitionResults.GenericName.Should().Be("Seniors");
+            competitionResults.SubFolderName.Should().Be("competitions");
+
+            // Assert: scoring
+            competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Liam Johnson");
+            competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
+            competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
+            competitionResults.ScoredRides[0].FullCompetition.Points.Should().Be(170);
+            competitionResults.ScoredRides[0].FullCompetition.Rank.Should().Be(1);
+            competitionResults.ScoredRides[0].TenMileCompetition.Points.Should().BeNull();
+            competitionResults.ScoredRides[0].TenMileCompetition.Rank.Should().BeNull();
+
+            competitionResults.ScoredRides[1].Competitor.FullName.Should().Be("Emily Brown");
+            competitionResults.ScoredRides[1].AllEvents.Points.Should().Be(166);
+            competitionResults.ScoredRides[1].AllEvents.Rank.Should().Be(2);
+            competitionResults.ScoredRides[1].FullCompetition.Points.Should().Be(166);
+            competitionResults.ScoredRides[1].FullCompetition.Rank.Should().Be(2);
+            competitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
+            competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
+
+            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Daniel Evans");
+            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
+            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
+            competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
+            competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
+        }
     }
 }
