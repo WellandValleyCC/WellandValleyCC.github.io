@@ -12,7 +12,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         {
         }
 
-        public override string DisplayName => "Veterans Championship";
+        public override string DisplayName => "Club Championship - Veterans";
         public override string FileName => $"{Year}-veterans";
         public override string SubFolderName => "competitions";
         public override string GenericName => "Veterans";

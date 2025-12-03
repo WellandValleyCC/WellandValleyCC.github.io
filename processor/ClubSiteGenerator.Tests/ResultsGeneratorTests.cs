@@ -178,7 +178,7 @@ namespace ClubSiteGenerator.Tests
 
             // Assert
             juvenilesCompetitionResults.CompetitionType.Should().Be("Juveniles");
-            juvenilesCompetitionResults.DisplayName.Should().Be("Juveniles Championship");
+            juvenilesCompetitionResults.DisplayName.Should().Be("Club Championship - Juveniles");
             juvenilesCompetitionResults.EligibilityStatement.Should().Contain("juvenile");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("junior");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("senior");
@@ -260,7 +260,7 @@ namespace ClubSiteGenerator.Tests
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be("Juniors");
-            competitionResults.DisplayName.Should().Be("Juniors Championship");
+            competitionResults.DisplayName.Should().Be("Club Championship - Juniors");
             competitionResults.EligibilityStatement.Should().Contain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("senior");
@@ -343,7 +343,7 @@ namespace ClubSiteGenerator.Tests
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be("Veterans");
-            competitionResults.DisplayName.Should().Be("Veterans Championship");
+            competitionResults.DisplayName.Should().Be("Club Championship - Veterans");
             competitionResults.EligibilityStatement.Should().Contain("veteran");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("junior");
@@ -593,8 +593,8 @@ namespace ClubSiteGenerator.Tests
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be("Seniors");
-            competitionResults.DisplayName.Should().Be("Seniors Championship");
-            competitionResults.EligibilityStatement.Should().Contain("senior");
+            competitionResults.DisplayName.Should().Be("Club Championship - Seniors");
+            competitionResults.EligibilityStatement.Should().Contain("any age");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");

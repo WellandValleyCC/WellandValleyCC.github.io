@@ -12,7 +12,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         { 
         }
 
-        public override string DisplayName => "Juniors Championship";
+        public override string DisplayName => "Club Championship - Juniors";
         public override string FileName => $"{Year}-juniors";
         public override string SubFolderName => "competitions";
 

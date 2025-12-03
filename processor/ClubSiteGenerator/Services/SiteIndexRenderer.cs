@@ -28,7 +28,7 @@ namespace ClubSiteGenerator.Services
 
             // Order competitions by fixed sequence
             var orderedCompetitions = competitions
-                .OrderBy(c => Array.IndexOf(CompetitionOrder, c.DisplayName))
+                .OrderBy(c => Array.IndexOf(CompetitionOrder, c.CompetitionType))
                 .Cast<IResultsSet>()
                 .ToList();
 
@@ -62,8 +62,8 @@ namespace ClubSiteGenerator.Services
 
         public static readonly string[] CompetitionOrder =
         {
-            "Seniors", "Veterans", "Juveniles", "Juniors",
-            "Women", "RoadBikeMen", "RoadBikeWomen",
+            "Seniors", "Veterans", "Women", "Juniors", "Juveniles",
+            "Road Bike Men", "Road Bike Women",
             "Premier", "League1", "League2", "League3", "League4",
             "NevBrooks"
         };

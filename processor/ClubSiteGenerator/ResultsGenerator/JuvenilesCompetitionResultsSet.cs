@@ -10,7 +10,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         private JuvenilesCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
             : base(calendar, scoredRides) { }
 
-        public override string DisplayName => "Juveniles Championship";
+        public override string DisplayName => "Club Championship - Juveniles";
         public override string FileName => $"{Year}-juveniles";
         public override string SubFolderName => "competitions";
         public override string GenericName => "Juveniles";
