@@ -594,7 +594,7 @@ namespace ClubSiteGenerator.Tests
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be("Seniors");
             competitionResults.DisplayName.Should().Be("Seniors Championship");
-            competitionResults.EligibilityStatement.Should().Contain("senior");
+            competitionResults.EligibilityStatement.Should().Contain("any age");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
