@@ -27,8 +27,8 @@ namespace ClubSiteGenerator
             Console.WriteLine($"Writing site to: {outputDir}");
 
             // Create DbContexts (connection strings configured in OnConfiguring or appsettings.json)
-            using var competitorDb = DbContextHelper.CreateCompetitorContext("2025");
-            using var eventDb = DbContextHelper.CreateEventContext("2025");
+            using var competitorDb = DbContextHelper.CreateReadonlyCompetitorDbContext("2025");
+            using var eventDb = DbContextHelper.CreateReadonlyEventDbContext("2025");
 
             var eventCalendar = DataLoader.LoadCalendar(eventDb);
             var allRides = DataLoader.LoadRides(eventDb);

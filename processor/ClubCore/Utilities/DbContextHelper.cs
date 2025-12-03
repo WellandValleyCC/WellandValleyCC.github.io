@@ -15,7 +15,9 @@ namespace ClubCore.Utilities
                 .Options;
 
             var dbContext = new EventDbContext(options);
-            ValidateSchema(dbContext, path);
+
+            // Standard context: apply migrations if needed
+            dbContext.Database.Migrate();
 
             return dbContext;
         }
@@ -30,8 +32,24 @@ namespace ClubCore.Utilities
                 .Options;
 
             var dbContext = new CompetitorDbContext(options);
-            ValidateSchema(dbContext, path);
 
+            // Standard context: apply migrations if needed
+            dbContext.Database.Migrate();
+
+            return dbContext;
+        }
+
+        public static EventDbContext CreateReadonlyEventDbContext(string year)
+        {
+            var dbContext = CreateEventContext(year);
+            ValidateSchema(dbContext, $"club_events_{year}.db");
+            return dbContext;
+        }
+
+        public static CompetitorDbContext CreateReadonlyCompetitorDbContext(string year)
+        {
+            var dbContext = CreateCompetitorContext(year);
+            ValidateSchema(dbContext, $"club_competitors_{year}.db");
             return dbContext;
         }
 
