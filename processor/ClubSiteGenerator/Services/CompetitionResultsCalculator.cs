@@ -7,20 +7,35 @@ namespace ClubSiteGenerator.Services
     public static class CompetitionResultsCalculator
     {
         /// <summary>
-        /// Builds a CompetitorResult for a single competitor group,
+        /// Builds a CompetitorResult for a single competitor's rides,
         /// calculating Best‑8 Ten‑mile and Scoring‑11 totals.
         /// </summary>
         public static CompetitorResult BuildCompetitorResult(
-            IGrouping<Competitor, Ride> group,
+            IReadOnlyList<Ride> rides,
             IEnumerable<CalendarEvent> calendar,
             Func<Ride, double?> pointsSelector)
         {
+            if (rides == null || rides.Count == 0)
+                throw new ArgumentException("Rides collection must not be null or empty.", nameof(rides));
+
+            // validate all rides have the same ClubNumber
+            var firstClubNumber = rides[0].Competitor?.ClubNumber;
+            if (firstClubNumber == null)
+                throw new ArgumentException("Rides must be hydrated with Competitors having a ClubNumber.", nameof(rides));
+
+            bool mismatch = rides.Any(r => r.Competitor?.ClubNumber != firstClubNumber);
+            if (mismatch)
+                throw new ArgumentException("All rides must belong to the same competitor (same ClubNumber).", nameof(rides));
+
+            // Use the last ride's competitor
+            var competitor = rides.Last().Competitor!;
+
             // Precompute lookup for event type
             var isTenMileByEvent = calendar
                 .ToDictionary(ev => ev.EventNumber, ev => ev.IsEvening10);
 
             // Only valid rides contribute to scoring
-            var validRides = group
+            var validRides = rides
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
@@ -67,20 +82,20 @@ namespace ClubSiteGenerator.Services
             var scoring11 = nonTenMileBest2Rides.Count == 2 ? nonTenMileBest2 + remainingBest9 : (double?)null;
 
             // Per‑event data for rendering
-            var eventPoints = group.ToDictionary(
+            var eventPoints = rides.ToDictionary(
                 r => r.EventNumber,
                 r => r.Status == RideStatus.Valid ? pointsSelector(r) : null
             );
 
-            var eventStatuses = group.ToDictionary(
+            var eventStatuses = rides.ToDictionary(
                 r => r.EventNumber,
                 r => r.Status
             );
 
             return new CompetitorResult
             {
-                Competitor = group.Key,
-                Rides = group.ToList(),
+                Competitor = competitor,
+                Rides = rides,
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
 
