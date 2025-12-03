@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -12,16 +13,18 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         public override string DisplayName => "Juniors Championship";
-        public override string FileName => "juniors";
+        public override string FileName => $"{Year}-juniors";
         public override string SubFolderName => "competitions";
 
         public override string GenericName => "Juniors";
         public override AgeGroup? AgeGroupFilter => AgeGroup.Junior;
-        public override string CompetitionType => "JNR";
+        public override string CompetitionType => "Juniors";
 
         public override string EligibilityStatement => "All first claim junior members of the club are eligible for this championship.";
 
-        public static JuniorsCompetitionResultsSet CreateFrom(IEnumerable<Ride> allRides, IEnumerable<CalendarEvent> events)
+        public static JuniorsCompetitionResultsSet CreateFrom(
+            IEnumerable<Ride> allRides, 
+            IEnumerable<CalendarEvent> calendar)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -37,14 +40,27 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
+            // filter junior rides
             var juniorRides = allRides
                 .Where(r =>
-                    r.Competitor != null
-                    && r.Competitor.IsJunior
-                    && r.Status == RideStatus.Valid);
+                    r.Competitor != null &&
+                    r.Competitor.IsJunior &&
+                    r.Status == RideStatus.Valid);
 
-            return null; // new JuniorsCompetitionResultsSet(juniorRides, events);
+
+            // group by competitor
+            var groups = juniorRides
+                .GroupBy(r => r.Competitor!)
+                .ToList();
+
+            // build results
+            var results = groups
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group, calendar, r => r.JuniorsPoints))
+                .ToList();
+
+            results = CompetitionResultsCalculator.SortResults(results).ToList();
+
+            return new JuniorsCompetitionResultsSet(calendar, results);
         }
     }
-
 }

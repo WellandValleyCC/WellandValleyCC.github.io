@@ -40,6 +40,7 @@ namespace ClubSiteGenerator.Services
 
             // Later: competitions auto‑discovered via reflection
             resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(rides, calendar));
         }
 
         public void GenerateAll()
