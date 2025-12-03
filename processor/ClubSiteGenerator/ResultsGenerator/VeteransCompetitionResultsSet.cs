@@ -15,9 +15,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Veterans Championship";
         public override string FileName => $"{Year}-veterans";
         public override string SubFolderName => "competitions";
-
         public override string GenericName => "Veterans";
-        public override AgeGroup? AgeGroupFilter => AgeGroup.Veteran;
         public override string CompetitionType => "Veterans";
 
         public override string EligibilityStatement => "All first claim veteran members of the club are eligible for this championship.";

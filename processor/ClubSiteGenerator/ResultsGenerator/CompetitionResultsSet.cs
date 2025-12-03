@@ -17,7 +17,6 @@ namespace ClubSiteGenerator.ResultsGenerator
             ScoredRides = scoredRides.ToList().AsReadOnly();
         }
 
-        public abstract AgeGroup? AgeGroupFilter { get; }
         public abstract string CompetitionType { get; }
 
         public abstract string EligibilityStatement { get; }

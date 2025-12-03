@@ -5,24 +5,23 @@ using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    public sealed class JuniorsCompetitionResultsSet : CompetitionResultsSet
+    public sealed class RoadBikeWomenCompetitionResultsSet : CompetitionResultsSet
     {
-        private JuniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
-            : base(calendar, scoredRides) 
-        { 
+        private RoadBikeWomenCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+            : base(calendar, scoredRides)
+        {
         }
 
-        public override string DisplayName => "Juniors Championship";
-        public override string FileName => $"{Year}-juniors";
+        public override string DisplayName => "Club Championship - Road Bike Women";
+        public override string FileName => $"{Year}-road-bike-women";
         public override string SubFolderName => "competitions";
+        public override string GenericName => "Road Bike Women";
+        public override string CompetitionType => "Road Bike Women";
 
-        public override string GenericName => "Juniors";
-        public override string CompetitionType => "Juniors";
-
-        public override string EligibilityStatement => "All first claim junior members of the club are eligible for this championship.";
-
-        public static JuniorsCompetitionResultsSet CreateFrom(
-            IEnumerable<Ride> allRides, 
+        public override string EligibilityStatement => "All first claim female members of the club riding road bikes are eligible for this championship.";
+            
+        public static RoadBikeWomenCompetitionResultsSet CreateFrom(
+            IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> calendar)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
@@ -39,26 +38,27 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            // filter junior rides
-            var juniorRides = allRides
+            // filter women rides
+            var championshipRides = allRides
                 .Where(r =>
                     r.Competitor != null &&
-                    r.Competitor.IsJunior &&
+                    r.Competitor.IsFemale == true &&
                     r.Status == RideStatus.Valid);
 
             // group by ClubNumber
-            var groups = juniorRides
+            var groups = championshipRides
                 .GroupBy(r => r.Competitor!.ClubNumber)
                 .ToList();
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuniorsPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.WomenPoints))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            return new JuniorsCompetitionResultsSet(calendar, results);
+            return new RoadBikeWomenCompetitionResultsSet(calendar, results);
         }
     }
 }
+
