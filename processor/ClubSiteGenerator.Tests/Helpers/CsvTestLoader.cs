@@ -133,6 +133,38 @@ namespace ClubSiteGenerator.Tests.Helpers
                     }
                 }
 
+                // 🏆 Assign positions & points for road bike rides - 
+                // as with womens above, points won't necessarily be what would happen in reality 
+                if (competitor != null && eventRoadBikeRank.HasValue)
+                {
+                    int pos = eventRoadBikeRank.Value;
+                    int pts = pos <= pointsTable.Length ? pointsTable[pos - 1] : 0;
+
+                    if (competitor.IsFemale)
+                    {
+                        ride.RoadBikeWomenPosition = pos;
+                        ride.RoadBikeWomenPoints = pts;
+                    }
+                    else
+                    {
+                        ride.RoadBikeMenPosition = pos;
+                        ride.RoadBikeMenPoints = pts;
+                    }
+                }
+
+                // 🏆 Assign positions & points for women - assumes that all riders are female,
+                // so the points won't necessarily be what would happen in reality 
+                if (competitor != null && eventRank.HasValue)
+                {
+                    int pos = eventRank.Value;
+                    int pts = pos <= pointsTable.Length ? pointsTable[pos - 1] : 0;
+
+                    if (competitor.IsFemale)
+                    {
+                        ride.WomenPosition = pos;
+                        ride.WomenPoints = pts;
+                    }
+                }
                 return ride;
             }).ToList();
         }

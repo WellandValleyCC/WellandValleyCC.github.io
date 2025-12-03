@@ -448,14 +448,26 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Olivia Green");
             competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
-
+            competitionResults.ScoredRides[0].FullCompetition.Points.Should().Be(170);
+            competitionResults.ScoredRides[0].FullCompetition.Rank.Should().Be(1);
+            competitionResults.ScoredRides[0].TenMileCompetition.Points.Should().BeNull();
+            competitionResults.ScoredRides[0].TenMileCompetition.Rank.Should().BeNull();
+            
             competitionResults.ScoredRides[1].Competitor.FullName.Should().Be("Emma Hall");
             competitionResults.ScoredRides[1].AllEvents.Points.Should().Be(166);
             competitionResults.ScoredRides[1].AllEvents.Rank.Should().Be(2);
-
+            competitionResults.ScoredRides[1].FullCompetition.Points.Should().Be(166);
+            competitionResults.ScoredRides[1].FullCompetition.Rank.Should().Be(2);
+            competitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
+            competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
+            
             competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Sophia White");
             competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
             competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
+            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
+            competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
+            competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
 
             // The remaining veterans (Ava, Mia, Isabella) will follow with lower totals
             competitionResults.ScoredRides[3].Competitor.FullName.Should().Be("Ava King");

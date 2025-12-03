@@ -52,7 +52,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.WomenPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.RoadBikeMenPoints))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
