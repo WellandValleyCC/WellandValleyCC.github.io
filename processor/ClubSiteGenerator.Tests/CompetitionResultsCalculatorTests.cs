@@ -113,7 +113,10 @@ namespace ClubSiteGenerator.Tests
                 new Ride { Competitor = competitor, EventNumber = 4, Status = RideStatus.DNS, JuvenilesPoints = 0 }
             };
 
-            var group = rides.GroupBy(r => r.Competitor).First();
+            var group = rides
+                .Where(r => r.Competitor != null)
+                .GroupBy(r => r.Competitor!)
+                .First();
 
             // Act
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group, calendar);
@@ -154,7 +157,10 @@ namespace ClubSiteGenerator.Tests
                 new Ride { Competitor = competitor, EventNumber = 13, Status = RideStatus.DNF, JuvenilesPoints = 0 }
             };
 
-            var group = rides.GroupBy(r => r.Competitor).First();
+            var group = rides
+                .Where(r => r.Competitor != null)
+                .GroupBy(r => r.Competitor!)
+                .First();
 
             // Act
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group, calendar);
