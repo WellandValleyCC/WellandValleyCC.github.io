@@ -61,7 +61,7 @@ namespace ClubSiteGenerator.Services
             var orderedCompetitions = resultsSets.OfType<CompetitionResultsSet>()
                 .OrderBy(comp => SiteIndexRenderer.CompetitionOrder
                     .ToList()
-                    .IndexOf(comp.CompetitionType.ToString()))
+                    .IndexOf(comp.CompetitionType))
                 .Cast<IResultsSet>()
                 .ToList();
 
@@ -93,7 +93,8 @@ namespace ClubSiteGenerator.Services
 
             foreach (var resultsSet in resultsSets.OfType<CompetitionResultsSet>())
             {
-                var renderer = new CompetitionRenderer(resultsSet, calendar);
+                var renderer = CompetitionRendererFactory.Create(resultsSet, calendar);
+
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
@@ -101,6 +102,7 @@ namespace ClubSiteGenerator.Services
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
             }
+
         }
 
         public void GenerateIndex()
@@ -114,7 +116,7 @@ namespace ClubSiteGenerator.Services
                 .OfType<CompetitionResultsSet>()
                 .OrderBy(comp => SiteIndexRenderer.CompetitionOrder
                     .ToList()
-                    .IndexOf(comp.CompetitionType.ToString()))
+                    .IndexOf(comp.CompetitionType))
                 .ToList();
 
             var outputDir = OutputLocator.GetOutputDirectory();

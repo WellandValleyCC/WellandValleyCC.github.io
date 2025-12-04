@@ -241,11 +241,10 @@ namespace ClubSiteGenerator.Renderers
             }
         }
 
-        private string RenderCell(string value, int index, Competitor competitor)
+        protected virtual string RenderCell(string value, int index, Competitor competitor)
         {
             var encodedValue = WebUtility.HtmlEncode(value);
 
-            // Column indices (zero-based)
             const int nameIndex = 0;
             const int rankFullIndex = 1;
             const int rankTensIndex = 2;
@@ -253,46 +252,57 @@ namespace ClubSiteGenerator.Renderers
             const int eventsOtherIndex = 4;
             const int scoring11Index = 5;
             const int best8Index = 6;
-            const int firstEventIndex = 7; // events start here
+            const int firstEventIndex = 7;
 
-            if (index == nameIndex)
-                return $"<td class=\"competitor-name\">{encodedValue}</td>";
-
-            if (index == rankFullIndex)
-                return $"<td class=\"rank-full\">{encodedValue}</td>";
-
-            if (index == rankTensIndex)
-                return $"<td class=\"rank-tens\">{encodedValue}</td>";
-
-            if (index == eventsTensIndex)
-                return $"<td class=\"events-tens\">{encodedValue}</td>";
-
-            if (index == eventsOtherIndex)
-                return $"<td class=\"events-other\">{encodedValue}</td>";
-
-            if (index == scoring11Index)
+            return index switch
             {
-                var podiumClass = GetPodiumClassForScoring11(competitor);
-                var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
-                    ? "scoring-11"
-                    : $"scoring-11 {podiumClass}";
-                return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
-            }
+                nameIndex => RenderNameCell(competitor, encodedValue),
+                rankFullIndex => RenderRankFullCell(encodedValue),
+                rankTensIndex => RenderRankTensCell(encodedValue),
+                eventsTensIndex => RenderEventsTensCell(encodedValue),
+                eventsOtherIndex => RenderEventsOtherCell(encodedValue),
+                scoring11Index => RenderScoring11Cell(encodedValue, competitor),
+                best8Index => RenderBest8Cell(encodedValue, competitor),
+                _ => RenderEventCell(encodedValue, calendar[index - firstEventIndex])
+            };
+        }
 
-            if (index == best8Index)
-            {
-                var podiumClass = GetPodiumClassForBest8(competitor);
-                var best8CssClass = string.IsNullOrEmpty(podiumClass)
-                    ? "best-8"
-                    : $"best-8 {podiumClass}";
-                return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
-            }
-            
-            // Event columns: index >= 7
-            var calendarIndex = index - firstEventIndex;
-            var ev = calendar[calendarIndex];
+        protected virtual string RenderNameCell(Competitor competitor, string encodedValue)
+            => $"<td class=\"competitor-name\">{encodedValue}</td>";
+
+        protected virtual string RenderRankFullCell(string encodedValue)
+            => $"<td class=\"rank-full\">{encodedValue}</td>";
+
+        protected virtual string RenderRankTensCell(string encodedValue)
+            => $"<td class=\"rank-tens\">{encodedValue}</td>";
+
+        protected virtual string RenderEventsTensCell(string encodedValue)
+            => $"<td class=\"events-tens\">{encodedValue}</td>";
+
+        protected virtual string RenderEventsOtherCell(string encodedValue)
+            => $"<td class=\"events-other\">{encodedValue}</td>";
+
+        protected virtual string RenderScoring11Cell(string encodedValue, Competitor competitor)
+        {
+            var podiumClass = GetPodiumClassForScoring11(competitor);
+            var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
+                ? "scoring-11"
+                : $"scoring-11 {podiumClass}";
+            return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
+        }
+
+        protected virtual string RenderBest8Cell(string encodedValue, Competitor competitor)
+        {
+            var podiumClass = GetPodiumClassForBest8(competitor);
+            var best8CssClass = string.IsNullOrEmpty(podiumClass)
+                ? "best-8"
+                : $"best-8 {podiumClass}";
+            return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
+        }
+
+        protected virtual string RenderEventCell(string encodedValue, CalendarEvent ev)
+        {
             var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-
             return $"<td class=\"{cssClass}\">{encodedValue}</td>";
         }
 

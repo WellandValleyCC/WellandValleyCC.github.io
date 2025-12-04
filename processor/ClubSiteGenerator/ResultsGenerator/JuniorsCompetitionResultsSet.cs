@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -17,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string SubFolderName => "competitions";
 
         public override string GenericName => "Juniors";
-        public override string CompetitionType => "Juniors";
+        public override CompetitionType CompetitionType => CompetitionType.Juniors;
 
         public override string EligibilityStatement => "All first claim junior members of the club are eligible for this championship.";
 

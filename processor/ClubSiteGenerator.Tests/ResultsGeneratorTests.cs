@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
@@ -177,7 +178,7 @@ namespace ClubSiteGenerator.Tests
             var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Assert
-            juvenilesCompetitionResults.CompetitionType.Should().Be("Juveniles");
+            juvenilesCompetitionResults.CompetitionType.Should().Be(CompetitionType.Juveniles);
             juvenilesCompetitionResults.DisplayName.Should().Be("Club Championship - Juveniles");
             juvenilesCompetitionResults.EligibilityStatement.Should().Contain("juvenile");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("junior");
@@ -259,7 +260,7 @@ namespace ClubSiteGenerator.Tests
             var competitionResults = JuniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Assert: metadata
-            competitionResults.CompetitionType.Should().Be("Juniors");
+            competitionResults.CompetitionType.Should().Be(CompetitionType.Juniors);
             competitionResults.DisplayName.Should().Be("Club Championship - Juniors");
             competitionResults.EligibilityStatement.Should().Contain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
@@ -342,7 +343,7 @@ namespace ClubSiteGenerator.Tests
             var competitionResults = VeteransCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Assert: metadata
-            competitionResults.CompetitionType.Should().Be("Veterans");
+            competitionResults.CompetitionType.Should().Be(CompetitionType.Veterans);
             competitionResults.DisplayName.Should().Be("Club Championship - Veterans");
             competitionResults.EligibilityStatement.Should().Contain("veteran");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
@@ -437,7 +438,7 @@ namespace ClubSiteGenerator.Tests
             var competitionResults = WomenCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Assert: metadata
-            competitionResults.CompetitionType.Should().Be("Women");
+            competitionResults.CompetitionType.Should().Be(CompetitionType.Women);
             competitionResults.DisplayName.Should().Be("Club Championship - Women");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
             competitionResults.FileName.Should().Be("2025-women");
@@ -523,7 +524,7 @@ namespace ClubSiteGenerator.Tests
             var competitionResults = RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Assert: metadata
-            competitionResults.CompetitionType.Should().Be("Road Bike Women");
+            competitionResults.CompetitionType.Should().Be(CompetitionType.RoadBikeWomen);
             competitionResults.DisplayName.Should().Be("Club Championship - Road Bike Women");
             competitionResults.EligibilityStatement.Should().Contain("road bike");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
@@ -592,7 +593,7 @@ namespace ClubSiteGenerator.Tests
             var competitionResults = SeniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
 
             // Assert: metadata
-            competitionResults.CompetitionType.Should().Be("Seniors");
+            competitionResults.CompetitionType.Should().Be(CompetitionType.Seniors);
             competitionResults.DisplayName.Should().Be("Club Championship - Seniors");
             competitionResults.EligibilityStatement.Should().Contain("any age");
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");

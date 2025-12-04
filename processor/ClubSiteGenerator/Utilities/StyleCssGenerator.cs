@@ -327,6 +327,31 @@ table.results thead tr:nth-child(3) th {
 .competition-nav a:hover { background-color: #e0e0e0; }
 ");
 
+            /* ===========================
+            League identification badges
+            =========================== */
+            builder.AppendLine(@"
+td.competitor-name {
+  position: relative;
+  padding: 6px 8px;
+  vertical-align: middle;
+}
+
+.league-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.8rem;       /* small and unobtrusive */
+  line-height: 1;
+  padding: 1px 4px;        /* tight padding */
+  border-radius: 3px;
+  font-weight: 600;
+  background-color: #eee;  /* subtle neutral background */
+  color: #333;             /* readable text */
+  opacity: 0.6;
+  white-space: nowrap;
+}
+");
 
             /* ===========================
             Competition Rules Block
