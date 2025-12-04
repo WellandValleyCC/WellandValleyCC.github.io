@@ -71,7 +71,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.SeniorsPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.LeaguePoints))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
