@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
@@ -38,7 +39,6 @@ namespace ClubSiteGenerator.Services
             foreach (var ev in calendar)
                 resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
-            // Later: competitions auto‑discovered via reflection
             resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(rides, calendar));
             resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(rides, calendar));
             resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(rides, calendar));
@@ -46,6 +46,13 @@ namespace ClubSiteGenerator.Services
             resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar));
             resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(rides, calendar));
             resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar));
+
+            // League competitions
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, rides, calendar));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, rides, calendar));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, rides, calendar));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, rides, calendar));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, rides, calendar));
         }
 
         public void GenerateAll()

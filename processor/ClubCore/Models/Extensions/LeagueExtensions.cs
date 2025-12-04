@@ -39,5 +39,18 @@ namespace ClubCore.Models.Extensions
                 _ => string.Empty
             };
         }
+
+        public static string GetDisplayName(this League league)
+        {
+            return league switch
+            {
+                League.Premier => "Premier",
+                League.League1 => "League 1",
+                League.League2 => "League 2",
+                League.League3 => "League 3",
+                League.League4 => "League 4",
+                _ => string.Empty
+            };
+        }
     }
 }
