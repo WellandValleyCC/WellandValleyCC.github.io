@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Models.Enums;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -17,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             ScoredRides = scoredRides.ToList().AsReadOnly();
         }
 
-        public abstract string CompetitionType { get; }
+        public abstract CompetitionType CompetitionType { get; }
 
         public abstract string EligibilityStatement { get; }
     }

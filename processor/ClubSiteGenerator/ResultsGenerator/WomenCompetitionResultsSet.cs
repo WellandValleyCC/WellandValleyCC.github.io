@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -16,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string FileName => $"{Year}-women";
         public override string SubFolderName => "competitions";
         public override string GenericName => "Women";
-        public override string CompetitionType => "Women";
+        public override CompetitionType CompetitionType => CompetitionType.Women;
 
         public override string EligibilityStatement => "All first claim female members of the club are eligible for this championship.";
 

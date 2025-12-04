@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -16,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string FileName => $"{Year}-veterans";
         public override string SubFolderName => "competitions";
         public override string GenericName => "Veterans";
-        public override string CompetitionType => "Veterans";
+        public override CompetitionType CompetitionType => CompetitionType.Veterans;
 
         public override string EligibilityStatement => "All first claim veteran members of the club are eligible for this championship.";
 

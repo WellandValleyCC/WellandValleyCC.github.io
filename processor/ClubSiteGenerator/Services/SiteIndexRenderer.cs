@@ -1,4 +1,5 @@
 ﻿using ClubSiteGenerator.Interfaces;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
 using System.Text;
 
@@ -60,12 +61,12 @@ namespace ClubSiteGenerator.Services
             File.WriteAllText(path, sb.ToString());
         }
 
-        public static readonly string[] CompetitionOrder =
+        public static readonly CompetitionType[] CompetitionOrder =
         {
-            "Seniors", "Veterans", "Women", "Juniors", "Juveniles",
-            "Road Bike Men", "Road Bike Women",
-            "Premier", "League1", "League2", "League3", "League4",
-            "NevBrooks"
+            CompetitionType.Seniors, CompetitionType.Veterans, CompetitionType.Women, CompetitionType.Juniors, CompetitionType.Juveniles, 
+            CompetitionType.RoadBikeMen, CompetitionType.RoadBikeWomen,
+            CompetitionType.PremierLeague, CompetitionType.League1, CompetitionType.League2, CompetitionType.League3, CompetitionType.League4,
+            CompetitionType.NevBrooks
         };
     }
 
