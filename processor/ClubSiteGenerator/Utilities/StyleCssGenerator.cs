@@ -503,6 +503,15 @@ footer {
     white-space: nowrap;
     color: #333;
   }
+
+  .league-badge {
+    font-size: 0.5rem;     /* smaller text */
+    padding: 1px 3px;      /* tighter padding */
+    bottom: 1px;           /* nudge closer to edge */
+    right: 2px;            /* keep tucked in */
+    border-radius: 2px;    /* slightly sharper corners */
+    opacity: 0.5;          /* lighter presence */
+  }
 }
 ");
             return builder.ToString();
