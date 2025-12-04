@@ -1,27 +1,45 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
-    public sealed class SeniorsCompetitionResultsSet : CompetitionResultsSet
+    internal class LeagueCompetitionResultsSet : CompetitionResultsSet
     {
-        private SeniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+        public League League { get; }
+
+        private LeagueCompetitionResultsSet(
+            League league,
+            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<CompetitorResult> scoredRides)
             : base(calendar, scoredRides)
         {
+            League = league;
         }
 
-        public override string DisplayName => "Club Championship - Seniors";
-        public override string FileName => $"{Year}-seniors";
+        private const string Sponsor = "George Halls Cycles";
+        public override string DisplayName => $"{Sponsor} League - {League.GetDisplayName()}";
+        public override string FileName => $"{Year}-league-{League.ToCsvValue()}";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Seniors";
-        public override CompetitionType CompetitionType => CompetitionType.Seniors;
+        public override string GenericName => League.GetDisplayName();
 
-        public override string EligibilityStatement => "All first claim members of the club are eligible for this championship - any age group.";
+        public override CompetitionType CompetitionType => League switch
+        {
+            League.Premier => CompetitionType.PremierLeague,
+            League.League1 => CompetitionType.League1,
+            League.League2 => CompetitionType.League2,
+            League.League3 => CompetitionType.League3,
+            League.League4 => CompetitionType.League4,
+            _ => CompetitionType.Undefined
+        };
 
-        public static SeniorsCompetitionResultsSet CreateFrom(
+        public override string EligibilityStatement => $"This competition is for club members assigned to {League.GetDisplayName()}.";
+
+        public static LeagueCompetitionResultsSet CreateFrom(
+            League league,
             IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> calendar)
         {
@@ -39,10 +57,11 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
-            // filter rides must be Valid, but any ageGroup
+            // filter rides must be Valid, Competitor muist be in this league
             var Championship = allRides
                 .Where(r =>
                     r.Competitor != null &&
+                    r.Competitor.League == league &&
                     r.Status == RideStatus.Valid);
 
             // group by ClubNumber
@@ -57,8 +76,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            return new SeniorsCompetitionResultsSet(calendar, results);
+            return new LeagueCompetitionResultsSet(league, calendar, results);
         }
     }
 }
-
