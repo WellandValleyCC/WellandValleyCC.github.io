@@ -99,7 +99,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
-            var renderer = new CompetitionRenderer(resultsSet, calendar);
+            var renderer = new CompetitionRenderer(resultsSet);
 
             var competitor = resultsSet.ScoredRides
                 .FirstOrDefault(r => r.TenMileCompetition.Rank == expectedRank)?.Competitor
@@ -175,7 +175,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
-            var renderer = new CompetitionRenderer(resultsSet, calendar);
+            var renderer = new CompetitionRenderer(resultsSet);
             
             var competitor = resultsSet.ScoredRides
                 .FirstOrDefault(r => r.TenMileCompetition.Rank == expectedRank)?.Competitor

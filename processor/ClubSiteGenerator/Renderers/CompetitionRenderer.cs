@@ -14,18 +14,18 @@ namespace ClubSiteGenerator.Renderers
         private readonly IReadOnlyList<CalendarEvent> calendar;
         private readonly string competitionTitle;
 
-        internal readonly List<string> columnTitles;
+        protected readonly List<string> columnTitles;
 
         protected override string PageTypeClass => "competition-page";
 
-        public CompetitionRenderer(CompetitionResultsSet resultsSet, IEnumerable<CalendarEvent> calendar)
+        public CompetitionRenderer(CompetitionResultsSet resultsSet)
         {
             this.resultsSet = resultsSet;
-            this.calendar = calendar.OrderBy(ev => ev.EventNumber).ToList();
+            this.calendar = resultsSet.CompetitionCalendar.OrderBy(ev => ev.EventNumber).ToList();
             this.competitionTitle = resultsSet.DisplayName;
 
             // columnTitles = fixed + event names
-            columnTitles = groupedFixedColumns
+            columnTitles = GroupedFixedColumns
                 .SelectMany(group =>
                     group.SubTitles.Count == 0
                         ? new[] { group.GroupTitle }
@@ -35,20 +35,21 @@ namespace ClubSiteGenerator.Renderers
                 .ToList();
         }
 
-        internal readonly List<(string GroupTitle, List<string> SubTitles)> groupedFixedColumns = new()
-        {
-            ("Name", new List<string>()), // no sub-columns
-            ("Current rank", new List<string> { "Competition", "Tens" }),
-            ("Events completed", new List<string> { "Tens", "Non-tens" }),
-            ("Scoring 11", new List<string>()),
-            ("10-mile TTs Best 8", new List<string>())
-        };
+        protected virtual IReadOnlyList<(string GroupTitle, IReadOnlyList<string> SubTitles)> GroupedFixedColumns =>
+            new (string, IReadOnlyList<string>)[]
+            {
+                ("Name", Array.Empty<string>()),
+                ("Current rank", new[] { "Competition", "Tens" }),
+                ("Events completed", new[] { "Tens", "Non-tens" }),
+                ("Scoring 11", Array.Empty<string>()),
+                ("10-mile TTs Best 8", Array.Empty<string>())
+            };
+
+        protected int FirstEventIndex =>
+            GroupedFixedColumns.Sum(group => group.SubTitles.Count == 0 ? 1 : group.SubTitles.Count);
 
         protected override string TitleElement()
             => $"<title>{WebUtility.HtmlEncode(competitionTitle)}</title>";
-
-
-        protected virtual string ChampionshipEligibilityStatement => string.Empty;
         
         protected override string HeaderHtml()
         {
@@ -108,7 +109,7 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            foreach (var (group, subs) in groupedFixedColumns)
+            foreach (var (group, subs) in GroupedFixedColumns)
             {
                 if (subs.Count == 0)
                     sb.AppendLine($"<th rowspan=\"3\" class=\"fixed-column-title\">{WebUtility.HtmlEncode(group)}</th>");
@@ -126,17 +127,18 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private string RenderEventTitleRow()
+        protected virtual string RenderEventTitleRow()
         {
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            // Absolute start index for events in the body: Name(0), Rank(1,2), Events(3,4), Best8(5), Scoring11(6) => firstEventIndex = 7
-            var colIndex = 7;
+            var colIndex = FirstEventIndex;
             foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-                sb.AppendLine($"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(ev.EventName)}</th>");
+                sb.AppendLine(
+                    $"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(ev.EventName)}</th>"
+                );
                 colIndex++;
             }
 
@@ -144,27 +146,34 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private string RenderEventDateRow()
+        protected virtual string RenderEventDateRow()
         {
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            // Emit leaf sub-headers with absolute indices
-            // Name doesn’t need a sub-header; it spans 3 rows.
-            // Current rank: Competitin(1), Tens(2)
-            sb.AppendLine("<th data-col-index=\"1\">Competition</th>");
-            sb.AppendLine("<th data-col-index=\"2\">Tens</th>");
+            int colIndex = 1;
 
-            // Events completed: Tens(3), Other(4)
-            sb.AppendLine("<th data-col-index=\"3\">Tens</th>");
-            sb.AppendLine("<th data-col-index=\"4\">Non-tens</th>");
+            // Walk the grouped fixed columns
+            foreach ((string groupTitle, IReadOnlyList<string> subTitles) in GroupedFixedColumns)
+            {
+                if (subTitles.Count > 0)
+                {
+                    foreach (var sub in subTitles)
+                    {
+                        sb.AppendLine($"<th data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(sub)}</th>");
+                        colIndex++;
+                    }
+                }
+                else
+                {
+                    // no sub‑headers --> skip, because the group spans all rows already
+                }
+            }
 
-            // Scoring 11 (5) and Best 8 (6) have no sub-header cells; they’re already spanning all rows in row 1.
-
+            // Now emit event date cells
             foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-                // event date cells don’t need data-col-index; event titles already carry it
                 sb.AppendLine($"<th class=\"event-date {cssClass}\">{ev.EventDate:ddd dd/MM/yy}</th>");
             }
 
@@ -196,7 +205,7 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private IEnumerable<string> BuildCells(CompetitorResult result)
+        protected virtual IEnumerable<string> BuildCells(CompetitorResult result)
         {
             // Name
             yield return result.Competitor.FullName;
@@ -245,26 +254,32 @@ namespace ClubSiteGenerator.Renderers
         {
             var encodedValue = WebUtility.HtmlEncode(value);
 
+            // fixed indices
             const int nameIndex = 0;
             const int rankFullIndex = 1;
             const int rankTensIndex = 2;
-            const int eventsTensIndex = 3;
-            const int eventsOtherIndex = 4;
-            const int scoring11Index = 5;
-            const int best8Index = 6;
-            const int firstEventIndex = 7;
+            const int numEventsTensIndex = 3;
+            const int numEventsOtherIndex = 4;
+            const int pointsFullCompetitionIndex = 5;
+            const int pointsTensCompetitionIndex = 6;
 
-            return index switch
+            if (index < FirstEventIndex)
             {
-                nameIndex => RenderNameCell(competitor, encodedValue),
-                rankFullIndex => RenderRankFullCell(encodedValue),
-                rankTensIndex => RenderRankTensCell(encodedValue),
-                eventsTensIndex => RenderEventsTensCell(encodedValue),
-                eventsOtherIndex => RenderEventsOtherCell(encodedValue),
-                scoring11Index => RenderScoring11Cell(encodedValue, competitor),
-                best8Index => RenderBest8Cell(encodedValue, competitor),
-                _ => RenderEventCell(encodedValue, calendar[index - firstEventIndex])
-            };
+                return index switch
+                {
+                    nameIndex => RenderNameCell(competitor, encodedValue),
+                    rankFullIndex => RenderRankFullCell(encodedValue),
+                    rankTensIndex => RenderRankTensCell(encodedValue),
+                    numEventsTensIndex => RenderEventsTensCell(encodedValue),
+                    numEventsOtherIndex => RenderEventsOtherCell(encodedValue),
+                    pointsFullCompetitionIndex => RenderFullCompetitionPointsCell(encodedValue, competitor),
+                    pointsTensCompetitionIndex => RenderTensCompetitionPointsCell(encodedValue, competitor),
+                    _ => throw new InvalidOperationException($"Unexpected fixed column index {index}")
+                };
+            }
+
+            // event columns
+            return RenderEventCell(encodedValue, calendar[index - FirstEventIndex]);
         }
 
         protected virtual string RenderNameCell(Competitor competitor, string encodedValue)
@@ -282,18 +297,18 @@ namespace ClubSiteGenerator.Renderers
         protected virtual string RenderEventsOtherCell(string encodedValue)
             => $"<td class=\"events-other\">{encodedValue}</td>";
 
-        protected virtual string RenderScoring11Cell(string encodedValue, Competitor competitor)
+        protected virtual string RenderFullCompetitionPointsCell(string encodedValue, Competitor competitor)
         {
-            var podiumClass = GetPodiumClassForScoring11(competitor);
+            var podiumClass = GetPodiumClassForFullCompetition(competitor);
             var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
                 ? "scoring-11"
                 : $"scoring-11 {podiumClass}";
             return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
         }
 
-        protected virtual string RenderBest8Cell(string encodedValue, Competitor competitor)
+        protected virtual string RenderTensCompetitionPointsCell(string encodedValue, Competitor competitor)
         {
-            var podiumClass = GetPodiumClassForBest8(competitor);
+            var podiumClass = GetPodiumClassForTenMileCompetition(competitor);
             var best8CssClass = string.IsNullOrEmpty(podiumClass)
                 ? "best-8"
                 : $"best-8 {podiumClass}";
@@ -306,7 +321,7 @@ namespace ClubSiteGenerator.Renderers
             return $"<td class=\"{cssClass}\">{encodedValue}</td>";
         }
 
-        private string? GetPodiumClassForScoring11(Competitor competitor)
+        protected string? GetPodiumClassForFullCompetition(Competitor competitor)
         {
             var result = resultsSet.ScoredRides.FirstOrDefault(r => r.Competitor == competitor);
             return result?.FullCompetition.Rank switch
@@ -318,7 +333,7 @@ namespace ClubSiteGenerator.Renderers
             };
         }
 
-        private string? GetPodiumClassForBest8(Competitor competitor)
+        protected string? GetPodiumClassForTenMileCompetition(Competitor competitor)
         {
             var result = resultsSet.ScoredRides.FirstOrDefault(r => r.Competitor == competitor);
             return result?.TenMileCompetition.Rank switch

@@ -13,6 +13,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             Year = calendar.First().EventDate.Year;
         }
 
+        public IEnumerable<CalendarEvent> CompetitionCalendar => Calendar;
         protected int Year { get; }
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
