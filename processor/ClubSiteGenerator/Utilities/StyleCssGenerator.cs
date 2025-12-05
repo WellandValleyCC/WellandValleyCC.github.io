@@ -225,6 +225,28 @@ header .event-distance {
 }
 .header-and-legend .legend { flex-wrap: wrap; }
 
+/* Base cancelled style */
+table.results thead .event-title.cancelled-event {
+  position: relative;
+  background-color: #f8d7da; /* pale red background */
+  color: #721c24;           /* dark red text */
+}
+
+/* Diagonal banner */
+table.results thead .event-title.cancelled-event::after {
+  content: ""Cancelled"";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-65deg);
+  background: rgba(200, 0, 0, 0.5); /* 50% opacity */
+  color: white;
+  font-weight: bold;
+  padding: 0.25rem 2rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 /* Championship layout (desktop) */
 .rules-and-legend {
   display: flex;
