@@ -136,6 +136,13 @@ namespace ClubSiteGenerator.Renderers
             foreach (var ev in calendar)
             {
                 var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+
+                // Add cancelled-event class if IsCancelled
+                if (ev.IsCancelled)
+                {
+                    cssClass += " cancelled-event";
+                }
+
                 sb.AppendLine(
                     $"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(ev.EventName)}</th>"
                 );
