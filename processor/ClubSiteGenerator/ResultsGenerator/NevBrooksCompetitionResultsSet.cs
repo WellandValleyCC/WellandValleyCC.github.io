@@ -55,6 +55,7 @@ namespace ClubSiteGenerator.ResultsGenerator
                 .Where(r =>
                     r.Competitor != null &&
                     r.Status == RideStatus.Valid &&
+                    r.NevBrooksPoints != null &&
                     r.CalendarEvent != null &&
                     relevantTenMileEventNumbers.Contains(r.CalendarEvent.EventNumber));
 
