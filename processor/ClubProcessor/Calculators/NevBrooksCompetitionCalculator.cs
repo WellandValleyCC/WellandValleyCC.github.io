@@ -67,7 +67,23 @@ namespace ClubProcessor.Calculators
                 // Update lookup for next event — after we’ve set Generated
                 if (r.ClubNumber.HasValue && r.NevBrooksSecondsGenerated.HasValue)
                 {
-                    previousGeneratedByClubNumber[r.ClubNumber.Value] = r.NevBrooksSecondsGenerated.Value;
+                    var clubNumber = r.ClubNumber.Value;
+                    var newHandicap = r.NevBrooksSecondsGenerated.Value;
+
+                    // Try to get the old value
+                    if (previousGeneratedByClubNumber.TryGetValue(clubNumber, out var oldHandicap))
+                    {
+                        // Only replace if new is smaller
+                        if (newHandicap < oldHandicap)
+                        {
+                            previousGeneratedByClubNumber[clubNumber] = newHandicap;
+                        }
+                    }
+                    else
+                    {
+                        // No old value, so store the new one
+                        previousGeneratedByClubNumber[clubNumber] = newHandicap;
+                    }
                 }
             }
 
