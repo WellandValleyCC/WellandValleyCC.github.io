@@ -1,13 +1,12 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
-using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
 
 namespace ClubSiteGenerator.Renderers
 {
     internal class SeniorsCompetitionRenderer : CompetitionRenderer
     {
-        public SeniorsCompetitionRenderer(CompetitionResultsSet resultsSet, IEnumerable<CalendarEvent> calendar) : base(resultsSet, calendar)
+        public SeniorsCompetitionRenderer(CompetitionResultsSet resultsSet) : base(resultsSet)
         {
         }
 

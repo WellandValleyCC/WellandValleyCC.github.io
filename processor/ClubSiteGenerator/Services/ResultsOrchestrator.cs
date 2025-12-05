@@ -53,6 +53,9 @@ namespace ClubSiteGenerator.Services
             resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, rides, calendar));
             resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, rides, calendar));
             resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, rides, calendar));
+
+            // Nev Brooks
+            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(rides, calendar));
         }
 
         public void GenerateAll()
@@ -109,7 +112,6 @@ namespace ClubSiteGenerator.Services
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
             }
-
         }
 
         public void GenerateIndex()
