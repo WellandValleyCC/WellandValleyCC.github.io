@@ -1,26 +1,29 @@
 ﻿using ClubSiteGenerator.Interfaces;
+using ClubSiteGenerator.Services;
 using System.Text.Json;
 
-namespace ClubSiteGenerator.Services
+public static class CompetitionRuleFactory
 {
-    public static class CompetitionRuleFactory
+    public static ICompetitionRule Create(JsonElement ruleConfig)
     {
-        public static ICompetitionRule Create(JsonElement ruleConfig)
+        var ruleClass = ruleConfig.GetProperty("ruleClass").GetString();
+
+        return ruleClass switch
         {
-            var ruleClass = ruleConfig.GetProperty("ruleClass").GetString();
+            "DefinedNumberOfEvents" =>
+                new DefinedNumberOfEventsRule(
+                    ruleConfig.GetProperty("fixedNumber").GetInt32()),
 
-            return ruleClass switch
-            {
-                nameof(CompetitionRuleHalfPlusOneCapped) =>
-                    new CompetitionRuleHalfPlusOneCapped(
-                        ruleConfig.GetProperty("cap").GetInt32()),
+            "HalfPlusOneCapped" =>
+                new HalfPlusOneCappedRule(
+                    ruleConfig.GetProperty("cap").GetInt32()),
 
-                nameof(CompetitionRuleDefinedNumberOfEvents) =>
-                    new CompetitionRuleDefinedNumberOfEvents(
-                        ruleConfig.GetProperty("fixedNumber").GetInt32()),
+            "HalfPlusOneMixedCapped" =>
+                new HalfPlusOneMixedCappedRule(
+                    ruleConfig.GetProperty("cap").GetInt32(),
+                    ruleConfig.GetProperty("requiredNonTens").GetInt32()),
 
-                _ => throw new InvalidOperationException($"Unknown rule class: {ruleClass}")
-            };
-        }
+            _ => throw new InvalidOperationException($"Unknown rule class: {ruleClass}")
+        };
     }
 }

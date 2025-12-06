@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Tests.Helpers;
 
@@ -44,7 +45,7 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), _calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule);
 
@@ -88,8 +89,8 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
-
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), _calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule);
 
             Assert.True(result.FullCompetition.Points > 0, $"{label} scoring should be positive");
@@ -133,7 +134,7 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             // Act
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule);
@@ -181,7 +182,7 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             // Act
             var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule);

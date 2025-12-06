@@ -42,7 +42,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             // resolve rules 
             var year = calendar.First().EventDate.Year;
             var tenMileRule = rulesProvider.GetRule(year, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(year, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             // filter juvenile rides
             var juvenileRides = allRides

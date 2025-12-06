@@ -41,7 +41,7 @@ namespace ClubSiteGenerator.Services
             foreach (var ev in calendar)
                 resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
-            var dataDir = FolderLocator.GetDataDirectory();
+            var dataDir = FolderLocator.GetConfigDirectory();
             var rulesPath = Path.Combine(dataDir, "CompetitionRules.json");
 
             using var doc = JsonDocument.Parse(File.ReadAllText(rulesPath));

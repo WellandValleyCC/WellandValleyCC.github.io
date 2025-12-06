@@ -16,7 +16,7 @@ namespace ClubSiteGenerator.Services
             IEnumerable<CalendarEvent> calendar,
             Func<Ride, double?> pointsSelector,
             ICompetitionRule tenMileRule,
-            ICompetitionRule fullCompetitionRule)
+            IMixedCompetitionRule fullCompetitionRule)
         {
             if (rides == null || rides.Count == 0)
                 throw new ArgumentException("Rides collection must not be null or empty.", nameof(rides));

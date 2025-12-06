@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Tests.Helpers; // CsvTestLoader
@@ -52,7 +53,7 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             var results = groups
                 .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule))
@@ -110,7 +111,7 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             var results = groups
                 .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule))
@@ -164,7 +165,7 @@ namespace ClubSiteGenerator.Tests
 
             var rulesProvider = new FakeRulesProvider();
             var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
-            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+            var fullCompetitionRule = (IMixedCompetitionRule)rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
 
             var results = groups
                 .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule))

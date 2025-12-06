@@ -26,5 +26,16 @@
 
             return dataDir;
         }
+
+        public static string GetConfigDirectory()
+        {
+            var repoRoot = FindGitRepoRoot();
+            var dataDir = Path.Combine(repoRoot, "config");
+
+            if (!Directory.Exists(dataDir))
+                throw new DirectoryNotFoundException($"Data directory not found at {dataDir}");
+
+            return dataDir;
+        }
     }
 }
