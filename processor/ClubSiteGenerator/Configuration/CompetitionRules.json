@@ -1,0 +1,24 @@
+{
+  "2025": {
+    "TenMile": {
+      "ruleClass": "CompetitionDefinedNumberOfEvents",
+      "fixedNumber": 8
+    },
+    "Full": {
+      "ruleClass": "CompetitionDefinedNumberOfEvents",
+      "requiredNonTens": 2,
+      "fixedNumber": 11
+    }
+  },
+  "2026": {
+    "TenMile": {
+      "ruleClass": "CompetitionHalfPlusOneCapped",
+      "cap": 11
+    },
+    "Full": {
+      "ruleClass": "CompetitionHalfPlusOneCapped",
+      "cap": 11,
+      "requiredNonTens": 2
+    }
+  }
+}

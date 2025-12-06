@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Interfaces;
 
 namespace ClubSiteGenerator.Services
 {
@@ -13,7 +14,9 @@ namespace ClubSiteGenerator.Services
         public static CompetitorResult BuildCompetitorResult(
             IReadOnlyList<Ride> rides,
             IEnumerable<CalendarEvent> calendar,
-            Func<Ride, double?> pointsSelector)
+            Func<Ride, double?> pointsSelector,
+            ICompetitionRule tenMileRule,
+            ICompetitionRule fullCompetitionRule)
         {
             if (rides == null || rides.Count == 0)
                 throw new ArgumentException("Rides collection must not be null or empty.", nameof(rides));
@@ -29,6 +32,9 @@ namespace ClubSiteGenerator.Services
 
             // Use the last ride's competitor
             var competitor = rides.Last().Competitor!;
+
+            int totalEventsInCalendar = calendar.Count();
+            int totalTenEventsInCalendar = calendar.Count(ev => ev.IsEvening10);
 
             // Precompute lookup for event type
             var isTenMileByEvent = calendar
@@ -46,40 +52,42 @@ namespace ClubSiteGenerator.Services
             var eventsCompletedOther = validRides.Count(r =>
                 isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && !isTen);
 
-            // Best 8 ten‑mile rides (valid only)
-            var best8TenMileRides = validRides
+            // Best x ten‑mile rides (valid only), where x is defined in CompetitionRules.json
+            var bestXTenMileRides = validRides
                 .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && isTen)
                 .OrderByDescending(r => pointsSelector(r) ?? 0)
-                .Take(8)
+                .Take(tenMileRule.GetLimit(totalTenEventsInCalendar))
                 .ToList();
 
             // If no ten‑mile rides, mark as null (n/a)
-            double? best8TenMile = best8TenMileRides.Any()
-                ? best8TenMileRides.Sum(r => pointsSelector(r) ?? 0)
+            double? bestXTenMile = bestXTenMileRides.Any()
+                ? bestXTenMileRides.Sum(r => pointsSelector(r) ?? 0)
                 : (double?)null;
 
-            // Best 2 non‑ten rides (valid only)
-            var nonTenMileBest2Rides = validRides
+            // Best x non‑ten rides (valid only) - defined in CompetitionRules.json "requiredNonTens"
+            var nonTenMileBestXRides = validRides
                 .Where(r => isTenMileByEvent.TryGetValue(r.EventNumber, out var isTen) && !isTen)
                 .OrderByDescending(r => pointsSelector(r) ?? 0)
-                .Take(2)
+                .Take(fullCompetitionRule.RequiredNonTens)
                 .ToList();
 
-            var nonTenMileBest2 = nonTenMileBest2Rides.Sum(r => pointsSelector(r) ?? 0);
-            var consumedEventNumbers = nonTenMileBest2Rides.Select(r => r.EventNumber).ToHashSet();
+            var nonTenMileBestXScore = nonTenMileBestXRides.Sum(r => pointsSelector(r) ?? 0);
+            var consumedEventNumbers = nonTenMileBestXRides.Select(r => r.EventNumber).ToHashSet();
 
-            // Best 9 of remaining valid rides (excluding the 2 non‑ten already consumed)
-            var remainingBest9Rides = validRides
+            // Best of remaining valid rides (excluding the X non‑ten already consumed)
+            var remainingBestRides = validRides
                 .Where(r => !consumedEventNumbers.Contains(r.EventNumber))
                 .OrderByDescending(r => pointsSelector(r) ?? 0)
-                .Take(9)
+                .Take(fullCompetitionRule.GetLimit(totalEventsInCalendar) - fullCompetitionRule.RequiredNonTens)
                 .ToList();
 
-            var remainingBest9 = remainingBest9Rides.Sum(r => pointsSelector(r) ?? 0);
+            var remainingBestRidesScore = remainingBestRides.Sum(r => pointsSelector(r) ?? 0);
 
-            // Combine into Scoring‑11 (only if 2 valid non‑ten exist)
-            var scoring11Rides = nonTenMileBest2Rides.Concat(remainingBest9Rides).ToList();
-            var scoring11 = nonTenMileBest2Rides.Count == 2 ? nonTenMileBest2 + remainingBest9 : (double?)null;
+            // Combine into Scoring‑X (only if the required non‑tens exist)
+            var scoringFullCompetitionRides = nonTenMileBestXRides.Concat(remainingBestRides).ToList();
+            var scoring11 = nonTenMileBestXRides.Count == fullCompetitionRule.RequiredNonTens 
+                ? nonTenMileBestXScore + remainingBestRidesScore 
+                : (double?)null;
 
             // Per‑event data for rendering
             var eventPoints = rides.ToDictionary(
@@ -113,15 +121,15 @@ namespace ClubSiteGenerator.Services
                 // Ten‑mile competition view
                 TenMileCompetition = new CompetitionScore
                 {
-                    Points = best8TenMile,
-                    Rides = best8TenMileRides
+                    Points = bestXTenMile,
+                    Rides = bestXTenMileRides
                 },
 
                 // Full competition view
                 FullCompetition = new CompetitionScore
                 {
                     Points = scoring11,
-                    Rides = scoring11Rides
+                    Rides = scoringFullCompetitionRides
                 }
             };
         }

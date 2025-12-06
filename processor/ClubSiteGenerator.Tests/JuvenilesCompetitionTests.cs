@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Tests.Helpers; // CsvTestLoader
@@ -49,8 +50,12 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
 
+            var rulesProvider = new FakeRulesProvider();
+            var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
+            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule))
                 .ToList();
 
             // Act  
@@ -102,8 +107,13 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
+
+            var rulesProvider = new FakeRulesProvider();
+            var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
+            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule))
                 .ToList();
 
             var ordered = CompetitionResultsCalculator.SortResults(results).ToList();
@@ -151,8 +161,13 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
+
+            var rulesProvider = new FakeRulesProvider();
+            var tenMileRule = rulesProvider.GetRule(2025, CompetitionRuleScope.TenMile);
+            var fullCompetitionRule = rulesProvider.GetRule(2025, CompetitionRuleScope.Full);
+
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, tenMileRule, fullCompetitionRule))
                 .ToList();
 
             // Add Zoe manually with no rides

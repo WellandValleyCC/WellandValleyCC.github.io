@@ -160,7 +160,12 @@ namespace ClubSiteGenerator.Tests
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
                 new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 },
+                new CalendarEvent { EventNumber = 4, EventName = "Event 4", EventDate = DateTime.Today.AddDays(1), Miles = 25 },
+                new CalendarEvent { EventNumber = 5, EventName = "Event 5", EventDate = DateTime.Today.AddDays(2), Miles = 25 },
+                new CalendarEvent { EventNumber = 6, EventName = "Event 6", EventDate = DateTime.Today.AddDays(3), Miles = 25 },
+                new CalendarEvent { EventNumber = 7, EventName = "Event 7", EventDate = DateTime.Today.AddDays(4), Miles = 25 },
+                new CalendarEvent { EventNumber = 8, EventName = "Event 8", EventDate = DateTime.Today.AddDays(5), Miles = 25 }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -173,9 +178,10 @@ namespace ClubSiteGenerator.Tests
                     ride.CalendarEvent = ev;
                 }
             }
+            var rulesProvider = new FakeRulesProvider();
 
             // Act
-            var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents, rulesProvider);
 
             // Assert
             juvenilesCompetitionResults.CompetitionType.Should().Be(CompetitionType.Juveniles);
@@ -242,7 +248,12 @@ namespace ClubSiteGenerator.Tests
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
                 new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 },
+                new CalendarEvent { EventNumber = 4, EventName = "Event 4", EventDate = DateTime.Today.AddDays(1), Miles = 25 },
+                new CalendarEvent { EventNumber = 5, EventName = "Event 5", EventDate = DateTime.Today.AddDays(2), Miles = 25 },
+                new CalendarEvent { EventNumber = 6, EventName = "Event 6", EventDate = DateTime.Today.AddDays(3), Miles = 25 },
+                new CalendarEvent { EventNumber = 7, EventName = "Event 7", EventDate = DateTime.Today.AddDays(4), Miles = 25 },
+                new CalendarEvent { EventNumber = 8, EventName = "Event 8", EventDate = DateTime.Today.AddDays(5), Miles = 25 }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -256,8 +267,10 @@ namespace ClubSiteGenerator.Tests
                 }
             }
 
+            var rulesProvider = new FakeRulesProvider();
+
             // Act
-            var competitionResults = JuniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = JuniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents, rulesProvider);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Juniors);
@@ -323,10 +336,15 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-        new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-        new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-        new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
-    };
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 },
+                new CalendarEvent { EventNumber = 4, EventName = "Event 4", EventDate = DateTime.Today.AddDays(1), Miles = 25 },
+                new CalendarEvent { EventNumber = 5, EventName = "Event 5", EventDate = DateTime.Today.AddDays(2), Miles = 25 },
+                new CalendarEvent { EventNumber = 6, EventName = "Event 6", EventDate = DateTime.Today.AddDays(3), Miles = 25 },
+                new CalendarEvent { EventNumber = 7, EventName = "Event 7", EventDate = DateTime.Today.AddDays(4), Miles = 25 },
+                new CalendarEvent { EventNumber = 8, EventName = "Event 8", EventDate = DateTime.Today.AddDays(5), Miles = 25 }
+            };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
 
@@ -339,8 +357,10 @@ namespace ClubSiteGenerator.Tests
                 }
             }
 
+            var rulesProvider = new FakeRulesProvider();
+
             // Act
-            var competitionResults = VeteransCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = VeteransCompetitionResultsSet.CreateFrom(rides, calendarEvents, rulesProvider);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Veterans);
@@ -420,7 +440,12 @@ namespace ClubSiteGenerator.Tests
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
                 new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 },
+                new CalendarEvent { EventNumber = 4, EventName = "Event 4", EventDate = DateTime.Today.AddDays(1), Miles = 25 },
+                new CalendarEvent { EventNumber = 5, EventName = "Event 5", EventDate = DateTime.Today.AddDays(2), Miles = 25 },
+                new CalendarEvent { EventNumber = 6, EventName = "Event 6", EventDate = DateTime.Today.AddDays(3), Miles = 25 },
+                new CalendarEvent { EventNumber = 7, EventName = "Event 7", EventDate = DateTime.Today.AddDays(4), Miles = 25 },
+                new CalendarEvent { EventNumber = 8, EventName = "Event 8", EventDate = DateTime.Today.AddDays(5), Miles = 25 }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -434,8 +459,10 @@ namespace ClubSiteGenerator.Tests
                 }
             }
 
+            var rulesProvider = new FakeRulesProvider();
+
             // Act
-            var competitionResults = WomenCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = WomenCompetitionResultsSet.CreateFrom(rides, calendarEvents, rulesProvider);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Women);
@@ -506,7 +533,12 @@ namespace ClubSiteGenerator.Tests
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
                 new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 },
+                new CalendarEvent { EventNumber = 4, EventName = "Event 4", EventDate = DateTime.Today.AddDays(1), Miles = 25 },
+                new CalendarEvent { EventNumber = 5, EventName = "Event 5", EventDate = DateTime.Today.AddDays(2), Miles = 25 },
+                new CalendarEvent { EventNumber = 6, EventName = "Event 6", EventDate = DateTime.Today.AddDays(3), Miles = 25 },
+                new CalendarEvent { EventNumber = 7, EventName = "Event 7", EventDate = DateTime.Today.AddDays(4), Miles = 25 },
+                new CalendarEvent { EventNumber = 8, EventName = "Event 8", EventDate = DateTime.Today.AddDays(5), Miles = 25 }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -520,8 +552,10 @@ namespace ClubSiteGenerator.Tests
                 }
             }
 
+            var rulesProvider = new FakeRulesProvider();
+
             // Act
-            var competitionResults = RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendarEvents, rulesProvider);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.RoadBikeWomen);
@@ -575,7 +609,12 @@ namespace ClubSiteGenerator.Tests
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
                 new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 },
+                new CalendarEvent { EventNumber = 4, EventName = "Event 4", EventDate = DateTime.Today.AddDays(1), Miles = 25 },
+                new CalendarEvent { EventNumber = 5, EventName = "Event 5", EventDate = DateTime.Today.AddDays(2), Miles = 25 },
+                new CalendarEvent { EventNumber = 6, EventName = "Event 6", EventDate = DateTime.Today.AddDays(3), Miles = 25 },
+                new CalendarEvent { EventNumber = 7, EventName = "Event 7", EventDate = DateTime.Today.AddDays(4), Miles = 25 },
+                new CalendarEvent { EventNumber = 8, EventName = "Event 8", EventDate = DateTime.Today.AddDays(5), Miles = 25 }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -589,8 +628,10 @@ namespace ClubSiteGenerator.Tests
                 }
             }
 
+            var rulesProvider = new FakeRulesProvider();
+
             // Act
-            var competitionResults = SeniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = SeniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents, rulesProvider);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Seniors);

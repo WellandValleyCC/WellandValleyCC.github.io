@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
@@ -21,7 +22,8 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static JuvenilesCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            ICompetitionRulesProvider rulesProvider)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -37,6 +39,11 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
+            // resolve rules 
+            var year = calendar.First().EventDate.Year;
+            var tenMileRule = rulesProvider.GetRule(year, CompetitionRuleScope.TenMile);
+            var fullCompetitionRule = rulesProvider.GetRule(year, CompetitionRuleScope.Full);
+
             // filter juvenile rides
             var juvenileRides = allRides
                 .Where(r =>
@@ -51,7 +58,12 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                    group.ToList(), 
+                    calendar, 
+                    r => r.JuvenilesPoints,
+                    tenMileRule,
+                    fullCompetitionRule))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();

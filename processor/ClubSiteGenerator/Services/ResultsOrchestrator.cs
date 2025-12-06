@@ -1,9 +1,11 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Utilities;
+using System.Text.Json;
 
 
 namespace ClubSiteGenerator.Services
@@ -39,23 +41,30 @@ namespace ClubSiteGenerator.Services
             foreach (var ev in calendar)
                 resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
-            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar));
+            var dataDir = FolderLocator.GetDataDirectory();
+            var rulesPath = Path.Combine(dataDir, "CompetitionRules.json");
+
+            using var doc = JsonDocument.Parse(File.ReadAllText(rulesPath));
+            var rulesProvider = new CompetitionRulesProvider(doc.RootElement);
+
+            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
+
 
             // League competitions
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, rides, calendar));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, rides, calendar, rulesProvider));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, rides, calendar, rulesProvider));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, rides, calendar, rulesProvider));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, rides, calendar, rulesProvider));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, rides, calendar, rulesProvider));
 
             // Nev Brooks
-            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider));
         }
 
         public void GenerateAll()

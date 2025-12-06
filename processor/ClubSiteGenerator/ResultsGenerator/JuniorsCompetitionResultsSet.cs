@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
@@ -8,9 +9,11 @@ namespace ClubSiteGenerator.ResultsGenerator
 {
     public sealed class JuniorsCompetitionResultsSet : CompetitionResultsSet
     {
-        private JuniorsCompetitionResultsSet(IEnumerable<CalendarEvent> calendar, IEnumerable<CompetitorResult> scoredRides)
+        private JuniorsCompetitionResultsSet(
+            IEnumerable<CalendarEvent> calendar, 
+            IEnumerable<CompetitorResult> scoredRides)
             : base(calendar, scoredRides) 
-        { 
+        {
         }
 
         public override string DisplayName => "Club Championship - Juniors";
@@ -24,7 +27,8 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static JuniorsCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides, 
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            ICompetitionRulesProvider rulesProvider)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -40,6 +44,11 @@ namespace ClubSiteGenerator.ResultsGenerator
                     nameof(allRides));
             }
 
+            // resolve rules 
+            var year = calendar.First().EventDate.Year;
+            var tenMileRule = rulesProvider.GetRule(year, CompetitionRuleScope.TenMile);
+            var fullCompetitionRule = rulesProvider.GetRule(year, CompetitionRuleScope.Full);
+
             // filter junior rides
             var juniorRides = allRides
                 .Where(r =>
@@ -54,7 +63,12 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuniorsPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                    group.ToList(), 
+                    calendar, 
+                    r => r.JuniorsPoints, 
+                    tenMileRule, 
+                    fullCompetitionRule))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();

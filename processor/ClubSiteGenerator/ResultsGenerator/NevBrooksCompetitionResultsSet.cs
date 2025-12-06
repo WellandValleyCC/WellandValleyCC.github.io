@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Services;
@@ -23,7 +24,8 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static NevBrooksCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            ICompetitionRulesProvider rulesProvider)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -38,6 +40,11 @@ namespace ClubSiteGenerator.ResultsGenerator
                     $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
                     nameof(allRides));
             }
+
+            // resolve rules 
+            var year = calendar.First().EventDate.Year;
+            var tenMileRule = rulesProvider.GetRule(year, CompetitionRuleScope.TenMile);
+            var fullCompetitionRule = rulesProvider.GetRule(year, CompetitionRuleScope.Full);
 
             // build the competition-specific calendar: all 10-mile evening events after the first
             var nevBrooksCalendar = calendar
@@ -69,7 +76,9 @@ namespace ClubSiteGenerator.ResultsGenerator
                 .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
                     group.ToList(),
                     nevBrooksCalendar, // pass the tight calendar here
-                    r => r.NevBrooksPoints))
+                    r => r.NevBrooksPoints,
+                    tenMileRule,
+                    fullCompetitionRule))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();

@@ -97,8 +97,8 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
-
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var rulesProvider = new FakeRulesProvider();
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider);
             var renderer = new CompetitionRenderer(resultsSet);
 
             var competitor = resultsSet.ScoredRides
@@ -173,8 +173,8 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
-
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var rulesProvider = new FakeRulesProvider();
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rulesProvider);
             var renderer = new CompetitionRenderer(resultsSet);
             
             var competitor = resultsSet.ScoredRides
