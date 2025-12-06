@@ -15,6 +15,7 @@ namespace ClubSiteGenerator.Renderers
         private readonly int eventNumber;
         private readonly DateOnly eventDate; 
         private readonly double eventMiles;
+        private readonly bool isCancelled;
 
         protected override string PageTypeClass => "event-page";
 
@@ -26,6 +27,7 @@ namespace ClubSiteGenerator.Renderers
             this.eventNumber = resultsSet.EventNumber;
             this.eventDate = resultsSet.EventDate;
             this.eventMiles = resultsSet.CalendarEvent.Miles;
+            this.isCancelled = resultsSet.CalendarEvent.IsCancelled;
         }
 
         internal readonly List<string> columnTitles = new()
@@ -41,9 +43,12 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("<div class=\"header-and-legend\">");
 
-            sb.AppendLine($"  <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
-            sb.AppendLine($"  <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
-            sb.AppendLine($"  <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
+            var headerClasses = "event-header-core" + (isCancelled ? " cancelled-event" : string.Empty);
+            sb.AppendLine($"  <div class=\"{headerClasses}\">");
+            sb.AppendLine($"    <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
+            sb.AppendLine($"    <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
+            sb.AppendLine($"    <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
+            sb.AppendLine("  </div>");
 
             sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
             sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");

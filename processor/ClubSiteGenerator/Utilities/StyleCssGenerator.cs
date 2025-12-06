@@ -247,6 +247,31 @@ table.results thead .event-title.cancelled-event::after {
   pointer-events: none;
 }
 
+.event-page .event-header-core.cancelled-event {
+  position: relative;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+/* Diagonal banner */
+.event-page .event-header-core.cancelled-event::after {
+  content: ""Cancelled"";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  background: rgba(200, 0, 0, 0.5);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.3rem 2.5rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* Championship layout (desktop) */
 .rules-and-legend {
   display: flex;
