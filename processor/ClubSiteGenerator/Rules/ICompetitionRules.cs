@@ -28,6 +28,11 @@
         string TenMileTitle { get; }
 
         /// <summary>
+        /// Title text for use where context makes it clear it's about ten‑mile scoring (e.g. Nev Brooks).
+        /// </summary>
+        string TenMileShortTitle { get; }
+
+        /// <summary>
         /// Title text for the mixed-distance scoring column.
         /// </summary>
         string FullCompetitionTitle { get; }

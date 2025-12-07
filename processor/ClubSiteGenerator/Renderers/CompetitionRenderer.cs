@@ -12,6 +12,7 @@ namespace ClubSiteGenerator.Renderers
     public class CompetitionRenderer : HtmlRendererBase
     {
         private readonly CompetitionResultsSet resultsSet;
+        private readonly ICompetitionRules rules;
         private readonly IReadOnlyList<CalendarEvent> calendar;
         private readonly string competitionTitle;
 
@@ -22,6 +23,7 @@ namespace ClubSiteGenerator.Renderers
         public CompetitionRenderer(CompetitionResultsSet resultsSet, ICompetitionRules rules)
         {
             this.resultsSet = resultsSet;
+            this.rules = rules;
             this.calendar = resultsSet.CompetitionCalendar.OrderBy(ev => ev.EventNumber).ToList();
             this.competitionTitle = resultsSet.DisplayName;
 
@@ -42,12 +44,14 @@ namespace ClubSiteGenerator.Renderers
                 ("Name", Array.Empty<string>()),
                 ("Current rank", new[] { "Competition", "Tens" }),
                 ("Events completed", new[] { "Tens", "Non-tens" }),
-                ("Scoring 11", Array.Empty<string>()),
-                ("10-mile TTs Best 8", Array.Empty<string>())
+                (Rules.FullCompetitionTitle, Array.Empty<string>()),
+                (Rules.TenMileTitle, Array.Empty<string>())
             };
 
         protected int FirstEventIndex =>
             GroupedFixedColumns.Sum(group => group.SubTitles.Count == 0 ? 1 : group.SubTitles.Count);
+
+        protected ICompetitionRules Rules => rules;
 
         protected override string TitleElement()
             => $"<title>{WebUtility.HtmlEncode(competitionTitle)}</title>";

@@ -33,7 +33,7 @@ namespace ClubSiteGenerator.Renderers
                 ("Name", Array.Empty<string>()),
                 ("Current rank", Array.Empty<string>()),
                 ("Events completed", Array.Empty<string>()),
-                ("Best 8", Array.Empty<string>())
+                (Rules.TenMileShortTitle, Array.Empty<string>())
             };
 
         protected override string TitleElement()

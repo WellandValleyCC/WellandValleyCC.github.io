@@ -23,9 +23,14 @@
         public int MixedEventCount { get; }
 
         /// <summary>
-        /// Title text for the ten‑mile scoring column (e.g. "Best 6 ten‑mile TTs").
+        /// Title text for the ten‑mile scoring column (e.g. "10-mile TTs Best 8").
         /// </summary>
-        public string TenMileTitle => $"Best {TenMileCount} ten‑mile TTs";
+        public string TenMileTitle => $"10-mile TTs Best {TenMileCount}";
+
+        /// <summary>
+        /// Title text for use where context makes it clear it's about ten‑mile scoring (e.g. Nev Brooks).
+        /// </summary>
+        public string TenMileShortTitle => $"Best {TenMileCount}";
 
         /// <summary>
         /// Title text for the mixed‑distance scoring column (e.g. "Scoring 11").
