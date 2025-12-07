@@ -1,4 +1,4 @@
-﻿namespace ClubSiteGenerator.Models
+﻿namespace ClubSiteGenerator.Rules
 {
     public class RuleDefinition
     {

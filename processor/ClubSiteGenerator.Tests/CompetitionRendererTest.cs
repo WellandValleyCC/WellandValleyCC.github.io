@@ -1,9 +1,11 @@
-﻿using ClubCore.Models;
+﻿using AngleSharp;
+using AutoFixture;
+using ClubCore.Models;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Tests.Helpers;
-using AngleSharp;
 using FluentAssertions;
 
 namespace ClubSiteGenerator.Tests
@@ -13,6 +15,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void Render_ShouldIncludeCompetitionTitleAndPoints()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange
             var calendar = new[]
             {
@@ -32,7 +36,7 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
 
             // Act
@@ -47,6 +51,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldIncludeLegendWithCorrectEntries()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange
             var calendar = new[]
             {
@@ -64,7 +70,7 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
 
             // Act
@@ -89,6 +95,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldIncludeCompetitorRow_WithCorrectClasses()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange
             var calendar = new[]
             {
@@ -107,7 +115,7 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
 
             // Act
@@ -171,6 +179,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldUseSemanticClassesForMultiRowHeaders()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange
             var calendar = new[]
             {
@@ -191,7 +201,7 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
 
             // Act
@@ -227,6 +237,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldApplyLegendClassesToBodyCells()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange
             var calendar = new[]
             {
@@ -246,7 +258,7 @@ namespace ClubSiteGenerator.Tests
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
 
             // Act

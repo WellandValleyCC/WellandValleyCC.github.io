@@ -1,9 +1,11 @@
 ﻿using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using AutoFixture;
 using ClubCore.Models;
 using ClubSiteGenerator.Models.Extensions;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
@@ -62,6 +64,8 @@ namespace ClubSiteGenerator.Tests
         [InlineData(4, "")]
         public void CompetitionRenderer_RendersScoring11Cell_WithExpectedCssClass(int? expectedRank, string expectedClass)
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3);
+
             // Arrange:
             var calendar = new[]
             {
@@ -98,7 +102,7 @@ namespace ClubSiteGenerator.Tests
 
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
 
             var competitor = resultsSet.ScoredRides
@@ -147,6 +151,8 @@ namespace ClubSiteGenerator.Tests
         [InlineData(4, "")]
         public void CompetitionRenderer_Render_IncludesExpectedBest8PodiumCssClass(int? expectedRank, string expectedClass)
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 1, mixedEventCount: 3);
+
             // Arrange:
             var calendar = new[]
             {
@@ -174,7 +180,7 @@ namespace ClubSiteGenerator.Tests
 
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
-            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar);
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer(resultsSet);
             
             var competitor = resultsSet.ScoredRides

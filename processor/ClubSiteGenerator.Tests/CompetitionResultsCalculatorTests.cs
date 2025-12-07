@@ -1,5 +1,7 @@
-﻿using ClubCore.Models;
+﻿using AutoFixture;
+using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.Tests
@@ -17,6 +19,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void JuvenileCompetitor_ScoresAreCalculatedCorrectly()
         {
+            var rules = new CompetitionRules(4, 2, 4);
+
             var competitor = new Competitor
             {
                 ClubNumber = 1,
@@ -37,7 +41,7 @@ namespace ClubSiteGenerator.Tests
 
             var group = rides.GroupBy(r => r.Competitor!).Single();
 
-            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), _calendar, r => r.JuvenilesPoints);
+            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), _calendar, r => r.JuvenilesPoints, rules);
 
             // Assert totals
             Assert.Equal(115, result.TenMileCompetition.Points); // 60 + 55
@@ -57,6 +61,8 @@ namespace ClubSiteGenerator.Tests
         [InlineData(false, "Senior")]
         public void Calculator_WorksAcrossAgeGroups(bool isJuvenile, string label)
         {
+            var rules = new CompetitionRules(4, 2, 4);
+
             var competitor = new Competitor
             {
                 ClubNumber = 2,
@@ -77,7 +83,7 @@ namespace ClubSiteGenerator.Tests
 
             var group = rides.GroupBy(r => r.Competitor!).Single();
 
-            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), _calendar, r => r.JuvenilesPoints);
+            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), _calendar, r => r.JuvenilesPoints, rules);
 
             Assert.True(result.FullCompetition.Points > 0, $"{label} scoring should be positive");
             Assert.NotEmpty(result.FullCompetition.Rides);
@@ -86,6 +92,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void BuildCompetitorResult_SplitsEventsCompletedIntoTensAndOther()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange: competitor with 2 valid ten‑mile rides, 1 valid non‑ten, and 1 DNS
             var competitor = new Competitor
             {
@@ -119,7 +127,7 @@ namespace ClubSiteGenerator.Tests
                 .First();
 
             // Act
-            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints);
+            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints, rules);
 
             // Assert
             Assert.Equal(2, result.EventsCompletedTens);   // two valid ten‑mile rides
@@ -130,6 +138,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void BuildCompetitorResult_AllNonTenRides_CountsOnlyOther()
         {
+            var rules = new CompetitionRules(2, 1, 3);
+
             // Arrange: competitor with 3 valid non‑ten rides and 1 DNF
             var competitor = new Competitor
             {
@@ -163,7 +173,7 @@ namespace ClubSiteGenerator.Tests
                 .First();
 
             // Act
-            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints);
+            var result = CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.JuvenilesPoints, rules);
 
             // Assert
             Assert.Equal(0, result.EventsCompletedTens);   // no ten‑mile rides

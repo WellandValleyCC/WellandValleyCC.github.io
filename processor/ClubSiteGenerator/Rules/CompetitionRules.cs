@@ -5,7 +5,7 @@
     /// These values are derived from config (fixed or formula) and are used
     /// by calculators and renderers to ensure consistency.
     /// </summary>
-    public class CompetitionRules
+    public class CompetitionRules : ICompetitionRules
     {
         /// <summary>
         /// Number of ten‑mile rides to count for the ten‑mile competition.

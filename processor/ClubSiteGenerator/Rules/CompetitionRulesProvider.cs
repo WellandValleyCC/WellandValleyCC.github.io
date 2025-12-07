@@ -1,10 +1,9 @@
 ﻿using ClubCore.Models;
-using ClubSiteGenerator.Models;
 using System.Text.Json;
 
 namespace ClubSiteGenerator.Rules
 {
-    public class CompetitionRulesProvider
+    public class CompetitionRulesProvider : ICompetitionRulesProvider
     {
         private readonly Dictionary<int, YearRules> _configs;
 
@@ -15,7 +14,7 @@ namespace ClubSiteGenerator.Rules
                        ?? throw new InvalidOperationException("Failed to load competition rules config.");
         }
 
-        public CompetitionRules GetRules(int competitionYear, IEnumerable<CalendarEvent> calendar)
+        public ICompetitionRules GetRules(int competitionYear, IEnumerable<CalendarEvent> calendar)
         {
             var candidateYears = _configs.Keys.Where(y => y <= competitionYear).ToList();
             if (!candidateYears.Any())
