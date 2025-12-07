@@ -60,21 +60,21 @@ table.results td.non-ten-mile-event,
 .legend .non-ten-mile-event     { background-color: #DCE6F1; }
 
 /* Scoring columns (cell-level) */
-table.results td.scoring-11,
-.legend .scoring-11             { background-color: #CCFFCC; }
+table.results td.mixed-score,
+.legend .mixed-score             { background-color: #CCFFCC; }
 
-table.results td.best-8,
-.legend .best-8                 { background-color: #EBF1DE; }
+table.results td.tens-score,
+.legend .tens-score                 { background-color: #EBF1DE; }
 
 
 /* Explicit column widths */
-table.results th.best-8,
-table.results td.best-8 {
+table.results th.tens-score,
+table.results td.tens-score {
   min-width: 70px;   /* wider than Scoring 11 */
 }
 
-table.results th.scoring-11,
-table.results td.scoring-11 {
+table.results th.mixed-score,
+table.results td.mixed-score {
   min-width: 65px;   /* baseline width for Scoring 11 */
 }
 
@@ -116,24 +116,24 @@ table.results td.scoring-11 {
 
 
 /* Gold */
-table.results td.scoring-11.gold,
-table.results td.best-8.gold,
+table.results td.mixed-score.gold,
+table.results td.tens-score.gold,
 table.results td.gold,
 .legend .gold {
   background-color: #cfb53b;
 }
 
 /* Silver */
-table.results td.scoring-11.silver,
-table.results td.best-8.silver,
+table.results td.mixed-score.silver,
+table.results td.tens-score.silver,
 table.results td.silver,
 .legend .silver {
   background-color: #c4c4c4;
 }
 
 /* Bronze */
-table.results td.scoring-11.bronze,
-table.results td.best-8.bronze,
+table.results td.mixed-score.bronze,
+table.results td.tens-score.bronze,
 table.results td.bronze,
 .legend .bronze {
   background-color: #a48347;
