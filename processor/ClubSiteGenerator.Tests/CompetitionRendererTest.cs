@@ -168,7 +168,7 @@ namespace ClubSiteGenerator.Tests
 
             // Summary column
             var ttBest8Cell = row.Children[idx("5")];
-            ttBest8Cell.ClassName.Should().Contain("best-8");
+            ttBest8Cell.ClassName.Should().Contain("tens-score");
 
             // Footer timestamp
             var footer = document.QuerySelector("footer p.generated");
@@ -179,7 +179,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldUseSemanticClassesForMultiRowHeaders()
         {
-            var rules = new CompetitionRules(2, 1, 3, "GHC");
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange
             var calendar = new[]
@@ -226,7 +226,7 @@ namespace ClubSiteGenerator.Tests
                 th.ClassList.Should().Contain("event-date");
 
             // Row 1: fixed columns
-            var fixedHeaders = new[] { "Name", "Current rank", "Events completed", "10-mile TTs Best 8", "Scoring 11" };
+            var fixedHeaders = new[] { "Name", "Current rank", "Events completed", "10-mile TTs Best 4", "Scoring 3" };
             foreach (var fixedHeader in fixedHeaders)
             {
                 var th = headerRows[0].Children.First(h => h.TextContent.Trim() == fixedHeader);

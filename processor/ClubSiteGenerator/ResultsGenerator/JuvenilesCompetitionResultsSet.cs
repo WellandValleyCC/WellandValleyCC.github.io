@@ -18,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string GenericName => "Juveniles";
         public override CompetitionType CompetitionType => CompetitionType.Juveniles;
 
-        public override string EligibilityStatement => "All first claim juvenile members of the club are eligible for this championship.";
+        public override string EligibilityStatement => "All first claim juvenile members of the club are eligible for this competition.";
 
         public static JuvenilesCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,

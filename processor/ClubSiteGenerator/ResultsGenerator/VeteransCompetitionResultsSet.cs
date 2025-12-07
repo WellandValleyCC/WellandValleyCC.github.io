@@ -20,7 +20,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string GenericName => "Veterans";
         public override CompetitionType CompetitionType => CompetitionType.Veterans;
 
-        public override string EligibilityStatement => "All first claim veteran members of the club are eligible for this championship.";
+        public override string EligibilityStatement => "All first claim veteran members of the club are eligible for this competition.";
 
         public static VeteransCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,

@@ -136,13 +136,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void JuvenilesCompetitionCreateTable_SortsByScoreBest11Events()
         {
-            var fixture = new Fixture();
-
-            var rules = fixture.Build<CompetitionRules>()
-                .With(r => r.TenMileCount, 2)
-                .With(r => r.NonTenMinimum, 1)
-                .With(r => r.MixedEventCount, 3)
-                .Create();
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange: Juvenile competitors
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -226,13 +220,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void JuniorsCompetitionCreateTable_SortsByScoreBest11Events()
         {
-            var fixture = new Fixture();
-
-            var rules = fixture.Build<CompetitionRules>()
-                .With(r => r.TenMileCount, 2)
-                .With(r => r.NonTenMinimum, 1)
-                .With(r => r.MixedEventCount, 3)
-                .Create();
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange: Junior competitors
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -317,13 +305,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void VeteransCompetitionCreateTable_SortsByScoreBest11Events()
         {
-            var fixture = new Fixture();
-
-            var rules = fixture.Build<CompetitionRules>()
-                .With(r => r.TenMileCount, 2)
-                .With(r => r.NonTenMinimum, 1)
-                .With(r => r.MixedEventCount, 3)
-                .Create();
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange: Veteran competitors (all with VetsBucket = 5)
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -408,13 +390,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void WomensCompetitionCreateTable_SortsByScoreBest11Events()
         {
-            var fixture = new Fixture();
-
-            var rules = fixture.Build<CompetitionRules>()
-                .With(r => r.TenMileCount, 2)
-                .With(r => r.NonTenMinimum, 1)
-                .With(r => r.MixedEventCount, 3)
-                .Create();
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange: Women competitors (mix of age groups, some veterans with VetsBucket values)
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -514,13 +490,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void RoadBikeWomenCompetitionCreateTable_SortsByScoreBest11Events()
         {
-            var fixture = new Fixture();
-
-            var rules = fixture.Build<CompetitionRules>()
-                .With(r => r.TenMileCount, 2)
-                .With(r => r.NonTenMinimum, 1)
-                .With(r => r.MixedEventCount, 3)
-                .Create();
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange: Road Bike Women competitors
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -591,13 +561,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void SeniorsCompetitionCreateTable_SortsByScoreBest11Events_WithMixedAgeGroups()
         {
-            var fixture = new Fixture();
-
-            var rules = fixture.Build<CompetitionRules>()
-                .With(r => r.TenMileCount, 2)
-                .With(r => r.NonTenMinimum, 1)
-                .With(r => r.MixedEventCount, 3)
-                .Create();
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange: competitors from mixed age groups (all eligible for Seniors)
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket

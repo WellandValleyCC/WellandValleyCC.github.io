@@ -20,7 +20,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string GenericName => "Road Bike Women";
         public override CompetitionType CompetitionType => CompetitionType.RoadBikeWomen;
 
-        public override string EligibilityStatement => "All first claim female members of the club riding road bikes are eligible for this championship.";
+        public override string EligibilityStatement => "All first claim female members of the club riding road bikes are eligible for this competition.";
             
         public static RoadBikeWomenCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,

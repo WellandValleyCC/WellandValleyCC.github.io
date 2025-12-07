@@ -47,10 +47,10 @@
         /// </summary>
         /// <remarks>
         /// E.g. (for 2025 with 11 mixed events scoring and 2 non-tens required):
-        /// Your championship score is the total of the points from your 2 highest scoring non-ten events, plus your best 9 other events of any distance.
+        /// Your competition score is the total of the points from your 2 highest scoring non-ten events, plus your best 9 other events of any distance.
         /// </remarks>  
         public string RuleTextMixedCompetition =>
-            $"Your championship score is the total of the points " +
+            $"Your competition score is the total of the points " +
             $"from your {NonTenMinimum} highest scoring non‑ten events, " +
             $"plus your best {MixedEventCount - NonTenMinimum} other events of any distance.";
 

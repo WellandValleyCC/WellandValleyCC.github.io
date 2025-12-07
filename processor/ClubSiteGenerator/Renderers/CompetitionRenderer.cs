@@ -230,10 +230,10 @@ namespace ClubSiteGenerator.Renderers
             yield return result.EventsCompletedTens.ToString();   // Tens
             yield return result.EventsCompletedOther.ToString();  // Other
 
-            // Scoring 11
+            // Mixed score
             yield return result.FullCompetition.PointsDisplay;
             
-            // Best 8
+            // Tens score
             yield return result.TenMileCompetition.PointsDisplay;
 
             // Per-event columns
@@ -312,19 +312,19 @@ namespace ClubSiteGenerator.Renderers
         protected virtual string RenderFullCompetitionPointsCell(string encodedValue, Competitor competitor)
         {
             var podiumClass = GetPodiumClassForFullCompetition(competitor);
-            var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
-                ? "scoring-11"
-                : $"scoring-11 {podiumClass}";
-            return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
+            var mixedScoreCssClass = string.IsNullOrEmpty(podiumClass)
+                ? "mixed-score"
+                : $"mixed-score {podiumClass}";
+            return $"<td class=\"{mixedScoreCssClass}\">{encodedValue}</td>";
         }
 
         protected virtual string RenderTensCompetitionPointsCell(string encodedValue, Competitor competitor)
         {
             var podiumClass = GetPodiumClassForTenMileCompetition(competitor);
-            var best8CssClass = string.IsNullOrEmpty(podiumClass)
-                ? "best-8"
-                : $"best-8 {podiumClass}";
-            return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
+            var tensScoreCssClass = string.IsNullOrEmpty(podiumClass)
+                ? "tens-score"
+                : $"tens-score {podiumClass}";
+            return $"<td class=\"{tensScoreCssClass}\">{encodedValue}</td>";
         }
 
         protected virtual string RenderEventCell(string encodedValue, CalendarEvent ev)

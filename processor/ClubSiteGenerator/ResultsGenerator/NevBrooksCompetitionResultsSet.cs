@@ -20,7 +20,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string GenericName => "Nev Brooks";
         public override CompetitionType CompetitionType => CompetitionType.NevBrooks;
 
-        public override string EligibilityStatement => "All first claim members of the club are eligible for this championship - any age group.";
+        public override string EligibilityStatement => "All first claim members of the club are eligible for this competition - any age group.";
 
         public static NevBrooksCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
