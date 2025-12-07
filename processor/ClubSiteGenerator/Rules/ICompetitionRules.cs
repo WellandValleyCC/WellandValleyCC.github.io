@@ -40,6 +40,11 @@
         /// <summary>
         /// Narrative rule text for the mixed-distance scoring.
         /// </summary>
-        string RuleText { get; }
+        string RuleTextMixedCompetition { get; }
+
+        /// <summary>
+        /// Narrative rule text for the 10 TTs scoring.
+        /// </summary>
+        string RuleTextTensCompetition { get; }
     }
 }

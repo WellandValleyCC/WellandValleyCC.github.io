@@ -40,10 +40,24 @@
         /// <summary>
         /// Narrative rule text for the mixed‑distance scoring.
         /// </summary>
-        public string RuleText =>
+        /// <remarks>
+        /// E.g. (for 2025 with 11 mixed events scoring and 2 non-tens required):
+        /// Your championship score is the total of the points from your 2 highest scoring non-ten events, plus your best 9 other events of any distance.
+        /// </remarks>  
+        public string RuleTextMixedCompetition =>
             $"Your championship score is the total of the points " +
             $"from your {NonTenMinimum} highest scoring non‑ten events, " +
             $"plus your best {MixedEventCount - NonTenMinimum} other events of any distance.";
+
+        /// <summary>
+        /// Narrative rule text for the 10 TTs scoring.
+        /// </summary>
+        /// <remarks
+        /// E.g. (for 2025 with best 8 tens):
+        /// Your overall score is the total of the points from your best 8 events.
+        /// </remarks>
+        public string RuleTextTensCompetition =>             
+            $"Your overall score is the total of the points from your best {TenMileCount} events.";
 
         public CompetitionRules(int tenMileCount, int nonTenMinimum, int mixedEventCount)
         {

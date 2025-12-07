@@ -58,7 +58,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"      {WebUtility.HtmlEncode(resultsSet.EligibilityStatement)}");
             sb.AppendLine("      This is a handicapped competition using your times from previous ten-mile events to establish your individual handicap");
             sb.AppendLine("      <br/>");
-            sb.AppendLine("      Your overall score is the total of the points from your best 8 events.");
+            sb.AppendLine($"      {Rules.RuleTextTensCompetition}");
             sb.AppendLine("    </p>");
             sb.AppendLine("  </section>");
 
