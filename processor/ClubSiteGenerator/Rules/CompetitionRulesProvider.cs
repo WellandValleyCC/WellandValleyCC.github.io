@@ -16,6 +16,8 @@ namespace ClubSiteGenerator.Rules
 
         public ICompetitionRules GetRules(int competitionYear, IEnumerable<CalendarEvent> calendar)
         {
+            Console.WriteLine($"[INFO] Getting rules for {competitionYear}");
+
             var candidateYears = _configs.Keys.Where(y => y <= competitionYear).ToList();
             if (!candidateYears.Any())
                 throw new InvalidOperationException($"No competition rules configured for {competitionYear} or earlier.");
@@ -23,7 +25,15 @@ namespace ClubSiteGenerator.Rules
             var effectiveYear = candidateYears.Max();
             var config = _configs[effectiveYear];
 
-            return BuildRules(config, calendar);
+            var rules = BuildRules(config, calendar);
+
+            Console.WriteLine(
+                $"[INFO] Rules: effectiveYear={effectiveYear}, " +
+                $"TenMileCount={rules.TenMileCount}, " +
+                $"MixedEventCount={rules.MixedEventCount}, " +
+                $"NonTenMinimum={rules.NonTenMinimum}");
+
+            return rules;
         }
 
         private CompetitionRules BuildRules(YearRules config, IEnumerable<CalendarEvent> calendar)
