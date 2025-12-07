@@ -37,7 +37,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
-            var renderer = new CompetitionRenderer(resultsSet);
+            var renderer = new CompetitionRenderer(resultsSet, rules);
 
             // Act
             var html = renderer.Render();
@@ -71,7 +71,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
-            var renderer = new CompetitionRenderer(resultsSet);
+            var renderer = new CompetitionRenderer(resultsSet, rules);
 
             // Act
             var html = renderer.Render();
@@ -116,7 +116,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
-            var renderer = new CompetitionRenderer(resultsSet);
+            var renderer = new CompetitionRenderer(resultsSet, rules);
 
             // Act
             var html = renderer.Render();
@@ -202,7 +202,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
-            var renderer = new CompetitionRenderer(resultsSet);
+            var renderer = new CompetitionRenderer(resultsSet, rules);
 
             // Act
             var html = renderer.Render();
@@ -259,7 +259,7 @@ namespace ClubSiteGenerator.Tests
             DataLoader.AttachReferencesToRides(rides, competitors, calendar);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
-            var renderer = new CompetitionRenderer(resultsSet);
+            var renderer = new CompetitionRenderer(resultsSet, rules);
 
             // Act
             var html = renderer.Render();

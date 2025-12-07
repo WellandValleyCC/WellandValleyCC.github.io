@@ -15,9 +15,9 @@ namespace ClubSiteGenerator.Services
         {
             return resultsSet.CompetitionType switch
             {
-                CompetitionType.Seniors => new SeniorsCompetitionRenderer(resultsSet),
-                CompetitionType.NevBrooks => new NevBrooksCompetitionRenderer(resultsSet),
-                _ => new CompetitionRenderer(resultsSet)
+                CompetitionType.Seniors => new SeniorsCompetitionRenderer(resultsSet, rules),
+                CompetitionType.NevBrooks => new NevBrooksCompetitionRenderer(resultsSet, rules),
+                _ => new CompetitionRenderer(resultsSet, rules)
             };
         }
     }

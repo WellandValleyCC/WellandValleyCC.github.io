@@ -2,6 +2,7 @@
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Utilities;
 using System.Net;
 using System.Text;
@@ -18,7 +19,7 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string PageTypeClass => "competition-page";
 
-        public CompetitionRenderer(CompetitionResultsSet resultsSet)
+        public CompetitionRenderer(CompetitionResultsSet resultsSet, ICompetitionRules rules)
         {
             this.resultsSet = resultsSet;
             this.calendar = resultsSet.CompetitionCalendar.OrderBy(ev => ev.EventNumber).ToList();
