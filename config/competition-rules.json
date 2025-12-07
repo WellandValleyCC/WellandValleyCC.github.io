@@ -1,0 +1,32 @@
+{
+  "2024": {
+    "tenMile": {
+      "count": 6
+    },
+    "mixedDistance": {
+      "count": 11,
+      "nonTenMinimum": 2
+    }
+  },
+  "2025": {
+    "tenMile": {
+      "count": 8
+    },
+    "mixedDistance": {
+      "formula": "calendarEvents/2+1",
+      "cap": 11,
+      "nonTenMinimum": 2
+    }
+  },
+  "2026": {
+    "tenMile": {
+      "formula": "calendarEvents/2+1",
+      "cap": 11
+    },
+    "mixedDistance": {
+      "formula": "calendarEvents/2+1",
+      "cap": 11,
+      "nonTenMinimum": 2
+    }
+  }
+}
