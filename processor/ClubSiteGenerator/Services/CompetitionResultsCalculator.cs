@@ -27,7 +27,8 @@ namespace ClubSiteGenerator.Services
             if (mismatch)
                 throw new ArgumentException("All rides must belong to the same competitor (same ClubNumber).", nameof(rides));
 
-            // Use the last ride's competitor
+            // Use the last ride's competitor - they are all the same person.  This one
+            // has the most up-to-date Competitor data.
             var competitor = rides.Last().Competitor!;
 
             // Precompute lookup for event type
