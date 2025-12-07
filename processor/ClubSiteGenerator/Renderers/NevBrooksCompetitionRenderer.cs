@@ -2,6 +2,7 @@
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Utilities;
 using System.Net;
 using System.Text;
@@ -17,8 +18,8 @@ namespace ClubSiteGenerator.Renderers
         protected override string PageTypeClass => "competition-page";
 
         public NevBrooksCompetitionRenderer(
-            CompetitionResultsSet resultsSet)
-            :base(resultsSet)
+            CompetitionResultsSet resultsSet, ICompetitionRules rules)
+            :base(resultsSet, rules)
         {
             this.resultsSet = resultsSet;
             this.calendar = resultsSet.CompetitionCalendar.OrderBy(ev => ev.EventNumber).ToList();
@@ -32,7 +33,7 @@ namespace ClubSiteGenerator.Renderers
                 ("Name", Array.Empty<string>()),
                 ("Current rank", Array.Empty<string>()),
                 ("Events completed", Array.Empty<string>()),
-                ("Best 8", Array.Empty<string>())
+                (Rules.TenMileShortTitle, Array.Empty<string>())
             };
 
         protected override string TitleElement()
@@ -57,7 +58,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"      {WebUtility.HtmlEncode(resultsSet.EligibilityStatement)}");
             sb.AppendLine("      This is a handicapped competition using your times from previous ten-mile events to establish your individual handicap");
             sb.AppendLine("      <br/>");
-            sb.AppendLine("      Your overall score is the total of the points from your best 8 events.");
+            sb.AppendLine($"      {Rules.RuleTextTensCompetition}");
             sb.AppendLine("    </p>");
             sb.AppendLine("  </section>");
 

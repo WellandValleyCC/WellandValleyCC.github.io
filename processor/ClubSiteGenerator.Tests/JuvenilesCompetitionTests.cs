@@ -1,5 +1,7 @@
-﻿using ClubCore.Models;
+﻿using AutoFixture;
+using ClubCore.Models;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Tests.Helpers; // CsvTestLoader
 using FluentAssertions;
@@ -11,6 +13,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void AssignRanks_TieAware_StopAtNull()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange
             var calendar = new[]
             {
@@ -50,7 +54,7 @@ namespace ClubSiteGenerator.Tests
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
 
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
                 .ToList();
 
             // Act  
@@ -81,6 +85,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void SortResults_TieredOrdering()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             var calendar = new[]
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
@@ -103,7 +109,7 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
                 .ToList();
 
             var ordered = CompetitionResultsCalculator.SortResults(results).ToList();
@@ -118,6 +124,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void SortResults_TieredOrdering_AssignsBothRanks()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             var calendar = new[]
             {
                 new CalendarEvent { EventNumber = 1, EventName = "Evening 10 TT", IsEvening10 = true },
@@ -152,7 +160,7 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints))
+                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
                 .ToList();
 
             // Add Zoe manually with no rides

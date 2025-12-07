@@ -1,8 +1,10 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Utilities;
 
 
@@ -15,7 +17,9 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<Competitor> competitors;   
         private readonly IEnumerable<CalendarEvent> calendar;
-        
+
+        private readonly ICompetitionRulesProvider rulesProvider;
+        private readonly ICompetitionRules rules;
 
         /// <param name="rides">These rides have been hydrated - i.e. Competitors (where applicable) attached and CalendarEvent attached.</param>
         /// <param name="competitors"></param>
@@ -29,6 +33,17 @@ namespace ClubSiteGenerator.Services
             this.competitors = competitors;
             this.calendar = calendar;
 
+            // Determine competition year from first event
+            var competitionYear = calendar.First().EventDate.Year;
+
+            // Construct provider once
+            var configDir = FolderLocator.GetConfigDirectory();
+            var configFilePath = Path.Combine(configDir, "competition-rules.json");
+            rulesProvider = new CompetitionRulesProvider(configFilePath);
+
+            // Resolve rules for this season
+            rules = rulesProvider.GetRules(competitionYear, calendar);
+
             InitializeResultsSets();
         }
 
@@ -39,23 +54,23 @@ namespace ClubSiteGenerator.Services
             foreach (var ev in calendar)
                 resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
-            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(rides, calendar));
-            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(rides, calendar, rules));
+            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(rides, calendar, rules));
+            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(rides, calendar, rules));
+            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(rides, calendar, rules));
+            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules));
+            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(rides, calendar, rules));
+            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendar, rules));
 
             // League competitions
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, rides, calendar));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, rides, calendar));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, rides, calendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, rides, calendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, rides, calendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, rides, calendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, rides, calendar, rules));
 
             // Nev Brooks
-            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(rides, calendar));
+            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(rides, calendar, rules));
         }
 
         public void GenerateAll()
@@ -103,7 +118,7 @@ namespace ClubSiteGenerator.Services
 
             foreach (var resultsSet in resultsSets.OfType<CompetitionResultsSet>())
             {
-                var renderer = CompetitionRendererFactory.Create(resultsSet, calendar);
+                var renderer = CompetitionRendererFactory.Create(resultsSet, calendar, rules);
 
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();

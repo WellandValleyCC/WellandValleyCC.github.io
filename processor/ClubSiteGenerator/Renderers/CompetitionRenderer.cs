@@ -2,6 +2,7 @@
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Utilities;
 using System.Net;
 using System.Text;
@@ -11,6 +12,7 @@ namespace ClubSiteGenerator.Renderers
     public class CompetitionRenderer : HtmlRendererBase
     {
         private readonly CompetitionResultsSet resultsSet;
+        private readonly ICompetitionRules rules;
         private readonly IReadOnlyList<CalendarEvent> calendar;
         private readonly string competitionTitle;
 
@@ -18,9 +20,10 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string PageTypeClass => "competition-page";
 
-        public CompetitionRenderer(CompetitionResultsSet resultsSet)
+        public CompetitionRenderer(CompetitionResultsSet resultsSet, ICompetitionRules rules)
         {
             this.resultsSet = resultsSet;
+            this.rules = rules;
             this.calendar = resultsSet.CompetitionCalendar.OrderBy(ev => ev.EventNumber).ToList();
             this.competitionTitle = resultsSet.DisplayName;
 
@@ -41,12 +44,14 @@ namespace ClubSiteGenerator.Renderers
                 ("Name", Array.Empty<string>()),
                 ("Current rank", new[] { "Competition", "Tens" }),
                 ("Events completed", new[] { "Tens", "Non-tens" }),
-                ("Scoring 11", Array.Empty<string>()),
-                ("10-mile TTs Best 8", Array.Empty<string>())
+                (Rules.FullCompetitionTitle, Array.Empty<string>()),
+                (Rules.TenMileTitle, Array.Empty<string>())
             };
 
         protected int FirstEventIndex =>
             GroupedFixedColumns.Sum(group => group.SubTitles.Count == 0 ? 1 : group.SubTitles.Count);
+
+        protected ICompetitionRules Rules => rules;
 
         protected override string TitleElement()
             => $"<title>{WebUtility.HtmlEncode(competitionTitle)}</title>";
@@ -70,7 +75,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"      {WebUtility.HtmlEncode(resultsSet.EligibilityStatement)}");
             sb.AppendLine("      To qualify, you must ride at least two non-ten TTs – e.g. 9.5 mile hard-ride, 25 mile TT, etc.");
             sb.AppendLine("      <br/>");
-            sb.AppendLine("      Your championship score is the total of the points from your two highest scoring non-ten events, plus your best 9 other events of any distance.");
+            sb.AppendLine($"      {Rules.RuleTextMixedCompetition}");
             sb.AppendLine("    </p>");
             sb.AppendLine("  </section>");
 
@@ -225,10 +230,10 @@ namespace ClubSiteGenerator.Renderers
             yield return result.EventsCompletedTens.ToString();   // Tens
             yield return result.EventsCompletedOther.ToString();  // Other
 
-            // Scoring 11
+            // Mixed score
             yield return result.FullCompetition.PointsDisplay;
             
-            // Best 8
+            // Tens score
             yield return result.TenMileCompetition.PointsDisplay;
 
             // Per-event columns
@@ -307,19 +312,19 @@ namespace ClubSiteGenerator.Renderers
         protected virtual string RenderFullCompetitionPointsCell(string encodedValue, Competitor competitor)
         {
             var podiumClass = GetPodiumClassForFullCompetition(competitor);
-            var scoring11CssClass = string.IsNullOrEmpty(podiumClass)
-                ? "scoring-11"
-                : $"scoring-11 {podiumClass}";
-            return $"<td class=\"{scoring11CssClass}\">{encodedValue}</td>";
+            var mixedScoreCssClass = string.IsNullOrEmpty(podiumClass)
+                ? "mixed-score"
+                : $"mixed-score {podiumClass}";
+            return $"<td class=\"{mixedScoreCssClass}\">{encodedValue}</td>";
         }
 
         protected virtual string RenderTensCompetitionPointsCell(string encodedValue, Competitor competitor)
         {
             var podiumClass = GetPodiumClassForTenMileCompetition(competitor);
-            var best8CssClass = string.IsNullOrEmpty(podiumClass)
-                ? "best-8"
-                : $"best-8 {podiumClass}";
-            return $"<td class=\"{best8CssClass}\">{encodedValue}</td>";
+            var tensScoreCssClass = string.IsNullOrEmpty(podiumClass)
+                ? "tens-score"
+                : $"tens-score {podiumClass}";
+            return $"<td class=\"{tensScoreCssClass}\">{encodedValue}</td>";
         }
 
         protected virtual string RenderEventCell(string encodedValue, CalendarEvent ev)

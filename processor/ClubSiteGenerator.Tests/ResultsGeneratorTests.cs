@@ -1,7 +1,9 @@
-﻿using ClubCore.Models;
+﻿using AutoFixture;
+using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -134,6 +136,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void JuvenilesCompetitionCreateTable_SortsByScoreBest11Events()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange: Juvenile competitors
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 3001,Brown,Emily,FirstClaim,true,Juvenile,
@@ -175,7 +179,7 @@ namespace ClubSiteGenerator.Tests
             }
 
             // Act
-            var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var juvenilesCompetitionResults = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendarEvents, rules);
 
             // Assert
             juvenilesCompetitionResults.CompetitionType.Should().Be(CompetitionType.Juveniles);
@@ -216,6 +220,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void JuniorsCompetitionCreateTable_SortsByScoreBest11Events()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange: Junior competitors
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 5001,Smith,Olivia,FirstClaim,true,Junior,
@@ -257,7 +263,7 @@ namespace ClubSiteGenerator.Tests
             }
 
             // Act
-            var competitionResults = JuniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = JuniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents, rules);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Juniors);
@@ -299,6 +305,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void VeteransCompetitionCreateTable_SortsByScoreBest11Events()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange: Veteran competitors (all with VetsBucket = 5)
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 7001,Anderson,George,FirstClaim,false,Veteran,5
@@ -340,7 +348,7 @@ namespace ClubSiteGenerator.Tests
             }
 
             // Act
-            var competitionResults = VeteransCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = VeteransCompetitionResultsSet.CreateFrom(rides, calendarEvents, rules);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Veterans);
@@ -382,6 +390,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void WomensCompetitionCreateTable_SortsByScoreBest11Events()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange: Women competitors (mix of age groups, some veterans with VetsBucket values)
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 9001,Hall,Emma,FirstClaim,true,Juvenile,
@@ -435,7 +445,7 @@ namespace ClubSiteGenerator.Tests
             }
 
             // Act
-            var competitionResults = WomenCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = WomenCompetitionResultsSet.CreateFrom(rides, calendarEvents, rules);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Women);
@@ -480,6 +490,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void RoadBikeWomenCompetitionCreateTable_SortsByScoreBest11Events()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange: Road Bike Women competitors
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 1001,Pinnock,Milly,FirstClaim,true,Junior,
@@ -521,7 +533,7 @@ namespace ClubSiteGenerator.Tests
             }
 
             // Act
-            var competitionResults = RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = RoadBikeWomenCompetitionResultsSet.CreateFrom(rides, calendarEvents, rules);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.RoadBikeWomen);
@@ -549,6 +561,8 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void SeniorsCompetitionCreateTable_SortsByScoreBest11Events_WithMixedAgeGroups()
         {
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
+
             // Arrange: competitors from mixed age groups (all eligible for Seniors)
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
 7001,Brown,Emily,FirstClaim,true,Juvenile,
@@ -590,7 +604,7 @@ namespace ClubSiteGenerator.Tests
             }
 
             // Act
-            var competitionResults = SeniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents);
+            var competitionResults = SeniorsCompetitionResultsSet.CreateFrom(rides, calendarEvents, rules);
 
             // Assert: metadata
             competitionResults.CompetitionType.Should().Be(CompetitionType.Seniors);

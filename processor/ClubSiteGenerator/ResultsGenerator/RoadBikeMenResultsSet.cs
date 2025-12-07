@@ -2,6 +2,7 @@
 using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -19,11 +20,12 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string GenericName => "Road Bike Men";
         public override CompetitionType CompetitionType => CompetitionType.RoadBikeMen;
 
-        public override string EligibilityStatement => "All first claim male members of the club riding road bikes are eligible for this championship.";
+        public override string EligibilityStatement => "All first claim male members of the club riding road bikes are eligible for this competition.";
 
         public static RoadBikeMenCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            ICompetitionRules rules)
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -54,7 +56,11 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.RoadBikeMenPoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                    group.ToList(), 
+                    calendar, 
+                    r => r.RoadBikeMenPoints,
+                    rules))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();

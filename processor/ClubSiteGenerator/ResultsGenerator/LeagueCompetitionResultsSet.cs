@@ -3,6 +3,7 @@ using ClubCore.Models.Enums;
 using ClubCore.Models.Extensions;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -10,18 +11,21 @@ namespace ClubSiteGenerator.ResultsGenerator
     internal class LeagueCompetitionResultsSet : CompetitionResultsSet
     {
         public League League { get; }
+        public string? Sponsor { get; }
 
         private LeagueCompetitionResultsSet(
             League league,
             IEnumerable<CalendarEvent> calendar,
-            IEnumerable<CompetitorResult> scoredRides)
+            IEnumerable<CompetitorResult> scoredRides,
+            string? sponsor)
             : base(calendar, scoredRides)
         {
             League = league;
+            Sponsor = sponsor;
         }
 
-        private const string Sponsor = "George Halls Cycles";
-        public override string DisplayName => $"{Sponsor} League - {League.GetDisplayName()}";
+        public override string DisplayName =>
+            $"{(string.IsNullOrWhiteSpace(Sponsor) ? "WVCC" : Sponsor)} League - {League.GetDisplayName()}";
         public override string FileName => $"{Year}-league-{League.ToCsvValue()}";
         public override string SubFolderName => "competitions";
         public override string GenericName => League.GetDisplayName();
@@ -41,7 +45,9 @@ namespace ClubSiteGenerator.ResultsGenerator
         public static LeagueCompetitionResultsSet CreateFrom(
             League league,
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            ICompetitionRules rules
+            )
         {
             if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
             {
@@ -71,12 +77,16 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(group.ToList(), calendar, r => r.LeaguePoints))
+                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                    group.ToList(), 
+                    calendar, 
+                    r => r.LeaguePoints,
+                    rules))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            return new LeagueCompetitionResultsSet(league, calendar, results);
+            return new LeagueCompetitionResultsSet(league, calendar, results, rules.LeagueSponsor);
         }
     }
 }
