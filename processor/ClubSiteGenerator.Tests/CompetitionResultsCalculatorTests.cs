@@ -19,7 +19,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void JuvenileCompetitor_ScoresAreCalculatedCorrectly()
         {
-            var rules = new CompetitionRules(4, 2, 4);
+            var rules = new CompetitionRules(4, 2, 4, "GHC");
 
             var competitor = new Competitor
             {
@@ -61,7 +61,7 @@ namespace ClubSiteGenerator.Tests
         [InlineData(false, "Senior")]
         public void Calculator_WorksAcrossAgeGroups(bool isJuvenile, string label)
         {
-            var rules = new CompetitionRules(4, 2, 4);
+            var rules = new CompetitionRules(4, 2, 4, "GHC");
 
             var competitor = new Competitor
             {
@@ -92,7 +92,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void BuildCompetitorResult_SplitsEventsCompletedIntoTensAndOther()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange: competitor with 2 valid ten‑mile rides, 1 valid non‑ten, and 1 DNS
             var competitor = new Competitor
@@ -138,7 +138,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void BuildCompetitorResult_AllNonTenRides_CountsOnlyOther()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange: competitor with 3 valid non‑ten rides and 1 DNF
             var competitor = new Competitor

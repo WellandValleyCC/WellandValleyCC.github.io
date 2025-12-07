@@ -8,6 +8,11 @@
     public interface ICompetitionRules
     {
         /// <summary>
+        /// The name of the organization or company sponsoring the league. Used in the page titles.
+        /// </summary>
+        string? LeagueSponsor { get; }
+
+        /// <summary>
         /// Number of ten-mile rides to count for the ten-mile competition.
         /// </summary>
         int TenMileCount { get; }

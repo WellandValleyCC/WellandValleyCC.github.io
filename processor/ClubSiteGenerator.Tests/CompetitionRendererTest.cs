@@ -15,7 +15,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void Render_ShouldIncludeCompetitionTitleAndPoints()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange
             var calendar = new[]
@@ -51,7 +51,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldIncludeLegendWithCorrectEntries()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange
             var calendar = new[]
@@ -95,7 +95,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldIncludeCompetitorRow_WithCorrectClasses()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange
             var calendar = new[]
@@ -179,7 +179,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldUseSemanticClassesForMultiRowHeaders()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange
             var calendar = new[]
@@ -237,7 +237,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public async Task Render_ShouldApplyLegendClassesToBodyCells()
         {
-            var rules = new CompetitionRules(2, 1, 3);
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
 
             // Arrange
             var calendar = new[]

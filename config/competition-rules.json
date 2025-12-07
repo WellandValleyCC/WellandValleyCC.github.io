@@ -1,5 +1,6 @@
 {
   "2024": {
+	"leagueSponsor": "George Halls Cycles",  
     "tenMile": {
       "count": 6
     },
@@ -9,6 +10,7 @@
     }
   },
   "2025": {
+	"leagueSponsor": "George Halls Cycles",  
     "tenMile": {
       "count": 8
     },
@@ -19,6 +21,7 @@
     }
   },
   "2026": {
+	"leagueSponsor": "George Halls Cycles",  
     "tenMile": {
       "formula": "calendarEvents/2+1",
       "cap": 11

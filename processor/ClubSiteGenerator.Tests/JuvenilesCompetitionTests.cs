@@ -13,7 +13,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void AssignRanks_TieAware_StopAtNull()
         {
-            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3);
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange
             var calendar = new[]
@@ -85,7 +85,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void SortResults_TieredOrdering()
         {
-            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3);
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             var calendar = new[]
             {
@@ -124,7 +124,7 @@ namespace ClubSiteGenerator.Tests
         [Fact]
         public void SortResults_TieredOrdering_AssignsBothRanks()
         {
-            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3);
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             var calendar = new[]
             {

@@ -64,7 +64,7 @@ namespace ClubSiteGenerator.Tests
         [InlineData(4, "")]
         public void CompetitionRenderer_RendersScoring11Cell_WithExpectedCssClass(int? expectedRank, string expectedClass)
         {
-            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3);
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 2, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange:
             var calendar = new[]
@@ -151,7 +151,7 @@ namespace ClubSiteGenerator.Tests
         [InlineData(4, "")]
         public void CompetitionRenderer_Render_IncludesExpectedBest8PodiumCssClass(int? expectedRank, string expectedClass)
         {
-            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 1, mixedEventCount: 3);
+            var rules = new CompetitionRules(tenMileCount: 4, nonTenMinimum: 1, mixedEventCount: 3, leagueSponsor: "GHC");
 
             // Arrange:
             var calendar = new[]

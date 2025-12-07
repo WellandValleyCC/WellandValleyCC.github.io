@@ -47,7 +47,7 @@ namespace ClubSiteGenerator.Rules
             int mixedCount = Resolve(config.MixedDistance, relevantEvents);
             int nonTenMinimum = config.MixedDistance.NonTenMinimum ?? 0;
 
-            return new CompetitionRules(tenMileCount, nonTenMinimum, mixedCount);
+            return new CompetitionRules(tenMileCount, nonTenMinimum, mixedCount, config.LeagueSponsor);
         }
 
         private int Resolve(RuleDefinition rule, int calendarEvents)

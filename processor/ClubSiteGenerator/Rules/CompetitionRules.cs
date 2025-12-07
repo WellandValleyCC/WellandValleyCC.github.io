@@ -8,6 +8,11 @@
     public class CompetitionRules : ICompetitionRules
     {
         /// <summary>
+        /// The name of the sponsor of the league. Used in the page titles - e.g. in 2025 - George Halls Cycles".
+        /// </summary>
+        public string? LeagueSponsor { get; }
+
+        /// <summary>
         /// Number of ten‑mile rides to count for the ten‑mile competition.
         /// </summary>
         public int TenMileCount { get; }
@@ -59,11 +64,12 @@
         public string RuleTextTensCompetition =>             
             $"Your overall score is the total of the points from your best {TenMileCount} events.";
 
-        public CompetitionRules(int tenMileCount, int nonTenMinimum, int mixedEventCount)
+        public CompetitionRules(int tenMileCount, int nonTenMinimum, int mixedEventCount, string? leagueSponsor)
         {
             TenMileCount = tenMileCount;
             NonTenMinimum = nonTenMinimum;
             MixedEventCount = mixedEventCount;
+            LeagueSponsor = leagueSponsor;
         }
     }
 }
