@@ -81,3 +81,10 @@ c095a7a8 (origin/master, origin/HEAD, master) Persisted competitor DB for 2026 i
 6. Open .\data\competitors_2026.csv in Excel and copy the data from the sheet (competitors_2026) into the Competitors sheet in the new events workbook.
   - It's important to copy all the data, including the header row, overwriting any existing data in the Competitors sheet.  This keeps references in the `Event_nn` sheets working 
   - Do not _copy/move_ the sheet from the csv into the workbook in its entirety and then use sheet renaming - this will break references in the `Event_nn` sheets.
+
+## Test the New Season Setup
+1. Edit the "ClubEvents_2026.xlsx" workbook to add some test data to the first event.
+  - i.e. Add some test rides to `Event_01`
+  ![Adding test rides to Event_01](./images/Add-sample-riders-to-event-01.png)
+  - Save the workbook.
+2. Commit and push the changes to the feature branch.
