@@ -73,6 +73,8 @@ c095a7a8 (origin/master, origin/HEAD, master) Persisted competitor DB for 2026 i
 5. Go to the Calendar sheet and update as per the draft data supplied by the TT committee.
   - At this stage, it does not matter if some of this will change as the committee finalises the calendar.
   ![Updating the calendar for the new season](./images/updating-calendar-for-new-season.png)
+  - Makes sure that the distance column is a numeric value.  
+	- if you're dealing with a 5+5, this value will be 10, but you'll need to update the Evening 10 and Non-Standard 10 columns manually to stop it being treated as a standard 10 mile event.  (See below #[Sample Run Failure Due to Non-Standard Distance Value](#sample-run-failure-due-to-non-standard-distance-value))
   - You may need to add additional `Event_nn` sheets.  
   - Do this by copy/pasting an existing `Event_nn` sheet to ensure all cells are set up as required. 
   - Just make sure they are named sequentially and align with the event numbers in the Calendar sheet.
@@ -88,3 +90,14 @@ c095a7a8 (origin/master, origin/HEAD, master) Persisted competitor DB for 2026 i
   ![Adding test rides to Event_01](./images/Add-sample-riders-to-event-01.png)
   - Save the workbook.
 2. Commit and push the changes to the feature branch.
+1. Trigger the `Process Club Data` action manually for the feature branch
+  ![Triggering the Process Club Data action manually](./images/trigger-Process-Club-Data-on-feature-branch.png)
+	- branch : `feature/2026-season-setup`
+	- run mode : `events`
+	- year : `2026`
+	- verborsity level : `minimal`
+### Sample Run Failure Due to Non-Standard Distance Value
+- See [sample run](https://github.com/WellandValleyCC/WellandValleyCC.github.io/actions/runs/20072025801)
+  - note that this run failed due to the distance column containing a non-numeric value ("5 + 5").
+  - retained here for reference, but the fix was to make it "=5+5" and then manually override the values in columns `I` and `J`
+![non-standard distance value causing failure](./images/five-plus-five-is-not-a-ten.png)
