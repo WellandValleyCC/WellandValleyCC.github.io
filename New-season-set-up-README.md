@@ -23,14 +23,14 @@ This guide will walk you through the steps necessary to set up a new season.
 ### 1: Create New Membership Workbook
 1. Create a new feature branch in the private membership repository for the new season.  e.g. "feature/2026-season-setup"
 2. Copy/rename the previous season's membership workbook to reflect the new season.
-	- e.g. Copy "25.01.14 2025 membership list.xlsx" to "dummy 2026 membership list.xlsx"
-	- The club membership secretary will supply the correct file in January of the coming year, well before the season starts.
-	- Place the new workbook in the same directory as the previous one.
-	- It will be adequate to leave the data as it is for now - we just need to be able to simulate some events to be sure everything is set up correctly.
+  - e.g. Copy "25.01.14 2025 membership list.xlsx" to "dummy 2026 membership list.xlsx"
+  - The club membership secretary will supply the correct file in January of the coming year, well before the season starts.
+  - Place the new workbook in the same directory as the previous one.
+  - It will be adequate to leave the data as it is for now - we just need to be able to simulate some events to be sure everything is set up correctly.
 3. Edit "C:\repos\wvcc\WellandValleyCC.club-membership-private\data\competitors.meta.json" to reference 
 the new dummy membership file, with "use_simulated_import_date" set to false.
-	- There is no need to force a specific import date, as the new season will not start until 2026.
-	- Sample contents of the updated "competitors.meta.json" file:
+  - There is no need to force a specific import date, as the new season will not start until 2026.
+  - Sample contents of the updated "competitors.meta.json" file:
 
 ``` json
 {
@@ -40,8 +40,39 @@ the new dummy membership file, with "use_simulated_import_date" set to false.
 }
 ```
 4. Commit and push the changes to the feature branch.
-    - See example commit: https://github.com/WellandValleyCC/WellandValleyCC.club-membership-private/commit/bf9a3afb4352cae82d4da527748b80fa0521f2d8 
-	- pipeline will run to push the public membership csv to the public repository.
-	- e.g. https://github.com/WellandValleyCC/WellandValleyCC.club-membership-private/actions/runs/20066947127
+  - See example commit: https://github.com/WellandValleyCC/WellandValleyCC.club-membership-private/commit/bf9a3afb4352cae82d4da527748b80fa0521f2d8 
+  - pipeline will run to push the public membership csv to the public repository.
+  - e.g. https://github.com/WellandValleyCC/WellandValleyCC.club-membership-private/actions/runs/20066947127
+5. Confirm pipeline runs.
+  - Run viewed on GitHub Actions for the private repository: (https://github.com/WellandValleyCC/WellandValleyCC.club-membership-private/actions/runs/20066947127)
+![private repo publishes membership csv to public repo](./images/private-repo-pipeline-run.png)
+	- Git commits in the public repository:
+
+```
+$ git log master -n 2 --oneline
+c095a7a8 (origin/master, origin/HEAD, master) Persisted competitor DB for 2026 import [ci skip]
+7af55094 Publish competitors_2026.csv with 248 rows
+```
+
+  - Note the pipeline run in the private repository automatically pushed the updated competitors_2026.csv to the public repository.
+  - Which in turn, triggered a new run [of action Process Club Data](https://github.com/WellandValleyCC/WellandValleyCC.github.io/actions/runs/20067006338/job/57558181456#step:10:73), resulting in the updated competitor database being persisted for 2026 
+    - Note how the Action detects the new competitors_2026.csv file and processes it accordingly to generate the competitor database for 2026.
 
 ### 2: Create New Events Workbook
+1. Create a new feature branch in the github io repository for the new season.  e.g. "feature/2026-season-setup"
+
+2. Copy/rename the previous season's events workbook to reflect the new season.
+  - e.g. Copy "ClubEvents_2025.xlsx" to "ClubEvents_2026.xlsx"
+  - Place the new workbook in the "data" directory of the public repository.
+	
+3. Open the new events workbook in Excel
+
+4. Select all the event sheets (Event_01, Event_02, ...) and clear out the yellow data cells.
+  - Make sure to select all the way down the rows to the bottom of the sheet, so that no old data remains.
+  ![Clearing out old event data](./images/clearing-out-old-event-data.png)
+
+5. Go to the Calendar sheet and update as per the draft data supplied by the TT committee.
+  - At this stage, it does not matter if some of this will change as the committee finalises the calendar.
+  ![Updating the calendar for the new season](./images/updating-calendar-for-new-season.png)
+  - You may need to add additional Event_nn sheets.  Just make sure they are named sequentially and align with the event numbers in the Calendar sheet.
+  - Keep the event numbers sequential and contiguous in the Calendar sheet.
