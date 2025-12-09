@@ -76,3 +76,7 @@ c095a7a8 (origin/master, origin/HEAD, master) Persisted competitor DB for 2026 i
   ![Updating the calendar for the new season](./images/updating-calendar-for-new-season.png)
   - You may need to add additional Event_nn sheets.  Just make sure they are named sequentially and align with the event numbers in the Calendar sheet.
   - Keep the event numbers sequential and contiguous in the Calendar sheet.
+
+6. Open .\data\competitors_2026.csv in Excel and copy the data from the sheet (competitors_2026) into the Competitors sheet in the new events workbook.
+  - It's important to copy all the data, including the header row, overwriting any existing data in the Competitors sheet.  This keeps references in the Events sheets working 
+  - Do not move the sheet from the csv into the workbook in its entirety and then use sheet renaming - this will break references in the Events sheets.
