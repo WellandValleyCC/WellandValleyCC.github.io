@@ -171,6 +171,12 @@ namespace ClubProcessor.Services
                 return null;
             }
 
+            if (!double.TryParse(row.MilesRaw, out var miles))
+            {
+                Console.WriteLine($"[WARN] Skipping Event {row.EventNumber}: invalid miles '{row.MilesRaw}'");
+                return null;
+            }
+
             if (string.IsNullOrWhiteSpace(row.EventName))
             {
                 Console.WriteLine($"[WARN] Skipping Event {row.EventNumber}: missing event name");
@@ -185,7 +191,7 @@ namespace ClubProcessor.Services
                 EventDate = DateTime.SpecifyKind(eventDate, DateTimeKind.Utc),
                 StartTime = startTime,
                 EventName = row.EventName,
-                Miles = row.Miles,
+                Miles = miles,
                 Location = row.Location,
                 IsHillClimb = IsYes(row.HillClimbRaw),
                 IsClubChampionship = IsYes(row.ClubChampRaw),

@@ -71,6 +71,12 @@ namespace ClubProcessor.Services
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
+            if (!calendar.Any(ev => ev.EventNumber == eventNumber))
+            {
+                Console.WriteLine($"[WARN] skipping Event {eventNumber} - no valid entry in Calendar sheet.");
+                return;
+            }
+
             var eventMiles = calendar
                 .Single(ev => ev.EventNumber == eventNumber).Miles;
 
