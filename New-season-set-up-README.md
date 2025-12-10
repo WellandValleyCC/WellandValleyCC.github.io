@@ -73,7 +73,7 @@ c095a7a8 (origin/master, origin/HEAD, master) Persisted competitor DB for 2026 i
 
 5. Go to the Calendar sheet and update as per the draft data supplied by the TT committee.
   - At this stage, it does not matter if some of this will change as the committee finalises the calendar.
-  ![Updating the calendar for the new season](./images/provisional calendar.png)
+  ![Updating the calendar for the new season](./images/provisional-calendar.png)
   - Ultimately, you need to make sure that the distance column is a numeric value.  
 	- if you're dealing with a 5+5, this value will be 10, and you'll need to update the Evening 10 and Non-Standard 10 columns manually to stop it being treated as a standard 10 mile event. But in these preliminary stages, it is okay to leave it as "5 + 5".
   - Similarly the date column needs to be a valid date, but it can be a rough indicator such as "TBC June" for now - the processing will still work, but will skip this event.
