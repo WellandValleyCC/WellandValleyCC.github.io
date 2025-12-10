@@ -17,7 +17,7 @@ namespace ClubCore.Models.Csv
         public string EventName { get; set; } = string.Empty;
 
         [Name("Miles")]
-        public double Miles { get; set; }
+        public string MilesRaw { get; set; }
 
         [Name("Location / Course")]
         public string Location { get; set; } = string.Empty;
