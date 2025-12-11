@@ -22,11 +22,16 @@ namespace ClubSiteGenerator.Utilities
                =========================== */
             builder.AppendLine(@"
 
-
 .month {
+  display: inline-block;       /* shrink to fit content */
+  max-width: fit-content;      /* cap at natural content width */
+  min-width: 16em;             /* optional: prevent it from being too narrow */
   border: 1px solid #ccc;
   padding: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 0 4px rgba(0,0,0,0.05);
 }
+
 
 .calendar td {
   width: 2em;
