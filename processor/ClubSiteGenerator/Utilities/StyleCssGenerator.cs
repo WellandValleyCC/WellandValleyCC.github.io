@@ -21,11 +21,7 @@ namespace ClubSiteGenerator.Utilities
                Calendar Grid Styling
                =========================== */
             builder.AppendLine(@"
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
+
 
 .month {
   border: 1px solid #ccc;
@@ -51,6 +47,28 @@ namespace ClubSiteGenerator.Utilities
 }
 .calendar td a:hover {
   text-decoration: underline;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* widest screens */
+  gap: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .calendar-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 ");
