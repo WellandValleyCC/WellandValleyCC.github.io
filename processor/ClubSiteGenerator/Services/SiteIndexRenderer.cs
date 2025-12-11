@@ -146,7 +146,7 @@ namespace ClubSiteGenerator.Services
 
             // Empty cells before the first day
             for (int i = 0; i < firstDayOfWeek; i++)
-                sb.AppendLine("      <td></td>");
+                sb.AppendLine("      <td class=\"blank-day\"><span class=\"cell-content placeholder\">.</span></td>");
 
             for (int day = 1; day <= daysInMonth; day++)
             {
@@ -158,11 +158,11 @@ namespace ClubSiteGenerator.Services
                     var cssClass = ev.CalendarEvent.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
                     sb.AppendLine(
                         $"      <td class=\"{cssClass}\"><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
-                        $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\">{day}</a></td>");
+                        $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\" class=\"cell-content\">{day}</a></td>");
                 }
                 else
                 {
-                    sb.AppendLine($"      <td class=\"no-event\">{day}</td>");
+                    sb.AppendLine($"      <td class=\"no-event\"><span class=\"cell-content\">{day}</span></td>");
                 }
 
                 if ((day + firstDayOfWeek) % 7 == 0 && day != daysInMonth)
@@ -177,7 +177,7 @@ namespace ClubSiteGenerator.Services
             if (lastDayOfWeek != 0)
             {
                 for (int i = lastDayOfWeek; i < 7; i++)
-                    sb.AppendLine("      <td></td>");
+                    sb.AppendLine("      <td class=\"blank-day\"><span class=\"cell-content placeholder\">.</span></td>");
                 sb.AppendLine("    </tr>");
             }
             else

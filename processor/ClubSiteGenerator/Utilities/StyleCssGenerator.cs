@@ -32,24 +32,56 @@ namespace ClubSiteGenerator.Utilities
   box-shadow: 0 0 4px rgba(0,0,0,0.05);
 }
 
-
-.calendar td {
-  width: 2em;
-  height: 2em;
-  text-align: center;
-}
-
 .calendar td.no-event {
   color: #bbb;
   background-color: #f9f9f9;
   opacity: 0.6;
   font-size: 1.4rem;
 }
+
+.calendar td.blank-day {
+  width: 2em;
+  height: 2em;
+  padding: 0;
+  background-color: transparent;
+  opacity: 1;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.calendar td.blank-day .cell-content {
+  color: transparent;     /* invisible text */
+  font-size: 1.4rem;      /* same as .no-event */
+  line-height: 2em;       /* match td height */
+}
+
+.calendar td .placeholder {
+  color: transparent;
+}
+
+.calendar td {
+  width: 2em;
+  height: 2em;
+  line-height: 2em;       /* ensures consistent vertical sizing */
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+}
+.calendar td .cell-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 2em;
+}
+
 .calendar td a {
   font-weight: bold;
-  color: #000;          /* keep event links prominent */
+  color: #000;
   text-decoration: none;
 }
+
 .calendar td a:hover {
   text-decoration: underline;
 }
