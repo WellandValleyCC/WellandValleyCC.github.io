@@ -25,16 +25,12 @@ namespace ClubSiteGenerator.Services
             Directory.CreateDirectory(outputDir);
 
             // Order events by EventNumber
-            var orderedEvents = events.OrderBy(ev => ev.EventNumber).Cast<IResultsSet>().ToList();
+            var orderedEvents = events.OrderBy(ev => ev.EventNumber).ToList();
 
             // Order competitions by fixed sequence
             var orderedCompetitions = competitions
                 .OrderBy(c => Array.IndexOf(CompetitionOrder, c.CompetitionType))
-                .Cast<IResultsSet>()
                 .ToList();
-
-            // Unified sequence
-            var allResults = orderedEvents.Concat(orderedCompetitions).ToList();
 
             var sb = new StringBuilder();
             sb.AppendLine("<!DOCTYPE html>");
@@ -46,13 +42,58 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
             sb.AppendLine("<h1>Season Overview</h1>");
+
+            // Legacy link
+            sb.AppendLine("<h2>Past Seasons</h2>");
             sb.AppendLine("<ul>");
+            sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
+            sb.AppendLine("</ul>");
 
-            foreach (var rs in allResults)
+            // Events section
+            sb.AppendLine("<h2>2026 Events</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var ev in orderedEvents)
             {
-                sb.AppendLine($"  <li><a href=\"{rs.SubFolderName}/{rs.FileName}.html\">{rs.DisplayName}</a></li>");
+                sb.AppendLine($"  <li>{ev.EventDate:dd MMM yyyy} (Event {ev.EventNumber}) - " +
+                              $"<a href=\"{ev.SubFolderName}/{ev.FileName}.html\">{ev.DisplayName}</a></li>");
             }
+            sb.AppendLine("</ul>");
 
+            // Competitions grouped
+            sb.AppendLine("<h2>Championship Competitions</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var comp in orderedCompetitions.Where(c =>
+                c.CompetitionType == CompetitionType.Seniors ||
+                c.CompetitionType == CompetitionType.Veterans ||
+                c.CompetitionType == CompetitionType.Women ||
+                c.CompetitionType == CompetitionType.Juniors ||
+                c.CompetitionType == CompetitionType.Juveniles ||
+                c.CompetitionType == CompetitionType.RoadBikeMen ||
+                c.CompetitionType == CompetitionType.RoadBikeWomen))
+            {
+                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+            }
+            sb.AppendLine("</ul>");
+
+            sb.AppendLine("<h2>Leagues</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var comp in orderedCompetitions.Where(c =>
+                c.CompetitionType == CompetitionType.PremierLeague ||
+                c.CompetitionType == CompetitionType.League1 ||
+                c.CompetitionType == CompetitionType.League2 ||
+                c.CompetitionType == CompetitionType.League3 ||
+                c.CompetitionType == CompetitionType.League4))
+            {
+                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+            }
+            sb.AppendLine("</ul>");
+
+            sb.AppendLine("<h2>Nev Brooks</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var comp in orderedCompetitions.Where(c => c.CompetitionType == CompetitionType.NevBrooks))
+            {
+                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+            }
             sb.AppendLine("</ul>");
 
             sb.AppendLine("</body></html>");
