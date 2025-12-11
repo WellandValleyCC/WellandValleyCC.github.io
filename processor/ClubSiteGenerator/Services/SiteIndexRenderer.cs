@@ -50,13 +50,19 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</ul>");
 
             // Events section
-            sb.AppendLine("<h2>2026 Calendar</h2>");
+            sb.AppendLine("<h2>Season Calendar</h2>");
             sb.AppendLine("<div class=\"calendar-grid\">");
 
-            foreach (int month in new[] { 3, 4, 5, 6, 7, 8 }) // Mar–Aug
+            // Find the first and last months with events
+            var firstMonth = orderedEvents.Min(e => e.EventDate.Month);
+            var lastMonth = orderedEvents.Max(e => e.EventDate.Month);
+            var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
+
+            for (int month = firstMonth; month <= lastMonth; month++)
             {
-                var monthEvents = orderedEvents.Where(e => e.EventDate.Year == 2026 && e.EventDate.Month == month);
-                sb.AppendLine(RenderMonthCalendar(2026, month, monthEvents));
+                var monthEvents = orderedEvents
+                    .Where(e => e.EventDate.Year == year && e.EventDate.Month == month);
+                sb.AppendLine(RenderMonthCalendar(year, month, monthEvents));
             }
 
             sb.AppendLine("</div>");
