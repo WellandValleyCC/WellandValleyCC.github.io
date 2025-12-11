@@ -49,14 +49,15 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
             sb.AppendLine("</ul>");
 
+            var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
+
             // Events section
-            sb.AppendLine("<h2>Season Calendar</h2>");
+            sb.AppendLine($"<h2>{year} Calendar</h2>");
             sb.AppendLine("<div class=\"calendar-grid\">");
 
             // Find the first and last months with events
             var firstMonth = orderedEvents.Min(e => e.EventDate.Month);
             var lastMonth = orderedEvents.Max(e => e.EventDate.Month);
-            var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
 
             for (int month = firstMonth; month <= lastMonth; month++)
             {
@@ -68,7 +69,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</div>");
 
             // Competitions grouped
-            sb.AppendLine("<h2>Championship Competitions</h2>");
+            sb.AppendLine($"<h2>{year} Championship Competitions</h2>");
             sb.AppendLine("<ul>");
             foreach (var comp in orderedCompetitions.Where(c =>
                 c.CompetitionType == CompetitionType.Seniors ||
@@ -83,7 +84,7 @@ namespace ClubSiteGenerator.Services
             }
             sb.AppendLine("</ul>");
 
-            sb.AppendLine("<h2>Leagues</h2>");
+            sb.AppendLine($"<h2>{year} Leagues</h2>");
             sb.AppendLine("<ul>");
             foreach (var comp in orderedCompetitions.Where(c =>
                 c.CompetitionType == CompetitionType.PremierLeague ||
@@ -96,7 +97,7 @@ namespace ClubSiteGenerator.Services
             }
             sb.AppendLine("</ul>");
 
-            sb.AppendLine("<h2>Nev Brooks</h2>");
+            sb.AppendLine($"<h2>{year} Nev Brooks</h2>");
             sb.AppendLine("<ul>");
             foreach (var comp in orderedCompetitions.Where(c => c.CompetitionType == CompetitionType.NevBrooks))
             {
