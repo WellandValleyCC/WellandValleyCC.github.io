@@ -52,21 +52,7 @@ namespace ClubSiteGenerator.Services
             var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
 
             // Events section
-            sb.AppendLine($"<h2>{year} Calendar</h2>");
-            sb.AppendLine("<div class=\"calendar-grid\">");
-
-            // Find the first and last months with events
-            var firstMonth = orderedEvents.Min(e => e.EventDate.Month);
-            var lastMonth = orderedEvents.Max(e => e.EventDate.Month);
-
-            for (int month = firstMonth; month <= lastMonth; month++)
-            {
-                var monthEvents = orderedEvents
-                    .Where(e => e.EventDate.Year == year && e.EventDate.Month == month);
-                sb.AppendLine(RenderMonthCalendar(year, month, monthEvents));
-            }
-
-            sb.AppendLine("</div>");
+            sb.AppendLine(RenderSeasonCalendar(year, orderedEvents));
 
             // Competitions grouped
             sb.AppendLine($"<h2>{year} Championship Competitions</h2>");
@@ -111,6 +97,34 @@ namespace ClubSiteGenerator.Services
             File.WriteAllText(path, sb.ToString());
         }
 
+        private string RenderSeasonCalendar(int year, IEnumerable<EventResultsSet> orderedEvents)
+        {
+            var sb = new StringBuilder();
+
+            // Legend
+            sb.AppendLine($"<h2>{year} Calendar</h2>");
+            sb.AppendLine("<div class=\"legend\">");
+            sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
+            sb.AppendLine("  <span class=\"non-ten-mile-event\">Other events</span>");
+            sb.AppendLine("</div>");
+
+            sb.AppendLine("<div class=\"calendar-grid\">");
+
+            // Find the first and last months with events
+            var firstMonth = orderedEvents.Min(e => e.EventDate.Month);
+            var lastMonth = orderedEvents.Max(e => e.EventDate.Month);
+
+            for (int month = firstMonth; month <= lastMonth; month++)
+            {
+                var monthEvents = orderedEvents
+                    .Where(e => e.EventDate.Year == year && e.EventDate.Month == month);
+                sb.AppendLine(RenderMonthCalendar(year, month, monthEvents));
+            }
+
+            sb.AppendLine("</div>");
+            return sb.ToString();
+        }
+
         private string RenderMonthCalendar(int year, int month, IEnumerable<EventResultsSet> events)
         {
             var sb = new StringBuilder();
@@ -141,9 +155,9 @@ namespace ClubSiteGenerator.Services
 
                 if (ev != null)
                 {
-                    // Add title attribute with event name and number
+                    var cssClass = ev.CalendarEvent.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
                     sb.AppendLine(
-                        $"      <td><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
+                        $"      <td class=\"{cssClass}\"><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
                         $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\">{day}</a></td>");
                 }
                 else

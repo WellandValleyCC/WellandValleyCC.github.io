@@ -145,10 +145,16 @@ table.results tr.guest-non-club-member,
 
 /* Ten vs Non-Ten events (cell-level) */
 table.results td.ten-mile-event,
-.legend .ten-mile-event         { background-color: #FDE9D9; }
+.calendar td.ten-mile-event,
+.legend .ten-mile-event {
+  background-color: #FDE9D9; /* 10‑mile events */
+}
 
 table.results td.non-ten-mile-event,
-.legend .non-ten-mile-event     { background-color: #DCE6F1; }
+.calendar td.non-ten-mile-event,
+.legend .non-ten-mile-event {
+  background-color: #DCE6F1; /* Other events */
+}
 
 /* Scoring columns (cell-level) */
 table.results td.mixed-score,
