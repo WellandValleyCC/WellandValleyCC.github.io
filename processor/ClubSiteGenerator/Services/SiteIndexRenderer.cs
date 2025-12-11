@@ -134,14 +134,16 @@ namespace ClubSiteGenerator.Services
 
                 if (ev != null)
                 {
-                    sb.AppendLine($"      <td><a href=\"{ev.SubFolderName}/{ev.FileName}.html\">{day}</a></td>");
+                    // Add title attribute with event name and number
+                    sb.AppendLine(
+                        $"      <td><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
+                        $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\">{day}</a></td>");
                 }
                 else
                 {
                     sb.AppendLine($"      <td class=\"no-event\">{day}</td>");
                 }
 
-                // End of week → close row and start new one
                 if ((day + firstDayOfWeek) % 7 == 0 && day != daysInMonth)
                 {
                     sb.AppendLine("    </tr>");
