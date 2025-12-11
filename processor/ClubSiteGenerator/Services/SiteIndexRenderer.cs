@@ -38,7 +38,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<head>");
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine("  <title>Season Index</title>");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/csv/styles.css\">");
+            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
             sb.AppendLine("<h1>Season Overview</h1>");
@@ -50,14 +50,16 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</ul>");
 
             // Events section
-            sb.AppendLine("<h2>2026 Events</h2>");
-            sb.AppendLine("<ul>");
-            foreach (var ev in orderedEvents)
+            sb.AppendLine("<h2>2026 Calendar</h2>");
+            sb.AppendLine("<div class=\"calendar-grid\">");
+
+            foreach (int month in new[] { 3, 4, 5, 6, 7, 8 }) // Mar–Aug
             {
-                sb.AppendLine($"  <li>{ev.EventDate:dd MMM yyyy} (Event {ev.EventNumber}) - " +
-                              $"<a href=\"{ev.SubFolderName}/{ev.FileName}.html\">{ev.DisplayName}</a></li>");
+                var monthEvents = orderedEvents.Where(e => e.EventDate.Year == 2026 && e.EventDate.Month == month);
+                sb.AppendLine(RenderMonthCalendar(2026, month, monthEvents));
             }
-            sb.AppendLine("</ul>");
+
+            sb.AppendLine("</div>");
 
             // Competitions grouped
             sb.AppendLine("<h2>Championship Competitions</h2>");
@@ -100,6 +102,69 @@ namespace ClubSiteGenerator.Services
 
             var path = Path.Combine(outputDir, "preview.html");
             File.WriteAllText(path, sb.ToString());
+        }
+
+        private string RenderMonthCalendar(int year, int month, IEnumerable<EventResultsSet> events)
+        {
+            var sb = new StringBuilder();
+            var monthName = new DateTime(year, month, 1).ToString("MMMM");
+            sb.AppendLine("<div class=\"month\">");
+            sb.AppendLine($"  <h3>{monthName}</h3>");
+            sb.AppendLine("  <table class=\"calendar\">");
+
+            // Header row
+            sb.AppendLine("    <tr>");
+            foreach (var dayName in new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" })
+                sb.AppendLine($"      <th>{dayName}</th>");
+            sb.AppendLine("    </tr>");
+
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int firstDayOfWeek = ((int)new DateTime(year, month, 1).DayOfWeek + 6) % 7;
+
+            sb.AppendLine("    <tr>");
+
+            // Empty cells before the first day
+            for (int i = 0; i < firstDayOfWeek; i++)
+                sb.AppendLine("      <td></td>");
+
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                var date = new DateOnly(year, month, day);
+                var ev = events.FirstOrDefault(e => e.EventDate == date);
+
+                if (ev != null)
+                {
+                    sb.AppendLine($"      <td><a href=\"{ev.SubFolderName}/{ev.FileName}.html\">{day}</a></td>");
+                }
+                else
+                {
+                    sb.AppendLine($"      <td class=\"no-event\">{day}</td>");
+                }
+
+                // End of week → close row and start new one
+                if ((day + firstDayOfWeek) % 7 == 0 && day != daysInMonth)
+                {
+                    sb.AppendLine("    </tr>");
+                    sb.AppendLine("    <tr>");
+                }
+            }
+
+            // Fill trailing empty cells
+            int lastDayOfWeek = (firstDayOfWeek + daysInMonth) % 7;
+            if (lastDayOfWeek != 0)
+            {
+                for (int i = lastDayOfWeek; i < 7; i++)
+                    sb.AppendLine("      <td></td>");
+                sb.AppendLine("    </tr>");
+            }
+            else
+            {
+                sb.AppendLine("    </tr>");
+            }
+
+            sb.AppendLine("  </table>");
+            sb.AppendLine("</div>");
+            return sb.ToString();
         }
 
         public static readonly CompetitionType[] CompetitionOrder =

@@ -17,6 +17,44 @@ namespace ClubSiteGenerator.Utilities
         {
             var builder = new StringBuilder();
 
+            /* ============================
+               Calendar Grid Styling
+               =========================== */
+            builder.AppendLine(@"
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.month {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+
+.calendar td {
+  width: 2em;
+  height: 2em;
+  text-align: center;
+}
+
+.calendar td.no-event {
+  color: #bbb;
+  background-color: #f9f9f9;
+  opacity: 0.6;
+  font-size: 1.4rem;
+}
+.calendar td a {
+  font-weight: bold;
+  color: #000;          /* keep event links prominent */
+  text-decoration: none;
+}
+.calendar td a:hover {
+  text-decoration: underline;
+}
+
+");
+
             /* ===========================
                Baseline + Body
                =========================== */
