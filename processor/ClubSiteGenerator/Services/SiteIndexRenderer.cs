@@ -25,16 +25,12 @@ namespace ClubSiteGenerator.Services
             Directory.CreateDirectory(outputDir);
 
             // Order events by EventNumber
-            var orderedEvents = events.OrderBy(ev => ev.EventNumber).Cast<IResultsSet>().ToList();
+            var orderedEvents = events.OrderBy(ev => ev.EventNumber).ToList();
 
             // Order competitions by fixed sequence
             var orderedCompetitions = competitions
                 .OrderBy(c => Array.IndexOf(CompetitionOrder, c.CompetitionType))
-                .Cast<IResultsSet>()
                 .ToList();
-
-            // Unified sequence
-            var allResults = orderedEvents.Concat(orderedCompetitions).ToList();
 
             var sb = new StringBuilder();
             sb.AppendLine("<!DOCTYPE html>");
@@ -42,23 +38,141 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<head>");
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine("  <title>Season Index</title>");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/csv/styles.css\">");
+            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
             sb.AppendLine("<h1>Season Overview</h1>");
-            sb.AppendLine("<ul>");
 
-            foreach (var rs in allResults)
+            // Legacy link
+            sb.AppendLine("<h2>Past Seasons</h2>");
+            sb.AppendLine("<ul>");
+            sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
+            sb.AppendLine("</ul>");
+
+            // Events section
+            sb.AppendLine("<h2>Season Calendar</h2>");
+            sb.AppendLine("<div class=\"calendar-grid\">");
+
+            // Find the first and last months with events
+            var firstMonth = orderedEvents.Min(e => e.EventDate.Month);
+            var lastMonth = orderedEvents.Max(e => e.EventDate.Month);
+            var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
+
+            for (int month = firstMonth; month <= lastMonth; month++)
             {
-                sb.AppendLine($"  <li><a href=\"{rs.SubFolderName}/{rs.FileName}.html\">{rs.DisplayName}</a></li>");
+                var monthEvents = orderedEvents
+                    .Where(e => e.EventDate.Year == year && e.EventDate.Month == month);
+                sb.AppendLine(RenderMonthCalendar(year, month, monthEvents));
             }
 
+            sb.AppendLine("</div>");
+
+            // Competitions grouped
+            sb.AppendLine("<h2>Championship Competitions</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var comp in orderedCompetitions.Where(c =>
+                c.CompetitionType == CompetitionType.Seniors ||
+                c.CompetitionType == CompetitionType.Veterans ||
+                c.CompetitionType == CompetitionType.Women ||
+                c.CompetitionType == CompetitionType.Juniors ||
+                c.CompetitionType == CompetitionType.Juveniles ||
+                c.CompetitionType == CompetitionType.RoadBikeMen ||
+                c.CompetitionType == CompetitionType.RoadBikeWomen))
+            {
+                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+            }
+            sb.AppendLine("</ul>");
+
+            sb.AppendLine("<h2>Leagues</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var comp in orderedCompetitions.Where(c =>
+                c.CompetitionType == CompetitionType.PremierLeague ||
+                c.CompetitionType == CompetitionType.League1 ||
+                c.CompetitionType == CompetitionType.League2 ||
+                c.CompetitionType == CompetitionType.League3 ||
+                c.CompetitionType == CompetitionType.League4))
+            {
+                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+            }
+            sb.AppendLine("</ul>");
+
+            sb.AppendLine("<h2>Nev Brooks</h2>");
+            sb.AppendLine("<ul>");
+            foreach (var comp in orderedCompetitions.Where(c => c.CompetitionType == CompetitionType.NevBrooks))
+            {
+                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+            }
             sb.AppendLine("</ul>");
 
             sb.AppendLine("</body></html>");
 
             var path = Path.Combine(outputDir, "preview.html");
             File.WriteAllText(path, sb.ToString());
+        }
+
+        private string RenderMonthCalendar(int year, int month, IEnumerable<EventResultsSet> events)
+        {
+            var sb = new StringBuilder();
+            var monthName = new DateTime(year, month, 1).ToString("MMMM");
+            sb.AppendLine("<div class=\"month\">");
+            sb.AppendLine($"  <h3>{monthName}</h3>");
+            sb.AppendLine("  <table class=\"calendar\">");
+
+            // Header row
+            sb.AppendLine("    <tr>");
+            foreach (var dayName in new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" })
+                sb.AppendLine($"      <th>{dayName}</th>");
+            sb.AppendLine("    </tr>");
+
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int firstDayOfWeek = ((int)new DateTime(year, month, 1).DayOfWeek + 6) % 7;
+
+            sb.AppendLine("    <tr>");
+
+            // Empty cells before the first day
+            for (int i = 0; i < firstDayOfWeek; i++)
+                sb.AppendLine("      <td></td>");
+
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                var date = new DateOnly(year, month, day);
+                var ev = events.FirstOrDefault(e => e.EventDate == date);
+
+                if (ev != null)
+                {
+                    // Add title attribute with event name and number
+                    sb.AppendLine(
+                        $"      <td><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
+                        $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\">{day}</a></td>");
+                }
+                else
+                {
+                    sb.AppendLine($"      <td class=\"no-event\">{day}</td>");
+                }
+
+                if ((day + firstDayOfWeek) % 7 == 0 && day != daysInMonth)
+                {
+                    sb.AppendLine("    </tr>");
+                    sb.AppendLine("    <tr>");
+                }
+            }
+
+            // Fill trailing empty cells
+            int lastDayOfWeek = (firstDayOfWeek + daysInMonth) % 7;
+            if (lastDayOfWeek != 0)
+            {
+                for (int i = lastDayOfWeek; i < 7; i++)
+                    sb.AppendLine("      <td></td>");
+                sb.AppendLine("    </tr>");
+            }
+            else
+            {
+                sb.AppendLine("    </tr>");
+            }
+
+            sb.AppendLine("  </table>");
+            sb.AppendLine("</div>");
+            return sb.ToString();
         }
 
         public static readonly CompetitionType[] CompetitionOrder =
