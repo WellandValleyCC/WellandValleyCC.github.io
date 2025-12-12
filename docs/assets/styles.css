@@ -11,9 +11,10 @@
 }
 
 .month h3 {
-  font-size: 1.5rem;  
+  font-size: 1.5rem !important;  /* override autosizing */
   font-weight: bold;
   margin: 0.25em 0;
+  -webkit-text-size-adjust: 100%; /* prevent mobile font boosting */
 }
 
 /* Calendar table setup */
