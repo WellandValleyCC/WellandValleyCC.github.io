@@ -37,6 +37,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<html lang=\"en\">");
             sb.AppendLine("<head>");
             sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine("  <title>Season Index</title>");
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
             sb.AppendLine("</head>");
