@@ -10,63 +10,63 @@
   box-shadow: 0 0 4px rgba(0,0,0,0.05);
 }
 
-.calendar td.no-event {
-  color: #bbb;
-  background-color: #f9f9f9;
-  opacity: 0.6;
-  font-size: 1.4rem;
+/* Calendar table setup */
+.calendar {
+  table-layout: fixed;       /* equal column widths */
+  border-collapse: collapse; /* no gaps between cells */
+  width: 100%;               /* stretch to container */
 }
 
-.calendar td.blank-day {
-  width: 2em;
-  height: 2em;
+/* Header and cell base styles */
+.calendar th,
+.calendar td {
+  width: 14.2857%;           /* 100% / 7 columns */
   padding: 0;
-  background-color: transparent;
-  opacity: 1;
   text-align: center;
   vertical-align: middle;
-}
-
-.calendar td.blank-day .cell-content {
-  color: transparent;     /* invisible text */
-  font-size: 1.4rem;      /* same as .no-event */
-  line-height: 2em;       /* match td height */
-}
-
-.calendar td .placeholder {
-  color: transparent;
 }
 
 .calendar td {
-  width: 2em;
-  height: 2em;
-  line-height: 2em;       /* ensures consistent vertical sizing */
-  text-align: center;
-  vertical-align: middle;
-  padding: 0;
+  font-size: 1.4rem;
 }
-.calendar td .cell-content {
+
+/* Generic cell content block: enforces square shape */
+.calendar td .cell-content,
+.calendar th .cell-content {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
-  line-height: 2em;
+  aspect-ratio: 1 / 1;       /* makes it square */
+  line-height: 1;            /* avoid double vertical spacing */
 }
 
+/* Event link styling */
 .calendar td a {
   font-weight: bold;
   color: #000;
   text-decoration: none;
 }
-
 .calendar td a:hover {
   text-decoration: underline;
 }
 
+/* No-event cells */
+.calendar td.no-event {
+  color: #bbb;
+  background-color: #f9f9f9;
+  opacity: 0.6;
+}
+
+/* Blank-day cells: invisible but present */
+.calendar td.blank-day .cell-content {
+  color: transparent;        /* invisible placeholder */
+}
+
+/* Grid wrapper for multiple months */
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* widest screens */
+  grid-template-columns: repeat(4, 1fr); /* adjust for your layout */
   gap: 1rem;
 }
 
