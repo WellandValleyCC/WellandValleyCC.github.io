@@ -24,7 +24,7 @@ namespace ClubSiteGenerator.Utilities
 
 .month {
   display: inline-block;       /* shrink to fit content */
-  max-width: fit-content;      /* cap at natural content width */
+  max-width: 25em;      /* cap at natural content width */
   min-width: 16em;             /* optional: prevent it from being too narrow */
   border: 1px solid #ccc;
   padding: 0.5rem;
@@ -94,8 +94,9 @@ namespace ClubSiteGenerator.Utilities
 /* Grid wrapper for multiple months */
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* adjust for your layout */
+  grid-template-columns: repeat(auto-fit, minmax(16em, 25em));
   gap: 1rem;
+  justify-content: start; /* anchor blocks to the left */
 }
 
 @media (max-width: 1200px) {
