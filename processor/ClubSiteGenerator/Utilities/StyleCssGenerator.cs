@@ -32,6 +32,12 @@ namespace ClubSiteGenerator.Utilities
   box-shadow: 0 0 4px rgba(0,0,0,0.05);
 }
 
+.month h3 {
+  font-size: 1.5rem;  
+  font-weight: bold;
+  margin: 0.25em 0;
+}
+
 /* Calendar table setup */
 .calendar {
   table-layout: fixed;       /* equal column widths */
