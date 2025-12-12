@@ -79,7 +79,8 @@ html {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16em, 25em));
   gap: 1rem;
-  justify-content: start; /* anchor blocks to the left */
+  justify-content: start; /* anchor left */
+  max-width: calc(25em * 3 + 2rem); /* 3 months + gaps */
 }
 
 @media (max-width: 1200px) {
@@ -604,4 +605,31 @@ footer {
     opacity: 0.5;          /* lighter presence */
   }
 }
+
+@media (max-width: 420px) {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  html {
+    font-size: 1.1rem; /* bump base font size slightly */
+  }
+
+  .month h3 {
+    font-size: 1.6rem;
+  }
+
+  .calendar td {
+    font-size: 1.5rem;
+  }
+
+  .legend {
+    font-size: 1.1rem;
+  }
+
+  .legend span {
+    font-size: 1.1rem;
+  }
+}
+
 
