@@ -22,6 +22,10 @@ namespace ClubSiteGenerator.Utilities
                =========================== */
             builder.AppendLine(@"
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 .month {
   display: inline-block;       /* shrink to fit content */
   max-width: 25em;      /* cap at natural content width */
