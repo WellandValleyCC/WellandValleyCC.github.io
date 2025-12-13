@@ -167,6 +167,13 @@ table.results td.non-ten-mile-event,
   background-color: #DCE6F1; /* Other events */
 }
 
+/* Standalone events (not part of Club Championship) */
+table.results td.stand-alone-event,
+.calendar td.stand-alone-event,
+.legend .stand-alone-event {
+  background-color: #E2F0D9; /* Standalone events */
+}
+
 /* Scoring columns (cell-level) */
 table.results td.mixed-score,
 .legend .mixed-score             { background-color: #CCFFCC; }
@@ -285,6 +292,32 @@ header .event-distance {
   margin: 0.25em 0;
 }
 .header-and-legend .legend { flex-wrap: wrap; }
+
+/* Base standalone style */
+.event-page .event-header-core.stand-alone-event {
+  position: relative;
+  background-color: #e2f0d9; /* pale green background */
+  color: #1c4721;           /* dark green text */
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+/* Diagonal banner */
+.event-page .event-header-core.stand-alone-event::after {
+  content: "Not a Championship event";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  background: rgba(0, 128, 0, 0.5);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.3rem 2.5rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
 
 /* Base cancelled style */
 table.results thead .event-title.cancelled-event {
