@@ -201,6 +201,13 @@ table.results td.non-ten-mile-event,
   background-color: #DCE6F1; /* Other events */
 }
 
+/* Standalone events (not part of Club Championship) */
+table.results td.stand-alone-event,
+.calendar td.stand-alone-event,
+.legend .stand-alone-event {
+  background-color: #E2F0D9; /* Standalone events */
+}
+
 /* Scoring columns (cell-level) */
 table.results td.mixed-score,
 .legend .mixed-score             { background-color: #CCFFCC; }
