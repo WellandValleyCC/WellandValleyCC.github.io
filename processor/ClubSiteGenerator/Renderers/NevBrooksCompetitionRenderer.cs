@@ -22,7 +22,7 @@ namespace ClubSiteGenerator.Renderers
             :base(resultsSet, rules)
         {
             this.resultsSet = resultsSet;
-            this.calendar = resultsSet.CompetitionCalendar.OrderBy(ev => ev.EventNumber).ToList();
+            this.calendar = resultsSet.ClubChampionshipCalendar.OrderBy(ev => ev.EventNumber).ToList();
             this.competitionTitle = resultsSet.DisplayName;
         }
 

@@ -1,7 +1,5 @@
-﻿using ClubCore.Context;
-using ClubCore.Utilities;
+﻿using ClubCore.Utilities;
 using ClubSiteGenerator.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClubSiteGenerator
 {

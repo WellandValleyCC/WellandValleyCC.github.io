@@ -16,6 +16,7 @@ namespace ClubSiteGenerator.Renderers
         private readonly DateOnly eventDate; 
         private readonly double eventMiles;
         private readonly bool isCancelled;
+        private readonly bool isStandAloneEvent;
 
         protected override string PageTypeClass => "event-page";
 
@@ -28,6 +29,7 @@ namespace ClubSiteGenerator.Renderers
             this.eventDate = resultsSet.EventDate;
             this.eventMiles = resultsSet.CalendarEvent.Miles;
             this.isCancelled = resultsSet.CalendarEvent.IsCancelled;
+            this.isStandAloneEvent = !resultsSet.CalendarEvent.IsClubChampionship;
         }
 
         internal readonly List<string> columnTitles = new()
@@ -43,7 +45,14 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("<div class=\"header-and-legend\">");
 
-            var headerClasses = "event-header-core" + (isCancelled ? " cancelled-event" : string.Empty);
+            var headerClasses = "event-header-core";
+
+            if (isStandAloneEvent)
+                headerClasses += " stand-alone-event";
+
+            if (isCancelled)
+                headerClasses += " cancelled-event";
+
             sb.AppendLine($"  <div class=\"{headerClasses}\">");
             sb.AppendLine($"    <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
             sb.AppendLine($"    <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");

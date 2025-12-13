@@ -106,7 +106,8 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine($"<h2>{year} Calendar</h2>");
             sb.AppendLine("<div class=\"legend\">");
             sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
-            sb.AppendLine("  <span class=\"non-ten-mile-event\">Other events</span>");
+            sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
+            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Standalone</span>");
             sb.AppendLine("</div>");
 
             sb.AppendLine("<div class=\"calendar-grid\">");
@@ -156,7 +157,19 @@ namespace ClubSiteGenerator.Services
 
                 if (ev != null)
                 {
-                    var cssClass = ev.CalendarEvent.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                    string cssClass;
+
+                    if (!ev.CalendarEvent.IsClubChampionship)
+                    {
+                        // Boxing Day Ten and other non‑championship events
+                        cssClass = "stand-alone-event";
+                    }
+                    else
+                    {
+                        // Championship events: distinguish 10‑mile vs other distances
+                        cssClass = ev.CalendarEvent.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
+                    }
+
                     sb.AppendLine(
                         $"      <td class=\"{cssClass}\"><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
                         $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\" class=\"cell-content\">{day}</a></td>");
