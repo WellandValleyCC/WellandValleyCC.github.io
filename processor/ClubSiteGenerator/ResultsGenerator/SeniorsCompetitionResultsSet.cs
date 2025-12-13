@@ -42,13 +42,13 @@ namespace ClubSiteGenerator.ResultsGenerator
             }
 
             // filter rides must be Valid, but any ageGroup
-            var Championship = allRides
+            var championshipRides = allRides
                 .Where(r =>
                     r.Competitor != null &&
                     r.Status == RideStatus.Valid);
 
             // group by ClubNumber
-            var groups = Championship
+            var groups = championshipRides
                 .GroupBy(r => r.Competitor!.ClubNumber)
                 .ToList();
 
