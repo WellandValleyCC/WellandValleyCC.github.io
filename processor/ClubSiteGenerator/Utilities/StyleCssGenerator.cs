@@ -355,7 +355,7 @@ header .event-distance {
 
 /* Diagonal banner */
 .event-page .event-header-core.stand-alone-event::after {
-  content: ""Not a Championship event"";
+  content: ""This is not a championship event"";
   position: absolute;
   top: 50%;
   left: 50%;
