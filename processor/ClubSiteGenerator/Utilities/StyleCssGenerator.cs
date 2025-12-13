@@ -344,6 +344,32 @@ header .event-distance {
 }
 .header-and-legend .legend { flex-wrap: wrap; }
 
+/* Base standalone style */
+.event-page .event-header-core.stand-alone-event {
+  position: relative;
+  background-color: #e2f0d9; /* pale green background */
+  color: #1c4721;           /* dark green text */
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+/* Diagonal banner */
+.event-page .event-header-core.stand-alone-event::after {
+  content: ""Not a Championship event"";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  background: rgba(0, 128, 0, 0.5);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.3rem 2.5rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* Base cancelled style */
 table.results thead .event-title.cancelled-event {
   position: relative;
