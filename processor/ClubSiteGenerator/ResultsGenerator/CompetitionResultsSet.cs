@@ -18,6 +18,9 @@ namespace ClubSiteGenerator.ResultsGenerator
             ScoredRides = scoredRides.ToList().AsReadOnly();
         }
 
+        public IEnumerable<CalendarEvent> ClubChampionshipCalendar =>
+            Calendar.Where(ev => ev.IsClubChampionship);
+
         public abstract CompetitionType CompetitionType { get; }
 
         public abstract string EligibilityStatement { get; }

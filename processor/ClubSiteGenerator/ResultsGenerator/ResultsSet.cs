@@ -13,8 +13,6 @@ namespace ClubSiteGenerator.ResultsGenerator
             Year = calendar.First().EventDate.Year;
         }
 
-        public IEnumerable<CalendarEvent> ClubChampionshipCalendar =>
-            Calendar.Where(ev => ev.IsClubChampionship);
         protected int Year { get; }
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
