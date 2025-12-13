@@ -9,11 +9,12 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         protected ResultsSet(IEnumerable<CalendarEvent> calendar)
         {
-            Calendar = calendar;
+            Calendar = calendar ?? throw new ArgumentNullException(nameof(calendar));
             Year = calendar.First().EventDate.Year;
         }
 
-        public IEnumerable<CalendarEvent> CompetitionCalendar => Calendar;
+        public IEnumerable<CalendarEvent> ClubChampionshipCalendar =>
+            Calendar.Where(ev => ev.IsClubChampionship);
         protected int Year { get; }
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
