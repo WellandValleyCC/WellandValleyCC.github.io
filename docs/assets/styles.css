@@ -354,7 +354,7 @@ table.results thead .event-title.cancelled-event::after {
   content: "Cancelled";
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 65%;
   transform: translate(-50%, -50%) rotate(-20deg);
   background: rgba(200, 0, 0, 0.5);
   color: white;
