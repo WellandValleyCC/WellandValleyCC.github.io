@@ -12,8 +12,10 @@ namespace ClubSiteGenerator.Tests
 {
     public class ResultsGeneratorTests
     {
-        [Fact]
-        public void EventCreateFrom_SortsByRankWithDxxAppendedAndSortedMembersThenSecondClaimThenGuests()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void EventCreateFrom_SortsAndSetsResultsSetProperties(bool isClubChampionship)
         {
             // Arrange
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -69,7 +71,15 @@ namespace ClubSiteGenerator.Tests
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
-            var calendarEvent = new CalendarEvent { EventNumber = 1, EventName = "Test TT", EventDate = DateTime.Today, Miles = 10 };
+            var calendarEvent = new CalendarEvent { 
+                EventNumber = 1, 
+                EventName = "Test TT", 
+                EventDate = new DateTime(2025, 12, 14),
+                Miles = 10, 
+                IsClubChampionship = isClubChampionship };
+
+            string expectedFileName = isClubChampionship ? "2025-event-01" : "2025-e01-test-tt";
+            string expectedLinkText = isClubChampionship ? "Event 1": "Test TT";
 
             rides
                 .Where(r => r.EventNumber == calendarEvent.EventNumber)
@@ -131,6 +141,14 @@ namespace ClubSiteGenerator.Tests
             ridesArray[i++].Name.Should().Be("zGuest AnotherRiderDq"); // DNS then guest - sorted alphabetically surname firstname
             ridesArray[i].Status.Should().Be(RideStatus.DQ);
             ridesArray[i++].Name.Should().Be("Guest RiderDq"); // DQ then guest
+
+            eventResults.EventNumber.Should().Be(calendarEvent.EventNumber);
+            eventResults.EventDate.Should().Be(DateOnly.FromDateTime(calendarEvent.EventDate));
+            eventResults.year.Should().Be(calendarEvent.EventDate.Year);
+            eventResults.DisplayName.Should().Be(calendarEvent.EventName);
+            eventResults.FileName.Should().Be(expectedFileName);
+            eventResults.SubFolderName.Should().Be("events");
+            eventResults.LinkText.Should().Be(expectedLinkText);
         }
 
         [Fact]
