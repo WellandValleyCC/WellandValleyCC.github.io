@@ -24,25 +24,20 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static NevBrooksCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<CalendarEvent> championshipCalendar,
             ICompetitionRules rules)
         {
-            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
-                    nameof(allRides));
-            }
+            if (HasMissingCompetitors(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with Competitors.", nameof(allRides));
 
-            if (allRides.Any(r => r.CalendarEvent is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
-                    nameof(allRides));
-            }
+            if (HasMissingCalendarEvents(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
+
+            if (HasNonChampionshipEvents(championshipCalendar))
+                throw new ArgumentException($"{nameof(championshipCalendar)} must contain only championship events.", nameof(championshipCalendar));
 
             // build the competition-specific calendar: all 10-mile evening events after the first
-            var nevBrooksCalendar = calendar
+            var nevBrooksCalendar = championshipCalendar
                 .Where(e => e.IsEvening10)
                 .OrderBy(e => e.EventNumber)
                 .Skip(1) // skip the first 10-mile TT

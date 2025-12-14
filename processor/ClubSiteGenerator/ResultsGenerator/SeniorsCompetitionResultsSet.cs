@@ -24,22 +24,17 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         public static SeniorsCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<CalendarEvent> championshipCalendar,
             ICompetitionRules rules)
         {
-            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
-                    nameof(allRides));
-            }
+            if (HasMissingCompetitors(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with Competitors.", nameof(allRides));
 
-            if (allRides.Any(r => r.CalendarEvent is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
-                    nameof(allRides));
-            }
+            if (HasMissingCalendarEvents(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
+
+            if (HasNonChampionshipEvents(championshipCalendar))
+                throw new ArgumentException($"{nameof(championshipCalendar)} must contain only championship events.", nameof(championshipCalendar));
 
             // filter rides must be Valid, but any ageGroup
             var championshipRides = allRides
@@ -56,14 +51,14 @@ namespace ClubSiteGenerator.ResultsGenerator
             var results = groups
                 .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
                     group.ToList(), 
-                    calendar, 
+                    championshipCalendar, 
                     r => r.SeniorsPoints,
                     rules))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            return new SeniorsCompetitionResultsSet(calendar, results);
+            return new SeniorsCompetitionResultsSet(championshipCalendar, results);
         }
     }
 }

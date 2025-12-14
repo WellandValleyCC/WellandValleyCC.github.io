@@ -22,5 +22,14 @@ namespace ClubSiteGenerator.ResultsGenerator
         public string? NextLink { get; set; }
         public string? PrevLabel { get; set; }
         public string? NextLabel { get; set; }
+
+        protected static bool HasMissingCompetitors(IEnumerable<Ride> rides) =>
+            rides.Any(r => r.ClubNumber != null && r.Competitor is null);
+
+        protected static bool HasMissingCalendarEvents(IEnumerable<Ride> rides) =>
+            rides.Any(r => r.CalendarEvent is null);
+
+        protected static bool HasNonChampionshipEvents(IEnumerable<CalendarEvent> calendar) =>
+            calendar.Any(ev => !ev.IsClubChampionship);
     }
 }

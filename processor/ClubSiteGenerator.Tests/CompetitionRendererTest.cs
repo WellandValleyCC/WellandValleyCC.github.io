@@ -20,8 +20,8 @@ namespace ClubSiteGenerator.Tests
             // Arrange
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "25 Mile", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "25 Mile", IsEvening10 = false, IsClubChampionship = true}
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -56,9 +56,9 @@ namespace ClubSiteGenerator.Tests
             // Arrange
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1 - ten", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2 - 25mile", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3 - 9.5mile hardride", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1 - ten", IsEvening10 = true, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2 - 25mile", IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3 - 9.5mile hardride", IsEvening10 = false, IsClubChampionship = true }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -184,9 +184,9 @@ namespace ClubSiteGenerator.Tests
             // Arrange
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false, IsClubChampionship = true }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -242,9 +242,9 @@ namespace ClubSiteGenerator.Tests
             // Arrange
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", IsEvening10 = true , IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", IsEvening10 = false, IsClubChampionship = true }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket

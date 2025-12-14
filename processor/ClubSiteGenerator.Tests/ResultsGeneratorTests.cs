@@ -162,9 +162,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -246,9 +246,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -331,9 +331,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-        new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-        new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-        new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+        new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+        new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+        new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
     };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -428,9 +428,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -516,9 +516,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -587,9 +587,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);

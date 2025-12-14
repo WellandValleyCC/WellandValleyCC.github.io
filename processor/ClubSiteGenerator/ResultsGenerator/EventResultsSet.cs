@@ -58,21 +58,13 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         // Factory: single CalendarEvent
-        public static EventResultsSet CreateFrom(IEnumerable<CalendarEvent> calendar, IEnumerable<Ride> allRides, int eventNumber)
+        public static EventResultsSet CreateFrom(IEnumerable<CalendarEvent> fullCalendar, IEnumerable<Ride> allRides, int eventNumber)
         {
-            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
-                    nameof(allRides));
-            }
+            if (HasMissingCompetitors(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with Competitors.", nameof(allRides));
 
-            if (allRides.Any(r => r.CalendarEvent is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
-                    nameof(allRides));
-            }
+            if (HasMissingCalendarEvents(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
 
             var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == eventNumber);
 
@@ -84,7 +76,7 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             var orderedHydratedRidesForEvent = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
 
-            return new EventResultsSet(calendar, orderedHydratedRidesForEvent, eventNumber);
+            return new EventResultsSet(fullCalendar, orderedHydratedRidesForEvent, eventNumber);
         }
     }
 
