@@ -103,6 +103,7 @@ namespace ClubSiteGenerator.Services
                 sb.AppendLine("</ul>");
             }
 
+
             sb.AppendLine("</body></html>");
 
             var path = Path.Combine(outputDir, "preview.html");
@@ -118,7 +119,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<div class=\"legend\">");
             sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
             sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
-            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Standalone</span>");
+            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Non-championship events</span>");
             sb.AppendLine("</div>");
 
             sb.AppendLine("<div class=\"calendar-grid\">");
