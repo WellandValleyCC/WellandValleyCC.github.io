@@ -144,7 +144,7 @@ namespace ClubSiteGenerator.Tests
 
             eventResults.EventNumber.Should().Be(calendarEvent.EventNumber);
             eventResults.EventDate.Should().Be(DateOnly.FromDateTime(calendarEvent.EventDate));
-            eventResults.year.Should().Be(calendarEvent.EventDate.Year);
+            eventResults.Year.Should().Be(calendarEvent.EventDate.Year);
             eventResults.DisplayName.Should().Be(calendarEvent.EventName);
             eventResults.FileName.Should().Be(expectedFileName);
             eventResults.SubFolderName.Should().Be("events");

@@ -19,12 +19,33 @@ namespace ClubSiteGenerator.ResultsGenerator
         public int EventNumber => calendarEvent.EventNumber;
         public DateOnly EventDate => DateOnly.FromDateTime(calendarEvent.EventDate);
 
-        public int year => calendarEvent.EventDate.Year;
+        public int Year => calendarEvent.EventDate.Year;
 
-        public override string DisplayName => $"{calendarEvent.EventName}";
-        public override string FileName => $"{year}-event-{calendarEvent.EventNumber:D2}";
         public override string SubFolderName => "events";
-        public override string LinkText => $"Event {EventNumber}";
+
+        public override string FileName => calendarEvent.IsClubChampionship 
+            ? $"{Year}-event-{calendarEvent.EventNumber:D2}" 
+            : $"{Year}-e{calendarEvent.EventNumber:D2}-{ToKebabCase(calendarEvent.EventName)}";
+        
+        public override string DisplayName => calendarEvent.EventName;
+
+        public override string LinkText => calendarEvent.IsClubChampionship
+            ? $"Event {EventNumber}"
+            : calendarEvent.EventName;
+
+        private static string ToKebabCase(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            // Replace spaces with hyphens, remove invalid chars, and lowercase
+            var kebab = value
+                .Trim()
+                .ToLowerInvariant()
+                .Replace(" ", "-");
+
+            return kebab;
+        }
 
         private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus eligibility)
         {
