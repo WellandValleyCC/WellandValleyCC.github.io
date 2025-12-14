@@ -8,8 +8,10 @@ namespace ClubSiteGenerator.Tests
 {
     public class EventRendererTests
     {
-        [Fact]
-        public void Render_IncludesTitleAndHeader()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Render_IncludesTitleAndHeader(bool isClubChampionship)
         {
             // Arrange: calendar event
             var ev = new CalendarEvent
@@ -17,7 +19,8 @@ namespace ClubSiteGenerator.Tests
                 EventNumber = 11,
                 EventName = "Walcote Interclub 25mile Hardride TT",
                 EventDate = new DateTime(2025, 6, 15),
-                Miles = 25
+                Miles = 25,
+                IsClubChampionship = isClubChampionship
             };
 
             // Arrange: competitor + ride
@@ -56,7 +59,8 @@ namespace ClubSiteGenerator.Tests
 
             // Assert
             html.Should().Contain("<title>Event 11: Walcote Interclub 25mile Hardride TT</title>");
-            html.Should().Contain("<span class=\"event-number\">Event 11:</span>");
+            html.Contains("<span class=\"event-number\">Event 11:</span>")
+                .Should().Be(isClubChampionship);
             html.Should().Contain("Sunday, 15 June 2025");
             html.Should().Contain("Distance: 25 miles");
             html.Should().Contain("href=\"2025-event-10.html\"");

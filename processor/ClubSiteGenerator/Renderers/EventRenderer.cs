@@ -54,7 +54,15 @@ namespace ClubSiteGenerator.Renderers
                 headerClasses += " cancelled-event";
 
             sb.AppendLine($"  <div class=\"{headerClasses}\">");
-            sb.AppendLine($"    <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
+            if (isStandAloneEvent)
+            {
+                sb.AppendLine($"    <h1>{WebUtility.HtmlEncode(eventTitle)}</h1>");
+            }
+            else
+            {
+                sb.AppendLine(
+                    $"    <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
+            }
             sb.AppendLine($"    <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"    <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
             sb.AppendLine("  </div>");
