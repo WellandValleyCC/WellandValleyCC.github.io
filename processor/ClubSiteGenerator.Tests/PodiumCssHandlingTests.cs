@@ -69,9 +69,9 @@ namespace ClubSiteGenerator.Tests
             // Arrange:
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "25 miler", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Another 25 miler", IsEvening10 = false },
+                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "25 miler", IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Another 25 miler", IsEvening10 = false, IsClubChampionship = true },
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -156,8 +156,8 @@ namespace ClubSiteGenerator.Tests
             // Arrange:
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "25 miler", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "25 miler", IsEvening10 = false, IsClubChampionship = true }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket

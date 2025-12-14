@@ -17,32 +17,27 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Club Championship -  Nev Brooks Handicap";
         public override string FileName => $"{Year}-nev-brooks";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Nev Brooks";
+        public override string LinkText => "Nev Brooks";
         public override CompetitionType CompetitionType => CompetitionType.NevBrooks;
 
         public override string EligibilityStatement => "All first claim members of the club are eligible for this competition - any age group.";
 
         public static NevBrooksCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<CalendarEvent> championshipCalendar,
             ICompetitionRules rules)
         {
-            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
-                    nameof(allRides));
-            }
+            if (HasMissingCompetitors(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with Competitors.", nameof(allRides));
 
-            if (allRides.Any(r => r.CalendarEvent is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
-                    nameof(allRides));
-            }
+            if (HasMissingCalendarEvents(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
+
+            if (HasNonChampionshipEvents(championshipCalendar))
+                throw new ArgumentException($"{nameof(championshipCalendar)} must contain only championship events.", nameof(championshipCalendar));
 
             // build the competition-specific calendar: all 10-mile evening events after the first
-            var nevBrooksCalendar = calendar
+            var nevBrooksCalendar = championshipCalendar
                 .Where(e => e.IsEvening10)
                 .OrderBy(e => e.EventNumber)
                 .Skip(1) // skip the first 10-mile TT

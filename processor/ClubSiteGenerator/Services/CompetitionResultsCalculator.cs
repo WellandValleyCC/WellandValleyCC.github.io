@@ -13,36 +13,39 @@ namespace ClubSiteGenerator.Services
         /// calculating Best‑8 Ten‑mile and Scoring‑11 totals (actually, year appropriate totals based on supplied rules).
         /// </summary>
         public static CompetitorResult BuildCompetitorResult(
-            IReadOnlyList<Ride> rides,
-            IEnumerable<CalendarEvent> calendar,
+            IReadOnlyList<Ride> championshipRides,
+            IEnumerable<CalendarEvent> championshipCalendar,
             Func<Ride, double?> pointsSelector,
             ICompetitionRules rules)
         {
-            if (rides == null || rides.Count == 0)
-                throw new ArgumentException("Rides collection must not be null or empty.", nameof(rides));
+            if (championshipRides == null || championshipRides.Count == 0)
+                throw new ArgumentException("Rides collection must not be null or empty.", nameof(championshipRides));
 
             // validate all rides have the same ClubNumber
-            var firstClubNumber = rides[0].Competitor?.ClubNumber;
+            var firstClubNumber = championshipRides[0].Competitor?.ClubNumber;
             if (firstClubNumber == null)
-                throw new ArgumentException("Rides must be hydrated with Competitors having a ClubNumber.", nameof(rides));
+                throw new ArgumentException("Rides must be hydrated with Competitors having a ClubNumber.", nameof(championshipRides));
 
-            bool mismatch = rides.Any(r => r.Competitor?.ClubNumber != firstClubNumber);
+            bool mismatch = championshipRides.Any(r => r.Competitor?.ClubNumber != firstClubNumber);
             if (mismatch)
-                throw new ArgumentException("All rides must belong to the same competitor (same ClubNumber).", nameof(rides));
+                throw new ArgumentException("All rides must belong to the same competitor (same ClubNumber).", nameof(championshipRides));
+
+            if (championshipCalendar == null || championshipCalendar.Any(ev => !ev.IsClubChampionship))
+                throw new ArgumentException("Championship calendar must not be null and must only contain club championship events.", nameof(championshipCalendar));
 
             // Determine competition year from the first event
-            var competitionYear = calendar.First().EventDate.Year;
+            var competitionYear = championshipCalendar.First().EventDate.Year;
 
             // Use the last ride's competitor - they are all the same person.  This one
             // has the most up-to-date Competitor data.
-            var competitor = rides.Last().Competitor!;
+            var competitor = championshipRides.Last().Competitor!;
 
             // Precompute lookup for event type
-            var isTenMileByEvent = calendar
+            var isTenMileByEvent = championshipCalendar
                 .ToDictionary(ev => ev.EventNumber, ev => ev.IsEvening10);
 
             // Only valid rides contribute to scoring
-            var validRides = rides
+            var validRides = championshipRides
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
@@ -95,12 +98,12 @@ namespace ClubSiteGenerator.Services
                 : (double?)null;
 
             // Per‑event data for rendering
-            var eventPoints = rides.ToDictionary(
+            var eventPoints = championshipRides.ToDictionary(
                 r => r.EventNumber,
                 r => r.Status == RideStatus.Valid ? pointsSelector(r) : null
             );
 
-            var eventStatuses = rides.ToDictionary(
+            var eventStatuses = championshipRides.ToDictionary(
                 r => r.EventNumber,
                 r => r.Status
             );
@@ -108,7 +111,7 @@ namespace ClubSiteGenerator.Services
             return new CompetitorResult
             {
                 Competitor = competitor,
-                Rides = rides,
+                Rides = championshipRides,
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
 

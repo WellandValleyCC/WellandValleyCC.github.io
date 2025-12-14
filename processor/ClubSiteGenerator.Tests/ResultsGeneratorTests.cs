@@ -12,8 +12,10 @@ namespace ClubSiteGenerator.Tests
 {
     public class ResultsGeneratorTests
     {
-        [Fact]
-        public void EventCreateFrom_SortsByRankWithDxxAppendedAndSortedMembersThenSecondClaimThenGuests()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void EventCreateFrom_SortsAndSetsResultsSetProperties(bool isClubChampionship)
         {
             // Arrange
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -69,7 +71,15 @@ namespace ClubSiteGenerator.Tests
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
-            var calendarEvent = new CalendarEvent { EventNumber = 1, EventName = "Test TT", EventDate = DateTime.Today, Miles = 10 };
+            var calendarEvent = new CalendarEvent { 
+                EventNumber = 1, 
+                EventName = "Test TT", 
+                EventDate = new DateTime(2025, 12, 14),
+                Miles = 10, 
+                IsClubChampionship = isClubChampionship };
+
+            string expectedFileName = isClubChampionship ? "2025-event-01" : "2025-e01-test-tt";
+            string expectedLinkText = isClubChampionship ? "Event 1": "Test TT";
 
             rides
                 .Where(r => r.EventNumber == calendarEvent.EventNumber)
@@ -131,6 +141,14 @@ namespace ClubSiteGenerator.Tests
             ridesArray[i++].Name.Should().Be("zGuest AnotherRiderDq"); // DNS then guest - sorted alphabetically surname firstname
             ridesArray[i].Status.Should().Be(RideStatus.DQ);
             ridesArray[i++].Name.Should().Be("Guest RiderDq"); // DQ then guest
+
+            eventResults.EventNumber.Should().Be(calendarEvent.EventNumber);
+            eventResults.EventDate.Should().Be(DateOnly.FromDateTime(calendarEvent.EventDate));
+            eventResults.Year.Should().Be(calendarEvent.EventDate.Year);
+            eventResults.DisplayName.Should().Be(calendarEvent.EventName);
+            eventResults.FileName.Should().Be(expectedFileName);
+            eventResults.SubFolderName.Should().Be("events");
+            eventResults.LinkText.Should().Be(expectedLinkText);
         }
 
         [Fact]
@@ -162,9 +180,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -189,7 +207,7 @@ namespace ClubSiteGenerator.Tests
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("senior");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("veteran");
             juvenilesCompetitionResults.FileName.Should().Be("2025-juveniles");
-            juvenilesCompetitionResults.GenericName.Should().Be("Juveniles");
+            juvenilesCompetitionResults.LinkText.Should().Be("Juveniles");
             juvenilesCompetitionResults.SubFolderName.Should().Be("competitions");
 
             juvenilesCompetitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Liam Johnson");
@@ -246,9 +264,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -273,7 +291,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("senior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
             competitionResults.FileName.Should().Be("2025-juniors");
-            competitionResults.GenericName.Should().Be("Juniors");
+            competitionResults.LinkText.Should().Be("Juniors");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring
@@ -331,9 +349,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-        new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-        new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-        new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+        new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+        new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+        new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
     };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -358,7 +376,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("senior");
             competitionResults.FileName.Should().Be("2025-veterans");
-            competitionResults.GenericName.Should().Be("Veterans");
+            competitionResults.LinkText.Should().Be("Veterans");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (same totals as Juveniles/Juniors pattern)
@@ -428,9 +446,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -452,7 +470,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.DisplayName.Should().Be("Club Championship - Women");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
             competitionResults.FileName.Should().Be("2025-women");
-            competitionResults.GenericName.Should().Be("Women");
+            competitionResults.LinkText.Should().Be("Women");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (pattern same as other tests, totals predictable)
@@ -516,9 +534,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -541,7 +559,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().Contain("road bike");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
             competitionResults.FileName.Should().Be("2025-road-bike-women");
-            competitionResults.GenericName.Should().Be("Road Bike Women");
+            competitionResults.LinkText.Should().Be("Road Bike Women");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (same totals pattern as other categories)
@@ -587,9 +605,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendarEvents = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10 },
-                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10 },
-                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10 }
+                new CalendarEvent { EventNumber = 1, EventName = "Event 1", EventDate = DateTime.Today.AddDays(-2), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "Event 2", EventDate = DateTime.Today.AddDays(-1), Miles = 10, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Event 3", EventDate = DateTime.Today, Miles = 10, IsClubChampionship = true }
             };
 
             var eventsByNumber = calendarEvents.ToDictionary(e => e.EventNumber);
@@ -614,7 +632,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
             competitionResults.FileName.Should().Be("2025-seniors");
-            competitionResults.GenericName.Should().Be("Seniors");
+            competitionResults.LinkText.Should().Be("Seniors");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring

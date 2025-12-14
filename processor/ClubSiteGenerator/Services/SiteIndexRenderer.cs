@@ -55,42 +55,54 @@ namespace ClubSiteGenerator.Services
             // Events section
             sb.AppendLine(RenderSeasonCalendar(year, orderedEvents));
 
-            // Competitions grouped
-            sb.AppendLine($"<h2>{year} Championship Competitions</h2>");
-            sb.AppendLine("<ul>");
-            foreach (var comp in orderedCompetitions.Where(c =>
+            // Championship competitions
+            var championshipComps = orderedCompetitions.Where(c =>
                 c.CompetitionType == CompetitionType.Seniors ||
                 c.CompetitionType == CompetitionType.Veterans ||
                 c.CompetitionType == CompetitionType.Women ||
                 c.CompetitionType == CompetitionType.Juniors ||
                 c.CompetitionType == CompetitionType.Juveniles ||
                 c.CompetitionType == CompetitionType.RoadBikeMen ||
-                c.CompetitionType == CompetitionType.RoadBikeWomen))
-            {
-                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
-            }
-            sb.AppendLine("</ul>");
+                c.CompetitionType == CompetitionType.RoadBikeWomen).ToList();
 
-            sb.AppendLine($"<h2>{year} Leagues</h2>");
-            sb.AppendLine("<ul>");
-            foreach (var comp in orderedCompetitions.Where(c =>
+            if (championshipComps.Any())
+            {
+                sb.AppendLine($"<h2>{year} Championship Competitions</h2>");
+                sb.AppendLine("<ul>");
+                foreach (var comp in championshipComps)
+                    sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+                sb.AppendLine("</ul>");
+            }
+
+            // Leagues
+            var leagueComps = orderedCompetitions.Where(c =>
                 c.CompetitionType == CompetitionType.PremierLeague ||
                 c.CompetitionType == CompetitionType.League1 ||
                 c.CompetitionType == CompetitionType.League2 ||
                 c.CompetitionType == CompetitionType.League3 ||
-                c.CompetitionType == CompetitionType.League4))
-            {
-                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
-            }
-            sb.AppendLine("</ul>");
+                c.CompetitionType == CompetitionType.League4).ToList();
 
-            sb.AppendLine($"<h2>{year} Nev Brooks</h2>");
-            sb.AppendLine("<ul>");
-            foreach (var comp in orderedCompetitions.Where(c => c.CompetitionType == CompetitionType.NevBrooks))
+            if (leagueComps.Any())
             {
-                sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+                sb.AppendLine($"<h2>{year} Leagues</h2>");
+                sb.AppendLine("<ul>");
+                foreach (var comp in leagueComps)
+                    sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+                sb.AppendLine("</ul>");
             }
-            sb.AppendLine("</ul>");
+
+            // Nev Brooks
+            var nevBrooksComps = orderedCompetitions.Where(c => c.CompetitionType == CompetitionType.NevBrooks).ToList();
+
+            if (nevBrooksComps.Any())
+            {
+                sb.AppendLine($"<h2>{year} Nev Brooks</h2>");
+                sb.AppendLine("<ul>");
+                foreach (var comp in nevBrooksComps)
+                    sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
+                sb.AppendLine("</ul>");
+            }
+
 
             sb.AppendLine("</body></html>");
 
@@ -107,7 +119,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<div class=\"legend\">");
             sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
             sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
-            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Standalone</span>");
+            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Non-championship events</span>");
             sb.AppendLine("</div>");
 
             sb.AppendLine("<div class=\"calendar-grid\">");

@@ -18,9 +18,9 @@ namespace ClubSiteGenerator.Tests
             // Arrange
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Evening 10 TT", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "25 Mile TT", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Hill Climb 5 Mile", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Evening 10 TT", IsEvening10 = true, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 2, EventName = "25 Mile TT", IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 3, EventName = "Hill Climb 5 Mile", IsEvening10 = false, IsClubChampionship = true }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -89,7 +89,7 @@ namespace ClubSiteGenerator.Tests
 
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
+                new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true, IsClubChampionship = true },
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
@@ -128,9 +128,9 @@ namespace ClubSiteGenerator.Tests
 
             var calendar = new[]
             {
-                new CalendarEvent { EventNumber = 1, EventName = "Evening 10 TT", IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, EventName = "25 Mile TT", IsEvening10 = false },
-                new CalendarEvent { EventNumber = 3, EventName = "Hill Climb 5 Mile", IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, EventName = "Evening 10 TT", IsEvening10 = true, IsClubChampionship = true},
+                new CalendarEvent { EventNumber = 2, EventName = "25 Mile TT", IsEvening10 = false, IsClubChampionship = true},
+                new CalendarEvent { EventNumber = 3, EventName = "Hill Climb 5 Mile", IsEvening10 = false, IsClubChampionship = true }
             };
 
             var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket

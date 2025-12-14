@@ -49,28 +49,48 @@ namespace ClubSiteGenerator.Services
 
         private void InitializeResultsSets()
         {
+            // Always add event results
             foreach (var ev in calendar)
                 resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
             var championshipRides = GetChampionshipRides(rides, calendar);
+            var championshipCalendar = GetChampionshipCalendar(calendar);
 
-            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
+            // Bail out if no championship events
+            if (!championshipCalendar.Any())
+                return;
 
-            // League competitions
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, championshipRides, calendar, rules));
+            // Core championship competitions
+            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
 
-            // Nev Brooks
-            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
+            // League competitions only if someone has a league assigned
+            if (championshipRides.Any(r => r.Competitor != null && r.Competitor.League != League.Undefined))
+            {
+                resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, championshipRides, championshipCalendar, rules));
+                resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, championshipRides, championshipCalendar, rules));
+                resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, championshipRides, championshipCalendar, rules));
+                resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, championshipRides, championshipCalendar, rules));
+                resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, championshipRides, championshipCalendar, rules));
+            }
+
+            // Nev Brooks only after the second 10‑mile TT with rides
+            var tenMileEventsWithRides = championshipCalendar
+                .Where(ev => ev.IsEvening10)
+                .Select(ev => ev.EventNumber)
+                .Distinct()
+                .Where(evNum => championshipRides.Any(r => r.EventNumber == evNum))
+                .ToList();
+
+            if (tenMileEventsWithRides.Count >= 2)
+            {
+                resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            }
         }
 
         private static IEnumerable<Ride> GetChampionshipRides(
@@ -87,6 +107,14 @@ namespace ClubSiteGenerator.Services
 
             // Only keep rides whose event is marked as championship
             return rides.Where(r => championshipEventNumbers.Contains(r.EventNumber));
+        }
+
+        private static IEnumerable<CalendarEvent> GetChampionshipCalendar(
+            IEnumerable<CalendarEvent> fullCalendar)
+        {
+            if (fullCalendar == null) throw new ArgumentNullException(nameof(fullCalendar));
+
+            return fullCalendar.Where(ev => ev.IsClubChampionship);
         }
 
         public void GenerateAll()
@@ -117,8 +145,8 @@ namespace ClubSiteGenerator.Services
                 current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
                 current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
 
-                current.PrevLabel = prev.GenericName;
-                current.NextLabel = next.GenericName;
+                current.PrevLabel = prev.LinkText;
+                current.NextLabel = next.LinkText;
             }
 
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())

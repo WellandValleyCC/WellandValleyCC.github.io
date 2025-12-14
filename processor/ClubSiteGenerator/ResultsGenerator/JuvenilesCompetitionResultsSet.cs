@@ -15,29 +15,24 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Club Championship - Juveniles";
         public override string FileName => $"{Year}-juveniles";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Juveniles";
+        public override string LinkText => "Juveniles";
         public override CompetitionType CompetitionType => CompetitionType.Juveniles;
 
         public override string EligibilityStatement => "All first claim juvenile members of the club are eligible for this competition.";
 
         public static JuvenilesCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
-            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<CalendarEvent> championshipCalendar,
             ICompetitionRules rules)
         {
-            if (allRides.Any(r => r.ClubNumber != null && r.Competitor is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with Competitors.",
-                    nameof(allRides));
-            }
+            if (HasMissingCompetitors(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with Competitors.", nameof(allRides));
 
-            if (allRides.Any(r => r.CalendarEvent is null))
-            {
-                throw new ArgumentException(
-                    $"{nameof(allRides)} collection must be hydrated with CalendarEvents.",
-                    nameof(allRides));
-            }
+            if (HasMissingCalendarEvents(allRides))
+                throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
+
+            if (HasNonChampionshipEvents(championshipCalendar))
+                throw new ArgumentException($"{nameof(championshipCalendar)} must contain only championship events.", nameof(championshipCalendar));
 
             // filter juvenile rides
             var juvenileRides = allRides
@@ -55,14 +50,14 @@ namespace ClubSiteGenerator.ResultsGenerator
             var results = groups
                 .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
                     group.ToList(), 
-                    calendar, 
+                    championshipCalendar, 
                     r => r.JuvenilesPoints,
                     rules))
                 .ToList();
 
             results = CompetitionResultsCalculator.SortResults(results).ToList();
 
-            return new JuvenilesCompetitionResultsSet(calendar, results);
+            return new JuvenilesCompetitionResultsSet(championshipCalendar, results);
         }
     }
 }
