@@ -70,7 +70,7 @@ namespace ClubSiteGenerator.Services
             resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
 
             // League competitions only if someone has a league assigned
-            if (championshipRides.Any(r => r.Competitor?.League != League.Undefined))
+            if (championshipRides.Any(r => r.Competitor != null && r.Competitor.League != League.Undefined))
             {
                 resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, championshipRides, championshipCalendar, rules));
                 resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, championshipRides, championshipCalendar, rules));

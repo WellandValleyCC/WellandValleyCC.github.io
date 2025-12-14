@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.ResultsGenerator
 {
@@ -38,13 +39,14 @@ namespace ClubSiteGenerator.ResultsGenerator
             if (string.IsNullOrWhiteSpace(value))
                 return string.Empty;
 
-            // Replace spaces with hyphens, remove invalid chars, and lowercase
-            var kebab = value
-                .Trim()
-                .ToLowerInvariant()
-                .Replace(" ", "-");
+            // Lowercase and trim
+            var lower = value.Trim().ToLowerInvariant();
 
-            return kebab;
+            // Replace any sequence of non‑letters/digits with a single hyphen
+            var kebab = Regex.Replace(lower, @"[^a-z0-9]+", "-");
+
+            // Trim leading/trailing hyphens
+            return kebab.Trim('-');
         }
 
         private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus eligibility)
