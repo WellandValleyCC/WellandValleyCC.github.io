@@ -5,7 +5,7 @@
         string DisplayName { get; }
         string FileName { get; }
         string SubFolderName { get; }
-        string GenericName { get; }
+        string LinkText { get; }
 
 
         string? PrevLink { get; set; }

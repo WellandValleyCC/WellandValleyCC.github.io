@@ -24,7 +24,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => $"{calendarEvent.EventName}";
         public override string FileName => $"{year}-event-{calendarEvent.EventNumber:D2}";
         public override string SubFolderName => "events";
-        public override string GenericName => $"Event {EventNumber}";
+        public override string LinkText => $"Event {EventNumber}";
 
         private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus eligibility)
         {

@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Club Championship -  Nev Brooks Handicap";
         public override string FileName => $"{Year}-nev-brooks";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Nev Brooks";
+        public override string LinkText => "Nev Brooks";
         public override CompetitionType CompetitionType => CompetitionType.NevBrooks;
 
         public override string EligibilityStatement => "All first claim members of the club are eligible for this competition - any age group.";

@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Club Championship - Road Bike Women";
         public override string FileName => $"{Year}-road-bike-women";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Road Bike Women";
+        public override string LinkText => "Road Bike Women";
         public override CompetitionType CompetitionType => CompetitionType.RoadBikeWomen;
 
         public override string EligibilityStatement => "All first claim female members of the club riding road bikes are eligible for this competition.";

@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Club Championship - Seniors";
         public override string FileName => $"{Year}-seniors";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Seniors";
+        public override string LinkText => "Seniors";
         public override CompetitionType CompetitionType => CompetitionType.Seniors;
 
         public override string EligibilityStatement => "All first claim members of the club are eligible for this competition - any age group.";

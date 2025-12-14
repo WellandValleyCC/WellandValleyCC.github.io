@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
         public abstract string SubFolderName { get; }
-        public abstract string GenericName { get; }
+        public abstract string LinkText { get; }
         public string? PrevLink { get; set; }
         public string? NextLink { get; set; }
         public string? PrevLabel { get; set; }

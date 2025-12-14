@@ -126,8 +126,8 @@ namespace ClubSiteGenerator.Services
                 current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
                 current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
 
-                current.PrevLabel = prev.GenericName;
-                current.NextLabel = next.GenericName;
+                current.PrevLabel = prev.LinkText;
+                current.NextLabel = next.LinkText;
             }
 
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())

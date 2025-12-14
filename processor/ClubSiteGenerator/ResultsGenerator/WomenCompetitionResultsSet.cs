@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string DisplayName => "Club Championship - Women";
         public override string FileName => $"{Year}-women";
         public override string SubFolderName => "competitions";
-        public override string GenericName => "Women";
+        public override string LinkText => "Women";
         public override CompetitionType CompetitionType => CompetitionType.Women;
 
         public override string EligibilityStatement => "All first claim female members of the club are eligible for this competition.";

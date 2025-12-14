@@ -28,7 +28,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             $"{(string.IsNullOrWhiteSpace(Sponsor) ? "WVCC" : Sponsor)} League - {League.GetDisplayName()}";
         public override string FileName => $"{Year}-league-{League.ToCsvValue()}";
         public override string SubFolderName => "competitions";
-        public override string GenericName => League.GetDisplayName();
+        public override string LinkText => League.GetDisplayName();
 
         public override CompetitionType CompetitionType => League switch
         {

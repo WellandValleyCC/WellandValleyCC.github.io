@@ -189,7 +189,7 @@ namespace ClubSiteGenerator.Tests
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("senior");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("veteran");
             juvenilesCompetitionResults.FileName.Should().Be("2025-juveniles");
-            juvenilesCompetitionResults.GenericName.Should().Be("Juveniles");
+            juvenilesCompetitionResults.LinkText.Should().Be("Juveniles");
             juvenilesCompetitionResults.SubFolderName.Should().Be("competitions");
 
             juvenilesCompetitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Liam Johnson");
@@ -273,7 +273,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("senior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
             competitionResults.FileName.Should().Be("2025-juniors");
-            competitionResults.GenericName.Should().Be("Juniors");
+            competitionResults.LinkText.Should().Be("Juniors");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring
@@ -358,7 +358,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("senior");
             competitionResults.FileName.Should().Be("2025-veterans");
-            competitionResults.GenericName.Should().Be("Veterans");
+            competitionResults.LinkText.Should().Be("Veterans");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (same totals as Juveniles/Juniors pattern)
@@ -452,7 +452,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.DisplayName.Should().Be("Club Championship - Women");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
             competitionResults.FileName.Should().Be("2025-women");
-            competitionResults.GenericName.Should().Be("Women");
+            competitionResults.LinkText.Should().Be("Women");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (pattern same as other tests, totals predictable)
@@ -541,7 +541,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().Contain("road bike");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
             competitionResults.FileName.Should().Be("2025-road-bike-women");
-            competitionResults.GenericName.Should().Be("Road Bike Women");
+            competitionResults.LinkText.Should().Be("Road Bike Women");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (same totals pattern as other categories)
@@ -614,7 +614,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
             competitionResults.FileName.Should().Be("2025-seniors");
-            competitionResults.GenericName.Should().Be("Seniors");
+            competitionResults.LinkText.Should().Be("Seniors");
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring

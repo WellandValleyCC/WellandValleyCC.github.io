@@ -18,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         public override string FileName => $"{Year}-juniors";
         public override string SubFolderName => "competitions";
 
-        public override string GenericName => "Juniors";
+        public override string LinkText => "Juniors";
         public override CompetitionType CompetitionType => CompetitionType.Juniors;
 
         public override string EligibilityStatement => "All first claim junior members of the club are eligible for this competition.";
