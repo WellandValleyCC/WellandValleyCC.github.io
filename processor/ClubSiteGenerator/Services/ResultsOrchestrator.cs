@@ -53,24 +53,25 @@ namespace ClubSiteGenerator.Services
                 resultsSets.Add(EventResultsSet.CreateFrom(calendar, rides, ev.EventNumber));
 
             var championshipRides = GetChampionshipRides(rides, calendar);
+            var championshipCalendar = GetChampionshipCalendar(calendar);
 
-            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
-            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
+            resultsSets.Add(SeniorsCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(VeteransCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(WomenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(JuniorsCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(JuvenilesCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(RoadBikeMenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
+            resultsSets.Add(RoadBikeWomenCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
 
             // League competitions
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, championshipRides, calendar, rules));
-            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, championshipRides, calendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.Premier, championshipRides, championshipCalendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League1, championshipRides, championshipCalendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League2, championshipRides, championshipCalendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League3, championshipRides, championshipCalendar, rules));
+            resultsSets.Add(LeagueCompetitionResultsSet.CreateFrom(League.League4, championshipRides, championshipCalendar, rules));
 
             // Nev Brooks
-            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(championshipRides, calendar, rules));
+            resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
         }
 
         private static IEnumerable<Ride> GetChampionshipRides(
@@ -87,6 +88,14 @@ namespace ClubSiteGenerator.Services
 
             // Only keep rides whose event is marked as championship
             return rides.Where(r => championshipEventNumbers.Contains(r.EventNumber));
+        }
+
+        private static IEnumerable<CalendarEvent> GetChampionshipCalendar(
+            IEnumerable<CalendarEvent> fullCalendar)
+        {
+            if (fullCalendar == null) throw new ArgumentNullException(nameof(fullCalendar));
+
+            return fullCalendar.Where(ev => ev.IsClubChampionship);
         }
 
         public void GenerateAll()
