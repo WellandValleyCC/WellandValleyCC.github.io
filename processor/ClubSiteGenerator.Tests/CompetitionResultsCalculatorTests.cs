@@ -10,10 +10,10 @@ namespace ClubSiteGenerator.Tests
     {
         private readonly List<CalendarEvent> _calendar = new()
         {
-            new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true },
-            new CalendarEvent { EventNumber = 2, EventName = "Evening 10", IsEvening10 = true },
-            new CalendarEvent { EventNumber = 3, EventName = "25 Mile", IsEvening10 = false },
-            new CalendarEvent { EventNumber = 4, EventName = "50 Mile", IsEvening10 = false }
+            new CalendarEvent { EventNumber = 1, EventName = "Evening 10", IsEvening10 = true, IsClubChampionship = true },
+            new CalendarEvent { EventNumber = 2, EventName = "Evening 10", IsEvening10 = true, IsClubChampionship = true },
+            new CalendarEvent { EventNumber = 3, EventName = "25 Mile", IsEvening10 = false, IsClubChampionship = true },
+            new CalendarEvent { EventNumber = 4, EventName = "50 Mile", IsEvening10 = false, IsClubChampionship = true }
         };
 
         [Fact]
@@ -107,10 +107,10 @@ namespace ClubSiteGenerator.Tests
 
             var calendar = new List<CalendarEvent>
             {
-                new CalendarEvent { EventNumber = 1, IsEvening10 = true },
-                new CalendarEvent { EventNumber = 2, IsEvening10 = true },
-                new CalendarEvent { EventNumber = 3, IsEvening10 = false },
-                new CalendarEvent { EventNumber = 4, IsEvening10 = false }
+                new CalendarEvent { EventNumber = 1, IsEvening10 = true , IsClubChampionship = true},
+                new CalendarEvent { EventNumber = 2, IsEvening10 = true , IsClubChampionship = true},
+                new CalendarEvent { EventNumber = 3, IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 4, IsEvening10 = false, IsClubChampionship = true }
             };
 
             var rides = new List<Ride>
@@ -153,10 +153,10 @@ namespace ClubSiteGenerator.Tests
 
             var calendar = new List<CalendarEvent>
             {
-                new CalendarEvent { EventNumber = 10, IsEvening10 = false },
-                new CalendarEvent { EventNumber = 11, IsEvening10 = false },
-                new CalendarEvent { EventNumber = 12, IsEvening10 = false },
-                new CalendarEvent { EventNumber = 13, IsEvening10 = false }
+                new CalendarEvent { EventNumber = 10, IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 11, IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 12, IsEvening10 = false, IsClubChampionship = true },
+                new CalendarEvent { EventNumber = 13, IsEvening10 = false, IsClubChampionship = true }
             };
 
             var rides = new List<Ride>
