@@ -136,17 +136,29 @@ namespace ClubSiteGenerator.Services
 
             var allResults = orderedEvents.Concat(orderedCompetitions).ToList();
 
-            for (int i = 0; i < allResults.Count; i++)
+            // Only set up prev/next if there’s more than one
+            if (allResults.Count > 1)
             {
-                var current = allResults[i];
-                var prev = allResults[(i - 1 + allResults.Count) % allResults.Count];
-                var next = allResults[(i + 1) % allResults.Count];
+                for (int i = 0; i < allResults.Count; i++)
+                {
+                    var current = allResults[i];
+                    var prev = allResults[(i - 1 + allResults.Count) % allResults.Count];
+                    var next = allResults[(i + 1) % allResults.Count];
 
-                current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
-                current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
-
-                current.PrevLabel = prev.LinkText;
-                current.NextLabel = next.LinkText;
+                    current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
+                    current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
+                    current.PrevLabel = prev.LinkText;
+                    current.NextLabel = next.LinkText;
+                }
+            }
+            else
+            {
+                // With only one result, leave links unset (null/empty)
+                var single = allResults[0];
+                single.PrevLink = null;
+                single.NextLink = null;
+                single.PrevLabel = null;
+                single.NextLabel = null;
             }
 
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())

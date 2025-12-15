@@ -47,6 +47,8 @@ namespace ClubProcessor.Services
             Console.WriteLine($"[INFO] Processing year: {year}");
             Console.WriteLine($"[INFO] Processing events in: {eventsDir}");
 
+            ClearRidesForObsoleteEvents();
+
             var csvFiles = Directory.GetFiles(eventsDir, "Event_*.csv");
             foreach (var csvPath in csvFiles.OrderBy(f => f))
             {
@@ -58,7 +60,23 @@ namespace ClubProcessor.Services
             eventContext.SaveChanges();
 
             return true;
-         }
+        }
+
+        private void ClearRidesForObsoleteEvents()
+        {
+            var validEventNumbers = calendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
+            var staleRides = eventContext.Rides
+                .Where(r => !validEventNumbers.Contains(r.EventNumber))
+                .ToList();
+
+            eventContext.Rides.RemoveRange(staleRides);
+            eventContext.SaveChanges();
+
+            Console.WriteLine($"[INFO] Removed {staleRides.Count} obsolete rides.");
+        }
 
         private int ExtractEventNumber(string path)
         {
