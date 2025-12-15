@@ -67,11 +67,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"    <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
             sb.AppendLine("  </div>");
 
-            sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
-            sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");
-            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
-            sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
-            sb.AppendLine("  </nav>");
+            sb.AppendLine(RenderNav(resultsSet));
 
             sb.AppendLine("  <div class=\"legend\">");
             sb.AppendLine("    <span class=\"competition-eligible\">Full member</span>");
@@ -81,6 +77,27 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("</div>");
 
+            return sb.ToString();
+        }
+
+        private static string RenderNav(EventResultsSet resultsSet)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
+
+            if (!string.IsNullOrWhiteSpace(resultsSet.PrevLink))
+            {
+                sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");
+            }
+
+            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
+
+            if (!string.IsNullOrWhiteSpace(resultsSet.NextLink))
+            {
+                sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
+            }
+
+            sb.AppendLine("  </nav>");
             return sb.ToString();
         }
 
