@@ -11,6 +11,7 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<EventResultsSet> events;
         private readonly IEnumerable<CompetitionResultsSet> competitions;
         private readonly string outputDir;
+        private readonly int competitionYear;
 
         public SiteIndexRenderer(IEnumerable<EventResultsSet> events,
                                  IEnumerable<CompetitionResultsSet> competitions,
@@ -19,9 +20,11 @@ namespace ClubSiteGenerator.Services
             this.events = events;
             this.competitions = competitions;
             this.outputDir = outputDir;
+            this.competitionYear = events.FirstOrDefault()?.EventDate.Year
+                                   ?? DateTime.Now.Year;
         }
 
-        public void RenderIndex(int year)
+        public void RenderIndex(string indexFileName)
         {
             Directory.CreateDirectory(outputDir);
 
@@ -43,20 +46,21 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
-            sb.AppendLine($"<h1>{year} Season Overview</h1>");
 
             // Legacy link
             sb.AppendLine("<h2>Past Seasons</h2>");
             sb.AppendLine("<ul>");
             sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
-            foreach (var pastYear in SeasonsConfig.GetSeasons().Where(y => y < year).OrderBy(y => y)) 
-            { 
-                sb.AppendLine($" <li><a href=\"index{pastYear}.html\">{pastYear} Season</a></li>"); 
+            foreach (var pastYear in SeasonsConfig.GetSeasons().Where(y => y < competitionYear).OrderBy(y => y))
+            {
+                sb.AppendLine($" <li><a href=\"{indexFileName}\">{pastYear} Season</a></li>");
             }
             sb.AppendLine("</ul>");
+            
+            sb.AppendLine($"<h1>{competitionYear} Season Overview</h1>");
 
             // Events section
-            sb.AppendLine(RenderSeasonCalendar(year, orderedEvents));
+            sb.AppendLine(RenderSeasonCalendar(competitionYear, orderedEvents));
 
             // Championship competitions
             var championshipComps = orderedCompetitions.Where(c =>
@@ -70,7 +74,7 @@ namespace ClubSiteGenerator.Services
 
             if (championshipComps.Any())
             {
-                sb.AppendLine($"<h2>{year} Championship Competitions</h2>");
+                sb.AppendLine($"<h2>{competitionYear} Championship Competitions</h2>");
                 sb.AppendLine("<ul>");
                 foreach (var comp in championshipComps)
                     sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
@@ -87,7 +91,7 @@ namespace ClubSiteGenerator.Services
 
             if (leagueComps.Any())
             {
-                sb.AppendLine($"<h2>{year} Leagues</h2>");
+                sb.AppendLine($"<h2>{competitionYear} Leagues</h2>");
                 sb.AppendLine("<ul>");
                 foreach (var comp in leagueComps)
                     sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
@@ -99,7 +103,7 @@ namespace ClubSiteGenerator.Services
 
             if (nevBrooksComps.Any())
             {
-                sb.AppendLine($"<h2>{year} Nev Brooks</h2>");
+                sb.AppendLine($"<h2>{competitionYear} Nev Brooks</h2>");
                 sb.AppendLine("<ul>");
                 foreach (var comp in nevBrooksComps)
                     sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
@@ -109,7 +113,7 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine("</body></html>");
 
-            var path = Path.Combine(outputDir, $"index{year}.html");
+            var path = Path.Combine(outputDir, $"{indexFileName}");
             File.WriteAllText(path, sb.ToString());
         }
 
@@ -227,18 +231,18 @@ namespace ClubSiteGenerator.Services
             CompetitionType.NevBrooks
         };
 
-        public void RenderRedirectIndex(int latestYear)
+        public void RenderRedirectIndex(string indexFileName)
         {
             var sb = new StringBuilder();
             sb.AppendLine("<!DOCTYPE html>");
             sb.AppendLine("<html lang=\"en\">");
             sb.AppendLine("<head>");
             sb.AppendLine("  <meta charset=\"utf-8\">");
-            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url=index{latestYear}.html\">");
+            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
             sb.AppendLine("  <title>Redirecting…</title>");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
-            sb.AppendLine($"<p>Redirecting to <a href=\"index{latestYear}.html\">{latestYear} Season</a></p>");
+            sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");
             sb.AppendLine("</body>");
             sb.AppendLine("</html>");
 

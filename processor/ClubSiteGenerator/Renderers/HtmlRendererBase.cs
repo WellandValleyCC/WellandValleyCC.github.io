@@ -6,6 +6,13 @@ namespace ClubSiteGenerator.Renderers
     {
         protected abstract string PageTypeClass { get; }
 
+        protected string IndexFileName { get; }
+
+        protected HtmlRendererBase(string indexFileName)
+        {
+            IndexFileName = indexFileName;
+        }
+
         public string Render()
         {
             var sb = new StringBuilder();

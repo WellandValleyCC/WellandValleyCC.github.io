@@ -119,7 +119,7 @@ namespace ClubSiteGenerator.Services
             return fullCalendar.Where(ev => ev.IsClubChampionship);
         }
 
-        public void GenerateAll()
+        public void GenerateAll(string indexFileName)
         {
             StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
 
@@ -165,7 +165,7 @@ namespace ClubSiteGenerator.Services
 
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())
             {
-                var renderer = new EventRenderer(resultsSet);
+                var renderer = new EventRenderer(indexFileName, resultsSet);
                 Console.WriteLine($"Generating results for event: {resultsSet.FileName}");
                 var html = renderer.Render();
                 var outputDir = OutputLocator.GetOutputDirectory();
@@ -176,7 +176,7 @@ namespace ClubSiteGenerator.Services
 
             foreach (var resultsSet in resultsSets.OfType<CompetitionResultsSet>())
             {
-                var renderer = CompetitionRendererFactory.Create(resultsSet, calendar, rules);
+                var renderer = CompetitionRendererFactory.Create(indexFileName, resultsSet, calendar, rules);
 
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();
@@ -187,7 +187,7 @@ namespace ClubSiteGenerator.Services
             }
         }
 
-        public void GenerateIndex()
+        public void GenerateIndex(string indexFileName)
         {
             var eventResults = resultsSets
                 .OfType<EventResultsSet>()   // filters only EventResults
@@ -203,9 +203,9 @@ namespace ClubSiteGenerator.Services
 
             var outputDir = OutputLocator.GetOutputDirectory();
             var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
-            indexRenderer.RenderIndex(competitionYear);
+            indexRenderer.RenderIndex(indexFileName);
 
-            indexRenderer.RenderRedirectIndex(competitionYear);
+            indexRenderer.RenderRedirectIndex(indexFileName);
         }
     }
 }

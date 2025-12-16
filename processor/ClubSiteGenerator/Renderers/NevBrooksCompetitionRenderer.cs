@@ -18,8 +18,8 @@ namespace ClubSiteGenerator.Renderers
         protected override string PageTypeClass => "competition-page";
 
         public NevBrooksCompetitionRenderer(
-            CompetitionResultsSet resultsSet, ICompetitionRules rules)
-            :base(resultsSet, rules)
+            string indexFileName, CompetitionResultsSet resultsSet, ICompetitionRules rules)
+            :base(indexFileName, resultsSet, rules)
         {
             this.resultsSet = resultsSet;
             this.calendar = resultsSet.ClubChampionshipCalendar.OrderBy(ev => ev.EventNumber).ToList();
