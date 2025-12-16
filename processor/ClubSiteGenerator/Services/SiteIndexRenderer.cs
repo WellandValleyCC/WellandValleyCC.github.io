@@ -121,12 +121,20 @@ namespace ClubSiteGenerator.Services
         {
             var sb = new StringBuilder();
 
-            // Legend
             sb.AppendLine($"<h2>{year} Calendar</h2>");
+
+            // Legends
+            bool hasTenMile = orderedEvents.Any(e => e.CalendarEvent.IsClubChampionship && e.CalendarEvent.IsEvening10);
+            bool hasOtherDistances = orderedEvents.Any(e => e.CalendarEvent.IsClubChampionship && !e.CalendarEvent.IsEvening10);
+            bool hasStandalone = orderedEvents.Any(e => !e.CalendarEvent.IsClubChampionship);
+
             sb.AppendLine("<div class=\"legend\">");
-            sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
-            sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
-            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Non-championship</span>");
+            if (hasTenMile)
+                sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
+            if (hasOtherDistances)
+                sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
+            if (hasStandalone)
+                sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Non‑championship</span>");
             sb.AppendLine("</div>");
 
             sb.AppendLine("<div class=\"calendar-grid\">");
@@ -145,6 +153,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</div>");
             return sb.ToString();
         }
+
 
         private string RenderMonthCalendar(int year, int month, IEnumerable<EventResultsSet> events)
         {
@@ -247,6 +256,10 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</html>");
 
             var path = Path.Combine(outputDir, "index.html");
+            File.WriteAllText(path, sb.ToString());
+
+            // Also write .htm version for legacy compatibility
+            path = Path.Combine(outputDir, "index.htm");
             File.WriteAllText(path, sb.ToString());
         }
     }
