@@ -20,8 +20,6 @@ namespace ClubSiteGenerator.ResultsGenerator
         public int EventNumber => calendarEvent.EventNumber;
         public DateOnly EventDate => DateOnly.FromDateTime(calendarEvent.EventDate);
 
-        public int Year => calendarEvent.EventDate.Year;
-
         public override string SubFolderName => "events";
 
         public override string FileName => calendarEvent.IsClubChampionship 

@@ -13,7 +13,7 @@ namespace ClubSiteGenerator.ResultsGenerator
             Year = calendar.First().EventDate.Year;
         }
 
-        protected int Year { get; }
+        public int Year { get; }
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
         public abstract string SubFolderName { get; }
