@@ -15,11 +15,13 @@ namespace ClubSiteGenerator.Services
         private readonly List<ResultsSet> resultsSets = new();
 
         private readonly IEnumerable<Ride> rides;
-        private readonly IEnumerable<Competitor> competitors;   
+        private readonly IEnumerable<Competitor> competitors;
         private readonly IEnumerable<CalendarEvent> calendar;
 
         private readonly ICompetitionRulesProvider rulesProvider;
         private readonly ICompetitionRules rules;
+
+        private readonly int competitionYear;
 
         /// <param name="rides">These rides have been hydrated - i.e. Competitors (where applicable) attached and CalendarEvent attached.</param>
         /// <param name="competitors"></param>
@@ -34,7 +36,7 @@ namespace ClubSiteGenerator.Services
             this.calendar = calendar;
 
             // Determine competition year from first event
-            var competitionYear = calendar.First().EventDate.Year;
+            competitionYear = calendar.First().EventDate.Year;
 
             // Construct provider once
             var configDir = FolderLocator.GetConfigDirectory();
@@ -201,7 +203,9 @@ namespace ClubSiteGenerator.Services
 
             var outputDir = OutputLocator.GetOutputDirectory();
             var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
-            indexRenderer.RenderIndex();
+            indexRenderer.RenderIndex(competitionYear);
+
+            indexRenderer.RenderRedirectIndex(competitionYear);
         }
     }
 }

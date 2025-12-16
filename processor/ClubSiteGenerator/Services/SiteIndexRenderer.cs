@@ -1,4 +1,5 @@
-﻿using ClubSiteGenerator.Interfaces;
+﻿using ClubProcessor.Configuration;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
 using System.Text;
@@ -20,7 +21,7 @@ namespace ClubSiteGenerator.Services
             this.outputDir = outputDir;
         }
 
-        public void RenderIndex()
+        public void RenderIndex(int year)
         {
             Directory.CreateDirectory(outputDir);
 
@@ -42,15 +43,17 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
-            sb.AppendLine("<h1>Season Overview</h1>");
+            sb.AppendLine($"<h1>{year} Season Overview</h1>");
 
             // Legacy link
             sb.AppendLine("<h2>Past Seasons</h2>");
             sb.AppendLine("<ul>");
             sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
+            foreach (var pastYear in SeasonsConfig.GetSeasons().Where(y => y < year).OrderBy(y => y)) 
+            { 
+                sb.AppendLine($" <li><a href=\"index{pastYear}.html\">{pastYear} Season</a></li>"); 
+            }
             sb.AppendLine("</ul>");
-
-            var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
 
             // Events section
             sb.AppendLine(RenderSeasonCalendar(year, orderedEvents));
@@ -106,7 +109,7 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine("</body></html>");
 
-            var path = Path.Combine(outputDir, "preview.html");
+            var path = Path.Combine(outputDir, $"index{year}.html");
             File.WriteAllText(path, sb.ToString());
         }
 
@@ -218,11 +221,29 @@ namespace ClubSiteGenerator.Services
 
         public static readonly CompetitionType[] CompetitionOrder =
         {
-            CompetitionType.Seniors, CompetitionType.Veterans, CompetitionType.Women, CompetitionType.Juniors, CompetitionType.Juveniles, 
+            CompetitionType.Seniors, CompetitionType.Veterans, CompetitionType.Women, CompetitionType.Juniors, CompetitionType.Juveniles,
             CompetitionType.RoadBikeMen, CompetitionType.RoadBikeWomen,
             CompetitionType.PremierLeague, CompetitionType.League1, CompetitionType.League2, CompetitionType.League3, CompetitionType.League4,
             CompetitionType.NevBrooks
         };
-    }
 
+        public void RenderRedirectIndex(int latestYear)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url=index{latestYear}.html\">");
+            sb.AppendLine("  <title>Redirecting…</title>");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+            sb.AppendLine($"<p>Redirecting to <a href=\"index{latestYear}.html\">{latestYear} Season</a></p>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+
+            var path = Path.Combine(outputDir, "index.html");
+            File.WriteAllText(path, sb.ToString());
+        }
+    }
 }
