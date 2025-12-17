@@ -54,7 +54,7 @@ namespace ClubSiteGenerator.Services
             // Legacy link
             sb.AppendLine("<h2>Past Seasons</h2>");
             sb.AppendLine("<ul>");
-            sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
+            sb.AppendLine("  <li><a href=\"/legacy/index.htm\">Legacy Results Archive</a></li>");
             foreach (var pastYear in SeasonsConfig.GetSeasons().Where(y => y < competitionYear).OrderBy(y => y))
             {
                 sb.AppendLine($" <li><a href=\"index{pastYear}.html\">{pastYear} Season</a></li>");
