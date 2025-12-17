@@ -47,6 +47,10 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
+            // Club website link
+            sb.AppendLine("<h2>Club Website</h2>"); 
+            sb.AppendLine("<p><a href=\"http://www.wellandvalleycc.co.uk/\">Welland Valley Cycling Club</a></p>");
+
             // Legacy link
             sb.AppendLine("<h2>Past Seasons</h2>");
             sb.AppendLine("<ul>");
