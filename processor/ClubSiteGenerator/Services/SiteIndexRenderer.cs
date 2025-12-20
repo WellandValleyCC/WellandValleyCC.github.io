@@ -202,8 +202,13 @@ namespace ClubSiteGenerator.Services
                         cssClass = ev.CalendarEvent.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
                     }
 
+                    if (ev.CalendarEvent.IsCancelled)
+                    {
+                        cssClass += " cancelled-event";
+                    }
+
                     sb.AppendLine(
-                        $"      <td class=\"{cssClass}\"><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
+                        $"      <td class=\"{cssClass.Trim()}\"><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
                         $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\" class=\"cell-content\">{day}</a></td>");
                 }
                 else
