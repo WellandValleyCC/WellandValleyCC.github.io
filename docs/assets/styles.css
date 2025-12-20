@@ -366,6 +366,29 @@ table.results thead .event-title.cancelled-event::after {
   z-index: 2;
 }
 
+/* Base cancelled style for calendar cell */
+.calendar td.cancelled-event {
+  position: relative;
+}
+
+/* Diagonal banner */
+.calendar td.cancelled-event::after {
+  content: "Cancelled";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background: rgba(200, 0, 0, 0.55);
+  color: white;
+  font-weight: bold;
+  font-size: 0.55rem;
+  padding: 0.1rem 1.2rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 2px;
+}
+
 /* Championship layout (desktop) */
 .rules-and-legend {
   display: flex;
