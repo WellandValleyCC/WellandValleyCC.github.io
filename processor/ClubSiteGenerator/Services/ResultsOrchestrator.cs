@@ -205,7 +205,10 @@ namespace ClubSiteGenerator.Services
             var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
             indexRenderer.RenderIndex(indexFileName);
 
-            indexRenderer.RenderRedirectIndex(indexFileName);
+            if (!indexFileName.Equals("preview.html", StringComparison.OrdinalIgnoreCase))
+            {
+                indexRenderer.RenderRedirectIndex(indexFileName);
+            }
         }
     }
 }

@@ -36,6 +36,7 @@ namespace ClubSiteGenerator
             // Orchestrate results generation
             var orchestrator = new ResultsOrchestrator(allRides, allCompetitors, eventCalendar);
             var indexFileName = $"index{year}.html";
+            indexFileName = "preview.html"; // TEMP OVERRIDE FOR PREVIEWING
             orchestrator.GenerateAll(indexFileName);
             orchestrator.GenerateIndex(indexFileName);
         }
