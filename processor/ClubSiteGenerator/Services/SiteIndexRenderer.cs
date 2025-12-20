@@ -1,4 +1,5 @@
-﻿using ClubSiteGenerator.Interfaces;
+﻿using ClubProcessor.Configuration;
+using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
 using System.Text;
@@ -10,6 +11,7 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<EventResultsSet> events;
         private readonly IEnumerable<CompetitionResultsSet> competitions;
         private readonly string outputDir;
+        private readonly int competitionYear;
 
         public SiteIndexRenderer(IEnumerable<EventResultsSet> events,
                                  IEnumerable<CompetitionResultsSet> competitions,
@@ -18,9 +20,11 @@ namespace ClubSiteGenerator.Services
             this.events = events;
             this.competitions = competitions;
             this.outputDir = outputDir;
+            this.competitionYear = events.FirstOrDefault()?.EventDate.Year
+                                   ?? DateTime.Now.Year;
         }
 
-        public void RenderIndex()
+        public void RenderIndex(string indexFileName)
         {
             Directory.CreateDirectory(outputDir);
 
@@ -42,18 +46,25 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
-            sb.AppendLine("<h1>Season Overview</h1>");
+
+            // Club website link
+            sb.AppendLine("<h2>Club Website</h2>"); 
+            sb.AppendLine("<p><a href=\"http://www.wellandvalleycc.co.uk/\">Welland Valley Cycling Club</a></p>");
 
             // Legacy link
             sb.AppendLine("<h2>Past Seasons</h2>");
             sb.AppendLine("<ul>");
-            sb.AppendLine("  <li><a href=\"https://wellandvalleycc.github.io/legacy/index.htm\">Legacy Results Archive</a></li>");
+            sb.AppendLine("  <li><a href=\"/legacy/index.htm\">Legacy Results Archive</a></li>");
+            foreach (var pastYear in SeasonsConfig.GetSeasons().Where(y => y < competitionYear).OrderBy(y => y))
+            {
+                sb.AppendLine($" <li><a href=\"index{pastYear}.html\">{pastYear} Season</a></li>");
+            }
             sb.AppendLine("</ul>");
-
-            var year = orderedEvents.First().EventDate.Year; // assuming all events same season/year
+            
+            sb.AppendLine($"<h1>{competitionYear} Season Overview</h1>");
 
             // Events section
-            sb.AppendLine(RenderSeasonCalendar(year, orderedEvents));
+            sb.AppendLine(RenderSeasonCalendar(competitionYear, orderedEvents));
 
             // Championship competitions
             var championshipComps = orderedCompetitions.Where(c =>
@@ -67,7 +78,7 @@ namespace ClubSiteGenerator.Services
 
             if (championshipComps.Any())
             {
-                sb.AppendLine($"<h2>{year} Championship Competitions</h2>");
+                sb.AppendLine($"<h2>{competitionYear} Championship Competitions</h2>");
                 sb.AppendLine("<ul>");
                 foreach (var comp in championshipComps)
                     sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
@@ -84,7 +95,7 @@ namespace ClubSiteGenerator.Services
 
             if (leagueComps.Any())
             {
-                sb.AppendLine($"<h2>{year} Leagues</h2>");
+                sb.AppendLine($"<h2>{competitionYear} Leagues</h2>");
                 sb.AppendLine("<ul>");
                 foreach (var comp in leagueComps)
                     sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
@@ -96,7 +107,7 @@ namespace ClubSiteGenerator.Services
 
             if (nevBrooksComps.Any())
             {
-                sb.AppendLine($"<h2>{year} Nev Brooks</h2>");
+                sb.AppendLine($"<h2>{competitionYear} Nev Brooks</h2>");
                 sb.AppendLine("<ul>");
                 foreach (var comp in nevBrooksComps)
                     sb.AppendLine($"  <li><a href=\"{comp.SubFolderName}/{comp.FileName}.html\">{comp.DisplayName}</a></li>");
@@ -106,7 +117,7 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine("</body></html>");
 
-            var path = Path.Combine(outputDir, "preview.html");
+            var path = Path.Combine(outputDir, $"{indexFileName}");
             File.WriteAllText(path, sb.ToString());
         }
 
@@ -114,12 +125,20 @@ namespace ClubSiteGenerator.Services
         {
             var sb = new StringBuilder();
 
-            // Legend
             sb.AppendLine($"<h2>{year} Calendar</h2>");
+
+            // Legends
+            bool hasTenMile = orderedEvents.Any(e => e.CalendarEvent.IsClubChampionship && e.CalendarEvent.IsEvening10);
+            bool hasOtherDistances = orderedEvents.Any(e => e.CalendarEvent.IsClubChampionship && !e.CalendarEvent.IsEvening10);
+            bool hasStandalone = orderedEvents.Any(e => !e.CalendarEvent.IsClubChampionship);
+
             sb.AppendLine("<div class=\"legend\">");
-            sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
-            sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
-            sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Non-championship</span>");
+            if (hasTenMile)
+                sb.AppendLine("  <span class=\"ten-mile-event\">10‑mile events</span>");
+            if (hasOtherDistances)
+                sb.AppendLine("  <span class=\"non-ten-mile-event\">Other distances</span>");
+            if (hasStandalone)
+                sb.AppendLine("  <span class=\"stand-alone-event\" title=\"Not part of the Club Championship\">Non‑championship</span>");
             sb.AppendLine("</div>");
 
             sb.AppendLine("<div class=\"calendar-grid\">");
@@ -138,6 +157,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("</div>");
             return sb.ToString();
         }
+
 
         private string RenderMonthCalendar(int year, int month, IEnumerable<EventResultsSet> events)
         {
@@ -218,11 +238,33 @@ namespace ClubSiteGenerator.Services
 
         public static readonly CompetitionType[] CompetitionOrder =
         {
-            CompetitionType.Seniors, CompetitionType.Veterans, CompetitionType.Women, CompetitionType.Juniors, CompetitionType.Juveniles, 
+            CompetitionType.Seniors, CompetitionType.Veterans, CompetitionType.Women, CompetitionType.Juniors, CompetitionType.Juveniles,
             CompetitionType.RoadBikeMen, CompetitionType.RoadBikeWomen,
             CompetitionType.PremierLeague, CompetitionType.League1, CompetitionType.League2, CompetitionType.League3, CompetitionType.League4,
             CompetitionType.NevBrooks
         };
-    }
 
+        public void RenderRedirectIndex(string indexFileName)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
+            sb.AppendLine("  <title>Redirecting…</title>");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+            sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+
+            var path = Path.Combine(outputDir, "index.html");
+            File.WriteAllText(path, sb.ToString());
+
+            // Also write .htm version for legacy compatibility
+            path = Path.Combine(outputDir, "index.htm");
+            File.WriteAllText(path, sb.ToString());
+        }
+    }
 }

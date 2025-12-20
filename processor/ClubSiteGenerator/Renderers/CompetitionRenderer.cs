@@ -20,7 +20,8 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string PageTypeClass => "competition-page";
 
-        public CompetitionRenderer(CompetitionResultsSet resultsSet, ICompetitionRules rules)
+        public CompetitionRenderer(string indexFileName, CompetitionResultsSet resultsSet, ICompetitionRules rules)
+            : base(indexFileName)
         {
             this.resultsSet = resultsSet;
             this.rules = rules;

@@ -7,8 +7,8 @@ namespace ClubSiteGenerator.Renderers
 {
     internal class SeniorsCompetitionRenderer : CompetitionRenderer
     {
-        public SeniorsCompetitionRenderer(CompetitionResultsSet resultsSet, ICompetitionRules rules) 
-            : base(resultsSet, rules)
+        public SeniorsCompetitionRenderer(string indexFileName, CompetitionResultsSet resultsSet, ICompetitionRules rules) 
+            : base(indexFileName, resultsSet, rules)
         {
         }
 

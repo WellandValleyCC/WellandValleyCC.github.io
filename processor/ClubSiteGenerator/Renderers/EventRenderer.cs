@@ -20,7 +20,8 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string PageTypeClass => "event-page";
 
-        public EventRenderer(EventResultsSet resultsSet)
+        public EventRenderer(string indexFileName, EventResultsSet resultsSet)
+            : base(indexFileName)
         {
             this.resultsSet = resultsSet;
 
@@ -80,7 +81,7 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private static string RenderNav(EventResultsSet resultsSet)
+        private string RenderNav(EventResultsSet resultsSet)
         {
             var sb = new StringBuilder();
             sb.AppendLine("  <nav class=\"event-nav\" aria-label=\"Event navigation\">");
@@ -90,7 +91,7 @@ namespace ClubSiteGenerator.Renderers
                 sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");
             }
 
-            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
+            sb.AppendLine($"    <a class=\"index\" href=\"../{IndexFileName}\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
 
             if (!string.IsNullOrWhiteSpace(resultsSet.NextLink))
             {

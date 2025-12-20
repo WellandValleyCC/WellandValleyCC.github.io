@@ -52,7 +52,7 @@ namespace ClubSiteGenerator.Tests
             var resultsSet = EventResultsSet.CreateFrom(new[] { ev }, new[] { ride }, 11);
             resultsSet.PrevLink = "2025-event-10.html";
             resultsSet.NextLink = "2025-event-12.html";
-            var renderer = new EventRenderer(resultsSet);
+            var renderer = new EventRenderer("index2025.html", resultsSet);
 
             // Act
             var html = renderer.Render();
@@ -64,7 +64,7 @@ namespace ClubSiteGenerator.Tests
             html.Should().Contain("Sunday, 15 June 2025");
             html.Should().Contain("Distance: 25 miles");
             html.Should().Contain("href=\"2025-event-10.html\"");
-            html.Should().Contain("href=\"../preview.html\"");
+            html.Should().Contain("href=\"../index2025.html\"");
             html.Should().Contain("href=\"2025-event-12.html\"");
             html.Should().Contain("competition-eligible");
             html.Should().Contain("guest-second-claim");
