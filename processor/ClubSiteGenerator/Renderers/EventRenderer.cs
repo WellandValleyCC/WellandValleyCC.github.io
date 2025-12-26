@@ -38,7 +38,9 @@ namespace ClubSiteGenerator.Renderers
             "Name", "Position", "Road Bike", "Actual Time", "Avg. mph"
         };
 
-        protected override string TitleElement() => $"<title>Event {eventNumber}: {WebUtility.HtmlEncode(eventTitle)}</title>";
+        protected override string TitleElement() => isStandAloneEvent
+            ? $"<title>{eventDate:dd/MM/yyyy}: {WebUtility.HtmlEncode(eventTitle)}</title>"
+            : $"<title>Event {eventNumber}: {WebUtility.HtmlEncode(eventTitle)}</title>";
 
         protected override string HeaderHtml()
         {
