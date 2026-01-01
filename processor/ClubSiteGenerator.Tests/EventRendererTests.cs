@@ -58,7 +58,10 @@ namespace ClubSiteGenerator.Tests
             var html = renderer.Render();
 
             // Assert
-            html.Should().Contain("<title>Event 11: Walcote Interclub 25mile Hardride TT</title>");
+            html.Should().Contain(
+                isClubChampionship 
+                ? "<title>Event 11: Walcote Interclub 25mile Hardride TT</title>"
+                : "<title>15/06/2025: Walcote Interclub 25mile Hardride TT</title>");
             html.Contains("<span class=\"event-number\">Event 11:</span>")
                 .Should().Be(isClubChampionship);
             html.Should().Contain("Sunday, 15 June 2025");
