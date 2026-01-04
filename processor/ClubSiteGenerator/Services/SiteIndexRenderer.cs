@@ -48,7 +48,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<body>");
 
             // Club website link
-            sb.AppendLine("<h1>Welland Valley Cycling Club Time Trials</h1>");
+            sb.AppendLine("<h1>WVCC Time Trials</h1>");
             sb.AppendLine("<ul>");
             sb.AppendLine("<li><a href=\"http://www.wellandvalleycc.co.uk/\">Welland Valley Cycling Club home page</a></li>");
             sb.AppendLine("<li><a href=\"/index.html\">Return to TT Home</a></li>");
