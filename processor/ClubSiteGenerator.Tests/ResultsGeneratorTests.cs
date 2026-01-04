@@ -206,7 +206,7 @@ namespace ClubSiteGenerator.Tests
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("junior");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("senior");
             juvenilesCompetitionResults.EligibilityStatement.Should().NotContain("veteran");
-            juvenilesCompetitionResults.FileName.Should().Be("2025-juveniles");
+            juvenilesCompetitionResults.FileName.Should().Be($"{DateTime.Now.Year}-juveniles");
             juvenilesCompetitionResults.LinkText.Should().Be("Juveniles");
             juvenilesCompetitionResults.SubFolderName.Should().Be("competitions");
 
@@ -290,7 +290,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("senior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
-            competitionResults.FileName.Should().Be("2025-juniors");
+            competitionResults.FileName.Should().Be($"{DateTime.Now.Year}-juniors");
             competitionResults.LinkText.Should().Be("Juniors");
             competitionResults.SubFolderName.Should().Be("competitions");
 
@@ -375,7 +375,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("senior");
-            competitionResults.FileName.Should().Be("2025-veterans");
+            competitionResults.FileName.Should().Be($"{DateTime.Now.Year}-veterans");
             competitionResults.LinkText.Should().Be("Veterans");
             competitionResults.SubFolderName.Should().Be("competitions");
 
@@ -469,7 +469,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.CompetitionType.Should().Be(CompetitionType.Women);
             competitionResults.DisplayName.Should().Be("Club Championship - Women");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
-            competitionResults.FileName.Should().Be("2025-women");
+            competitionResults.FileName.Should().Be($"{DateTime.Now.Year}-women");
             competitionResults.LinkText.Should().Be("Women");
             competitionResults.SubFolderName.Should().Be("competitions");
 
@@ -558,7 +558,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.DisplayName.Should().Be("Club Championship - Road Bike Women");
             competitionResults.EligibilityStatement.Should().Contain("road bike");
             competitionResults.EligibilityStatement.Should().Match(s => s.Contains("women") || s.Contains("female"));
-            competitionResults.FileName.Should().Be("2025-road-bike-women");
+            competitionResults.FileName.Should().Be($"{DateTime.Now.Year}-road-bike-women");
             competitionResults.LinkText.Should().Be("Road Bike Women");
             competitionResults.SubFolderName.Should().Be("competitions");
 
@@ -631,7 +631,7 @@ namespace ClubSiteGenerator.Tests
             competitionResults.EligibilityStatement.Should().NotContain("juvenile");
             competitionResults.EligibilityStatement.Should().NotContain("junior");
             competitionResults.EligibilityStatement.Should().NotContain("veteran");
-            competitionResults.FileName.Should().Be("2025-seniors");
+            competitionResults.FileName.Should().Be($"{DateTime.Now.Year}-seniors");
             competitionResults.LinkText.Should().Be("Seniors");
             competitionResults.SubFolderName.Should().Be("competitions");
 
