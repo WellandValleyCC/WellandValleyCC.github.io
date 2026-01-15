@@ -288,5 +288,49 @@ namespace ClubSiteGenerator.Tests
                 }
             }
         }
+
+        [Fact]
+        public async Task Render_ShouldIncludeNavigationWithIndexLink()
+        {
+            var rules = new CompetitionRules(2, 1, 3, "GHC");
+
+            // Arrange
+            var calendar = new[]
+            {
+        new CalendarEvent { EventNumber = 1, EventName = "Event 1 - ten", IsEvening10 = true, IsClubChampionship = true },
+        new CalendarEvent { EventNumber = 2, EventName = "Event 2 - 25mile", IsEvening10 = false, IsClubChampionship = true },
+        new CalendarEvent { EventNumber = 3, EventName = "Event 3 - 9.5mile hardride", IsEvening10 = false, IsClubChampionship = true }
+    };
+
+            var competitorsCsv = @"ClubNumber,Surname,GivenName,ClaimStatus,IsFemale,AgeGroup,VetsBucket
+1,Smith,Alice,FirstClaim,true,Juvenile,";
+
+            var competitors = CsvTestLoader.LoadCompetitorsFromCsv(competitorsCsv);
+
+            var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
+1,1,Valid,1,,,Alice Smith";
+
+            var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
+            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+
+            var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
+            var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
+
+            // Act
+            var html = renderer.Render();
+            var context = BrowsingContext.New(Configuration.Default);
+            var document = await context.OpenAsync(req => req.Content(html));
+
+            // Assert: navigation exists
+            var nav = document.QuerySelector("nav.competition-nav");
+            nav.Should().NotBeNull("the competition navigation bar should be present");
+
+            // Assert: index link exists
+            var indexLink = nav!.QuerySelector("a.index");
+            indexLink.Should().NotBeNull("the navigation should include an index link");
+
+            // Assert: correct href
+            indexLink!.GetAttribute("href").Should().Be("../index2025.html");
+        }
     }
 }
