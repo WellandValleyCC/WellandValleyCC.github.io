@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Rules;
@@ -39,8 +40,8 @@ namespace ClubSiteGenerator.ResultsGenerator
             // filter veteran rides
             var veteranRides = allRides
                 .Where(r =>
-                    r.Competitor != null &&
-                    r.Competitor.IsVeteran &&
+                    r.Competitor is { IsVeteran: true } c &&
+                    c.IsEligible() &&
                     r.Status == RideStatus.Valid);
 
             // group by ClubNumber
