@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Rules;
@@ -47,10 +48,11 @@ namespace ClubSiteGenerator.ResultsGenerator
                 .Select(e => e.EventNumber)
                 .ToHashSet();
 
-            // filter rides: must be Valid, any ageGroup, and event is one of the tight calendar events
+            // filter rides: must be Valid, any ageGroup, and event is one of the Nev Brooks calendar events
             var championshipRides = allRides
                 .Where(r =>
-                    r.Competitor != null &&
+                    r.Competitor is { } c &&
+                    c.IsEligible() &&
                     r.Status == RideStatus.Valid &&
                     r.NevBrooksPoints != null &&
                     r.CalendarEvent != null &&
