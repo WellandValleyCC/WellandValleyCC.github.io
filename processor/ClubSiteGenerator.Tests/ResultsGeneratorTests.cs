@@ -210,6 +210,8 @@ namespace ClubSiteGenerator.Tests
             juvenilesCompetitionResults.LinkText.Should().Be("Juveniles");
             juvenilesCompetitionResults.SubFolderName.Should().Be("competitions");
 
+            juvenilesCompetitionResults.ScoredRides.Count.Should().Be(2);
+
             juvenilesCompetitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Liam Johnson");
             juvenilesCompetitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             juvenilesCompetitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
@@ -225,14 +227,6 @@ namespace ClubSiteGenerator.Tests
             juvenilesCompetitionResults.ScoredRides[1].FullCompetition.Rank.Should().Be(2);
             juvenilesCompetitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
             juvenilesCompetitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
-
-            juvenilesCompetitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Daniel Evans");
-            juvenilesCompetitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
-            juvenilesCompetitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
-            juvenilesCompetitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
-            juvenilesCompetitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
-            juvenilesCompetitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
-            juvenilesCompetitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
         }
 
         [Fact]
@@ -295,6 +289,8 @@ namespace ClubSiteGenerator.Tests
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring
+            competitionResults.ScoredRides.Count.Should().Be(2);
+
             competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Noah Williams");
             competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
@@ -310,14 +306,6 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[1].FullCompetition.Rank.Should().Be(2);
             competitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
             competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
-
-            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Ava Taylor");
-            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
-            competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
         }
 
         [Fact]
@@ -380,6 +368,8 @@ namespace ClubSiteGenerator.Tests
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (same totals as Juveniles/Juniors pattern)
+            competitionResults.ScoredRides.Count.Should().Be(2);
+
             competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Sophia Clark");
             competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
@@ -395,14 +385,6 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[1].FullCompetition.Rank.Should().Be(2);
             competitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
             competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
-
-            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("James Moore");
-            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
-            competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
         }
 
         [Fact]
@@ -474,6 +456,8 @@ namespace ClubSiteGenerator.Tests
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (pattern same as other tests, totals predictable)
+            competitionResults.ScoredRides.Count.Should().Be(4);
+
             competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Olivia Green");
             competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
@@ -490,18 +474,16 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
             competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
             
-            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Sophia White");
-            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Ava King");
+            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(147);
             competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(147);
             competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
             competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
             competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
 
-            // The remaining veterans (Ava, Mia, Isabella) will follow with lower totals
-            competitionResults.ScoredRides[3].Competitor.FullName.Should().Be("Ava King");
-            competitionResults.ScoredRides[4].Competitor.FullName.Should().Be("Mia Scott");
-            competitionResults.ScoredRides[5].Competitor.FullName.Should().Be("Isabella Young");
+            // The remaining first claim veteran (Isabella) will follow with lower totals
+            competitionResults.ScoredRides[3].Competitor.FullName.Should().Be("Isabella Young");
         }
 
 
@@ -563,6 +545,9 @@ namespace ClubSiteGenerator.Tests
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring (same totals pattern as other categories)
+
+            competitionResults.ScoredRides.Count.Should().Be(2);
+
             competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Ruby Isaac");
             competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
@@ -570,10 +555,6 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[1].Competitor.FullName.Should().Be("Milly Pinnock");
             competitionResults.ScoredRides[1].AllEvents.Points.Should().Be(166);
             competitionResults.ScoredRides[1].AllEvents.Rank.Should().Be(2);
-
-            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Jane Moore");
-            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
         }
 
         [Fact]
@@ -636,6 +617,8 @@ namespace ClubSiteGenerator.Tests
             competitionResults.SubFolderName.Should().Be("competitions");
 
             // Assert: scoring
+            competitionResults.ScoredRides.Count.Should().Be(2);
+
             competitionResults.ScoredRides[0].Competitor.FullName.Should().Be("Liam Johnson");
             competitionResults.ScoredRides[0].AllEvents.Points.Should().Be(170);
             competitionResults.ScoredRides[0].AllEvents.Rank.Should().Be(1);
@@ -651,14 +634,6 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[1].FullCompetition.Rank.Should().Be(2);
             competitionResults.ScoredRides[1].TenMileCompetition.Points.Should().BeNull();
             competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
-
-            competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Daniel Evans");
-            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
-            competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
-            competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Models.Extensions;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Rules;
@@ -37,10 +38,10 @@ namespace ClubSiteGenerator.ResultsGenerator
             // filter juvenile rides
             var juvenileRides = allRides
                 .Where(r =>
-                    r.Competitor != null &&
-                    r.Competitor.IsJuvenile &&
+                    r.Competitor is { IsJuvenile: true } c &&
+                    c.IsEligible() &&
                     r.Status == RideStatus.Valid);
- 
+
             // group by ClubNumber
             var groups = juvenileRides
                 .GroupBy(r => r.Competitor!.ClubNumber)
