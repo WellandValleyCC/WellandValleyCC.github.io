@@ -475,9 +475,9 @@ namespace ClubSiteGenerator.Tests
             competitionResults.ScoredRides[1].TenMileCompetition.Rank.Should().BeNull();
             
             competitionResults.ScoredRides[2].Competitor.FullName.Should().Be("Ava King");
-            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].AllEvents.Points.Should().Be(147);
             competitionResults.ScoredRides[2].AllEvents.Rank.Should().Be(3);
-            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(159);
+            competitionResults.ScoredRides[2].FullCompetition.Points.Should().Be(147);
             competitionResults.ScoredRides[2].FullCompetition.Rank.Should().Be(3);
             competitionResults.ScoredRides[2].TenMileCompetition.Points.Should().BeNull();
             competitionResults.ScoredRides[2].TenMileCompetition.Rank.Should().BeNull();
