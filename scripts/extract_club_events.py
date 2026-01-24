@@ -82,6 +82,16 @@ def extract_club_events(xlsx_path, output_dir):
     else:
         print("[WARN] Sheet missing: Competitors")
         
+    if "RoundRobinRiders" in xl.sheet_names:
+        print("[OK] Extracting RoundRobinRiders sheet")
+        round_robin_riders_df = xl.parse("RoundRobinRiders")
+        round_robin_riders_out = os.path.join(year_dir, f"RoundRobinRiders_{year}.csv")
+        round_robin_riders_df.to_csv(round_robin_riders_out, index=False)
+        shutil.copy(round_robin_riders_out, os.path.join(artifact_dir, os.path.basename(round_robin_riders_out)))
+        print(f"[INFO] Saved to: {round_robin_riders_out} ({len(round_robin_riders_df)} rows)")
+    else:
+        print("[WARN] Sheet missing: RoundRobinRiders")
+        
     if "Leagues" in xl.sheet_names:
         print("[OK] Extracting Leagues sheet")
         leagues_df = xl.parse("Leagues")
