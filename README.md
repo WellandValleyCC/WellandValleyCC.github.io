@@ -54,9 +54,9 @@ WellandValleyCC.github.io/
 └── .gitignore                        # Ignore /data or build artifacts
 ```
 
-- master branch: editable source (data, scripts, templates). Do not keep generated HTML here.- 
+- master branch: editable source (data, scripts, templates). Do not keep generated HTML here.
 
-- gh-pages branch: single-purpose branch containing only the generated static site that GitHub Pages serves.
+- gh-pages branch: single-purpose branch containing only the generated static site that GitHub Pages serves.  Never merge this into master!
 
 ---
 
@@ -65,15 +65,15 @@ WellandValleyCC.github.io/
 
 1. Competitor data is maintained in the private repo `WellandValleyCC.club-membership-private` (see its README).  
 2. A workflow there commits `competitors_YYYY.csv` into this repo (`master/data/`).  
-3. A workflow on `master` processes that file (`--mode competitions`) and updates `club_competitors_YYYY.db`.  
+3. The workflow `Process Club Data` on `master` processes that file (`--mode competitors`) and updates `club_competitors_YYYY.db`.  
 4. After each TT event, editors commit `ClubEvents_YYYY.xlsx` into `master/data/`.  
-5. A workflow on `master` processes the event file (`--mode events`), generates HTML into `site-out/`, and publishes it to `gh-pages` as an atomic commit.  
-6. GitHub Pages serves the site directly from the `gh-pages` branch.  
-
-Each publish is atomic and traceable to its source commit.
+5. The workflow 'Process Club Data` on `master` processes the event file (`--mode events`) and updates `club_events_YYYY.db`.
+6. The workflow `Generate Static Site` reads from the two SQLite DBs and generates HTML into `SiteOutput`, and publishes it to `gh-pages` as an atomic commit via a PR  
+7. Editors examine the PR and if satistied, commit to the `gh-pages` branch.  
+8. The workflow `pages-build-deployment` is triggered to push the changes live: https://wellandvalleycc.github.io/
 
 ---
-## Site Generation Workflow
+### Site Generation Workflow
 
 The static site is generated automatically whenever a new `club_events_YYYY.db` file is committed to `master`.  
 A GitHub Actions workflow runs the generator and opens a pull request against `gh-pages`.
@@ -106,16 +106,55 @@ See [Developer Docs](developer-docs/) for detailed guides:
 
 ## Tools
 ### VTTA Scraper
+You should run this whenever VTTA have updated their times.  And also whenever a new distance is used in a season (e.g. in 2026, we added a 9.4 mile TT).  For details:
+
 [VTTA Scraper](tools/vtta-scraper/README.md)
 
 Additional utilities live under `tools/`
 
 --- 
 
-## League Competitions
+## Competitions
+
+### WVCC First Claim member competitions
+
+WVCC run a number of competitions for first claim members: 
+
+#### Age related
+- `Seniors`
+- `Veterans` (handicapped)
+- `Juniors`
+- `Juveniles`
+
+#### Gender specific 
+- `Women`
+
+#### For Road Bike riders
+- `RoadBikeMen`
+- `RoadBikeWomen`
+
+### Nev Brooks
+A handicapped competition for 10-mile events, designed to reward improvement over the course of the season.
+
+### League Competitions
 League allocations (Prem, 1–4) are defined mid‑season in `Leagues` worksheet with ClubEvents_2026.xlsx
   
 See [League Competitions Guide](developer-docs/leagues.md) for details on membership persistence and scoring outputs.
+
+### Round Robin
+
+Welland Valley CC is part of a multi-club TT series - the Round Robin. 
+[Round Robin TT series 2025](https://wellandvalleycc.co.uk/round-robin-tt-series/)
+[2025 wrap up](https://wellandvalleycc.co.uk/2025/09/06/wrapping-up-the-round-robin-tt-series/)
+[Round Robin TT series 2026](https://wellandvalleycc.co.uk/roundrobin2026/)
+
+Each round robin event, though not necessarily run by Welland Valley CC, is part of the WVCC TT calendar. Separate inter-club Round Robin competitions exist
+
+These are open to both first and second claim members of teh participating clubs.
+
+- `Round Robin Open`
+- `Round Robin Female`
+- `Round Robin Club`
 
 ---
 

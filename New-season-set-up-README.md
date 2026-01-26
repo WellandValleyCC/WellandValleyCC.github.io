@@ -1,5 +1,5 @@
 # How to set up a new season
-This guide will walk you through the steps necessary to set up a new season. 
+This guide walks you through the steps necessary to set up a new season. 
 ## Prerequisites
 - Draft calendar for the new season.
 	- This will usually be available from the TT committee, perhaps via email.
