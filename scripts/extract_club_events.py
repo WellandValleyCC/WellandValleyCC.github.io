@@ -29,16 +29,58 @@ def suppress_openpyxl_header_footer_warnings():
     print("[INFO] Suppressed openpyxl header/footer warnings (safe to ignore, no impact on CSV extraction)")
     
 def normalize_boolean_column(df, colname="isFemale"):
-    if colname in df.columns:
-        df[colname] = (
-            df[colname]
-            .astype(str)              # force everything to string
-            .str.strip()              # remove spaces
-            .str.upper()              # normalise case
-            .map({"TRUE": True, "FALSE": False, "1": True, "0": False})
-            .astype(bool)             # now it's a real boolean
-            .map({True: "True", False: "False"})  # final output format
-        )
+    if colname not in df.columns:
+        print(f"[DEBUG] Column '{colname}' not found in dataframe")
+        return
+
+    print(f"\n[DEBUG] Normalizing column: {colname}")
+    print("[DEBUG] Original dtype:", df[colname].dtype)
+    print("[DEBUG] Original sample values:")
+    print(df[colname].head(10))
+
+    # Step 1: convert to string for inspection
+    s = df[colname].astype(str)
+    print("\n[DEBUG] After astype(str):")
+    print(s.head(10))
+
+    # Step 2: normalise case/whitespace
+    s2 = s.str.strip().str.upper()
+    print("\n[DEBUG] After strip + upper:")
+    print(s2.head(10))
+
+    # Step 3: try numeric conversion
+    numeric = pd.to_numeric(s2, errors="coerce")
+    print("\n[DEBUG] Numeric conversion:")
+    print(numeric.head(10))
+
+    # Step 4: build boolean series
+    bool_series = pd.Series(index=df.index, dtype=bool)
+
+    # Case A: numeric values (0.0 / 1.0)
+    numeric_mask = numeric.notna()
+    bool_series[numeric_mask] = numeric[numeric_mask] != 0
+
+    # Case B: TRUE/FALSE strings
+    string_mask = ~numeric_mask
+    bool_series[string_mask] = s2[string_mask].map(
+        {"TRUE": True, "FALSE": False}
+    )
+
+    print("\n[DEBUG] Combined boolean series:")
+    print(bool_series.head(10))
+
+    # Step 5: detect unmapped values
+    unmapped = bool_series.isna()
+    if unmapped.any():
+        print("\n[WARN] Unmapped values detected:")
+        print(s2[unmapped].value_counts())
+    else:
+        print("[DEBUG] No unmapped values")
+
+    # Step 6: final output as "True"/"False"
+    df[colname] = bool_series.map({True: "True", False: "False"})
+    print("\n[DEBUG] Final output sample:")
+    print(df[colname].head(10))
     
 def extract_club_events(xlsx_path, output_dir):
     match = re.search(r'ClubEvents_(\d{4})\.xlsx$', os.path.basename(xlsx_path))
