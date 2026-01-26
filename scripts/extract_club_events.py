@@ -28,6 +28,18 @@ def suppress_openpyxl_header_footer_warnings():
     )
     print("[INFO] Suppressed openpyxl header/footer warnings (safe to ignore, no impact on CSV extraction)")
     
+def normalize_boolean_column(df, colname="isFemale"):
+    if colname in df.columns:
+        df[colname] = (
+            df[colname]
+            .astype(str)              # force everything to string
+            .str.strip()              # remove spaces
+            .str.upper()              # normalise case
+            .map({"TRUE": True, "FALSE": False, "1": True, "0": False})
+            .astype(bool)             # now it's a real boolean
+            .map({True: "True", False: "False"})  # final output format
+        )
+    
 def extract_club_events(xlsx_path, output_dir):
     match = re.search(r'ClubEvents_(\d{4})\.xlsx$', os.path.basename(xlsx_path))
     if not match:
@@ -75,6 +87,7 @@ def extract_club_events(xlsx_path, output_dir):
     if "Competitors" in xl.sheet_names:
         print("[INFO] Extracting Competitors sheet (reference only)")
         competitors_df = xl.parse("Competitors")
+        normalize_boolean_column(competitors_df, "isFemale")
         competitors_out = os.path.join(year_dir, f"Competitors_{year}.csv")
         competitors_df.to_csv(competitors_out, index=False)
         shutil.copy(competitors_out, os.path.join(artifact_dir, os.path.basename(competitors_out)))
@@ -85,6 +98,7 @@ def extract_club_events(xlsx_path, output_dir):
     if "RoundRobinRiders" in xl.sheet_names:
         print("[OK] Extracting RoundRobinRiders sheet")
         round_robin_riders_df = xl.parse("RoundRobinRiders")
+        normalize_boolean_column(round_robin_riders_df, "isFemale")
         round_robin_riders_out = os.path.join(year_dir, f"RoundRobinRiders_{year}.csv")
         round_robin_riders_df.to_csv(round_robin_riders_out, index=False)
         shutil.copy(round_robin_riders_out, os.path.join(artifact_dir, os.path.basename(round_robin_riders_out)))
