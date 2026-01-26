@@ -150,11 +150,11 @@ Welland Valley CC is part of a multi-club TT series - the Round Robin.
 
 Each round robin event, though not necessarily run by Welland Valley CC, is part of the WVCC TT calendar. Separate inter-club Round Robin competitions exist
 
-These are open to both first and second claim members of teh participating clubs.
+These are open to both first and second claim members of the participating clubs.
 
-- `Round Robin Open`
-- `Round Robin Female`
-- `Round Robin Club`
+- Round Robin Open
+- Round Robin Female
+- Round Robin Club
 
 See [Round Robin README](developer-docs/Round-robin-README.md) for details on scoring and outputs.
 
