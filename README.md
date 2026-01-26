@@ -156,6 +156,8 @@ These are open to both first and second claim members of teh participating clubs
 - `Round Robin Female`
 - `Round Robin Club`
 
+See [Round Robin README](developer-docs/Round-robin-README.md) for details on scoring and outputs.
+
 ---
 
 ## Contributions
