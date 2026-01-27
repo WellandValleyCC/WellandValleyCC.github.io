@@ -23,9 +23,16 @@ In `--mode competitors`, the processor reads `competitors_YYYY.csv` and populate
 ### Mode: events
 In `--mode events`, the processor reads `ClubEvents_YYYY.xlsx` and populates the `club_events_YYYY.db` SQLite database - specifically the `CalendarEvents` and `Rides` tables.
 
-
-<img src="/images/CalendarEvents-Table.png" alt="Calendar Events table" width="300" style="vertical-align: top;">
-<img src="/images/Rides-Table.png" alt="Rides table" width="400" style="vertical-align: top;">
+<table>
+  <tr>
+    <td valign="top">
+      <img src="/images/CalendarEvents-Table.png" width="300">
+    </td>
+    <td valign="top">
+      <img src="/images/Rides-Table.png" width="400">
+    </td>
+  </tr>
+</table>
 
 ## Round Robin enhancements 
 
