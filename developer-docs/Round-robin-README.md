@@ -15,10 +15,10 @@ In `--mode competitors`, the processor reads `competitors_YYYY.csv` and populate
 
 <!--
 ![Competitors table](/images/Competitors-Table.png)
-<img src="/images/Competitors-Table.png" alt="Competitors table" style="width:50%;">
+<img src="../images/Competitors-Table.png" alt="Competitors table" style="width:50%;">
 -->
 
-<img src="/images/Competitors-Table.png" alt="Competitors table" width="300">
+<img src="../images/Competitors-Table.png" alt="Competitors table" width="300">
 
 ### Mode: events
 In `--mode events`, the processor reads `ClubEvents_YYYY.xlsx` and populates the `club_events_YYYY.db` SQLite database - specifically the `CalendarEvents` and `Rides` tables.
@@ -26,10 +26,10 @@ In `--mode events`, the processor reads `ClubEvents_YYYY.xlsx` and populates the
 <table>
   <tr>
     <td valign="top">
-      <img src="/images/CalendarEvents-Table.png" width="300">
+      <img src="../images/CalendarEvents-Table.png" width="300">
     </td>
     <td valign="top">
-      <img src="/images/Rides-Table.png" width="400">
+      <img src="../images/Rides-Table.png" width="400">
     </td>
   </tr>
 </table>
