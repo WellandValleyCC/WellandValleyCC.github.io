@@ -211,18 +211,32 @@ namespace ClubProcessor.Services
 
         private void ValidateRoundRobinClub(string rrClub, int eventNumber)
         {
-            var normalised = rrClub.Trim().ToUpper();
-            
-            if (string.IsNullOrWhiteSpace(normalised) || normalised == "WVCC")
-                return; // Empty, or `WVCC` is allowed
+            if (string.IsNullOrWhiteSpace(rrClub))
+                return; // Empty allowed
 
-            var exists = _db.RoundRobinClubs
-                .Any(c => c.ShortName.ToUpper() == normalised);
+            // Split CSV list: "Ratae, WVCC" --> ["Ratae", "WVCC"]
+            var clubs = rrClub
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(c => c.Trim())
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .ToList();
 
-            if (!exists)
+            foreach (var club in clubs)
             {
-                throw new InvalidOperationException(
-                    $"Event {eventNumber}: Round Robin Club '{rrClub}' is not a known round robin club.");
+                var normalised = club.ToUpperInvariant();
+
+                // WVCC always allowed
+                if (normalised == "WVCC")
+                    continue;
+
+                var exists = _db.RoundRobinClubs
+                    .Any(c => c.ShortName.ToUpper() == normalised);
+
+                if (!exists)
+                {
+                    throw new InvalidOperationException(
+                        $"Event {eventNumber}: Round Robin Club '{club}' is not a known round robin club.");
+                }
             }
         }
 

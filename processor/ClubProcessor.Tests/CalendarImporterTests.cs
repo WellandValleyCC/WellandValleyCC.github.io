@@ -185,6 +185,43 @@ namespace ClubProcessor.Tests
             // Assert
             context.CalendarEvents.Should().HaveCount(1);
         }
+
+        [Fact]
+        public void ImportFromCsv_MultipleClubs_ShouldBeAccepted()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<EventDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new EventDbContext(options);
+
+            // Seed ONLY valid clubs (e.g., RFW, HCRC)
+            context.RoundRobinClubs.AddRange(
+                new RoundRobinClub { ShortName = "RFW", FullName = "Rockingham Forest Wheelers", WebsiteUrl = "URL" },
+                new RoundRobinClub { ShortName = "HCRC", FullName = "Horton Cycling & Running Club", WebsiteUrl = "URL" }
+            );
+            context.SaveChanges();
+
+            var importer = new CalendarImporter(context);
+
+            var testCsvPath = "test-data/calendar_invalid_rrclub.csv";
+            Directory.CreateDirectory("test-data");
+
+            // Insert a CSV row with an INVALID Round Robin Club: "XYZ"
+            File.WriteAllText(
+                testCsvPath,
+                "Event Number,Date,Start time,Event Name,Round Robin Club,Miles,Location / Course,Hill Climb,Club Championship,Non-Standard 10,Evening 10,Hard Ride Series,Round Robin Event,Sheet Name,isCancelled\n" +
+                "1,2025-04-01,18:30,Invalid Club Test,\"HCRC,WVCC\",10.0,Medbourne,,Y,,Y,,Y,Event_01,\n"
+            );
+
+            // Act
+            importer.ImportFromCsv(testCsvPath);
+
+            // Assert
+            context.CalendarEvents.Should().HaveCount(1);
+            context.CalendarEvents.First().RoundRobinClub.Should().Be("HCRC,WVCC");
+        }
     }
 }
 
