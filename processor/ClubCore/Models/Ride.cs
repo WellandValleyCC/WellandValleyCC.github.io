@@ -13,6 +13,7 @@ namespace ClubCore.Models
         public int EventNumber { get; set; }
         public int? ClubNumber { get; set; }
         public string? Name { get; set; } = string.Empty;
+        public string? RoundRobinClub { get; set; }
         public bool IsRoadBike { get; set; }
         public double TotalSeconds { get; set; }
 
@@ -80,6 +81,13 @@ namespace ClubCore.Models
         public double? NevBrooksSecondsGenerated { get; set; }     // Raw handicap value
         public double? NevBrooksSecondsApplied { get; set; }       // Capped or adjusted handicap
         public double? NevBrooksSecondsAdjustedTime { get; set; }  // Final time after handicap
+
+        public int? RoundRobinPosition { get; set; }
+        public double? RoundRobinPoints { get; set; }
+
+        public int? RoundRobinWomenPosition { get; set; }
+        public double? RoundRobinWomenPoints { get; set; }
+
 
         public bool IsGuest => ClubNumber == null && !string.IsNullOrWhiteSpace(Name);
 
