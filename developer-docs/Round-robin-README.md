@@ -104,6 +104,7 @@ Jane Doe,LFCC,Jane Doe (LFCC),True
 - [ ] Additional columns in CalendarEvents table (populated from Calendar sheet)
 - [ ] RoundRobinRiders table added to club_events_YYYY.db - new migration
 - [ ] RoundRobinRiders table populated from RoundRobinRiders_{YYYY}.csv and Competitors table
+- [ ] Rides table - additional properties
 
 #### Enhanced CalendarEvents table
 
@@ -123,4 +124,11 @@ This table will be populated from the `RoundRobinRiders_{YYYY}.csv` file.  These
 
 What to do about WVCC riders concept of dates when they sign up?  Do we need this concept for other clubs?  For now, we will assume that all non-WVCC riders are in their club for all RR events.  We could always use a different name in the event pages if we need to.
 
+#### Rides table - additional properties
+
+- `Club` - the name of the club to which the rider belongs.  This will be `WVCC` for club members.  For guest riders, this will be whatever string appears in parentheses in their name (column A of the Event sheets).  E.g. "John Doe (Ratae)" --> `Ratae`; "Jane Doe (HCRC)" --> `HCRC`.
+- `RoundRobinPosition` - this will store the position of the rider in the event, if (and only if) the `Club` is a participant club for the RoundRobin competition.
+- `RoundRobinPoints` - the points for the position (60, 55, 51 etc.) - normal rules apply for draws.
+- `RoundRobinWomenPosition` - this will store the position of the rider in the event, if (and only if) the `Club` is a participant club for the RoundRobin competition *and* the rider `IsFemale` (looked up in `Competitors` table for `WVCC` riders, or `RoundRobinRiders` table for riders from other clubs)
+- `RoundRobinWomenPoints` - the points for the position (60, 55, 51 etc.) - normal rules apply for draws.
 
