@@ -11,9 +11,9 @@ obj/
 **/Migrations/
 
 # But allow these specific ones
-!processor/ClubProcessor/Migrations
-!processor/ClubProcessor/Migrations/EventDb/
-!processor/ClubProcessor/Migrations/CompetitorDb/
+!processor/ClubCore/Migrations
+!processor/ClubCore/Migrations/EventDb/
+!processor/ClubCore/Migrations/CompetitorDb/
 
 
 # 🧑‍💻 IDE and user-specific files
