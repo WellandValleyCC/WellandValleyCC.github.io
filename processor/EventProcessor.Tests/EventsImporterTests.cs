@@ -128,5 +128,152 @@ namespace EventProcessor.Tests
 
             return yearFolder; // Return path to 2025 folder
         }
+
+        [Fact]
+        public void ImportFromFolder_ClubMember_AssignsWvccClub()
+        {
+            // Arrange
+            using var eventContext = DbContextFactory.CreateEventContext();
+            using var competitorContext = DbContextFactory.CreateCompetitorContext();
+
+            // Insert RoundRobinClub: WVCC
+            eventContext.RoundRobinClubs.Add(new RoundRobinClub
+            {
+                ShortName = "WVCC",
+                FullName = "Welland Valley Cycling Club",
+                WebsiteUrl = "https://wellandvalleycc.co.uk/"
+            });
+            eventContext.SaveChanges();
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent
+                {
+                    EventNumber = 1,
+                    EventName   = "Test TT",
+                    EventDate   = new DateTime(2025, 5, 10, 19, 0, 0, DateTimeKind.Utc),
+                    Miles       = 10
+                }
+            };
+
+            var importer = new EventsImporter(eventContext, competitorContext, calendar);
+
+            var folder = TestOutputHelper.GetOutputDirectory();
+            var yearFolder = Path.Combine(folder, "2025");
+            var eventsFolder = Path.Combine(yearFolder, "events");
+            Directory.CreateDirectory(eventsFolder);
+
+            // Minimal CSV with a club-number rider
+            File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), new[]
+            {
+                "Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed",
+                "101,0,24,0,, ,Theo Marlin,00:24:00,"
+            });
+
+            // Act
+            importer.ImportFromFolder(yearFolder);
+
+            // Assert
+            var ride = eventContext.Rides.Single(r => r.Name == "Theo Marlin");
+            ride.RoundRobinClub.Should().Be("WVCC");
+        }
+
+        [Fact]
+        public void ImportFromFolder_RiderNameContainsClub_AssignsExtractedClubShortName()
+        {
+            // Arrange
+            using var eventContext = DbContextFactory.CreateEventContext();
+            using var competitorContext = DbContextFactory.CreateCompetitorContext();
+
+            // Insert RoundRobinClub: HCRC
+            eventContext.RoundRobinClubs.Add(new RoundRobinClub
+            {
+                ShortName = "HCRC",
+                FullName = "Hinckley Cycle Racing Club",
+                WebsiteUrl = "https://hinckleycrc.org/"
+            });
+            eventContext.SaveChanges();
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent
+                {
+                    EventNumber = 1,
+                    EventName   = "Test TT",
+                    EventDate   = new DateTime(2025, 5, 10, 19, 0, 0, DateTimeKind.Utc),
+                    Miles       = 10
+                }
+            };
+
+            var importer = new EventsImporter(eventContext, competitorContext, calendar);
+
+            var folder = TestOutputHelper.GetOutputDirectory();
+            var yearFolder = Path.Combine(folder, "2025");
+            var eventsFolder = Path.Combine(yearFolder, "events");
+            Directory.CreateDirectory(eventsFolder);
+
+            // Minimal CSV with a rider whose name includes a club in parentheses
+            File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), new[]
+            {
+                "Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed",
+                "Jane Doe (HCRC),0,25,0,, ,Jane Doe (HCRC),00:25:00,"
+            });
+
+            // Act
+            importer.ImportFromFolder(yearFolder);
+
+            // Assert
+            var ride = eventContext.Rides.Single(r => r.Name == "Jane Doe (HCRC)");
+            ride.RoundRobinClub.Should().Be("HCRC");
+        }
+
+        [Fact]
+        public void ImportFromFolder_RiderNameContainsNonRRClub_DoesNotAssignClubShortName()
+        {
+            // Arrange
+            using var eventContext = DbContextFactory.CreateEventContext();
+            using var competitorContext = DbContextFactory.CreateCompetitorContext();
+
+            // Insert RoundRobinClub: HCRC
+            eventContext.RoundRobinClubs.Add(new RoundRobinClub
+            {
+                ShortName = "HCRC",
+                FullName = "Hinckley Cycle Racing Club",
+                WebsiteUrl = "https://hinckleycrc.org/"
+            });
+            eventContext.SaveChanges();
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent
+                {
+                    EventNumber = 1,
+                    EventName   = "Test TT",
+                    EventDate   = new DateTime(2025, 5, 10, 19, 0, 0, DateTimeKind.Utc),
+                    Miles       = 10
+                }
+            };
+
+            var importer = new EventsImporter(eventContext, competitorContext, calendar);
+
+            var folder = TestOutputHelper.GetOutputDirectory();
+            var yearFolder = Path.Combine(folder, "2025");
+            var eventsFolder = Path.Combine(yearFolder, "events");
+            Directory.CreateDirectory(eventsFolder);
+
+            // Minimal CSV with a rider whose name includes a club in parentheses
+            File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), new[]
+            {
+                "Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed",
+                "Jane Doe (IGD),0,25,0,, ,Jane Doe (IGD),00:25:00,"
+            });
+
+            // Act
+            importer.ImportFromFolder(yearFolder);
+
+            // Assert
+            var ride = eventContext.Rides.Single(r => r.Name == "Jane Doe (IGD)");
+            ride.RoundRobinClub.Should().BeNull();
+        }
     }
 }
