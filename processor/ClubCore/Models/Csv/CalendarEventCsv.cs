@@ -16,6 +16,9 @@ namespace ClubCore.Models.Csv
         [Name("Event Name")]
         public string EventName { get; set; } = string.Empty;
 
+        [Name("Round Robin Club")]
+        public string RoundRobinClub { get; set; } = string.Empty;
+
         [Name("Miles")]
         public string MilesRaw { get; set; } = string.Empty;
 
@@ -36,6 +39,9 @@ namespace ClubCore.Models.Csv
 
         [Name("Hard Ride Series")]
         public string HardRideRaw { get; set; } = string.Empty;
+
+        [Name("Round Robin Event")]
+        public string RoundRobinEventRaw { get; set; } = string.Empty;
 
         [Name("Sheet Name")]
         public string SheetName { get; set; } = string.Empty;
