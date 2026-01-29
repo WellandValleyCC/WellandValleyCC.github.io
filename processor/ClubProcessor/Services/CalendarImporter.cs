@@ -3,8 +3,6 @@ using ClubCore.Models;
 using ClubCore.Models.Csv;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Globalization;
 
 namespace ClubProcessor.Services
@@ -76,8 +74,8 @@ namespace ClubProcessor.Services
 
             var requiredHeaders = new[]
             {
-                "Event Number","Date","Start time","Event Name","Miles","Location / Course",
-                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","isCancelled"
+                "Event Number","Date","Start time","Event Name","Round Robin Club", "Miles","Location / Course",
+                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled"
             };
 
             foreach (var required in requiredHeaders)
