@@ -29,6 +29,8 @@ namespace ClubCore.Models
         [MaxLength(100)]
         public string EventName { get; set; } = string.Empty;
 
+        public string RoundRobinClub { get; set; } = string.Empty;
+
         [Column(TypeName = "REAL")]
         public double Miles { get; set; }
 
@@ -40,6 +42,7 @@ namespace ClubCore.Models
         public bool IsNonStandard10 { get; set; }
         public bool IsEvening10 { get; set; }
         public bool IsHardRideSeries { get; set; }
+        public bool IsRoundRobinEvent { get; set; }
 
         public bool IsCancelled { get; set; }
     }
