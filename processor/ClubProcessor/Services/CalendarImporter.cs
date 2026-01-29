@@ -185,6 +185,9 @@ namespace ClubProcessor.Services
                 return null;
             }
 
+            var rrClub = row.RoundRobinClub?.Trim() ?? string.Empty;
+            ValidateRoundRobinClub(rrClub, row.EventNumber);
+
             // Console.WriteLine($"[DEBUG] Event {row.EventNumber}: ClubChamp='{row.ClubChampRaw}', NonStd10='{row.NonStd10Raw}', Evening10='{row.Evening10Raw}', HardRide='{row.HardRideRaw}', Cancelled='{row.CancelledRaw}'");
 
             return new CalendarEvent
@@ -193,7 +196,7 @@ namespace ClubProcessor.Services
                 EventDate = DateTime.SpecifyKind(eventDate, DateTimeKind.Utc),
                 StartTime = startTime,
                 EventName = row.EventName,
-                //RoundRobinClub = row.RoundRobinClub ?? string.Empty,
+                RoundRobinClub = row.RoundRobinClub ?? string.Empty,
                 Miles = miles,
                 Location = row.Location,
                 IsHillClimb = IsYes(row.HillClimbRaw),
@@ -201,9 +204,26 @@ namespace ClubProcessor.Services
                 IsNonStandard10 = IsYes(row.NonStd10Raw),
                 IsEvening10 = IsYes(row.Evening10Raw),
                 IsHardRideSeries = IsYes(row.HardRideRaw),
-                //IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
+                IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
                 IsCancelled = IsYes(row.CancelledRaw)
             };
+        }
+
+        private void ValidateRoundRobinClub(string rrClub, int eventNumber)
+        {
+            var normalised = rrClub.Trim().ToUpper();
+            
+            if (string.IsNullOrWhiteSpace(normalised) || normalised == "WVCC")
+                return; // Empty, or `WVCC` is allowed
+
+            var exists = _db.RoundRobinClubs
+                .Any(c => c.ShortName.ToUpper() == normalised);
+
+            if (!exists)
+            {
+                throw new InvalidOperationException(
+                    $"Event {eventNumber}: Round Robin Club '{rrClub}' is not a known round robin club.");
+            }
         }
 
         private static bool IsYes(string? raw) =>
