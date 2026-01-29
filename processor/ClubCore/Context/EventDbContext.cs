@@ -6,9 +6,10 @@ namespace ClubCore.Context
 {
     public class EventDbContext : DbContext
     {
-        public DbSet<Ride> Rides { get; set; }
-        public DbSet<CalendarEvent> CalendarEvents { get; set; }
-        public DbSet<PointsAllocation> PointsAllocations { get; set; }
+        public DbSet<Ride> Rides { get; set; } = default!;
+        public DbSet<CalendarEvent> CalendarEvents { get; set; } = default!;
+        public DbSet<PointsAllocation> PointsAllocations { get; set; } = default!;
+        public DbSet<RoundRobinClub> RoundRobinClubs { get; set; } = default!;
 
         public EventDbContext(DbContextOptions<EventDbContext> options)
             : base(options)

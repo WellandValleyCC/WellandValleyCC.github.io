@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubProcessor.Migrations.EventDb
 {
     [DbContext(typeof(EventDbContext))]
-    [Migration("20260129143039_AddRoundRobinClubs")]
+    [Migration("20260129144219_AddRoundRobinClubs")]
     partial class AddRoundRobinClubs
     {
         /// <inheritdoc />
@@ -218,6 +218,29 @@ namespace ClubProcessor.Migrations.EventDb
                     b.HasKey("Id");
 
                     b.ToTable("Rides");
+                });
+
+            modelBuilder.Entity("ClubCore.Models.RoundRobinClub", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WebsiteUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoundRobinClubs");
                 });
 #pragma warning restore 612, 618
         }

@@ -49,6 +49,7 @@ namespace ClubProcessor.Migrations.EventDb
                 unique: true);
         }
 
+
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
