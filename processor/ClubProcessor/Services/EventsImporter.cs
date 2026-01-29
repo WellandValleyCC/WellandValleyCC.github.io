@@ -3,6 +3,7 @@ using ClubCore.Models;
 using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -148,18 +149,60 @@ namespace ClubProcessor.Services
             var rawNumberOrName = row.NumberOrName?.Trim();
 
             bool isClubMember = int.TryParse(rawNumberOrName, out int clubNumber);
-            string? name = isClubMember ? null : rawNumberOrName;
+            
+            var clubShortName = ResolveClubShortName(row, isClubMember);
 
             return new Ride
             {
                 EventNumber = eventNumber,
                 Name = row.Name,
                 ClubNumber = isClubMember ? clubNumber : null,
+                RoundRobinClub = clubShortName,
                 TotalSeconds = row.TotalSeconds,
                 AvgSpeed = row.TotalSeconds > 0 ? 25.0 * 1000 / row.TotalSeconds * 3.6 : null, // Example: 25 km course
                 IsRoadBike = row.IsRoadBike,
                 Status = row.Eligibility,
             };
+        }
+
+        private string? ResolveClubShortName(RideCsvRow row, bool isClubMember)
+        {
+            if (isClubMember)
+                return "WVCC"; // default for members
+
+            // Otherwise try to extract a club name from the rider's name
+            var clubName = ExtractClubNameFromName(row.Name);
+            if (clubName is null)
+                return null;
+
+            return LookupClubShortName(clubName);
+        }
+
+        private string? ExtractClubNameFromName(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            // Look for "(XYZ)" at the end of the name
+            var start = name.LastIndexOf('(');
+            var end = name.LastIndexOf(')');
+
+            if (start < 0 || end < 0 || end <= start)
+                return null;
+
+            var clubName = name.Substring(start + 1, end - start - 1).Trim();
+            return string.IsNullOrWhiteSpace(clubName) ? null : clubName;
+        }
+
+        private string? LookupClubShortName(string clubName)
+        {
+            // Normalise for comparison
+            var normalised = clubName.Trim().ToUpperInvariant();
+
+            var club = eventContext.RoundRobinClubs
+                .FirstOrDefault(c => c.ShortName.ToUpper() == normalised);
+
+            return club?.ShortName;
         }
     }
 }
