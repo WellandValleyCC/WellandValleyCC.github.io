@@ -66,7 +66,7 @@ This sheet has been extended with two new columns:
 
 #### Event sheets - new Raw Name column to simplify results entry
 
-These sheets have an additional column `Raw Name`:
+These sheets have an additional column `Number/Raw Name`:
 
 ![ClubEvents_YYYY.xlsx Event sheets.png](/images/ClubEvents_YYYY-Event-sheets.png)
 
@@ -77,16 +77,15 @@ And column A (`Number/Name`) has been updated to make use of a formula:
 
 This formula follows the following algorithm:
 
-1.  Is the named rider a member of WVCC (`Competitors` sheet - populated with data from `Competitors_YYYY.csv`)?  Yes - use their member number. [ `Mike Ives` --> `581`]
+1.  Is the named rider a member of WVCC (`Competitors` sheet - populated with data from `Competitors_YYYY.csv`)?  Yes - use their member number. [ `Mike Ives` --> `581`].  This helps where club number was not provided at sign on.
 2. Is the named rider present in the `RoundRobinRiders` sheet?  Yes - use their `Decorated Name` which includes their club name in parenthesis. [`John Doe` --> `John Doe (Ratae)`]
-3. Otherwise - use the name 'as is'.  [`Geraint Thomas` --> `Geraint Thomas`]
+3. Otherwise - use the name.number 'as is'.  [`Geraint Thomas` --> `Geraint Thomas`; `581` --> `581`].  This is the 'right' way to enter a WVCC club member.
 
 > [!TIP]
 >
-> When entering event results, enter names in column J initially to make use of this lookup algorithm.  
+> When entering event results, enter WVCC club numbers, or (for guests) names in column J initially to make use of this lookup algorithm.  
 > 
-> However, you should overwrite the formula in column `A` with the rider's name if, at the time of the event, the rider is *not* a member of a club (WVCC or other Round Robin club).  This prevents issues if the rider later joins WVCC or one of the other clubs, where the formula would make it appear as though their membership was back-dated.
-
+> Overwrite the formula in column `A` with the rider's name if, at the time of the event, the rider is *not* a member of a club (WVCC or other Round Robin club).  This prevents issues if the rider later joins WVCC or one of the other clubs, where the formula would make it appear as though their membership was back-dated.
 
 ### Github pipeline script enhanced 
 
