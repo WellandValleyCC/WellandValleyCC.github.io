@@ -132,3 +132,10 @@ What to do about WVCC riders concept of dates when they sign up?  Do we need thi
 - `RoundRobinWomenPosition` - this will store the position of the rider in the event, if (and only if) the `Club` is a participant club for the RoundRobin competition *and* the rider `IsFemale` (looked up in `Competitors` table for `WVCC` riders, or `RoundRobinRiders` table for riders from other clubs)
 - `RoundRobinWomenPoints` - the points for the position (60, 55, 51 etc.) - normal rules apply for draws.
 
+#### New RoundRobinClubs table
+
+Populated automatically by the ClubProcessor with the five clubs currently in the Round Robin series (`WVCC`, `HCRC`, `RFW`, `Ratae`, `LFCC`)
+
+<img src="../images/RoundRobinClubs-Table.png" alt="RoundRobinClubs table">
+
+If a Ride is done by a member of one of these clubs, then it will have the RoundRobin scoring columns filled in by the Round Robin calculator classes.  
