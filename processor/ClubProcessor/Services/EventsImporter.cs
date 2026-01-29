@@ -138,16 +138,13 @@ namespace ClubProcessor.Services
         }
 
         /// <remarks>
-        ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
-        ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,
-        ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X             * 
+        ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed,Number/Raw Name
+        ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,,9999
+        ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X,Johnny Doe
+        ///   Jane Doe (HCRC),0,21.0,57.0,,,Joe Murray (HCRC),00:21:57,X,Jane Doe
         /// </remarks>
         private Ride? ParseRide(RideCsvRow row, int eventNumber)
         {
-            // TODO: Parse columns from dynamic row
-            // TODO: Compute calculated fields (points, standard time, etc.)
-            // TODO: Handle DNS/DNF/DQ and set RideEligibility
-
             var rawNumberOrName = row.NumberOrName?.Trim();
 
             bool isClubMember = int.TryParse(rawNumberOrName, out int clubNumber);
