@@ -131,6 +131,8 @@ This table will be populated from the `RoundRobinRiders_{YYYY}.csv` file.  These
 
 What to do about WVCC riders concept of dates when they sign up?  Do we need this concept for other clubs?  For now, we will assume that all non-WVCC riders are in their club for all RR events.  We could always use a different name in the event pages if we need to.
 
+New class `RoundRobinRiderImporter` based on `\processor\ClubProcessor\Services\CompetitorImporter.cs`
+
 #### Rides table - additional properties
 
 - `Club` - the name of the club to which the rider belongs.  This will be `WVCC` for club members.  For guest riders, this will be whatever string appears in parentheses in their name (column A of the Event sheets).  E.g. "John Doe (Ratae)" --> `Ratae`; "Jane Doe (HCRC)" --> `HCRC`.
@@ -150,3 +152,26 @@ If a Ride is done by a member of one of these clubs, then it will have the Round
 This table is used for validation of club names used in the Calendar worksheet.  And also used to identify riders as being eligible for the round robin competition.  
 
 > [!NOTE] The events importer (`\processor\ClubProcessor\Services\EventsImporter.cs`) will process the rider names from the event CSV sheet and use any parentherical suffix as a club name.  E.g. "John Doe (Ratae)" --> `Ratae`, "Geraint Thomas (IGD)" --> `IGD`. If the rider's club identified this way is not part of the round robin series, then the Ride object will *not* have the new Club property set.  Thus, their name in the event html will still include their club in parentheses, but since the club is not one of the known RR clubs, they will not be included in scoring for RR.
+
+### RideProcessing enhancements
+
+Needs two new `IRideProcessor` derived classes to populate the new Ride scoring columns: 
+
+'RoundRobinOpenScoreCalculator' - will process all rides by members of WVCC (any claim status) and by riders with a RoundRobinClub identified.  Sets the `RoundRobinPosition` and `RoundRobinPoints`.
+
+'RoundRobinWomenScoreCalculator' - will process all rides by IsFemale members of WVCC (any claim status) and by IsFemale riders with a RoundRobinClub identified.  Sets the `RoundRobinWomenPosition` and `RoundRobinWomenPoints`.  This will need to hydrate rides with `RoundRobinRiders` table - so an extension to `RideProcessingCoordinator` where we already have the following:
+
+```
+        public void ProcessAll(
+            IEnumerable<Ride> rides, 
+            IEnumerable<Competitor> competitors, 
+            IEnumerable<CalendarEvent> calendarEvents)
+        {
+            RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
+            RideHydrationHelper.HydrateCompetitors(rides, competitors);
+
+            var ridesByEvent = rides
+                .GroupBy(r => r.EventNumber)
+                .OrderBy(g => g.Key);
+```
+
