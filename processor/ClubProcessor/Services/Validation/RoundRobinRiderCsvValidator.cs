@@ -13,6 +13,9 @@ namespace ClubProcessor.Services.Validation
             {
                 lineNumber++;
 
+                if (IsBlankRow(row))
+                    continue;
+
                 issues.AddRange(ValidateRow(row, lineNumber));
             }
 
@@ -24,8 +27,9 @@ namespace ClubProcessor.Services.Validation
             if (string.IsNullOrWhiteSpace(row.Name))
                 yield return Issue(line, "Name is missing.");
 
-            if (string.IsNullOrWhiteSpace(row.Club))
-                yield return Issue(line, "Club is missing.");
+            // Club is not mandatory - this helps when new riders sign up and we don't yet know their club affiliation.
+            //if (string.IsNullOrWhiteSpace(row.Club))
+            //    yield return Issue(line, "Club is missing.");
 
             if (string.IsNullOrWhiteSpace(row.DecoratedName))
                 yield return Issue(line, "DecoratedName is missing.");
@@ -46,5 +50,12 @@ namespace ClubProcessor.Services.Validation
 
         private static string Issue(int line, string message)
             => $"Line {line}: {message}";
+
+        private static bool IsBlankRow(RoundRobinRiderCsvRow row)
+        {
+            return string.IsNullOrWhiteSpace(row.Name)
+                && (string.IsNullOrWhiteSpace(row.DecoratedName) || row.DecoratedName == " ()")
+                && string.IsNullOrWhiteSpace(row.IsFemale);
+        }
     }
 }

@@ -27,7 +27,6 @@ namespace ClubProcessor.Tests
 
         [Theory]
         [InlineData("", "Velo", " (Velo)", "Line 2: Name is missing.")]
-        [InlineData("Alice", "", "Alice ()", "Line 2: Club is missing.")]
         [InlineData("Alice", "Velo", "", "Line 2: DecoratedName is missing.")]
         public void Validate_WhenRequiredFieldMissing_ShouldReturnExpectedIssue(
             string name, string club, string decoratedName, string expectedIssue)
@@ -123,7 +122,6 @@ namespace ClubProcessor.Tests
             var issues = RoundRobinRiderCsvValidator.Validate(rows).ToList();
 
             issues.Should().Contain("Line 2: Name is missing.");
-            issues.Should().Contain("Line 3: Club is missing.");
         }
     }
 }
