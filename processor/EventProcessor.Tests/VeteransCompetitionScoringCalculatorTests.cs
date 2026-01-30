@@ -16,6 +16,54 @@ namespace EventProcessor.Tests
 {
     public class VeteransCompetitionScoringCalculatorTests
     {
+        public static List<RoundRobinRider> CreateSampleRiders() =>
+            new()
+            {
+                        new RoundRobinRider
+                        {
+                            Name = "Alex Morton",
+                            RoundRobinClub = "Aerologic",
+                            IsFemale = false
+                        },
+                        new RoundRobinRider
+                        {
+                            Name = "Riley Thompson",
+                            RoundRobinClub = "Ashby ICC",
+                            IsFemale = false
+                        },
+                        new RoundRobinRider
+                        {
+                            Name = "Sophie Langford",
+                            RoundRobinClub = "RFW",
+                            IsFemale = true
+                        },
+                        new RoundRobinRider
+                        {
+                            Name = "Marcus Hale",
+                            RoundRobinClub = "RFW",
+                            IsFemale = false
+                        },
+                        new RoundRobinRider
+                        {
+                            Name = "Elliot Fraser",
+                            RoundRobinClub = "LFCC",
+                            IsFemale = false
+                        },
+                        new RoundRobinRider
+                        {
+                            Name = "Hannah Keating",
+                            RoundRobinClub = "LFCC",
+                            IsFemale = true
+                        },
+                        new RoundRobinRider
+                        {
+                            Name = "Jordan Pike",
+                            RoundRobinClub = "LFCC",
+                            IsFemale = false
+                        }
+            };
+
+
         [Theory]
         [InlineData(9.5,  1, false, 10000, 35)]  
         [InlineData(10.0, 1, false, 10000, 36)]
@@ -104,8 +152,9 @@ namespace EventProcessor.Tests
 
             var scorer = RideProcessingCoordinatorFactory.Create(PointsProvider.AsDelegate(), 2025);
 
+            var roundRobinRiders = CreateSampleRiders();
             // Act
-            scorer.ProcessAll(rides, competitors, calendarEvents);
+            scorer.ProcessAll(rides, competitors, calendarEvents, roundRobinRiders);
 
             // Assert
             var debug = TestHelpers.RenderVeteransDebugOutput(rides, competitorVersions, new[] { 1 });

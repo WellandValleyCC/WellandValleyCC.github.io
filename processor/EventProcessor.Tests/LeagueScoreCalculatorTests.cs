@@ -11,6 +11,53 @@ namespace EventProcessor.Tests
     {
         private readonly Func<int, int> pointsForPosition = pos => 10 - (pos - 1);
 
+        public static List<RoundRobinRider> CreateSampleRiders() =>
+             new()
+             {
+                            new RoundRobinRider
+                            {
+                                Name = "Alex Morton",
+                                RoundRobinClub = "Aerologic",
+                                IsFemale = false
+                            },
+                            new RoundRobinRider
+                            {
+                                Name = "Riley Thompson",
+                                RoundRobinClub = "Ashby ICC",
+                                IsFemale = false
+                            },
+                            new RoundRobinRider
+                            {
+                                Name = "Sophie Langford",
+                                RoundRobinClub = "RFW",
+                                IsFemale = true
+                            },
+                            new RoundRobinRider
+                            {
+                                Name = "Marcus Hale",
+                                RoundRobinClub = "RFW",
+                                IsFemale = false
+                            },
+                            new RoundRobinRider
+                            {
+                                Name = "Elliot Fraser",
+                                RoundRobinClub = "LFCC",
+                                IsFemale = false
+                            },
+                            new RoundRobinRider
+                            {
+                                Name = "Hannah Keating",
+                                RoundRobinClub = "LFCC",
+                                IsFemale = true
+                            },
+                            new RoundRobinRider
+                            {
+                                Name = "Jordan Pike",
+                                RoundRobinClub = "LFCC",
+                                IsFemale = false
+                            }
+             };
+
         [Theory]
         [EventAutoData]
         public void EventScoring_ForLeagues_AssignsLeaguePositionsAndPoints(
@@ -37,8 +84,11 @@ namespace EventProcessor.Tests
             competitors.Single(c => c.ClubNumber == 5101).League = League.Premier;
             competitors.Single(c => c.ClubNumber == 5102).League = League.Premier;
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
+
 
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
 

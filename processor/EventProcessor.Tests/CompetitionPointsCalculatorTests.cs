@@ -9,6 +9,53 @@ namespace EventProcessor.Tests
 {
     public class CompetitionPointsCalculatorTests
     {
+        public static List<RoundRobinRider> CreateSampleRiders() =>
+             new()
+             {
+                    new RoundRobinRider
+                    {
+                        Name = "Alex Morton",
+                        RoundRobinClub = "Aerologic",
+                        IsFemale = false
+                    },
+                    new RoundRobinRider
+                    {
+                        Name = "Riley Thompson",
+                        RoundRobinClub = "Ashby ICC",
+                        IsFemale = false
+                    },
+                    new RoundRobinRider
+                    {
+                        Name = "Sophie Langford",
+                        RoundRobinClub = "RFW",
+                        IsFemale = true
+                    },
+                    new RoundRobinRider
+                    {
+                        Name = "Marcus Hale",
+                        RoundRobinClub = "RFW",
+                        IsFemale = false
+                    },
+                    new RoundRobinRider
+                    {
+                        Name = "Elliot Fraser",
+                        RoundRobinClub = "LFCC",
+                        IsFemale = false
+                    },
+                    new RoundRobinRider
+                    {
+                        Name = "Hannah Keating",
+                        RoundRobinClub = "LFCC",
+                        IsFemale = true
+                    },
+                    new RoundRobinRider
+                    {
+                        Name = "Jordan Pike",
+                        RoundRobinClub = "LFCC",
+                        IsFemale = false
+                    }
+             };
+
         private static void AssertJuvenileRideMatchesExpected(List<Ride> ridesForEvent, (int ClubNumber, string Name, int Position, double Points) expected)
         {
             var ride = ridesForEvent.SingleOrDefault(r => r.ClubNumber == expected.ClubNumber);
@@ -133,8 +180,10 @@ namespace EventProcessor.Tests
                 (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51), // 980s FirstClaim IsJuvenile
             };
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Arrange helper structures
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -234,8 +283,10 @@ namespace EventProcessor.Tests
                 (ClubNumber: 1013, Name: "Ethan Graham", Position: 3, Points: 51), // 980s FirstClaim IsJuvenile
             };
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Arrange helper structures
             var competitorVersions = TestHelpers.CreateCompetitorVersionsLookup(competitors);
@@ -319,8 +370,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue)
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act & Assert
-            var act = () => scorer.ProcessAll(rides, competitors, calendar);
+            var act = () => scorer.ProcessAll(rides, competitors, calendar, roundRobinRiders);
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage("Scoring aborted: missing competitors detected. Please check the membership list.");
@@ -345,8 +398,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Build grouping and debug output
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
@@ -463,8 +518,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderSeniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
@@ -569,8 +626,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Group by event using the existing test helper
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: false);
@@ -624,8 +683,10 @@ namespace EventProcessor.Tests
                             r.Status == RideStatus.Valid)
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Group by event using the existing test helper
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: false);
@@ -678,8 +739,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Two groupings:
             // - all eligible rides (for checking "no road riders" behaviour)
@@ -746,8 +809,10 @@ namespace EventProcessor.Tests
                             r.Status == RideStatus.Valid)
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Two groupings:
             // - all eligible rides (for checking "no road riders" behaviour)
@@ -814,8 +879,10 @@ namespace EventProcessor.Tests
                     r.Status == RideStatus.Valid)
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders();
+
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: false);
 
@@ -875,7 +942,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+
+            // Act
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderJuniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
@@ -932,7 +1002,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
+
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderJuniorsDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -985,7 +1058,8 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -1055,7 +1129,8 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -1123,7 +1198,8 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderRoadBikeMenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -1175,7 +1251,8 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderRoadBikeMenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -1224,7 +1301,8 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderRoadBikeWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -1286,7 +1364,8 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
-            scorer.ProcessAll(allRides, competitors, calendar);
+            var roundRobinRiders = CreateSampleRiders();
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
             var debug = TestHelpers.RenderRoadBikeWomenDebugOutput(validRides, competitorVersions, new[] { 1, 2, 3 });
             _ = debug;
@@ -1350,8 +1429,10 @@ namespace EventProcessor.Tests
                 .Where(r => r.ClubNumber.HasValue && competitorVersions.ContainsKey(r.ClubNumber.Value))
                 .ToList();
 
+            var roundRobinRiders = CreateSampleRiders(); 
+            
             // Act
-            scorer.ProcessAll(allRides, competitors, calendar);
+            scorer.ProcessAll(allRides, competitors, calendar, roundRobinRiders);
 
             // Build grouping and debug output
             var ridesByEvent = TestHelpers.BuildRidesByEvent(validRides, onlyValidWithClubNumber: true);
