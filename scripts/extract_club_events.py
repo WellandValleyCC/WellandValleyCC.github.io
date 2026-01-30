@@ -109,7 +109,6 @@ def extract_club_events(xlsx_path, output_dir):
     if "RoundRobinRiders" in xl.sheet_names:
         print("[OK] Extracting RoundRobinRiders sheet")
         round_robin_riders_df = xl.parse("RoundRobinRiders")
-        normalize_boolean_column(round_robin_riders_df, "isFemale")
         round_robin_riders_out = os.path.join(year_dir, f"RoundRobinRiders_{year}.csv")
         round_robin_riders_df.to_csv(round_robin_riders_out, index=False)
         shutil.copy(round_robin_riders_out, os.path.join(artifact_dir, os.path.basename(round_robin_riders_out)))
