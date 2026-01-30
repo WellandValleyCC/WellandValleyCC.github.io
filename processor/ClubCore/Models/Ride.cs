@@ -98,6 +98,9 @@ namespace ClubCore.Models
         public Competitor? Competitor { get; set; }
 
         [NotMapped]
+        public RoundRobinRider? RoundRobinRider { get; set; }
+
+        [NotMapped]
         public CalendarEvent? CalendarEvent { get; set; }
 
         [NotMapped]
