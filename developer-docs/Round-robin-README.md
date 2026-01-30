@@ -131,7 +131,12 @@ This table will be populated from the `RoundRobinRiders_{YYYY}.csv` file.  These
 
 What to do about WVCC riders concept of dates when they sign up?  Do we need this concept for other clubs?  For now, we will assume that all non-WVCC riders are in their club for all RR events.  We could always use a different name in the event pages if we need to.
 
+> [!NOTE]
+> Any rider in the RoundRobinRiders CSV whose Club name is not one of the valid RoundRobinClubs will be omitted.  This table is exclusively for those riders who are non-WVCC, but are eligible for Round Robin competitions.
+
 New class `RoundRobinRiderImporter` based on `\processor\ClubProcessor\Services\CompetitorImporter.cs`
+
+New class `RoundRobinRiderCsvRow` based on `\processor\ClubCore\Models\Csv\CompetitorCsvRow.cs`
 
 #### Rides table - additional properties
 
