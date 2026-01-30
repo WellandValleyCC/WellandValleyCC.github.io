@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubProcessor.Migrations.EventDb
 {
     [DbContext(typeof(EventDbContext))]
-    [Migration("20260130095707_AddRoundRobinRidersTable")]
+    [Migration("20260130123356_AddRoundRobinRidersTable")]
     partial class AddRoundRobinRidersTable
     {
         /// <inheritdoc />
@@ -259,8 +259,9 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<bool>("IsFemale")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Name")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoundRobinClub")
                         .IsRequired()

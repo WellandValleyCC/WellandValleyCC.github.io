@@ -10,7 +10,7 @@ namespace ClubCore.Models
         [Key]
         public int Id { get; set; }  // Auto-incremented by EF/SQLite
 
-        public required int Name { get; set; }                // e.g. "John Doe"
+        public required string Name { get; set; }             // e.g. "John Doe"
         public required string RoundRobinClub { get; set; }   // e.g. "Ratae"
         public required bool IsFemale { get; set; }           // e.g. false
 

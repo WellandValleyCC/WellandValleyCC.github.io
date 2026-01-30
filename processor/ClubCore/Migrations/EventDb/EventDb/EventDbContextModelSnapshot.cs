@@ -256,8 +256,9 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<bool>("IsFemale")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Name")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoundRobinClub")
                         .IsRequired()

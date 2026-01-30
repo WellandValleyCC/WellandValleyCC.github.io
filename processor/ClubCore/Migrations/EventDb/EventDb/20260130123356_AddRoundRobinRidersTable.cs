@@ -16,7 +16,7 @@ namespace ClubProcessor.Migrations.EventDb
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     RoundRobinClub = table.Column<string>(type: "TEXT", nullable: false),
                     IsFemale = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
