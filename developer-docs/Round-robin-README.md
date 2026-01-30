@@ -180,3 +180,15 @@ Needs two new `IRideProcessor` derived classes to populate the new Ride scoring 
                 .OrderBy(g => g.Key);
 ```
 
+Net result is these columns being populated where we have a `Ride` from a WVCC club member (regardless of Claim Status) or the ride is from a guest who is a member of one of the Round Robin clubs (and therefore includes a valid value in `RoundRobinClub` and the `Name` matches the decorated name of a rider in the `RoundRobinRiders` table).
+
+<img src="../images/Rides-table-from-2025-event-19-RR-columns.png" alt="Rides updated for RoundRobin scoring">
+
+``` sql
+select Name, Status, ClubNumber, RoundRobinClub, 
+RoundRobinPosition, RoundRobinPoints, 
+RoundRobinWomenPosition, RoundRobinWomenPoints 
+from Rides where EventNumber = 19
+```
+
+Note that guest riders who are not members of one of the round robin clubs do *NOT* get a score.
