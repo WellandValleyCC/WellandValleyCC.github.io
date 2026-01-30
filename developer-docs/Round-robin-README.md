@@ -146,3 +146,7 @@ Populated automatically by the ClubProcessor with the five clubs currently in th
 <img src="../images/RoundRobinClubs-Table.png" alt="RoundRobinClubs table">
 
 If a Ride is done by a member of one of these clubs, then it will have the RoundRobin scoring columns filled in by the Round Robin calculator classes.  
+
+This table is used for validation of club names used in the Calendar worksheet.  And also used to identify riders as being eligible for the round robin competition.  
+
+> [!NOTE] The events importer (`\processor\ClubProcessor\Services\EventsImporter.cs`) will process the rider names from the event CSV sheet and use any parentherical suffix as a club name.  E.g. "John Doe (Ratae)" --> `Ratae`, "Geraint Thomas (IGD)" --> `IGD`. If the rider's club identified this way is not part of the round robin series, then the Ride object will *not* have the new Club property set.  Thus, their name in the event html will still include their club in parentheses, but since the club is not one of the known RR clubs, they will not be included in scoring for RR.
