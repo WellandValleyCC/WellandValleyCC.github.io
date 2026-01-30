@@ -17,7 +17,7 @@ namespace ClubProcessor.Calculators
         public int ApplyScores(int eventNumber, List<Ride> rides, Func<int, int> pointsForPosition)
         {
             var eligibleRides = rides
-                .Where(r => r.Competitor != null && r.EventNumber == eventNumber)
+                .Where(r => r.EventNumber == eventNumber)
                 .Where(IsEligible)
                 .OrderBy(GetOrderingTime)
                 .ToList();
