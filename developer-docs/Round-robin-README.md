@@ -113,6 +113,13 @@ This needs a new migration to add the following columns to the CalendarEvents ta
 - IsRoundRobinEvent - boolean
 - RoundRobinClub - string
 
+Also, extensions to the corresponding csv handler class `\processor\ClubCore\Models\Csv\CalendarEventCsv.cs`, and code in `\processor\ClubProcessor\Services\CalendarImporter.cs` to validate the supplied Club Name (if present) against the list of clubs defined in RoundRobinClubs (plus implicitly "WVCC").
+
+> - [!NOTE]
+> Since the hosting of one event in the 2025 season was shared by Ratae and WVCC, this should be capable of handling a CSV list of club names.
+
+Validation should ensure that the club name used in this Round Robin Club column is a recognised round robin participating club.
+
 #### New RoundRobinRiders table
 
 - [ ] to do
