@@ -191,4 +191,9 @@ RoundRobinWomenPosition, RoundRobinWomenPoints
 from Rides where EventNumber = 19
 ```
 
-Note that guest riders who are not members of one of the round robin clubs do *NOT* get a score.
+> [!NOTE]
+> 1. Guest riders who are not members of one of the round robin clubs do *NOT* get a score.
+>
+> 2. Riders representing a RR club as second claim can show their first claim club name in their name - e.g. "Joe Murray (M I Racing) (LFCC)".  
+>
+> 3. If a rider fails to identify the RR club they are representing, then no points will be scored.
