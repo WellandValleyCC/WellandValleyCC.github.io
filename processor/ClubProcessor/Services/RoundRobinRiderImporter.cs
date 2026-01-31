@@ -53,7 +53,10 @@ namespace ClubProcessor.Services
                 // Skip riders whose club is not in the RR club list
                 if (!validClubs.Contains(row.Club))
                 {
-                    Console.WriteLine($"[INFO] Skipping rider {row.Name}: Club '{row.Club}' is not a valid RoundRobinClub.");
+                    if (!string.IsNullOrWhiteSpace(row.Club))
+                    {
+                        Console.WriteLine($"[INFO] Skipping ride {row.Name}: Club '{row.Club}' is not a valid RoundRobinClub.");
+                    }
                     continue;
                 }
 
