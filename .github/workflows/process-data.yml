@@ -164,22 +164,20 @@ jobs:
 
       - name: Prepare commit inputs for Competitor SQLite DB
         run: |
-          if [ -f ".competitor_csv_path" ]; then
-            file=$(cat .competitor_csv_path)
-            year=$(basename "$file" | grep -oP '\d{4}')
-            dbPath="data/club_competitors_${year}.db"
+          year="${{ github.event.inputs.year }}"
+          if [ -z "$year" ]; then
+            year=$(date +'%Y')
+          fi
       
-            if [ -f "$dbPath" ]; then
-              echo "[INFO] Found DB: $dbPath"
-              echo "dbPath=$dbPath" >> $GITHUB_ENV
-              echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
-              echo "skipCommit=false" >> $GITHUB_ENV
-            else
-              echo "[INFO] DB not found: $dbPath — skipping commit"
-              echo "skipCommit=true" >> $GITHUB_ENV
-            fi
+          dbPath="data/club_competitors_${year}.db"
+      
+          if [ -f "$dbPath" ]; then
+            echo "[INFO] Competitor DB exists: $dbPath"
+            echo "dbPath=$dbPath" >> $GITHUB_ENV
+            echo "commitMessage=Persisted competitor DB for ${year} import [ci skip]" >> $GITHUB_ENV
+            echo "skipCommit=false" >> $GITHUB_ENV
           else
-            echo "[INFO] No competitor CSV marker file — skipping commit"
+            echo "[INFO] Competitor DB not found — skipping commit"
             echo "skipCommit=true" >> $GITHUB_ENV
           fi
         shell: bash
