@@ -1,12 +1,12 @@
 ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,VetsBucket,ImportDate
-7,Barnett,Vic,Honorary,False,Veteran,32,2026-01-01
-473,Barnett,George,Honorary,False,Veteran,33,2026-01-01
-68,Beach,Ronald,Honorary,False,Veteran,35,2026-01-01
-10,Birch,Dave,Honorary,False,Veteran,35,2026-01-01
-493,Halls,George,Honorary,False,Veteran,37,2026-01-01
-369,Barnett,Dean,First Claim,False,Veteran,8,2026-01-01
-13,Bramford,Paul,First Claim,False,Veteran,28,2026-01-01
-1100,Mansfield,Ian,First Claim,False,Veteran,13,2026-01-01
-39,Reay,Michael,First Claim,False,Veteran,43,2026-01-01
-508,Riley,Peter,First Claim,False,Veteran,31,2026-01-01
-597,Shelley,Trevor,First Claim,False,Veteran,36,2026-01-01
+7,Barnett,Vic,Honorary,False,Veteran,32,2026-01-02
+473,Barnett,George,Honorary,False,Veteran,33,2026-01-02
+68,Beach,Ronald,Honorary,False,Veteran,35,2026-01-02
+10,Birch,Dave,Honorary,False,Veteran,35,2026-01-02
+493,Halls,George,Honorary,False,Veteran,37,2026-01-02
+369,Barnett,Dean,First Claim,False,Veteran,8,2026-01-02
+13,Bramford,Paul,First Claim,False,Veteran,28,2026-01-02
+1100,Mansfield,Ian,First Claim,False,Veteran,13,2026-01-02
+39,Reay,Michael,First Claim,False,Veteran,43,2026-01-02
+508,Riley,Peter,First Claim,False,Veteran,31,2026-01-02
+597,Shelley,Trevor,First Claim,False,Veteran,36,2026-01-02
