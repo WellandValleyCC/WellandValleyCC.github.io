@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace ClubSiteGenerator.Tests
 {
-    public class DataLoaderTests
+    public class RideHydratorTests
     {
         private readonly Fixture _fixture = new();
 
