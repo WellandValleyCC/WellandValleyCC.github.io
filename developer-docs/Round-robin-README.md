@@ -1,7 +1,6 @@
 # Round Robin README
 
 The Round Robin competitions are not WVCC specific, but for reasons of practicality, it makes sense to process them alongside the WVCC competitions.
-A key design goal, however, is to not pollute the WVCC specific implementation with `ClubProcessor`, so that other clubs wishing to adopt this cloud-based competition system can do so.
 
 ## ClubProcessor before Round Robin support
 
@@ -197,3 +196,21 @@ from Rides where EventNumber = 19
 > 2. Riders representing a RR club as second claim can show their first claim club name in their name - e.g. "Joe Murray (M I Racing) (LFCC)".  
 >
 > 3. If a rider fails to identify the RR club they are representing, then no points will be scored.
+
+## Presentation
+
+The WVCC timetrials are rendered via a static website on the WellandValleyCC.github.io repo, using the gh-pages branch, /docs folder
+
+<img src="../images/WellandValleyCC.github.io-settings-pages.png" alt="WellandValleyCC.github.i settings pages">
+
+index.html is a redirect to the current season's index page: e.g. index2026.html where the index page shows a calendar of events and links to the various competitions.  This is all very WVCC focused, with the competitions being exclusively for first claim WVCC members - and the event pages focused on representing riders as WVCC members or guests.
+
+Rather than pollute this static site with inter-club round robin results, the intent is to create another index page which any of the round robin participant clubs could link to from their club website.
+
+This new static site will be at https://wellandvalleycc.github.io/round-robin and will follow the same format as the WVCC index page at the root URI.  In other words, there will be a calendar - showing just the round robin events, and linking to RR-centric renderings of each event.  And the competitions section showing:
+
+1) round robin open
+2) round robin women
+3) round robin club 
+
+> [!NOTE] Need to consider how best to handle a link to the club website - should there be multiple links, one for each particpating club?  Or could the URI have a query string which specifies the parent club - e.g. https://wellandvalleycc.github.io/round-robin?club=wvcc; or https://wellandvalleycc.github.io/round-robin?club=ratae
