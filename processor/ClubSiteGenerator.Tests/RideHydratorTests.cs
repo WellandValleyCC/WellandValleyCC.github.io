@@ -1,10 +1,8 @@
 ﻿using AutoFixture;
 using ClubCore.Models;
 using ClubCore.Models.Enums;
-using ClubSiteGenerator.Services;
 using ClubSiteGenerator.Services.Hydration;
 using FluentAssertions;
-using System.Globalization;
 
 namespace ClubSiteGenerator.Tests
 {
@@ -12,16 +10,64 @@ namespace ClubSiteGenerator.Tests
     {
         private readonly Fixture _fixture = new();
 
-        [Fact]
-        public void AttachReferencesToRides_ShouldAttachCompetitorAndCalendarEvent()
+        public RideHydratorTests()
         {
-            // Arrange
+            _fixture.Customize<Competitor>(c =>
+                c.Without(x => x.VetsBucket));
+
+            _fixture.Customize<Ride>(c =>
+                c.Without(r => r.Competitor));
+        }
+
+        // ------------------------------------------------------------
+        // Calendar Event Hydration
+        // ------------------------------------------------------------
+
+        [Fact]
+        public void AttachCalendarEvents_ShouldAttachCalendarEvent()
+        {
+            var calendarEvent = _fixture.Build<CalendarEvent>()
+                .With(e => e.EventNumber, 1)
+                .With(e => e.EventDate, new DateTime(2024, 06, 01))
+                .Create();
+
+            var ride = _fixture.Build<Ride>()
+                .With(r => r.Name, "Alice Ride")
+                .With(r => r.EventNumber, 1)
+                .With(r => r.CalendarEvent, (CalendarEvent?)null)
+                .Create();
+
+            RideHydrator.AttachCalendarEvents(new[] { ride }, new[] { calendarEvent });
+
+            ride.CalendarEvent.Should().Be(calendarEvent);
+        }
+
+        [Fact]
+        public void AttachCalendarEvents_ShouldThrowIfCalendarEventMissing()
+        {
+            var ride = _fixture.Build<Ride>()
+                .With(r => r.Name, "Bob Ride")
+                .With(r => r.EventNumber, 99)
+                .Create();
+
+            Action act = () =>
+                RideHydrator.AttachCalendarEvents(new[] { ride }, Array.Empty<CalendarEvent>());
+
+            act.Should().Throw<InvalidOperationException>()
+                .WithMessage($"*{ride.EventNumber}*");
+        }
+
+        // ------------------------------------------------------------
+        // Competitor Hydration
+        // ------------------------------------------------------------
+
+        [Fact]
+        public void AttachCompetitors_ShouldAttachCompetitorSnapshot()
+        {
             var competitor = _fixture.Build<Competitor>()
                 .With(c => c.ClubNumber, 123)
-                .With(c => c.AgeGroup, AgeGroup.Senior)
-                .With(c => c.VetsBucket, (int?)null)
-                .With(c => c.ClaimStatus, ClaimStatus.FirstClaim)
                 .With(c => c.CreatedUtc, new DateTime(2024, 01, 01))
+                .Without(c => c.VetsBucket)
                 .Create();
 
             var calendarEvent = _fixture.Build<CalendarEvent>()
@@ -36,49 +82,13 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            // Act
-            RideHydrator.AttachCalendarEvents(new[] { ride }, new[] { calendarEvent });
             RideHydrator.AttachCompetitors(new[] { ride }, new[] { competitor }, new[] { calendarEvent });
-            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
-
-            // Assert
             ride.Competitor.Should().Be(competitor);
-            ride.CalendarEvent.Should().Be(calendarEvent);
         }
 
         [Fact]
-        public void AttachReferencesToRides_ShouldThrowIfCalendarEventMissing()
-        {
-            var competitor = new Competitor
-            {
-                ClubNumber = 123,
-                GivenName = "Alice",
-                Surname = "Smith",
-                ClaimStatus = ClaimStatus.FirstClaim,
-                IsFemale = false,
-                AgeGroup = AgeGroup.Senior,
-                CreatedUtc = new DateTime(2024, 01, 01),
-                LastUpdatedUtc = new DateTime(2024, 01, 01),
-                League = League.Undefined
-            };
-
-
-            var ride = _fixture.Build<Ride>()
-                .With(r => r.Name, "Bob Ride")
-                .With(r => r.ClubNumber, 456)
-                .With(r => r.EventNumber, 99)
-                .With(r => r.Competitor, (Competitor?)null)
-                .Create();
-
-            Action act = () => RideHydrator.AttachCalendarEvents(new[] { ride }, Array.Empty<CalendarEvent>());
-
-            act.Should().Throw<InvalidOperationException>()
-                .WithMessage($"*{ride.EventNumber}*");
-        }
-
-        [Fact]
-        public void AttachReferencesToRides_ShouldThrowIfCompetitorMissing()
+        public void AttachCompetitors_ShouldThrowIfCompetitorMissing()
         {
             var calendarEvent = _fixture.Build<CalendarEvent>()
                 .With(e => e.EventNumber, 1)
@@ -89,49 +99,42 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Name, "Charlie Ride")
                 .With(r => r.ClubNumber, 999)
                 .With(r => r.EventNumber, 1)
-                .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            Action act = () => RideHydrator.AttachCompetitors(new[] { ride }, Array.Empty<Competitor>(), new[] { calendarEvent });
+            Action act = () =>
+                RideHydrator.AttachCompetitors(new[] { ride }, Array.Empty<Competitor>(), new[] { calendarEvent });
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage($"*{ride.ClubNumber}*");
         }
 
         [Fact]
-        public void AttachReferencesToRides_ShouldPickLatestCompetitorSnapshotBeforeEventDate()
+        public void AttachCompetitors_ShouldPickLatestSnapshotBeforeEventDate()
         {
             var snapshots = new[]
             {
                 _fixture.Build<Competitor>()
-                    .Without(c => c.VetsBucket) 
+                    .Without(c => c.VetsBucket)
                     .With(c => c.ClubNumber, 123)
                     .With(c => c.GivenName, "OldSnapshotGivenName")
                     .With(c => c.Surname, "OldSnapshotSurname")
-                    .With(c => c.AgeGroup, AgeGroup.Senior)
-                    .With(c => c.ClaimStatus, ClaimStatus.SecondClaim)
                     .With(c => c.CreatedUtc, new DateTime(2024, 01, 01))
-                    .Without(c => c.VetsBucket)
                     .Create(),
+
                 _fixture.Build<Competitor>()
-                    .Without(c => c.VetsBucket) 
+                    .Without(c => c.VetsBucket)
                     .With(c => c.ClubNumber, 123)
                     .With(c => c.GivenName, "NewSnapshotGivenName")
                     .With(c => c.Surname, "NewSnapshotSurname")
-                    .With(c => c.AgeGroup, AgeGroup.Senior)
-                    .With(c => c.ClaimStatus, ClaimStatus.FirstClaim)
                     .With(c => c.CreatedUtc, new DateTime(2024, 05, 01))
-                    .Without(c => c.VetsBucket)
                     .Create(),
+
                 _fixture.Build<Competitor>()
                     .Without(c => c.VetsBucket)
                     .With(c => c.ClubNumber, 123)
                     .With(c => c.GivenName, "TooLateSnapshotGivenName")
                     .With(c => c.Surname, "TooLateSnapshotSurname")
-                    .With(c => c.AgeGroup, AgeGroup.Senior)
-                    .With(c => c.ClaimStatus, ClaimStatus.SecondClaim)
                     .With(c => c.CreatedUtc, new DateTime(2024, 07, 01))
-                    .Without(c => c.VetsBucket)
                     .Create()
             };
 
@@ -144,31 +147,25 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Name, "Alice Ride")
                 .With(r => r.ClubNumber, 123)
                 .With(r => r.EventNumber, 1)
-                .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            RideHydrator.AttachCalendarEvents(new[] { ride }, new[] { calendarEvent });
             RideHydrator.AttachCompetitors(new[] { ride }, snapshots, new[] { calendarEvent });
-            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
-            ride?.Competitor?.FullName.Should().Be("NewSnapshotGivenName NewSnapshotSurname");
+            ride.Competitor!.FullName.Should().Be("NewSnapshotGivenName NewSnapshotSurname");
         }
 
         [Fact]
-        public void AttachReferencesToRides_ShouldThrowIfNoSnapshotBeforeEventDate()
+        public void AttachCompetitors_ShouldThrowIfNoSnapshotBeforeEventDate()
         {
             var snapshots = new[]
             {
                 _fixture.Build<Competitor>()
-                .Without(c => c.VetsBucket)
-                .With(c => c.ClubNumber, 123)
-                .With(c => c.GivenName, "TooLateSnapshotGivenName")
-                .With(c => c.Surname, "TooLateSnapshotSurname")
-                .With(c => c.AgeGroup, AgeGroup.Senior)
-                .With(c => c.ClaimStatus, ClaimStatus.SecondClaim)
-                .With(c => c.CreatedUtc, new DateTime(2024, 07, 01))
-                .Without(c => c.VetsBucket)
-                .Create()
+                    .Without(c => c.VetsBucket)
+                    .With(c => c.ClubNumber, 123)
+                    .With(c => c.GivenName, "TooLateSnapshotGivenName")
+                    .With(c => c.Surname, "TooLateSnapshotSurname")
+                    .With(c => c.CreatedUtc, new DateTime(2024, 07, 01))
+                    .Create()
             };
 
             var calendarEvent = _fixture.Build<CalendarEvent>()
@@ -180,13 +177,10 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Name, "TooLateSnapshotGivenName TooLateSnapshotSurname")
                 .With(r => r.ClubNumber, 123)
                 .With(r => r.EventNumber, 1)
-                .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            Action act = () => RideHydrator.AttachCompetitors(
-                new[] { ride },
-                snapshots,
-                new[] { calendarEvent });
+            Action act = () =>
+                RideHydrator.AttachCompetitors(new[] { ride }, snapshots, new[] { calendarEvent });
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage($"*{ride.ClubNumber}*");
