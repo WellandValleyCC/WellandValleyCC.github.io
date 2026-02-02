@@ -1,5 +1,6 @@
 ﻿using ClubCore.Utilities;
 using ClubSiteGenerator.Services;
+using ClubSiteGenerator.Services.Hydration;
 
 namespace ClubSiteGenerator
 {
@@ -31,7 +32,11 @@ namespace ClubSiteGenerator
             var eventCalendar = DataLoader.LoadCalendar(eventDb);
             var allRides = DataLoader.LoadRides(eventDb);
             var allCompetitors = DataLoader.LoadCompetitors(competitorDb);
-            DataLoader.AttachReferencesToRides(allRides, allCompetitors, eventCalendar);
+            var rrRiders = DataLoader.LoadRoundRobinRiders(eventDb); 
+
+            RideHydrator.AttachCalendarEvents(allRides, eventCalendar);
+            RideHydrator.AttachCompetitors(allRides, allCompetitors, eventCalendar);
+            RideHydrator.AttachRoundRobinRiders(allRides, rrRiders);
 
             // Orchestrate results generation
             var orchestrator = new ResultsOrchestrator(allRides, allCompetitors, eventCalendar);
