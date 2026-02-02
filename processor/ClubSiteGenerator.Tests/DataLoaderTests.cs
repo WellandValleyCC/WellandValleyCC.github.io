@@ -1,8 +1,10 @@
-﻿using ClubCore.Models;
-using ClubSiteGenerator.Services;
-using FluentAssertions;
-using AutoFixture;
+﻿using AutoFixture;
+using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubSiteGenerator.Services;
+using ClubSiteGenerator.Services.Hydration;
+using FluentAssertions;
+using System.Globalization;
 
 namespace ClubSiteGenerator.Tests
 {
@@ -35,10 +37,10 @@ namespace ClubSiteGenerator.Tests
                 .Create();
 
             // Act
-            DataLoader.AttachReferencesToRides(
-                new[] { ride },
-                new[] { competitor },
-                new[] { calendarEvent });
+            RideHydrator.AttachCalendarEvents(new[] { ride }, new[] { calendarEvent });
+            RideHydrator.AttachCompetitors(new[] { ride }, new[] { competitor }, new[] { calendarEvent });
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
+
 
             // Assert
             ride.Competitor.Should().Be(competitor);
@@ -69,10 +71,7 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            Action act = () => DataLoader.AttachReferencesToRides(
-                new[] { ride },
-                new[] { competitor },
-                Array.Empty<CalendarEvent>());
+            Action act = () => RideHydrator.AttachCalendarEvents(new[] { ride }, Array.Empty<CalendarEvent>());
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage($"*{ride.EventNumber}*");
@@ -93,10 +92,7 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            Action act = () => DataLoader.AttachReferencesToRides(
-                new[] { ride },
-                Array.Empty<Competitor>(),
-                new[] { calendarEvent });
+            Action act = () => RideHydrator.AttachCompetitors(new[] { ride }, Array.Empty<Competitor>(), new[] { calendarEvent });
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage($"*{ride.ClubNumber}*");
@@ -151,10 +147,9 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            DataLoader.AttachReferencesToRides(
-                new[] { ride },
-                snapshots,
-                new[] { calendarEvent });
+            RideHydrator.AttachCalendarEvents(new[] { ride }, new[] { calendarEvent });
+            RideHydrator.AttachCompetitors(new[] { ride }, snapshots, new[] { calendarEvent });
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             ride?.Competitor?.FullName.Should().Be("NewSnapshotGivenName NewSnapshotSurname");
         }
@@ -188,7 +183,7 @@ namespace ClubSiteGenerator.Tests
                 .With(r => r.Competitor, (Competitor?)null)
                 .Create();
 
-            Action act = () => DataLoader.AttachReferencesToRides(
+            Action act = () => RideHydrator.AttachCompetitors(
                 new[] { ride },
                 snapshots,
                 new[] { calendarEvent });

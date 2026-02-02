@@ -5,6 +5,7 @@ using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
+using ClubSiteGenerator.Services.Hydration;
 using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
 
@@ -34,7 +35,9 @@ namespace ClubSiteGenerator.Tests
 2,1,DNS,,,,Alice Smith";
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
@@ -68,7 +71,10 @@ namespace ClubSiteGenerator.Tests
             var ridesCsv = @"EventNumber,ClubNumber,Eligibility,EventRank,EventRoadBikeRank,TotalSeconds,Name
 1,1,Valid,1,,,Alice Smith";
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
@@ -113,7 +119,10 @@ namespace ClubSiteGenerator.Tests
 1,1,Valid,1,,,Alice Smith
 2,1,DNS,,,,Alice Smith";
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
+
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
@@ -199,7 +208,10 @@ namespace ClubSiteGenerator.Tests
 2,1,DNS,,,,Alice Smith";
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
+
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
@@ -256,7 +268,9 @@ namespace ClubSiteGenerator.Tests
 1,1,Valid,1,,,Alice Smith";
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
@@ -311,7 +325,9 @@ namespace ClubSiteGenerator.Tests
 1,1,Valid,1,,,Alice Smith";
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
