@@ -10,10 +10,11 @@ using ClubSiteGenerator.Utilities;
 
 namespace ClubSiteGenerator.Services
 {
-    public class ResultsOrchestrator
+    public class ClubResultsOrchestrator
     {
         private readonly List<ResultsSet> resultsSets = new();
 
+        private readonly string outputDir;
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<Competitor> competitors;
         private readonly IEnumerable<CalendarEvent> calendar;
@@ -26,11 +27,13 @@ namespace ClubSiteGenerator.Services
         /// <param name="rides">These rides have been hydrated - i.e. Competitors (where applicable) attached and CalendarEvent attached.</param>
         /// <param name="competitors"></param>
         /// <param name="calendar"></param>
-        public ResultsOrchestrator(
+        public ClubResultsOrchestrator(
+            string outputDir,
             IEnumerable<Ride> rides,
             IEnumerable<Competitor> competitors,
             IEnumerable<CalendarEvent> calendar)
         {
+            this.outputDir = outputDir;
             this.rides = rides;
             this.competitors = competitors;
             this.calendar = calendar;
@@ -121,7 +124,7 @@ namespace ClubSiteGenerator.Services
 
         public void GenerateAll(string indexFileName)
         {
-            StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
+            StylesWriter.EnsureStylesheet(outputDir);
 
             // Build unified ordering and assign Prev/Next
             var orderedEvents = resultsSets.OfType<EventResultsSet>()
@@ -168,7 +171,6 @@ namespace ClubSiteGenerator.Services
                 var renderer = new EventRenderer(indexFileName, resultsSet);
                 Console.WriteLine($"Generating results for event: {resultsSet.FileName}");
                 var html = renderer.Render();
-                var outputDir = OutputLocator.GetOutputDirectory();
                 var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
@@ -180,7 +182,6 @@ namespace ClubSiteGenerator.Services
 
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();
-                var outputDir = OutputLocator.GetOutputDirectory();
                 var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
@@ -201,7 +202,6 @@ namespace ClubSiteGenerator.Services
                     .IndexOf(comp.CompetitionType))
                 .ToList();
 
-            var outputDir = OutputLocator.GetOutputDirectory();
             var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
             indexRenderer.RenderIndex(indexFileName);
 

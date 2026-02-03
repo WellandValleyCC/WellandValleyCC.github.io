@@ -7,14 +7,20 @@ namespace ClubSiteGenerator.Services
         public static string GetOutputDirectory()
         {
             bool runningInCi = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
+            string root;
+
             if (runningInCi)
-                return Path.Combine(Path.GetTempPath(), "wvcc-site");
+            {
+                root = Path.Combine(Path.GetTempPath(), "wvcc-site");
+                Console.WriteLine($"[OutputLocator] Running in CI. Root output directory: {root}");
+            }
+            else
+            {
+                root = FolderLocator.FindGitRepoRoot();
+                Console.WriteLine($"[OutputLocator] Running locally. Root output directory: {root}");
+            }
 
-            var repoRoot = FolderLocator.FindGitRepoRoot();
-            var dir = Path.Combine(repoRoot, "SiteOutput");
-            Directory.CreateDirectory(dir);
-
-            return dir;
+            return root;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace ClubSiteGenerator.Services
 {
     public static class DataLoader
     {
-        public static IReadOnlyList<CalendarEvent> LoadCalendar(EventDbContext eventDb) =>
+        public static List<CalendarEvent> LoadCalendar(EventDbContext eventDb) =>
             eventDb.CalendarEvents.ToList();
 
         public static IReadOnlyList<Competitor> LoadCompetitors(CompetitorDbContext competitorDb) =>
