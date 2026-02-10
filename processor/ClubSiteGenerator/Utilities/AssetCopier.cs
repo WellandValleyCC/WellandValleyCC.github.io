@@ -39,7 +39,7 @@ namespace ClubSiteGenerator.Utilities
                 .Select(f =>
                 {
                     var match = ExtractYearRegex().Match(f!);
-                    return match.Success ? int.Parse(match.Value) : (int?)null;
+                    return match.Success ? int.Parse(match.Groups[1].Value) : (int?)null;
                 })
                 .OfType<int>()
                 .OrderByDescending(y => y)
