@@ -116,6 +116,14 @@ html {
     justify-content: center;
 }
 
+.weekday-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
 /* ===========================
    Baseline + Body
    =========================== */

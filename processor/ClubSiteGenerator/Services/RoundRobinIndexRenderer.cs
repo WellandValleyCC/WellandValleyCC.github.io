@@ -107,6 +107,17 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine("<div class=\"month\">");
             sb.AppendLine($"  <h3>{monthName}</h3>");
+
+            sb.AppendLine("  <div class=\"weekday-row\">");
+            sb.AppendLine("    <div>Mon</div>");
+            sb.AppendLine("    <div>Tue</div>");
+            sb.AppendLine("    <div>Wed</div>");
+            sb.AppendLine("    <div>Thu</div>");
+            sb.AppendLine("    <div>Fri</div>");
+            sb.AppendLine("    <div>Sat</div>");
+            sb.AppendLine("    <div>Sun</div>");
+            sb.AppendLine("  </div>");
+
             sb.AppendLine("  <div class=\"month-grid\">");
 
             int daysInMonth = DateTime.DaysInMonth(competitionYear, month);
@@ -145,7 +156,7 @@ namespace ClubSiteGenerator.Services
         // ------------------------------------------------------------
         private string RenderEventCell(CalendarEvent ev, int day)
         {
-            var link = $"{competitionYear}-rr-event-{ev.RoundRobinEventNumber:D2}.html";
+            var link = $"events/{competitionYear}-rr-event-{ev.RoundRobinEventNumber:D2}.html";
 
             return
         $@"    <div class=""cell event"">
@@ -161,11 +172,11 @@ namespace ClubSiteGenerator.Services
         private string RenderCompetitionsSection()
         {
             return
-@"<h2>Competitions</h2>
+        $@"<h2>Competitions</h2>
 <ul class=""competitions"">
-    <li><a href=""competition-open.html"">Open Competition</a></li>
-    <li><a href=""competition-women.html"">Women’s Competition</a></li>
-    <li><a href=""competition-club.html"">Club Competition</a></li>
+    <li><a href=""competitions/{competitionYear}-rr-open.html"">Open Competition</a></li>
+    <li><a href=""competitions/{competitionYear}-rr-women.html"">Women’s Competition</a></li>
+    <li><a href=""competitions/{competitionYear}-rr-club.html"">Club Competition</a></li>
 </ul>";
         }
 
