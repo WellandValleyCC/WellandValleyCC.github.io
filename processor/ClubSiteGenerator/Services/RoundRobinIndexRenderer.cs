@@ -107,14 +107,14 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine("<div class=\"month\">");
             sb.AppendLine($"  <h3>{monthName}</h3>");
-            sb.AppendLine("  <div class=\"calendar-grid\">");
+            sb.AppendLine("  <div class=\"month-grid\">");
 
             int daysInMonth = DateTime.DaysInMonth(competitionYear, month);
             int firstDayOfWeek = ((int)new DateTime(competitionYear, month, 1).DayOfWeek + 6) % 7;
 
             // Leading blanks
             for (int i = 0; i < firstDayOfWeek; i++)
-                sb.AppendLine("    <div class=\"day empty\"></div>");
+                sb.AppendLine("    <div class=\"cell empty\"><div class=\"cell-content\"></div></div>");
 
             // Actual days
             for (int day = 1; day <= daysInMonth; day++)
@@ -123,7 +123,10 @@ namespace ClubSiteGenerator.Services
 
                 if (ev == null)
                 {
-                    sb.AppendLine($"    <div class=\"day no-event\"><span class=\"date\">{day}</span></div>");
+                    sb.AppendLine(
+        $@"    <div class=""cell no-event"">
+            <div class=""cell-content"">{day}</div>
+        </div>");
                 }
                 else
                 {
@@ -138,23 +141,18 @@ namespace ClubSiteGenerator.Services
         }
 
         // ------------------------------------------------------------
-        // EVENT CELL (LOGO + DATE + LINK)
+        // EVENT CELL (DATE + LINK ONLY — NO LOGO)
         // ------------------------------------------------------------
         private string RenderEventCell(CalendarEvent ev, int day)
         {
-            var club = ev.RoundRobinClub;
-            var logoPath = $"logos/{club.ToLower()}.png"; // adjust if using SVG
-
-            // Link target: event results page (future)
-            var link = $"event{ev.RoundRobinEventNumber:D2}.html";
+            var link = $"{competitionYear}-rr-event-{ev.RoundRobinEventNumber:D2}.html";
 
             return
-$@"    <div class=""day event"">
-          <a href=""{link}"" class=""cell-link"" title=""{ev.EventName}"">
-              <span class=""date"">{day}</span>
-              <img src=""{logoPath}"" alt=""{club}"" class=""host-logo"" />
-          </a>
-      </div>";
+        $@"    <div class=""cell event"">
+            <div class=""cell-content"">
+                <a href=""{link}"" title=""{ev.EventName}"">{day}</a>
+            </div>
+        </div>";
         }
 
         // ------------------------------------------------------------

@@ -103,6 +103,19 @@ html {
     }
 }
 
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.month-grid .cell-content {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* ===========================
    Baseline + Body
    =========================== */
