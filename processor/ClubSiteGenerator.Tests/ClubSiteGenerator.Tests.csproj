@@ -30,4 +30,8 @@
     <ProjectReference Include="..\ClubSiteGenerator\ClubSiteGenerator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestData\Assets\css\" />
+  </ItemGroup>
+
 </Project>
