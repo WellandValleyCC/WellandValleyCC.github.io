@@ -185,15 +185,33 @@ namespace ClubSiteGenerator.Services
         // ------------------------------------------------------------
         private string RenderParticipatingClubsSection()
         {
-            // For now, static. Later: data‑driven.
             return
-@"<h2>Participating Clubs</h2>
-<div class=""club-grid"">
-    <div class=""club""><img src=""logos/wvcc.png""><div>WVCC</div></div>
-    <div class=""club""><img src=""logos/hcrc.png""><div>HCRC</div></div>
-    <div class=""club""><img src=""logos/rfw.png""><div>RFW</div></div>
-    <div class=""club""><img src=""logos/ratae.png""><div>Ratae</div></div>
-    <div class=""club""><img src=""logos/lfcc.png""><div>LFCC</div></div>
+        $@"<h2>Participating Clubs</h2>
+<div class=""clubs-grid"">
+    <div class=""club"">
+        <div class=""club-logo""><img src=""logos/wvcc.png"" alt=""WVCC""></div>
+        <div class=""club-name"">Welland Valley CC</div>
+    </div>
+
+    <div class=""club"">
+        <div class=""club-logo""><img src=""logos/hcrc.png"" alt=""HCRC""></div>
+        <div class=""club-name"">Hinckley CRC</div>
+    </div>
+
+    <div class=""club"">
+        <div class=""club-logo""><img src=""logos/rfw.png"" alt=""RFW""></div>
+        <div class=""club-name"">Rockingham Forest Wheelers</div>
+    </div>
+
+    <div class=""club"">
+        <div class=""club-logo""><img src=""logos/ratae.png"" alt=""Ratae""></div>
+        <div class=""club-name"">Ratae RC</div>
+    </div>
+
+    <div class=""club"">
+        <div class=""club-logo""><img src=""logos/lfcc.png"" alt=""LFCC""></div>
+        <div class=""club-name"">Leicester Forest CC</div>
+    </div>
 </div>";
         }
     }

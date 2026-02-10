@@ -305,3 +305,37 @@ table.results td.bronze,
     background-color: #a48347;
     color: #DDD9C4;
 }
+
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.club {
+    text-align: center;
+}
+
+.club-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%; /* optional: circular logos */
+    overflow: hidden;
+    background: #f5f5f5; /* fallback if logo has transparency */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.club-logo img {
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+}
+
+.club-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
