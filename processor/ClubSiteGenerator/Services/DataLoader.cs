@@ -16,5 +16,8 @@ namespace ClubSiteGenerator.Services
 
         public static IReadOnlyList<RoundRobinRider> LoadRoundRobinRiders(EventDbContext eventDb) =>
             eventDb.RoundRobinRiders.ToList();
+
+        public static IReadOnlyList<RoundRobinClub> LoadRoundRobinClubs(EventDbContext eventDb) =>
+            eventDb.RoundRobinClubs.ToList();
     }
 }

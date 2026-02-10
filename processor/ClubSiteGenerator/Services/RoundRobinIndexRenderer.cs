@@ -6,16 +6,20 @@ namespace ClubSiteGenerator.Services
     public class RoundRobinIndexRenderer
     {
         private readonly IEnumerable<CalendarEvent> calendar;
+        private readonly IEnumerable<RoundRobinClub> clubs;
         private readonly string outputDir;
         private readonly string cssFileName;
         private readonly int competitionYear;
 
+
         public RoundRobinIndexRenderer(
             IEnumerable<CalendarEvent> calendar,
+            IEnumerable<RoundRobinClub> clubs,
             string outputDir,
             string cssFileName)
         {
             this.calendar = calendar;
+            this.clubs = clubs;
             this.outputDir = outputDir;
             this.cssFileName = cssFileName;
 
@@ -59,7 +63,7 @@ namespace ClubSiteGenerator.Services
 
             sb.AppendLine(RenderCalendar());
             sb.AppendLine(RenderCompetitionsSection());
-            sb.AppendLine(RenderParticipatingClubsSection());
+            sb.AppendLine(RenderParticipatingClubsSection(clubs));
 
             sb.AppendLine(RenderGeneratedFooter());
 
@@ -185,39 +189,46 @@ namespace ClubSiteGenerator.Services
         // ------------------------------------------------------------
         // PARTICIPATING CLUBS
         // ------------------------------------------------------------
-        private string RenderParticipatingClubsSection()
+        private string RenderParticipatingClubsSection(IEnumerable<RoundRobinClub> clubs)
         {
-            return
-        $@"<h2>Participating Clubs</h2>
-<div class=""clubs-grid"">
-    <div class=""club"">
-        <div class=""club-logo""><img src=""logos/wvcc.png"" alt=""WVCC""></div>
-        <div class=""club-name"">Welland Valley CC</div>
-    </div>
+            var activeClubs = clubs
+                .Where(c => c.FromYear <= competitionYear)
+                .OrderBy(c => c.FullName)
+                .ToList();
 
-    <div class=""club"">
-        <div class=""club-logo""><img src=""logos/hcrc.png"" alt=""HCRC""></div>
-        <div class=""club-name"">Hinckley CRC</div>
-    </div>
+            var sb = new StringBuilder();
 
-    <div class=""club"">
-        <div class=""club-logo""><img src=""logos/rfw.png"" alt=""RFW""></div>
-        <div class=""club-name"">Rockingham Forest Wheelers</div>
-    </div>
+            sb.AppendLine("<h2>Participating Clubs</h2>");
+            sb.AppendLine("<div class=\"clubs-grid\">");
 
-    <div class=""club"">
-        <div class=""club-logo""><img src=""logos/ratae.png"" alt=""Ratae""></div>
-        <div class=""club-name"">Ratae RC</div>
-    </div>
+            foreach (var club in activeClubs)
+            {
+                var logoPath = $"logos/{club.ShortName.ToLower()}.png";
 
-    <div class=""club"">
-        <div class=""club-logo""><img src=""logos/lfcc.png"" alt=""LFCC""></div>
-        <div class=""club-name"">Leicester Forest CC</div>
-    </div>
-</div>";
+                sb.AppendLine("  <div class=\"club\">");
+
+                // Optional: wrap logo in a link if WebsiteUrl is present
+                if (!string.IsNullOrWhiteSpace(club.WebsiteUrl))
+                {
+                    sb.AppendLine($"    <a href=\"{club.WebsiteUrl}\" target=\"_blank\" rel=\"noopener\">");
+                    sb.AppendLine($"      <div class=\"club-logo\"><img src=\"{logoPath}\" alt=\"{club.ShortName}\"></div>");
+                    sb.AppendLine("    </a>");
+                }
+                else
+                {
+                    sb.AppendLine($"    <div class=\"club-logo\"><img src=\"{logoPath}\" alt=\"{club.ShortName}\"></div>");
+                }
+
+                sb.AppendLine($"    <div class=\"club-name\">{club.FullName}</div>");
+                sb.AppendLine("  </div>");
+            }
+
+            sb.AppendLine("</div>");
+
+            return sb.ToString();
         }
 
-private string RenderGeneratedFooter()
+        private string RenderGeneratedFooter()
 {
     var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
     return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";

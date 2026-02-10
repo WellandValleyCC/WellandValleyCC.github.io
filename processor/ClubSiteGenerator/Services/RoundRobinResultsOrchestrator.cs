@@ -10,6 +10,7 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<Competitor> competitors;
         private readonly IEnumerable<CalendarEvent> calendar;
+        private readonly IEnumerable<RoundRobinClub> clubs;
 
         private readonly int competitionYear;
 
@@ -17,12 +18,14 @@ namespace ClubSiteGenerator.Services
             string outputDir,
             IEnumerable<Ride> rides,
             IEnumerable<Competitor> competitors,
-            IEnumerable<CalendarEvent> calendar)
+            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<RoundRobinClub> clubs)
         {
             this.outputDir = outputDir;
             this.rides = rides;
             this.competitors = competitors;
             this.calendar = calendar;
+            this.clubs = clubs;
 
             // Determine competition year from first event
             competitionYear = calendar.First().EventDate.Year;
@@ -40,7 +43,13 @@ namespace ClubSiteGenerator.Services
                 competitionYear,
                 prefix: "roundrobin");
 
-            var renderer = new RoundRobinIndexRenderer(calendar, outputDir, cssFile);
+            var renderer = new RoundRobinIndexRenderer(
+                calendar,
+                clubs,
+                outputDir,
+                cssFile
+            );
+
             renderer.RenderIndex(indexFileName);
 
             RenderRedirectIndex(indexFileName);

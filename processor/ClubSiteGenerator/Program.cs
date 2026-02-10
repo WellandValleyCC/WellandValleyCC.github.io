@@ -48,11 +48,18 @@ namespace ClubSiteGenerator
             // Round Robin site
             var rrEventCalendar = rrCalendarFromFullCalendar(eventCalendar);
 
+            var roundRobinClubs = DataLoader.LoadRoundRobinClubs(eventDb);
+
+            var activeClubs = roundRobinClubs
+                .Where(c => c.FromYear <= int.Parse(year))
+                .ToList();
+
             GenerateRoundRobinSite(
                 Path.Combine(outputRoot, "RoundRobinSiteOutput"),
                 allRides,
                 allCompetitors,
                 rrEventCalendar,
+                activeClubs,
                 $"index{year}.html"
             );
         }
@@ -94,6 +101,7 @@ namespace ClubSiteGenerator
             IEnumerable<Ride> rides,
             IEnumerable<Competitor> competitors,
             IEnumerable<CalendarEvent> rrEventCalendar,
+            IEnumerable<RoundRobinClub> clubs,
             string indexFileName)
         {
             Directory.CreateDirectory(outputDir);
@@ -102,7 +110,8 @@ namespace ClubSiteGenerator
                 outputDir,
                 rides,
                 competitors,
-                rrEventCalendar);
+                rrEventCalendar,
+                clubs);
 
             rrOrchestrator.GenerateAll(indexFileName);
             rrOrchestrator.GenerateIndex(indexFileName);
