@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Utilities;
 using System.Text;
 
 namespace ClubSiteGenerator.Services
@@ -34,9 +35,13 @@ namespace ClubSiteGenerator.Services
 
         public void GenerateIndex(string indexFileName)
         {
-            var html = BuildPlaceholderHtml();
-            var path = Path.Combine(outputDir, indexFileName);
-            File.WriteAllText(path, html);
+            var cssFile = AssetCopier.CopyYearSpecificStylesheet(
+                outputDir,
+                competitionYear,
+                prefix: "roundrobin");
+
+            var renderer = new RoundRobinIndexRenderer(calendar, outputDir, cssFile);
+            renderer.RenderIndex(indexFileName);
 
             RenderRedirectIndex(indexFileName);
         }

@@ -7,14 +7,17 @@ namespace ClubSiteGenerator.Services
     {
         private readonly IEnumerable<CalendarEvent> calendar;
         private readonly string outputDir;
+        private readonly string cssFileName;
         private readonly int competitionYear;
 
         public RoundRobinIndexRenderer(
             IEnumerable<CalendarEvent> calendar,
-            string outputDir)
+            string outputDir,
+            string cssFileName)
         {
             this.calendar = calendar;
             this.outputDir = outputDir;
+            this.cssFileName = cssFileName;
 
             competitionYear = calendar.FirstOrDefault()?.EventDate.Year
                               ?? DateTime.Now.Year;
@@ -46,7 +49,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine($"  <title>Round Robin TT – {competitionYear}</title>");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/roundrobin.css\">");
+            sb.AppendLine($"  <link rel=\"stylesheet\" href=\"assets/{cssFileName}\">");
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
