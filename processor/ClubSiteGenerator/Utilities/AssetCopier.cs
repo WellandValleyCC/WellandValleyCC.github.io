@@ -1,6 +1,8 @@
-﻿namespace ClubSiteGenerator.Utilities
+﻿using System.Text.RegularExpressions;
+
+namespace ClubSiteGenerator.Utilities
 {
-    public static class AssetCopier
+    public static partial class AssetCopier
     {
         /// <summary>
         /// Copies a year-specific CSS file into the output folder, falling back to the
@@ -36,11 +38,10 @@
             var availableYears = available
                 .Select(f =>
                 {
-                    var digits = new string(f.Where(char.IsDigit).ToArray());
-                    return int.TryParse(digits, out var y) ? y : (int?)null;
+                    var match = ExtractYearRegex().Match(f!);
+                    return match.Success ? int.Parse(match.Value) : (int?)null;
                 })
-                .Where(y => y.HasValue)
-                .Select(y => y.Value)
+                .OfType<int>()
                 .OrderByDescending(y => y)
                 .ToList();
 
@@ -68,5 +69,8 @@
             var dest = Path.Combine(assetsDir, fileName);
             File.Copy(source, dest, overwrite: true);
         }
+
+        [GeneratedRegex(@"^.*?(\d{4})\.css$")]
+        private static partial Regex ExtractYearRegex();
     }
 }
