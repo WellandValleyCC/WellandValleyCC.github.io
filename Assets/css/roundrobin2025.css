@@ -1,18 +1,12 @@
 ﻿/* ============================
    Calendar Grid Styling
    =========================== */
-
-html {
-    -webkit-text-size-adjust: 100%;
-}
-
 .month {
-    display: inline-block;
-    max-width: 25em;
-    min-width: 16em;
+	display: block;
     border: 1px solid #ccc;
     padding: 0.5rem;
     background-color: #fff;
+    box-shadow: 0 0 4px rgba(0,0,0,0.05);
     box-shadow: 0 0 4px rgba(0,0,0,0.05);
 }
 
@@ -22,59 +16,6 @@ html {
         margin: 0.25em 0;
         -webkit-text-size-adjust: 100%;
     }
-
-/* Calendar table setup */
-.calendar {
-    table-layout: fixed;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-    /* Header and cell base styles */
-    .calendar th,
-    .calendar td {
-        width: 14.2857%;
-        padding: 0;
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .calendar td {
-        font-size: 1.4rem;
-    }
-
-        /* Generic cell content block: enforces square shape */
-        .calendar td .cell-content,
-        .calendar th .cell-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            line-height: 1;
-        }
-
-        /* Event link styling */
-        .calendar td a {
-            color: #004080;
-            text-decoration: underline;
-        }
-
-            .calendar td a:hover {
-                text-decoration: underline;
-            }
-
-        /* No-event cells */
-        .calendar td.no-event {
-            color: #bbb;
-            background-color: #f9f9f9;
-            opacity: 0.6;
-        }
-
-        /* Blank-day cells */
-        .calendar td.blank-day .cell-content {
-            color: transparent;
-        }
 
 /* Grid wrapper for multiple months */
 .calendar-grid {
@@ -311,6 +252,13 @@ table.results td.bronze,
     grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     gap: 1.5rem;
     margin-top: 1rem;
+
+    /* Limit to 3 columns */
+    max-width: calc(12rem * 3 + 3rem); /* 3 columns + gaps */
+
+    /* Left align */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .club {
@@ -338,4 +286,17 @@ table.results td.bronze,
 .club-name {
     font-size: 0.9rem;
     font-weight: 600;
+}
+
+footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+    text-align: center;
+}
+
+footer .generated {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0.5rem 0 0;
 }

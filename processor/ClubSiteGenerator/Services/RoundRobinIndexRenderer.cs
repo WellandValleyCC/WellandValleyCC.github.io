@@ -61,6 +61,8 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine(RenderCompetitionsSection());
             sb.AppendLine(RenderParticipatingClubsSection());
 
+            sb.AppendLine(RenderGeneratedFooter());
+
             sb.AppendLine("  </div>");
             sb.AppendLine("</body>");
             sb.AppendLine("</html>");
@@ -76,7 +78,7 @@ namespace ClubSiteGenerator.Services
             var sb = new StringBuilder();
 
             sb.AppendLine("<h2>Calendar</h2>");
-            sb.AppendLine("<div class=\"calendar-wrapper\">");
+            sb.AppendLine("<div class=\"calendar-grid\">");
 
             var firstMonth = calendar.Min(e => e.EventDate.Month);
             var lastMonth = calendar.Max(e => e.EventDate.Month);
@@ -214,5 +216,11 @@ namespace ClubSiteGenerator.Services
     </div>
 </div>";
         }
+
+private string RenderGeneratedFooter()
+{
+    var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
+    return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
+}
     }
 }
