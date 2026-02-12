@@ -114,7 +114,6 @@ namespace ClubSiteGenerator
                 clubs);
 
             rrOrchestrator.GenerateAll(indexFileName);
-            rrOrchestrator.GenerateIndex(indexFileName);
         }
     }
 }

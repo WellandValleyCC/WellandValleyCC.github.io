@@ -37,11 +37,12 @@ namespace ClubSiteGenerator.Services
             GenerateIndex(indexFileName);
         }
 
-        public void GenerateIndex(string indexFileName)
+        private void GenerateIndex(string indexFileName)
         {
             var repoRoot = FolderLocator.FindGitRepoRoot();
 
-            var cssFile = AssetPipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
+            var result = AssetPipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
+            var cssFile = result.CssFile;
 
             var outputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
 
@@ -51,7 +52,7 @@ namespace ClubSiteGenerator.Services
                 outputRoot,
                 cssFile
             );
-
+            
             renderer.RenderIndex(indexFileName);
 
             RenderRedirectIndex(indexFileName);
