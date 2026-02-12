@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Tests.Helpers;
 using ClubSiteGenerator.Utilities;
 using FluentAssertions;
@@ -14,23 +15,28 @@ namespace ClubSiteGenerator.Tests.Utilities
         {
             // Arrange
             var root = TestFileSystem.CreateTempAssetsFolder();
-            Directory.SetCurrentDirectory(root);
+
+            var assetsRoot = Path.Combine(root, PathTokens.AssetsFolder);
+            var outputRoot = Path.Combine(root, "output");
 
             var year = 2025;
             var prefix = "roundrobin";
             var fileName = $"{prefix}{year}.css";
 
-            TestFileSystem.CreateCssFile(root, fileName);
-
-            var outputDir = Path.Combine(root, "output");
+            TestFileSystem.CreateCssFile(assetsRoot, fileName);
 
             // Act
-            var result = AssetCopier.CopyYearSpecificStylesheet(outputDir, year, prefix);
+            var result = AssetCopier.CopyYearSpecificStylesheet(
+                assetsRoot,
+                outputRoot,
+                year,
+                prefix
+            );
 
             // Assert
             result.Should().Be(fileName);
 
-            var copied = Path.Combine(outputDir, "assets", fileName);
+            var copied = Path.Combine(outputRoot, PathTokens.AssetsFolder, fileName);
             File.Exists(copied).Should().BeTrue();
         }
 
@@ -39,22 +45,27 @@ namespace ClubSiteGenerator.Tests.Utilities
         {
             // Arrange
             var root = TestFileSystem.CreateTempAssetsFolder();
-            Directory.SetCurrentDirectory(root);
+
+            var assetsRoot = Path.Combine(root, PathTokens.AssetsFolder);
+            var outputRoot = Path.Combine(root, "output");
 
             var prefix = "roundrobin";
 
-            TestFileSystem.CreateCssFile(root, $"{prefix}2023.css");
-            TestFileSystem.CreateCssFile(root, $"{prefix}2024.css");
-
-            var outputDir = Path.Combine(root, "output");
+            TestFileSystem.CreateCssFile(assetsRoot, $"{prefix}2023.css");
+            TestFileSystem.CreateCssFile(assetsRoot, $"{prefix}2024.css");
 
             // Act
-            var result = AssetCopier.CopyYearSpecificStylesheet(outputDir, 2025, prefix);
+            var result = AssetCopier.CopyYearSpecificStylesheet(
+                assetsRoot,
+                outputRoot,
+                2025,
+                prefix
+            );
 
             // Assert
             result.Should().Be($"{prefix}2024.css");
 
-            var copied = Path.Combine(outputDir, "assets", $"{prefix}2024.css");
+            var copied = Path.Combine(outputRoot, PathTokens.AssetsFolder, $"{prefix}2024.css");
             File.Exists(copied).Should().BeTrue();
         }
 
@@ -63,16 +74,21 @@ namespace ClubSiteGenerator.Tests.Utilities
         {
             // Arrange
             var root = TestFileSystem.CreateTempAssetsFolder();
-            Directory.SetCurrentDirectory(root);
+
+            var assetsRoot = Path.Combine(root, PathTokens.AssetsFolder);
+            var outputRoot = Path.Combine(root, "output");
 
             var prefix = "roundrobin";
 
-            TestFileSystem.CreateCssFile(root, $"{prefix}2027.css");
-
-            var outputDir = Path.Combine(root, "output");
+            TestFileSystem.CreateCssFile(assetsRoot, $"{prefix}2027.css");
 
             // Act
-            var act = () => AssetCopier.CopyYearSpecificStylesheet(outputDir, 2025, prefix);
+            var act = () => AssetCopier.CopyYearSpecificStylesheet(
+                assetsRoot,
+                outputRoot,
+                2025,
+                prefix
+            );
 
             // Assert
             act.Should().Throw<FileNotFoundException>()
@@ -84,13 +100,19 @@ namespace ClubSiteGenerator.Tests.Utilities
         {
             // Arrange
             var root = TestFileSystem.CreateTempAssetsFolder();
-            Directory.SetCurrentDirectory(root);
+
+            var assetsRoot = Path.Combine(root, PathTokens.AssetsFolder);
+            var outputRoot = Path.Combine(root, "output");
 
             var prefix = "roundrobin";
-            var outputDir = Path.Combine(root, "output");
 
             // Act
-            var act = () => AssetCopier.CopyYearSpecificStylesheet(outputDir, 2025, prefix);
+            var act = () => AssetCopier.CopyYearSpecificStylesheet(
+                assetsRoot,
+                outputRoot,
+                2025,
+                prefix
+            );
 
             // Assert
             act.Should().Throw<FileNotFoundException>()
@@ -102,20 +124,25 @@ namespace ClubSiteGenerator.Tests.Utilities
         {
             // Arrange
             var root = TestFileSystem.CreateTempAssetsFolder();
-            Directory.SetCurrentDirectory(root);
+
+            var assetsRoot = Path.Combine(root, PathTokens.AssetsFolder);
+            var outputRoot = Path.Combine(root, "output");
 
             var prefix = "roundrobin";
             var fileName = $"{prefix}2025.css";
 
-            TestFileSystem.CreateCssFile(root, fileName);
-
-            var outputDir = Path.Combine(root, "output");
+            TestFileSystem.CreateCssFile(assetsRoot, fileName);
 
             // Act
-            var result = AssetCopier.CopyYearSpecificStylesheet(outputDir, 2026, prefix);
+            var result = AssetCopier.CopyYearSpecificStylesheet(
+                assetsRoot,
+                outputRoot,
+                2026,
+                prefix
+            );
 
             // Assert
-            var copied = Path.Combine(outputDir, "assets", fileName);
+            var copied = Path.Combine(outputRoot, PathTokens.AssetsFolder, fileName);
             File.Exists(copied).Should().BeTrue();
         }
     }
