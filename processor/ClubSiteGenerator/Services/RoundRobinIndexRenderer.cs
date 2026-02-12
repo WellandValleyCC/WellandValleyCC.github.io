@@ -58,6 +58,9 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<body>");
 
             sb.AppendLine("  <div class=\"container\">");
+
+            sb.AppendLine(RenderHeaderGraphic());
+
             sb.AppendLine($"    <h1>Round Robin TT – {competitionYear}</h1>");
             sb.AppendLine("    <p>A multi‑club time trial series hosted across the region.</p>");
 
@@ -228,10 +231,20 @@ namespace ClubSiteGenerator.Services
             return sb.ToString();
         }
 
+        private string RenderHeaderGraphic()
+        {
+            return
+        $@"<div class=""rr-hero"">
+    <img src=""/logos/round-robin/rr-header-2026.png""
+         alt=""Round Robin TT Series branding""
+         class=""rr-header"" />
+</div>";
+        }
+
         private string RenderGeneratedFooter()
-{
-    var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
-    return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
-}
+        {
+            var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
+            return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
+        }
     }
 }
