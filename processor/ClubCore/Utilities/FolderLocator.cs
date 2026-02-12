@@ -19,7 +19,7 @@
         public static string GetDataDirectory()
         {
             var repoRoot = FindGitRepoRoot();
-            var dataDir = Path.Combine(repoRoot, "data");
+            var dataDir = Path.Combine(repoRoot, PathTokens.DataFolder);
 
             if (!Directory.Exists(dataDir))
                 throw new DirectoryNotFoundException($"Data directory not found at {dataDir}");
@@ -30,7 +30,7 @@
         public static string GetConfigDirectory()
         {
             var repoRoot = FindGitRepoRoot();
-            var dataDir = Path.Combine(repoRoot, "config");
+            var dataDir = Path.Combine(repoRoot, PathTokens.ConfigFolder);
 
             if (!Directory.Exists(dataDir))
                 throw new DirectoryNotFoundException($"Data directory not found at {dataDir}");

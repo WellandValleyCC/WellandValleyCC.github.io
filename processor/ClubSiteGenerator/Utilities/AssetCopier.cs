@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using ClubCore.Utilities;
+using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.Utilities
 {
@@ -10,12 +11,11 @@ namespace ClubSiteGenerator.Utilities
         /// Returns the filename that was copied (e.g. "roundrobin2025.css").
         /// </summary>
         public static string CopyYearSpecificStylesheet(
-            string outputDir,
+            string assetsRoot,   // source folder, e.g. <repoRoot>\RoundRobinSiteAssets\assets
+            string outputDir,    // output root, e.g. <repoRoot>\RoundRobinSiteOutput
             int year,
             string prefix)
         {
-            var assetsRoot = Path.Combine("Assets", "css");
-
             // Find all matching files: prefixYYYY.css
             var available = Directory.GetFiles(assetsRoot, $"{prefix}*.css")
                                      .Select(Path.GetFileName)
@@ -63,7 +63,7 @@ namespace ClubSiteGenerator.Utilities
         {
             var source = Path.Combine(root, fileName);
 
-            var assetsDir = Path.Combine(outputDir, "assets");
+            var assetsDir = Path.Combine(outputDir, PathTokens.AssetsFolder);
             Directory.CreateDirectory(assetsDir);
 
             var dest = Path.Combine(assetsDir, fileName);

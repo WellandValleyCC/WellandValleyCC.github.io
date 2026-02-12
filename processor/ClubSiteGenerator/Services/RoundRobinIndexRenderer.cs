@@ -161,14 +161,27 @@ namespace ClubSiteGenerator.Services
         }
 
         // ------------------------------------------------------------
-        // EVENT CELL (DATE + LINK ONLY — NO LOGO)
+        // EVENT CELL (DATE + LINK ONLY — FADED LOGO BEHIND)
         // ------------------------------------------------------------
         private string RenderEventCell(CalendarEvent ev, int day)
         {
             var link = $"events/{competitionYear}-rr-event-{ev.RoundRobinEventNumber:D2}.html";
+            var club = FindClubForEvent(ev);
+
+            var classes = new List<string> { "day-cell", "rr-event" };
+
+            string bgAttr = "";
+            if (club != null)
+            {
+                classes.Add("rr-event-with-logo");
+                bgAttr = $@"style=""--bg: url('../logos/{club.ShortName.ToLower()}.png')""";
+            }
+
+            var classAttr = string.Join(" ", classes);
+            var attr = string.IsNullOrEmpty(bgAttr) ? "" : $" {bgAttr}";
 
             return
-        $@"    <div class=""cell event"">
+        $@"    <div class=""{classAttr}""{attr}>
             <div class=""cell-content"">
                 <a href=""{link}"" title=""{ev.EventName}"">{day}</a>
             </div>
@@ -245,6 +258,15 @@ namespace ClubSiteGenerator.Services
         {
             var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
             return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
+        }
+
+        private RoundRobinClub? FindClubForEvent(CalendarEvent ev)
+        {
+            if (string.IsNullOrWhiteSpace(ev.RoundRobinClub))
+                return null;
+
+            return clubs.FirstOrDefault(c =>
+                string.Equals(c.ShortName, ev.RoundRobinClub, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
