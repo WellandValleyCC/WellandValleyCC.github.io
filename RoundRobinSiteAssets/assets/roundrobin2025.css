@@ -10,12 +10,12 @@
     box-shadow: 0 0 4px rgba(0,0,0,0.05);
 }
 
-    .month h3 {
-        font-size: 1.5rem !important;
-        font-weight: bold;
-        margin: 0.25em 0;
-        -webkit-text-size-adjust: 100%;
-    }
+.month h3 {
+	font-size: 1.5rem !important;
+	font-weight: bold;
+	margin: 0.25em 0;
+	-webkit-text-size-adjust: 100%;
+}
 
 /* Grid wrapper for multiple months */
 .calendar-grid {
@@ -51,10 +51,12 @@
 }
 
 .month-grid .cell-content {
+    position: relative;
     aspect-ratio: 1 / 1;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center;      /* number stays centred vertically */
+    justify-content: center;  /* number stays centred horizontally */
+    line-height: 1.1;
 }
 
 .weekday-row {
@@ -63,6 +65,22 @@
     text-align: center;
     font-weight: bold;
     margin-bottom: 0.5rem;
+}
+
+/* ===========================
+   Club shortname under number
+   =========================== */
+.club-shortname {
+    position: absolute;
+    bottom: 1px;              /* subtle spacing from bottom */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    opacity: 0.55;
+    line-height: 1;
+    pointer-events: none;     /* keeps the number clickable */
 }
 
 /* ===========================
