@@ -65,38 +65,6 @@
     margin-bottom: 0.5rem;
 }
 
-
-/* ===========================
-   Event Cells with Club Logos
-   =========================== */
-
-.rr-event-with-logo {
-    --bg-resolved: var(--bg);
-    position: relative;
-    background-color: #fff; /* fallback */
-    overflow: hidden;
-}
-
-.rr-event-with-logo::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: var(--bg-resolved);
-    background-size: 70%;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.25;          /* was 0.12 — double the visibility */
-    filter: none;           /* remove grayscale so colours show */
-    pointer-events: none;
-    z-index: 0;
-}
-
-.rr-event-with-logo .cell-content,
-.rr-event-with-logo a {
-    position: relative;
-    z-index: 1;                  /* ensure text sits above logo */
-}
-
 /* ===========================
    Baseline + Body
    =========================== */
