@@ -166,15 +166,14 @@ namespace ClubSiteGenerator.Services
         private string RenderEventCell(CalendarEvent ev, int day)
         {
             var link = $"events/{competitionYear}-rr-event-{ev.RoundRobinEventNumber:D2}.html";
-            var club = FindClubForEvent(ev);
-
+            
             var classes = new List<string> { "day-cell", "rr-event" };
 
             // No background logos anymore
             var classAttr = string.Join(" ", classes);
 
             // Club shortname (mixed case preserved)
-            var clubShort = club?.ShortName ?? "";
+            var clubShort = ev.RoundRobinClub;
 
             return
         $@"    <div class=""{classAttr}"">
