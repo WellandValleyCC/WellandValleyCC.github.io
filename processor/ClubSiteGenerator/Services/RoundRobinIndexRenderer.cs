@@ -161,7 +161,7 @@ namespace ClubSiteGenerator.Services
         }
 
         // ------------------------------------------------------------
-        // EVENT CELL (DATE + LINK ONLY — FADED LOGO BEHIND)
+        // EVENT CELL (DATE + LINK + CLUB SHORTNAME BELOW)
         // ------------------------------------------------------------
         private string RenderEventCell(CalendarEvent ev, int day)
         {
@@ -170,20 +170,17 @@ namespace ClubSiteGenerator.Services
 
             var classes = new List<string> { "day-cell", "rr-event" };
 
-            string bgAttr = "";
-            if (club != null)
-            {
-                classes.Add("rr-event-with-logo");
-                bgAttr = $@"style=""--bg: url('../logos/{club.ShortName.ToLower()}.png')""";
-            }
-
+            // No background logos anymore
             var classAttr = string.Join(" ", classes);
-            var attr = string.IsNullOrEmpty(bgAttr) ? "" : $" {bgAttr}";
+
+            // Club shortname (mixed case preserved)
+            var clubShort = club?.ShortName ?? "";
 
             return
-        $@"    <div class=""{classAttr}""{attr}>
+        $@"    <div class=""{classAttr}"">
             <div class=""cell-content"">
                 <a href=""{link}"" title=""{ev.EventName}"">{day}</a>
+                <div class=""club-shortname"">{clubShort}</div>
             </div>
         </div>";
         }
