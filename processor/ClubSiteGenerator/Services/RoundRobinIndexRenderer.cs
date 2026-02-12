@@ -174,7 +174,7 @@ namespace ClubSiteGenerator.Services
             if (club != null)
             {
                 classes.Add("rr-event-with-logo");
-                bgAttr = $@"style=""--bg: url('logos/{club.ShortName.ToLower()}.png')""";
+                bgAttr = $@"style=""--bg: url('../logos/{club.ShortName.ToLower()}.png')""";
             }
 
             var classAttr = string.Join(" ", classes);
