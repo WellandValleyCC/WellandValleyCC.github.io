@@ -1,4 +1,6 @@
-﻿using ClubCore.Utilities;
+﻿using ClubCore.Interfaces;
+using ClubCore.Utilities;
+using ClubSiteGenerator.Interfaces;
 
 namespace ClubSiteGenerator.Utilities
 {
@@ -7,32 +9,49 @@ namespace ClubSiteGenerator.Utilities
     /// Copies year-specific CSS, logos, and any other asset folders.
     /// Returns an AssetPipelineResult containing the selected CSS filename.
     /// </summary>
-    public static class AssetPipeline
+    public class AssetPipeline
     {
-        public static AssetPipelineResult CopyRoundRobinAssets(string repoRoot, int year)
+        private readonly IAssetCopier assetCopier;
+        private readonly IDirectoryCopyHelper copyHelper;
+        private readonly IDirectoryProvider directoryProvider;
+        private readonly ILog log;
+
+        public AssetPipeline(
+            IAssetCopier assetCopier,
+            IDirectoryCopyHelper copyHelper,
+            IDirectoryProvider directoryProvider,
+            ILog log)
         {
-            Log.Info($"Starting Round Robin asset pipeline for year {year}");
-            Log.Info($"Repo root: {repoRoot}");
+            this.assetCopier = assetCopier;
+            this.copyHelper = copyHelper;
+            this.directoryProvider = directoryProvider;
+            this.log = log;
+        }
+
+        public AssetPipelineResult CopyRoundRobinAssets(string repoRoot, int year)
+        {
+            log.Info($"Starting Round Robin asset pipeline for year {year}");
+            log.Info($"Repo root: {repoRoot}");
 
             // Resolve canonical folders
             var rrAssetsRoot = Path.Combine(repoRoot, PathTokens.RoundRobinAssetsFolder);
             var rrOutputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
 
-            Log.Info($"Assets root: {rrAssetsRoot}");
-            Log.Info($"Output root: {rrOutputRoot}");
+            log.Info($"Assets root: {rrAssetsRoot}");
+            log.Info($"Output root: {rrOutputRoot}");
 
             // 1. Copy year-specific stylesheet
             var cssSource = Path.Combine(rrAssetsRoot, PathTokens.AssetsFolder);
-            Log.Info($"Selecting CSS from: {cssSource}");
+            log.Info($"Selecting CSS from: {cssSource}");
 
-            var cssFile = AssetCopier.CopyYearSpecificStylesheet(
+            var cssFile = assetCopier.CopyYearSpecificStylesheet(
                 cssSource,
                 rrOutputRoot,
                 year,
                 prefix: PathTokens.RoundRobinCssPrefix
             );
 
-            Log.Info($"Copied CSS file: {cssFile}");
+            log.Info($"Copied CSS file: {cssFile}");
 
             // Exclusions (e.g., markdown files)
             var exclude = new[] { PathTokens.MarkdownExtension };
@@ -41,11 +60,11 @@ namespace ClubSiteGenerator.Utilities
             var logosSource = Path.Combine(rrAssetsRoot, PathTokens.LogosFolder);
             var logosDest = Path.Combine(rrOutputRoot, PathTokens.LogosFolder);
 
-            Log.Info($"Copying logos from {logosSource} to {logosDest}");
-            DirectoryCopyHelper.CopyRecursive(logosSource, logosDest, exclude);
+            log.Info($"Copying logos from {logosSource} to {logosDest}");
+            copyHelper.CopyRecursive(logosSource, logosDest, exclude);
 
             // 3. Copy any other asset folders that exist
-            foreach (var folder in Directory.GetDirectories(rrAssetsRoot))
+            foreach (var folder in directoryProvider.GetDirectories(rrAssetsRoot))
             {
                 var name = Path.GetFileName(folder);
 
@@ -55,11 +74,11 @@ namespace ClubSiteGenerator.Utilities
 
                 var dest = Path.Combine(rrOutputRoot, name);
 
-                Log.Info($"Copying additional asset folder: {name}");
-                DirectoryCopyHelper.CopyRecursive(folder, dest, exclude);
+                log.Info($"Copying additional asset folder: {name}");
+                copyHelper.CopyRecursive(folder, dest, exclude);
             }
 
-            Log.Info("Asset pipeline complete.");
+            log.Info("Asset pipeline complete.");
 
             return new AssetPipelineResult
             {
