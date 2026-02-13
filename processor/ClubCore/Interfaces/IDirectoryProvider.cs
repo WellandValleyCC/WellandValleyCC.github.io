@@ -1,4 +1,4 @@
-﻿namespace ClubSiteGenerator.Interfaces
+﻿namespace ClubCore.Interfaces
 {
     public interface IDirectoryProvider
     {

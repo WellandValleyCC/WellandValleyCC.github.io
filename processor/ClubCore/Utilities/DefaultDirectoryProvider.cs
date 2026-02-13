@@ -1,4 +1,4 @@
-﻿using ClubSiteGenerator.Interfaces;
+﻿using ClubCore.Interfaces;
 
 namespace ClubCore.Utilities
 {
