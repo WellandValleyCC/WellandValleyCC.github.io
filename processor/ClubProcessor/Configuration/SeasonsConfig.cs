@@ -7,7 +7,12 @@ namespace ClubProcessor.Configuration
     {
         public static IReadOnlyList<int> GetSeasons()
         {
-            var configDir = FolderLocator.GetConfigDirectory();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var configDir = folderLocator.GetConfigDirectory();
+
             var path = Path.Combine(configDir, "seasons.json");
 
             if (!File.Exists(path))

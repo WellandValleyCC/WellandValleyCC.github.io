@@ -23,13 +23,21 @@ namespace ClubCore.Utilities
 
         private static string GetEventDbPath(string year)
         {
-            var dataDir = FolderLocator.GetDataDirectory();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var dataDir = folderLocator.GetDataDirectory();
             return Path.Combine(dataDir, $"club_events_{year}.db");
         }
 
         private static string GetCompetitorDbPath(string year)
         {
-            var dataDir = FolderLocator.GetDataDirectory();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var dataDir = folderLocator.GetDataDirectory();
             return Path.Combine(dataDir, $"club_competitors_{year}.db");
         }
 

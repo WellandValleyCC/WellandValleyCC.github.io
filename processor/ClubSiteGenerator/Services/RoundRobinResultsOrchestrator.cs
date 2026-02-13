@@ -39,7 +39,11 @@ namespace ClubSiteGenerator.Services
 
         private void GenerateIndex(string indexFileName)
         {
-            var repoRoot = FolderLocator.FindGitRepoRoot();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var repoRoot = folderLocator.FindGitRepoRoot();
 
             var pipeline = CreateAssetPipeline();
             var result = pipeline.CopyRoundRobinAssets(repoRoot, competitionYear);

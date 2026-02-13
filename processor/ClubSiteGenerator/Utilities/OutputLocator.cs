@@ -16,7 +16,11 @@ namespace ClubSiteGenerator.Services
             }
             else
             {
-                root = FolderLocator.FindGitRepoRoot();
+                var folderLocator = new DefaultFolderLocator(
+                    new DefaultDirectoryProvider(),
+                    new DefaultLog());
+
+                root = folderLocator.FindGitRepoRoot();
                 Console.WriteLine($"[OutputLocator] Running locally. Root output directory: {root}");
             }
 

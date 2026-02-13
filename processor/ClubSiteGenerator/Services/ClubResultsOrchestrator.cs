@@ -41,8 +41,11 @@ namespace ClubSiteGenerator.Services
             // Determine competition year from first event
             competitionYear = calendar.First().EventDate.Year;
 
-            // Construct provider once
-            var configDir = FolderLocator.GetConfigDirectory();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var configDir = folderLocator.GetConfigDirectory();
             var configFilePath = Path.Combine(configDir, "competition-rules.json");
             rulesProvider = new CompetitionRulesProvider(configFilePath);
 

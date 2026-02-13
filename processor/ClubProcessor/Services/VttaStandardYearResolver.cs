@@ -10,7 +10,11 @@ namespace ClubProcessor.Services
 
         static VttaStandardYearResolver()
         {
-            var repoRoot = FolderLocator.FindGitRepoRoot();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var repoRoot = folderLocator.FindGitRepoRoot();
             var dataFolder = Path.Combine(repoRoot, PathTokens.DataFolder);
             var files = Directory.GetFiles(dataFolder, "vtta-standards-combined.*.csv");
             AvailableYears = new SortedSet<int>(

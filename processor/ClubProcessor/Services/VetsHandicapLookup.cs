@@ -23,7 +23,11 @@ namespace ClubProcessor.Services
             _maleSeconds = new();
             _femaleSeconds = new();
 
-            var repoRoot = FolderLocator.FindGitRepoRoot();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var repoRoot = folderLocator.FindGitRepoRoot();
             var dataFolder = Path.Combine(repoRoot, PathTokens.DataFolder);
             var filePath = Path.Combine(dataFolder, $"vtta-standards-combined.{effectiveYear}.csv");
 
