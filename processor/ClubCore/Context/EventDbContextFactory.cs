@@ -9,7 +9,7 @@ namespace ClubCore.Context
         public EventDbContext CreateDbContext(string[] args)
         {
             var year = args.Length > 0 ? args[0] : "2025";
-            var dbPath = DbPathResolver.GetEventDbPath(year);
+            var dbPath = DbPathResolver.ResolveEventDbPath(year);
 
             Console.WriteLine($"[INFO] Creating EventDbContext for year {year} → {dbPath}");
 

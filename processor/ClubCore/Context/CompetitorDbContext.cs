@@ -18,7 +18,7 @@ namespace ClubCore.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var dbPath = DbPathResolver.GetCompetitorDbPath("2025"); // or inject year if dynamic
+                var dbPath = DbPathResolver.ResolveCompetitorDbPath("2025"); // or inject year if dynamic
                 Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
                 optionsBuilder.UseSqlite($"Data Source={dbPath}");
             }

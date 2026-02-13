@@ -9,7 +9,7 @@ namespace ClubCore.Context
         public CompetitorDbContext CreateDbContext(string[] args)
         {
             var year = args.Length > 0 ? args[0] : "2025";
-            var dbPath = DbPathResolver.GetCompetitorDbPath(year);
+            var dbPath = DbPathResolver.ResolveCompetitorDbPath(year);
 
             Console.WriteLine($"[INFO] Creating CompetitorDbContext for year {year} → {dbPath}");
 
