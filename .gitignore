@@ -81,6 +81,15 @@ artifacts/
 /RoundRobinSiteOutput/*
 !/RoundRobinSiteOutput/.gitkeep
 
+# 🧪 Test coverage output (XPlat Code Coverage)
+**/TestResults/
+**/coverage.cobertura.xml
 
+# 📊 Local HTML coverage reports
+coverage-report/
+coverage-report/**
+
+# 🧪 Coverlet-style coverage folders (if ever used again)
+**/coverage/
 
 
