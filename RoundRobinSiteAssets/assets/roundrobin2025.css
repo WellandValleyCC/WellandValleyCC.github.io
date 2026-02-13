@@ -320,9 +320,11 @@ footer .generated {
 }
 
 .rr-hero img.rr-header {
-    width: 100%;
+    width: auto;        /* use natural PNG width */
+    max-width: 100%;    /* shrink on small screens */
     height: auto;
-    max-width: 100%;
     display: block;
+    margin: 0;          /* anchor to top-left */
 }
+
 
