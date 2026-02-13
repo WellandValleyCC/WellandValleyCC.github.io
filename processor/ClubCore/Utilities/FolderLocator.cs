@@ -1,42 +1,61 @@
-﻿namespace ClubCore.Utilities
+﻿using ClubCore.Interfaces;
+
+namespace ClubCore.Utilities
 {
-    public static class FolderLocator
+    public class FolderLocator : IFolderLocator
     {
-        public static string FindGitRepoRoot()
+        private readonly IDirectoryProvider directoryProvider;
+        private readonly ILog log;
+
+        public FolderLocator(IDirectoryProvider directoryProvider, ILog log)
+        {
+            this.directoryProvider = directoryProvider;
+            this.log = log;
+        }
+
+        public string FindGitRepoRoot()
         {
             var dir = new DirectoryInfo(AppContext.BaseDirectory);
-            while (dir != null && !Directory.Exists(Path.Combine(dir.FullName, ".git")))
+
+            while (dir != null)
             {
+                var gitPath = Path.Combine(dir.FullName, ".git");
+
+                if (directoryProvider.Exists(gitPath))
+                {
+                    log.Info($"Git repo root found at: {dir.FullName}");
+                    return dir.FullName;
+                }
+
                 dir = dir.Parent;
             }
 
-            if (dir == null)
-                throw new DirectoryNotFoundException("Could not locate Git repo root (no .git folder found)");
-
-            return dir.FullName;
+            throw new DirectoryNotFoundException(
+                "Could not locate Git repo root (no .git folder found)");
         }
 
-        public static string GetDataDirectory()
+        public string GetDataDirectory()
         {
             var repoRoot = FindGitRepoRoot();
             var dataDir = Path.Combine(repoRoot, PathTokens.DataFolder);
 
-            if (!Directory.Exists(dataDir))
-                throw new DirectoryNotFoundException($"Data directory not found at {dataDir}");
+            if (!directoryProvider.Exists(dataDir))
+                throw new DirectoryNotFoundException(
+                    $"Data directory not found at {dataDir}");
 
             return dataDir;
         }
 
-        public static string GetConfigDirectory()
+        public string GetConfigDirectory()
         {
             var repoRoot = FindGitRepoRoot();
-            var dataDir = Path.Combine(repoRoot, PathTokens.ConfigFolder);
+            var configDir = Path.Combine(repoRoot, PathTokens.ConfigFolder);
 
-            if (!Directory.Exists(dataDir))
-                throw new DirectoryNotFoundException($"Data directory not found at {dataDir}");
+            if (!directoryProvider.Exists(configDir))
+                throw new DirectoryNotFoundException(
+                    $"Config directory not found at {configDir}");
 
-            return dataDir;
+            return configDir;
         }
-
     }
 }
