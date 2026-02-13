@@ -1,17 +1,49 @@
-﻿namespace ClubCore.Utilities
+﻿using ClubCore.Interfaces;
+using ClubSiteGenerator.Interfaces;
+
+namespace ClubCore.Utilities
 {
-    public static class DbPathResolver
+    public class DbPathResolver : IDbPathResolver
     {
-        public static string GetCompetitorDbPath(string year) =>
-            Path.Combine(FolderLocator.FindGitRepoRoot(), PathTokens.DataFolder, $"club_competitors_{year}.db");
+        private readonly IFolderLocator folderLocator;
 
-        public static string GetEventDbPath(string year) =>
-            Path.Combine(FolderLocator.FindGitRepoRoot(), PathTokens.DataFolder, $"club_events_{year}.db");
+        public DbPathResolver(IFolderLocator folderLocator)
+        {
+            this.folderLocator = folderLocator;
+        }
 
-        //public static string GetFallbackDbPath() =>
-        //    Path.Combine(RepoLocator.FindGitRepoRoot(), FolderNames.Data, "club_events_fallback.db");
+        public string GetCompetitorDbPath(string year)
+        {
+            var root = folderLocator.FindGitRepoRoot();
+            return Path.Combine(root, PathTokens.DataFolder, $"club_competitors_{year}.db");
+        }
 
-        //public static string GetResultsDbPath() =>
-        //    Path.Combine(RepoLocator.FindGitRepoRoot(), FolderNames.Data, "results.db");
+        public string GetEventDbPath(string year)
+        {
+            var root = folderLocator.FindGitRepoRoot();
+            return Path.Combine(root, PathTokens.DataFolder, $"club_events_{year}.db");
+        }
+
+        // -----------------------------
+        // Static fallback API for DbContext
+        // -----------------------------
+        public static string ResolveCompetitorDbPath(string year)
+        {
+            var locator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            return new DbPathResolver(locator).GetCompetitorDbPath(year);
+        }
+
+        public static string ResolveEventDbPath(string year)
+        {
+            var locator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            return new DbPathResolver(locator).GetEventDbPath(year);
+        }
+
     }
 }
