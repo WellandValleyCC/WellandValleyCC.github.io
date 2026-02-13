@@ -41,7 +41,8 @@ namespace ClubSiteGenerator.Services
         {
             var repoRoot = FolderLocator.FindGitRepoRoot();
 
-            var result = AssetPipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
+            var pipeline = CreateAssetPipeline();
+            var result = pipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
             var cssFile = result.CssFile;
 
             var outputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
@@ -52,10 +53,19 @@ namespace ClubSiteGenerator.Services
                 outputRoot,
                 cssFile
             );
-            
-            renderer.RenderIndex(indexFileName);
 
+            renderer.RenderIndex(indexFileName);
             RenderRedirectIndex(indexFileName);
+        }
+
+        private AssetPipeline CreateAssetPipeline()
+        {
+            return new AssetPipeline(
+                new DefaultAssetCopier(),
+                new DefaultDirectoryCopyHelper(),
+                new DefaultDirectoryProvider(),
+                new DefaultLog()
+            );
         }
 
         private string BuildPlaceholderHtml()
