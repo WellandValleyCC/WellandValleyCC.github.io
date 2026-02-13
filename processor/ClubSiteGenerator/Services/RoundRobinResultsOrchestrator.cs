@@ -60,11 +60,15 @@ namespace ClubSiteGenerator.Services
 
         private AssetPipeline CreateAssetPipeline()
         {
+            var directoryProvider = new DefaultDirectoryProvider();
+            var fileProvider = new DefaultFileProvider();
+            var log = new DefaultLog();
+
             return new AssetPipeline(
                 new DefaultAssetCopier(),
-                new DefaultDirectoryCopyHelper(),
-                new DefaultDirectoryProvider(),
-                new DefaultLog()
+                new DefaultDirectoryCopyHelper(directoryProvider, fileProvider, log),
+                directoryProvider,
+                log
             );
         }
 
