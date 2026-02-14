@@ -32,7 +32,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         /// E.g. 2026-rr-event-03
         /// </summary>
         public override string FileName =>
-            $"{Year}-rr-{EventNumber:D2}";
+            $"{Year}-rr-event-{EventNumber:D2}";
 
         public override string DisplayName => roundRobinEvent.EventName;
 
@@ -69,7 +69,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             if (HasMissingCalendarEvents(allRides))
                 throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
 
-            var rrEvent = roundRobinCalendar.Single(ev => ev.EventNumber == eventNumber);
+            var rrEvent = roundRobinCalendar.Single(ev => ev.RoundRobinEventNumber == eventNumber);
 
             if (!rrEvent.IsRoundRobinEvent)
                 throw new InvalidOperationException(
