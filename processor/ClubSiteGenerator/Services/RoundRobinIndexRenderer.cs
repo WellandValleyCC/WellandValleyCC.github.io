@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using ClubCore.Models;
+using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 
 namespace ClubSiteGenerator.Services
 {
@@ -16,7 +17,8 @@ namespace ClubSiteGenerator.Services
             IEnumerable<CalendarEvent> calendar,
             IEnumerable<RoundRobinClub> clubs,
             string outputDir,
-            string cssFileName)
+            string cssFileName,
+            List<RoundRobinEventResultsSet> rrEventResults)
         {
             this.calendar = calendar;
             this.clubs = clubs;

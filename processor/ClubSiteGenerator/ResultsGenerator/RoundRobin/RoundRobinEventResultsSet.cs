@@ -4,7 +4,7 @@ using ClubCore.Utilities;
 
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
-    internal sealed class RoundRobinEventResultsSet : ResultsSet
+    public sealed class RoundRobinEventResultsSet : ResultsSet
     {
         private readonly CalendarEvent roundRobinEvent;
         public readonly IEnumerable<Ride> Rides;
