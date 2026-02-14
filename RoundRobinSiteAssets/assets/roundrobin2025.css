@@ -319,12 +319,90 @@ footer .generated {
     margin: 0.5rem 0 0;
 }
 
-.rr-hero img.rr-header {
-    width: auto;        /* use natural PNG width */
-    max-width: 100%;    /* shrink on small screens */
-    height: auto;
-    display: block;
-    margin: 0;          /* anchor to top-left */
+/* ---------------------------------------------------------
+   RR Base Styles (independent of club site)
+--------------------------------------------------------- */
+
+body.rr.event-page {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, sans-serif;
+    background: #fff;
+    color: #222;
+    line-height: 1.5;
 }
 
+/* Headings */
+body.rr.event-page h1,
+body.rr.event-page h2,
+body.rr.event-page h3 {
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+}
 
+/* Paragraphs */
+body.rr.event-page p {
+    margin: 0 0 1rem 0;
+}
+
+/* Links */
+body.rr.event-page a {
+    color: #005bbb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+body.rr.event-page a:hover {
+    text-decoration: underline;
+}
+
+/* ---------------------------------------------------------
+   Header + Event Metadata
+--------------------------------------------------------- */
+
+body.rr.event-page .header-and-legend {
+    padding: 1.5rem;
+    border-bottom: 1px solid #ddd;
+    background: #fafafa;
+}
+
+body.rr.event-page .event-header-core h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+}
+
+body.rr.event-page .event-header-core .event-date,
+body.rr.event-page .event-header-core .event-distance {
+    margin: 0.2rem 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ---------------------------------------------------------
+   Navigation
+--------------------------------------------------------- */
+
+body.rr.event-page .event-nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.2rem;
+}
+
+body.rr.event-page .event-nav .prev::before {
+    content: "« ";
+}
+
+body.rr.event-page .event-nav .next::after {
+    content: " »";
+}
+
+/* ---------------------------------------------------------
+   Main Content
+--------------------------------------------------------- */
+
+body.rr.event-page main {
+    padding: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
