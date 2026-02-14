@@ -1,5 +1,9 @@
 ﻿using ClubCore.Models;
 using ClubCore.Utilities;
+using ClubSiteGenerator.Interfaces;
+using ClubSiteGenerator.Renderers.RoundRobin;
+using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using ClubSiteGenerator.Utilities;
 using System.Text;
 
@@ -13,6 +17,8 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<CalendarEvent> calendar;
         private readonly IEnumerable<RoundRobinClub> clubs;
 
+        private readonly List<ResultsSet> resultsSets = new();
+
         private readonly int competitionYear;
 
         public RoundRobinResultsOrchestrator(
@@ -22,6 +28,13 @@ namespace ClubSiteGenerator.Services
             IEnumerable<CalendarEvent> calendar,
             IEnumerable<RoundRobinClub> clubs)
         {
+            if (calendar.Any(ev => !ev.IsRoundRobinEvent))
+            {
+                throw new ArgumentException(
+                    "RoundRobinResultsOrchestrator must be constructed with a calendar containing only Round Robin events.",
+                    nameof(calendar));
+            }
+
             this.outputDir = outputDir;
             this.rides = rides;
             this.competitors = competitors;
@@ -34,7 +47,56 @@ namespace ClubSiteGenerator.Services
 
         public void GenerateAll(string indexFileName)
         {
+            InitializeResultsSets();
+
+            var orderedEvents = resultsSets
+                .OfType<RoundRobinEventResultsSet>()
+                .OrderBy(ev => ev.EventNumber)   // or EventDate if you prefer
+                .Cast<IResultsSet>()
+                .ToList();
+
+            if (orderedEvents.Count > 1)
+            {
+                for (int i = 0; i < orderedEvents.Count; i++)
+                {
+                    var current = orderedEvents[i];
+                    var prev = orderedEvents[(i - 1 + orderedEvents.Count) % orderedEvents.Count];
+                    var next = orderedEvents[(i + 1) % orderedEvents.Count];
+
+                    current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
+                    current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
+                    current.PrevLabel = prev.LinkText;
+                    current.NextLabel = next.LinkText;
+                }
+            }
+
+            foreach (var resultsSet in resultsSets.OfType<RoundRobinEventResultsSet>())
+            {
+                var renderer = new RoundRobinEventRenderer(indexFileName, resultsSet);
+
+                Console.WriteLine($"Generating RR event results for: {resultsSet.FileName}");
+
+                var html = renderer.Render();
+
+                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
+                Directory.CreateDirectory(folderPath);
+
+                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
+            }
+
             GenerateIndex(indexFileName);
+        }
+
+        private void InitializeResultsSets()
+        {
+            foreach (var ev in calendar)
+            {
+                resultsSets.Add(
+                    RoundRobinEventResultsSet.CreateFrom(
+                        calendar,
+                        rides,
+                        ev.RoundRobinEventNumber));
+            }
         }
 
         private void GenerateIndex(string indexFileName)
@@ -51,11 +113,17 @@ namespace ClubSiteGenerator.Services
 
             var outputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
 
+            var rrEventResults = resultsSets
+                .OfType<RoundRobinEventResultsSet>()
+                .OrderBy(ev => ev.EventDate)
+                .ToList();
+
             var renderer = new RoundRobinIndexRenderer(
                 calendar,
                 clubs,
                 outputRoot,
-                cssFile
+                cssFile,
+                rrEventResults
             );
 
             renderer.RenderIndex(indexFileName);
