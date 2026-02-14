@@ -1,4 +1,4 @@
-﻿using ClubCore.Models;
+using ClubCore.Models;
 using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Renderers.RoundRobin;
@@ -11,13 +11,13 @@ namespace ClubSiteGenerator.Services
 {
     public class RoundRobinResultsOrchestrator
     {
+        private readonly List<ResultsSet> resultsSets = new();
+
         private readonly string outputDir;
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<Competitor> competitors;
         private readonly IEnumerable<CalendarEvent> calendar;
         private readonly IEnumerable<RoundRobinClub> clubs;
-
-        private readonly List<ResultsSet> resultsSets = new();
 
         private readonly int competitionYear;
 
@@ -28,6 +28,13 @@ namespace ClubSiteGenerator.Services
             IEnumerable<CalendarEvent> calendar,
             IEnumerable<RoundRobinClub> clubs)
         {
+            this.outputDir = outputDir;
+            this.rides = rides;
+            this.competitors = competitors;
+            this.calendar = calendar;
+            this.clubs = clubs;
+
+            // Guard: calendar must contain only RR events
             if (calendar.Any(ev => !ev.IsRoundRobinEvent))
             {
                 throw new ArgumentException(
@@ -35,55 +42,17 @@ namespace ClubSiteGenerator.Services
                     nameof(calendar));
             }
 
-            this.outputDir = outputDir;
-            this.rides = rides;
-            this.competitors = competitors;
-            this.calendar = calendar;
-            this.clubs = clubs;
-
             // Determine competition year from first event
             competitionYear = calendar.First().EventDate.Year;
         }
 
         public void GenerateAll(string indexFileName)
         {
+            StylesWriter.EnsureStylesheet(outputDir);
+
             InitializeResultsSets();
-
-            var orderedEvents = resultsSets
-                .OfType<RoundRobinEventResultsSet>()
-                .OrderBy(ev => ev.EventNumber)   // or EventDate if you prefer
-                .Cast<IResultsSet>()
-                .ToList();
-
-            if (orderedEvents.Count > 1)
-            {
-                for (int i = 0; i < orderedEvents.Count; i++)
-                {
-                    var current = orderedEvents[i];
-                    var prev = orderedEvents[(i - 1 + orderedEvents.Count) % orderedEvents.Count];
-                    var next = orderedEvents[(i + 1) % orderedEvents.Count];
-
-                    current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
-                    current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
-                    current.PrevLabel = prev.LinkText;
-                    current.NextLabel = next.LinkText;
-                }
-            }
-
-            foreach (var resultsSet in resultsSets.OfType<RoundRobinEventResultsSet>())
-            {
-                var renderer = new RoundRobinEventRenderer(indexFileName, resultsSet);
-
-                Console.WriteLine($"Generating RR event results for: {resultsSet.FileName}");
-
-                var html = renderer.Render();
-
-                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
-                Directory.CreateDirectory(folderPath);
-
-                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
-            }
-
+            WirePrevNextLinks();
+            GeneratePages(indexFileName);
             GenerateIndex(indexFileName);
         }
 
@@ -96,6 +65,47 @@ namespace ClubSiteGenerator.Services
                         calendar,
                         rides,
                         ev.RoundRobinEventNumber));
+            }
+        }
+
+        private void WirePrevNextLinks()
+        {
+            var orderedEvents = resultsSets
+                .OfType<RoundRobinEventResultsSet>()
+                .OrderBy(ev => ev.EventNumber)
+                .Cast<IResultsSet>()
+                .ToList();
+
+            if (orderedEvents.Count <= 1)
+                return;
+
+            for (int i = 0; i < orderedEvents.Count; i++)
+            {
+                var current = orderedEvents[i];
+                var prev = orderedEvents[(i - 1 + orderedEvents.Count) % orderedEvents.Count];
+                var next = orderedEvents[(i + 1) % orderedEvents.Count];
+
+                current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
+                current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
+                current.PrevLabel = prev.LinkText;
+                current.NextLabel = next.LinkText;
+            }
+        }
+
+        private void GeneratePages(string indexFileName)
+        {
+            foreach (var resultsSet in resultsSets.OfType<RoundRobinEventResultsSet>())
+            {
+                var renderer = new RoundRobinEventRenderer(indexFileName, resultsSet);
+
+                Console.WriteLine($"Generating RR event results for: {resultsSet.FileName}");
+
+                var html = renderer.Render();
+
+                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
+                Directory.CreateDirectory(folderPath);
+
+                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
             }
         }
 
@@ -123,8 +133,7 @@ namespace ClubSiteGenerator.Services
                 clubs,
                 outputRoot,
                 cssFile,
-                rrEventResults
-            );
+                rrEventResults);
 
             renderer.RenderIndex(indexFileName);
             RenderRedirectIndex(indexFileName);
@@ -139,15 +148,13 @@ namespace ClubSiteGenerator.Services
             var copyHelper = new DefaultDirectoryCopyHelper(
                 directoryProvider,
                 fileProvider,
-                log
-            );
+                log);
 
             return new AssetPipeline(
                 new DefaultAssetCopier(),
                 copyHelper,
                 directoryProvider,
-                log
-            );
+                log);
         }
 
         private void RenderRedirectIndex(string indexFileName)
@@ -168,7 +175,6 @@ namespace ClubSiteGenerator.Services
             var path = Path.Combine(outputDir, "index.html");
             File.WriteAllText(path, sb.ToString());
 
-            // Also write .htm version for legacy compatibility
             path = Path.Combine(outputDir, "index.htm");
             File.WriteAllText(path, sb.ToString());
         }
