@@ -21,6 +21,8 @@ namespace ClubSiteGenerator.Services
 
         private readonly int competitionYear;
 
+        private string cssFile = "";
+
         public RoundRobinResultsOrchestrator(
             string outputDir,
             IEnumerable<Ride> rides,
@@ -50,6 +52,7 @@ namespace ClubSiteGenerator.Services
         {
             StylesWriter.EnsureStylesheet(outputDir);
 
+            PrepareAssets();
             InitializeResultsSets();
             WirePrevNextLinks();
             GeneratePages(indexFileName);
@@ -96,6 +99,8 @@ namespace ClubSiteGenerator.Services
         {
             foreach (var resultsSet in resultsSets.OfType<RoundRobinEventResultsSet>())
             {
+                resultsSet.CssFile = cssFile;
+
                 var renderer = new RoundRobinEventRenderer(indexFileName, resultsSet);
 
                 Console.WriteLine($"Generating RR event results for: {resultsSet.FileName}");
@@ -117,10 +122,6 @@ namespace ClubSiteGenerator.Services
 
             var repoRoot = folderLocator.FindGitRepoRoot();
 
-            var pipeline = CreateAssetPipeline();
-            var result = pipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
-            var cssFile = result.CssFile;
-
             var outputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
 
             var rrEventResults = resultsSets
@@ -137,6 +138,20 @@ namespace ClubSiteGenerator.Services
 
             renderer.RenderIndex(indexFileName);
             RenderRedirectIndex(indexFileName);
+        }
+
+        private void PrepareAssets()
+        {
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var repoRoot = folderLocator.FindGitRepoRoot();
+
+            var pipeline = CreateAssetPipeline();
+            var result = pipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
+
+            cssFile = result.CssFile;
         }
 
         private AssetPipeline CreateAssetPipeline()

@@ -15,6 +15,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         public string Render()
         {
+            var cssFile = resultsSet.CssFile;
+
             var prevLinkHtml = string.IsNullOrEmpty(resultsSet.PrevLink)
                 ? ""
                 : $@"<a class=""nav-prev"" href=""{resultsSet.PrevLink}"">&laquo; {resultsSet.PrevLabel}</a>";
@@ -29,22 +31,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 <head>
     <meta charset=""utf-8"">
     <title>{resultsSet.DisplayName}</title>
-    <style>
-        body {{
-            font-family: sans-serif;
-            margin: 2rem;
-        }}
-        .nav {{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }}
-        .nav a {{
-            text-decoration: none;
-            color: #0066cc;
-            font-weight: bold;
-        }}
-    </style>
+    <link rel=""stylesheet"" href=""../assets/{cssFile}"" />
 </head>
 <body>
 

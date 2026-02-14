@@ -28,6 +28,8 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 
         public override string SubFolderName => "events";
 
+        public string CssFile { get; set; } = "";
+
         /// <summary>
         /// E.g. 2026-rr-event-03
         /// </summary>
