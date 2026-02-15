@@ -442,9 +442,9 @@ body.rr.event-page .event-header-core .event-distance {
 --------------------------------------------------------- */
 
 .event-nav a.prev::before,
-.competition-nav a.prev::before { content: "←"; }
+.competition-nav a.prev::before { content: "← "; }
 .event-nav a.next::after,
-.competition-nav a.next::after { content: "→"; }
+.competition-nav a.next::after { content: " →"; }
 
 /* ---------------------------------------------------------
    Navigation — Prev left, Index centre, Next right
