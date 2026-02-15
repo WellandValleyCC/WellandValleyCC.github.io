@@ -1,6 +1,7 @@
 ﻿using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
@@ -22,13 +23,29 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             this.indexFileName = indexFileName;
             this.resultsSet = resultsSet;
 
-            this.eventTitle = resultsSet.DisplayName;
+            this.eventTitle = CleanTitle(resultsSet.DisplayName);
             this.eventNumber = resultsSet.EventNumber;
             this.eventDate = resultsSet.EventDate;
             this.eventMiles = resultsSet.CalendarEvent.Miles;
             this.isCancelled = resultsSet.CalendarEvent.IsCancelled;
 
             this.eventDistanceText = $"{resultsSet.CalendarEvent.Miles:0.#} miles";
+        }
+
+        private static string CleanTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return title;
+
+            // Remove “Round Robin” in any casing, with optional extra spaces
+            var cleaned = Regex.Replace(
+                title,
+                @"\s*round\s*robin\s*",
+                "",
+                RegexOptions.IgnoreCase
+            );
+
+            return cleaned.Trim();
         }
 
         public string Render()
