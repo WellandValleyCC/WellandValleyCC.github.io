@@ -51,12 +51,16 @@ namespace ClubSiteGenerator.Services
 
         public void GenerateAll(string indexFileName)
         {
-            StylesWriter.EnsureStylesheet(outputDir);
-
+            PrepareAssets();
             InitializeResultsSets();
             WirePrevNextLinks();
             GeneratePages(indexFileName);
             GenerateIndex(indexFileName);
+        }
+
+        private void PrepareAssets()
+        {
+            StylesWriter.EnsureStylesheet(outputDir);
         }
 
         private void InitializeResultsSets()

@@ -1,4 +1,5 @@
 ﻿using ClubCore.Interfaces;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Utilities;
 using FluentAssertions;
@@ -23,11 +24,27 @@ namespace ClubCore.Tests.Utilities
             );
         }
 
+        private AssetPipelineResult RunPipeline(AssetPipeline pipeline)
+        {
+            return pipeline.CopyRoundRobinAssets(
+                "root",
+                2025,
+                PathTokens.RoundRobinAssetsFolder,
+                PathTokens.RoundRobinOutputFolder,
+                PathTokens.RoundRobinCssPrefix,
+                "Round Robin"
+            );
+        }
+
         [Fact]
         public void Returns_CssFile_From_AssetCopier()
         {
             assetCopier
-                .CopyYearSpecificStylesheet(Arg.Any<string>(), Arg.Any<string>(), 2025, Arg.Any<string>())
+                .CopyYearSpecificStylesheet(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    2025,
+                    Arg.Any<string>())
                 .Returns("roundrobin-2025.css");
 
             directoryProvider.GetDirectories(Arg.Any<string>())
@@ -35,7 +52,7 @@ namespace ClubCore.Tests.Utilities
 
             var pipeline = CreatePipeline();
 
-            var result = pipeline.CopyRoundRobinAssets("root", 2025);
+            var result = RunPipeline(pipeline);
 
             result.CssFile.Should().Be("roundrobin-2025.css");
         }
@@ -48,36 +65,33 @@ namespace ClubCore.Tests.Utilities
 
             var pipeline = CreatePipeline();
 
-            pipeline.CopyRoundRobinAssets("root", 2025);
+            RunPipeline(pipeline);
 
             copyHelper.Received().CopyRecursive(
-                Path.Combine("root", "RoundRobinSiteAssets", "logos"),
-                Path.Combine("root", "RoundRobinSiteOutput", "logos"),
-                Arg.Is<string[]>(x => x.Contains(".md"))
+                Path.Combine("root", PathTokens.RoundRobinAssetsFolder, PathTokens.LogosFolder),
+                Path.Combine("root", PathTokens.RoundRobinOutputFolder, PathTokens.LogosFolder),
+                Arg.Is<string[]>(x => x.Contains(PathTokens.MarkdownExtension))
             );
         }
 
         [Fact]
         public void Copies_Additional_Asset_Folders()
         {
-            // Assemble
             directoryProvider.GetDirectories(Arg.Any<string>())
                 .Returns(new[]
                 {
-                    Path.Combine("root", "RoundRobinSiteAssets", "extra"),
-                    Path.Combine("root", "RoundRobinSiteAssets", "assets"),
-                    Path.Combine("root", "RoundRobinSiteAssets", "logos")
+                    Path.Combine("root", PathTokens.RoundRobinAssetsFolder, "extra"),
+                    Path.Combine("root", PathTokens.RoundRobinAssetsFolder, PathTokens.AssetsFolder),
+                    Path.Combine("root", PathTokens.RoundRobinAssetsFolder, PathTokens.LogosFolder)
                 });
 
             var pipeline = CreatePipeline();
 
-            // Act
-            pipeline.CopyRoundRobinAssets("root", 2025);
+            RunPipeline(pipeline);
 
-            // Assert
             copyHelper.Received().CopyRecursive(
-                Path.Combine("root", "RoundRobinSiteAssets", "extra"),
-                Path.Combine("root", "RoundRobinSiteOutput", "extra"),
+                Path.Combine("root", PathTokens.RoundRobinAssetsFolder, "extra"),
+                Path.Combine("root", PathTokens.RoundRobinOutputFolder, "extra"),
                 Arg.Any<string[]>()
             );
         }
@@ -90,7 +104,7 @@ namespace ClubCore.Tests.Utilities
 
             var pipeline = CreatePipeline();
 
-            pipeline.CopyRoundRobinAssets("root", 2025);
+            RunPipeline(pipeline);
 
             log.Received().Info(Arg.Is<string>(s => s.Contains("Starting Round Robin asset pipeline")));
             log.Received().Info("Asset pipeline complete.");

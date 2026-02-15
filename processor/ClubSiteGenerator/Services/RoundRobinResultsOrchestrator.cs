@@ -50,8 +50,6 @@ namespace ClubSiteGenerator.Services
 
         public void GenerateAll(string indexFileName)
         {
-            StylesWriter.EnsureStylesheet(outputDir);
-
             PrepareAssets();
             InitializeResultsSets();
             WirePrevNextLinks();
@@ -149,7 +147,13 @@ namespace ClubSiteGenerator.Services
             var repoRoot = folderLocator.FindGitRepoRoot();
 
             var pipeline = CreateAssetPipeline();
-            var result = pipeline.CopyRoundRobinAssets(repoRoot, competitionYear);
+            var result = pipeline.CopyRoundRobinAssets(
+                repoRoot,
+                competitionYear,
+                PathTokens.RoundRobinAssetsFolder,
+                PathTokens.RoundRobinOutputFolder,
+                PathTokens.RoundRobinCssPrefix,
+                "Round Robin");
 
             cssFile = result.CssFile;
         }

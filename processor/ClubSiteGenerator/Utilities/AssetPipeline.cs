@@ -28,14 +28,20 @@ namespace ClubSiteGenerator.Utilities
             this.log = log;
         }
 
-        public AssetPipelineResult CopyRoundRobinAssets(string repoRoot, int year)
+        public AssetPipelineResult CopyRoundRobinAssets(
+            string repoRoot,
+            int year,
+            string assetsFolder,
+            string outputFolder,
+            string cssPrefix,
+            string siteName)
         {
-            log.Info($"Starting Round Robin asset pipeline for year {year}");
+            log.Info($"Starting {siteName} asset pipeline for year {year}");
             log.Info($"Repo root: {repoRoot}");
 
             // Resolve canonical folders
-            var rrAssetsRoot = Path.Combine(repoRoot, PathTokens.RoundRobinAssetsFolder);
-            var rrOutputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
+            var rrAssetsRoot = Path.Combine(repoRoot, assetsFolder);
+            var rrOutputRoot = Path.Combine(repoRoot, outputFolder);
 
             log.Info($"Assets root: {rrAssetsRoot}");
             log.Info($"Output root: {rrOutputRoot}");
@@ -48,7 +54,7 @@ namespace ClubSiteGenerator.Utilities
                 cssSource,
                 rrOutputRoot,
                 year,
-                prefix: PathTokens.RoundRobinCssPrefix
+                prefix: cssPrefix
             );
 
             log.Info($"Copied CSS file: {cssFile}");
