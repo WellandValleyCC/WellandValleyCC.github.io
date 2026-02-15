@@ -418,7 +418,7 @@ body.rr.event-page .event-header-core .event-distance {
 
 .rr-banner-header {
     position: relative;
-    padding: 2rem 1rem;
+    padding: 2rem 0;
 }
 
 .rr-banner-header::before {
