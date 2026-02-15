@@ -446,13 +446,24 @@ body.rr.event-page .event-header-core .event-distance {
 .event-nav a.next::after,
 .competition-nav a.next::after { content: "→"; }
 
+/* ---------------------------------------------------------
+   Navigation — Prev left, Index centre, Next right
+--------------------------------------------------------- */
+
 body.rr.event-page .event-nav {
     display: flex;
-    justify-content: center;
-    gap: 2rem;
+    justify-content: space-between; /* pushes prev and next to edges */
+    align-items: center;
     margin-top: 1.2rem;
+    width: 100%;
 }
 
+/* Ensure the Index pill stays centred even if prev/next are missing */
+body.rr.event-page .event-nav .index {
+    margin: 0 auto;
+}
+
+/* Base pill styling (unchanged) */
 .event-nav a {
     display: inline-block;
     padding: 0.35rem 0.75rem;

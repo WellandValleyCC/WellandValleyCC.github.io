@@ -70,13 +70,13 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         <p class=""event-date"">{rrHeaderDate}</p>
         <p class=""event-distance"">Distance: {eventDistanceText}</p>
       </div>
-   
-      <nav class=""event-nav"" aria-label=""Event navigation"">
-          {prevLinkHtml}
-          <a class=""index"" href=""../{indexFileName}"" aria-label=""Back to index"">Index</a>
-          {nextLinkHtml}
-      </nav>
     </div>
+   
+    <nav class=""event-nav"" aria-label=""Event navigation"">
+      {prevLinkHtml}
+      <a class=""index"" href=""../{indexFileName}"" aria-label=""Back to index"">Index</a>
+      {nextLinkHtml}
+    </nav>
   <div>
 </header>
 
