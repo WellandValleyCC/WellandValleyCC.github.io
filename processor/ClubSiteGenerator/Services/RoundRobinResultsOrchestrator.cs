@@ -118,9 +118,7 @@ namespace ClubSiteGenerator.Services
                 new DefaultDirectoryProvider(),
                 new DefaultLog());
 
-            var repoRoot = folderLocator.FindGitRepoRoot();
-
-            var outputRoot = Path.Combine(repoRoot, PathTokens.RoundRobinOutputFolder);
+            var outputRoot = outputDir;
 
             var rrEventResults = resultsSets
                 .OfType<RoundRobinEventResultsSet>()
