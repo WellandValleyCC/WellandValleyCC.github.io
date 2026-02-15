@@ -38,7 +38,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 
         public override string DisplayName => roundRobinEvent.EventName;
 
-        public override string LinkText => roundRobinEvent.EventName;
+        public override string LinkText => $"RR Event {EventNumber}";
 
         private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus rideStatus)
         {
