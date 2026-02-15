@@ -441,6 +441,11 @@ body.rr.event-page .event-header-core .event-distance {
    Navigation
 --------------------------------------------------------- */
 
+.event-nav a.prev::before,
+.competition-nav a.prev::before { content: "←"; }
+.event-nav a.next::after,
+.competition-nav a.next::after { content: "→"; }
+
 body.rr.event-page .event-nav {
     display: flex;
     justify-content: center;
