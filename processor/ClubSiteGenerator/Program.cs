@@ -84,7 +84,6 @@ namespace ClubSiteGenerator
                 calendar);
 
             orchestrator.GenerateAll(indexFileName);
-            orchestrator.GenerateIndex(indexFileName);
         }
 
         static List<CalendarEvent> rrCalendarFromFullCalendar(List<CalendarEvent> fullCalendar)
