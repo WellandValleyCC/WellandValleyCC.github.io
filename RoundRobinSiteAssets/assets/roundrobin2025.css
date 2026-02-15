@@ -319,6 +319,13 @@ footer .generated {
     margin: 0.5rem 0 0;
 }
 
+.rr-hero img.rr-header {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    display: block;
+}
+
 /* ---------------------------------------------------------
    RR Base Styles (independent of club site)
 --------------------------------------------------------- */
