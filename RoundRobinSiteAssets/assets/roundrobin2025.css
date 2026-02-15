@@ -437,6 +437,13 @@ body.rr.event-page .event-header-core .event-distance {
     position: relative; /* ensures text sits above the banner */
 }
 
+body.rr.event-page .event-header-core .event-host {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0.2rem 0 0.8rem 0;
+    font-style: italic;
+}
+
 /* ---------------------------------------------------------
    Navigation
 --------------------------------------------------------- */

@@ -48,6 +48,32 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             return cleaned.Trim();
         }
 
+        private static string FormatHosts(string rawHosts)
+        {
+            if (string.IsNullOrWhiteSpace(rawHosts))
+                return string.Empty;
+
+            // Split on comma, trim whitespace, remove empties
+            var parts = rawHosts
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => p.Length > 0)
+                .ToList();
+
+            if (parts.Count == 0)
+                return string.Empty;
+
+            if (parts.Count == 1)
+                return parts[0];
+
+            if (parts.Count == 2)
+                return $"{parts[0]} & {parts[1]}";
+
+            // 3 or more clubs → Oxford comma style
+            return string.Join(", ", parts.Take(parts.Count - 1))
+                   + " & " + parts.Last();
+        }
+
         public string Render()
         {
             var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
@@ -61,6 +87,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 : $@"<a class=""next"" href=""{resultsSet.NextLink}"" aria-label=""Next"">{resultsSet.NextLabel}</a>";
 
             var eventDateText = resultsSet.EventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
+
+            var hostClubName = FormatHosts(resultsSet.CalendarEvent.RoundRobinClub);
 
             var rrHeaderTitle = eventTitle;
             var rrHeaderDate = eventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
@@ -84,6 +112,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
           <span class=""event-number"">Event {eventNumber}:</span>
           {rrHeaderTitle}
         </h1>
+        <p class=""event-host"">Hosted by {hostClubName}</p>
         <p class=""event-date"">{rrHeaderDate}</p>
         <p class=""event-distance"">Distance: {eventDistanceText}</p>
       </div>
