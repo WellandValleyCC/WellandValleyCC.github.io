@@ -173,7 +173,12 @@ jobs:
           git checkout -b $branch
           git add docs/
           git status --porcelain
-  
+
+      - name: Push branch
+        working-directory: rrrepo
+        run: |
+          git push origin $branch
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
