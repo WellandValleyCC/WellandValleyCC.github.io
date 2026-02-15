@@ -377,7 +377,7 @@ body.rr.event-page a:hover {
 body.rr.event-page .header-and-legend {
     padding: 1.5rem;
     border-bottom: 1px solid #ddd;
-    background: #fafafa;
+    background: transparent;
 }
 
 body.rr.event-page .event-header-core h1 {
@@ -390,6 +390,27 @@ body.rr.event-page .event-header-core .event-distance {
     margin: 0.2rem 0;
     font-size: 1rem;
     color: #555;
+}
+
+.rr-banner-header {
+    position: relative;
+    padding: 2rem 1rem;
+}
+
+.rr-banner-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../logos/round-robin/rr-header-2026.png");
+    background-size: cover;          /* fill width, crop vertically */
+    background-repeat: no-repeat;
+    background-position: center;     /* keep the middle of the image visible */
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+.rr-banner-header > * {
+    position: relative; /* ensures text sits above the banner */
 }
 
 /* ---------------------------------------------------------
