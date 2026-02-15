@@ -33,6 +33,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         public string Render()
         {
+            var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
+
             var prevLinkHtml = string.IsNullOrEmpty(resultsSet.PrevLink)
                 ? ""
                 : $@"<a class=""prev"" href=""{resultsSet.PrevLink}"" aria-label=""Previous"">{resultsSet.PrevLabel}</a>";
@@ -74,6 +76,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
   <p>This is a placeholder page for Round Robin event {eventNumber}.</p>
   <p>The real renderer will output full event results here.</p>
 </main>
+
+<footer><p class=""generated"">Generated {timestamp}</p></footer>
 
 </body>
 </html>";
