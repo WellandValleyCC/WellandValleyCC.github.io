@@ -64,7 +64,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
     <div class=""header-and-legend"">
       <div class=""event-header-core"">
         <h1>
-          <span class=""event-number"">RR Event {eventNumber}:</span>
+          <span class=""event-number"">Event {eventNumber}:</span>
           {rrHeaderTitle}
         </h1>
         <p class=""event-date"">{rrHeaderDate}</p>
