@@ -399,7 +399,7 @@ body.rr.event-page a:hover {
 --------------------------------------------------------- */
 
 body.rr.event-page .header-and-legend {
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     border-bottom: 1px solid #ddd;
     background: transparent;
 }
@@ -491,7 +491,7 @@ body.rr.event-page .event-nav .index {
 --------------------------------------------------------- */
 
 body.rr.event-page main {
-    padding: 1.5rem;
-    max-width: 800px;
-    margin: 0 auto;
+    padding: 0;
+    max-width: none;
+    margin: 0;
 }
