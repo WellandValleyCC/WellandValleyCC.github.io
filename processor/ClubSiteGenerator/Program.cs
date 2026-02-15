@@ -21,6 +21,10 @@ namespace ClubSiteGenerator
             var year = args[yearIndex + 1];
             Console.WriteLine($"[INFO] Processing year: {year}");
 
+            var indexFilename = (year == "2025")
+                ? $"preview{year}.html"
+                : $"index{year}.html";
+
             var outputRoot = OutputLocator.GetOutputDirectory();
             Console.WriteLine($"Writing site to: {outputRoot}");
 
@@ -42,7 +46,7 @@ namespace ClubSiteGenerator
                 allRides,
                 allCompetitors,
                 eventCalendar,
-                $"index{year}.html"
+                indexFilename
             );
 
             // Round Robin site
@@ -60,7 +64,7 @@ namespace ClubSiteGenerator
                 allCompetitors,
                 rrEventCalendar,
                 activeClubs,
-                $"index{year}.html"
+                indexFilename
             );
         }
 
