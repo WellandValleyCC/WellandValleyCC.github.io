@@ -45,6 +45,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             var eventDateText = resultsSet.EventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
 
+            var rrHeaderTitle = eventTitle;
+            var rrHeaderDate = eventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
+
             return $@"
 <!DOCTYPE html>
 <html lang=""en"">
@@ -60,9 +63,12 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
   <div class=""rr-banner-header"">
     <div class=""header-and-legend"">
       <div class=""event-header-core"">
-          <h1>{eventTitle}</h1>
-          <p class=""event-date"">{eventDateText}</p>
-          <p class=""event-distance"">Distance: {eventDistanceText}</p>
+        <h1>
+          <span class=""event-number"">RR Event {eventNumber}:</span>
+          {rrHeaderTitle}
+        </h1>
+        <p class=""event-date"">{rrHeaderDate}</p>
+        <p class=""event-distance"">Distance: {eventDistanceText}</p>
       </div>
    
       <nav class=""event-nav"" aria-label=""Event navigation"">
