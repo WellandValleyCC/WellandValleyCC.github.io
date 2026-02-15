@@ -143,15 +143,16 @@ namespace ClubSiteGenerator.Services
             var folderLocator = new DefaultFolderLocator(
                 new DefaultDirectoryProvider(),
                 new DefaultLog());
-
+        
             var repoRoot = folderLocator.FindGitRepoRoot();
+            var assetsRoot = Path.Combine(repoRoot, PathTokens.RoundRobinAssetsFolder);
+            var outputRoot = outputDir;
 
             var pipeline = CreateAssetPipeline();
             var result = pipeline.CopyRoundRobinAssets(
-                repoRoot,
+                assetsRoot,
+                outputRoot,
                 competitionYear,
-                PathTokens.RoundRobinAssetsFolder,
-                PathTokens.RoundRobinOutputFolder,
                 PathTokens.RoundRobinCssPrefix,
                 "Round Robin");
 

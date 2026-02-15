@@ -26,11 +26,14 @@ namespace ClubCore.Tests.Utilities
 
         private AssetPipelineResult RunPipeline(AssetPipeline pipeline)
         {
+            // Arrange: create fake absolute paths for assets and output
+            var assetsRoot = Path.Combine("root", PathTokens.RoundRobinAssetsFolder);
+            var outputRoot = Path.Combine("root", PathTokens.RoundRobinOutputFolder);
+
             return pipeline.CopyRoundRobinAssets(
-                "root",
+                assetsRoot,
+                outputRoot,
                 2025,
-                PathTokens.RoundRobinAssetsFolder,
-                PathTokens.RoundRobinOutputFolder,
                 PathTokens.RoundRobinCssPrefix,
                 "Round Robin"
             );

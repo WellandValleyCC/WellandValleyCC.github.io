@@ -29,30 +29,23 @@ namespace ClubSiteGenerator.Utilities
         }
 
         public AssetPipelineResult CopyRoundRobinAssets(
-            string repoRoot,
+            string assetsRoot,
+            string outputRoot,
             int year,
-            string assetsFolder,
-            string outputFolder,
             string cssPrefix,
             string siteName)
         {
             log.Info($"Starting {siteName} asset pipeline for year {year}");
-            log.Info($"Repo root: {repoRoot}");
-
-            // Resolve canonical folders
-            var rrAssetsRoot = Path.Combine(repoRoot, assetsFolder);
-            var rrOutputRoot = Path.Combine(repoRoot, outputFolder);
-
-            log.Info($"Assets root: {rrAssetsRoot}");
-            log.Info($"Output root: {rrOutputRoot}");
+            log.Info($"Assets root: {assetsRoot}");
+            log.Info($"Output root: {outputRoot}");
 
             // 1. Copy year-specific stylesheet
-            var cssSource = Path.Combine(rrAssetsRoot, PathTokens.AssetsFolder);
+            var cssSource = Path.Combine(assetsRoot, PathTokens.AssetsFolder);
             log.Info($"Selecting CSS from: {cssSource}");
 
             var cssFile = assetCopier.CopyYearSpecificStylesheet(
                 cssSource,
-                rrOutputRoot,
+                outputRoot,
                 year,
                 prefix: cssPrefix
             );
@@ -63,14 +56,14 @@ namespace ClubSiteGenerator.Utilities
             var exclude = new[] { PathTokens.MarkdownExtension };
 
             // 2. Copy logos (if present)
-            var logosSource = Path.Combine(rrAssetsRoot, PathTokens.LogosFolder);
-            var logosDest = Path.Combine(rrOutputRoot, PathTokens.LogosFolder);
+            var logosSource = Path.Combine(assetsRoot, PathTokens.LogosFolder);
+            var logosDest = Path.Combine(outputRoot, PathTokens.LogosFolder);
 
             log.Info($"Copying logos from {logosSource} to {logosDest}");
             copyHelper.CopyRecursive(logosSource, logosDest, exclude);
 
             // 3. Copy any other asset folders that exist
-            foreach (var folder in directoryProvider.GetDirectories(rrAssetsRoot))
+            foreach (var folder in directoryProvider.GetDirectories(assetsRoot))
             {
                 var name = Path.GetFileName(folder);
 
@@ -78,7 +71,7 @@ namespace ClubSiteGenerator.Utilities
                 if (name.Equals(PathTokens.AssetsFolder, StringComparison.OrdinalIgnoreCase)) continue;
                 if (name.Equals(PathTokens.LogosFolder, StringComparison.OrdinalIgnoreCase)) continue;
 
-                var dest = Path.Combine(rrOutputRoot, name);
+                var dest = Path.Combine(outputRoot, name);
 
                 log.Info($"Copying additional asset folder: {name}");
                 copyHelper.CopyRecursive(folder, dest, exclude);
@@ -91,5 +84,6 @@ namespace ClubSiteGenerator.Utilities
                 CssFile = cssFile
             };
         }
+
     }
 }
