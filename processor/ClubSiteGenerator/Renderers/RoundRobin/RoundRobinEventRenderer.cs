@@ -247,13 +247,10 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 : $"<td class=\"{tdClass}\">{encoded}</td>";
         }
 
-        private static string GetRowClass(Ride ride) => ride switch
-        {
-            { EventEligibleRidersRank: not null } => "competition-eligible",
-            { ClubNumber: null } => "guest-non-club-member",
-            { Competitor.ClaimStatus: ClaimStatus.SecondClaim } => "guest-second-claim",
-            _ => "competition-eligible"
-        };
+        private static string GetRowClass(Ride ride) =>
+            !string.IsNullOrWhiteSpace(ride.RoundRobinClub)
+                ? "competition-eligible"
+                : "guest-non-club-member";
 
         private static string StripClubSuffix(string name, string? roundRobinClub)
         {
