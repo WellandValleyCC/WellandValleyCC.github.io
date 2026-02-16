@@ -64,7 +64,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public static RoundRobinEventResultsSet CreateFrom(
             IEnumerable<CalendarEvent> roundRobinCalendar,
             IEnumerable<Ride> allRides,
-            int eventNumber)
+            int roundRobinEventNumber)
         {
             if (HasMissingCompetitors(allRides))
                 throw new ArgumentException($"{nameof(allRides)} must be hydrated with Competitors.", nameof(allRides));
@@ -72,13 +72,15 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             if (HasMissingCalendarEvents(allRides))
                 throw new ArgumentException($"{nameof(allRides)} must be hydrated with CalendarEvents.", nameof(allRides));
 
-            var rrEvent = roundRobinCalendar.Single(ev => ev.RoundRobinEventNumber == eventNumber);
+            var rrEvent = roundRobinCalendar.Single(ev => ev.RoundRobinEventNumber == roundRobinEventNumber);
+
+            var fullSeasonEventNumber = rrEvent.EventNumber;
 
             if (!rrEvent.IsRoundRobinEvent)
                 throw new InvalidOperationException(
-                    $"CalendarEvent {eventNumber} is not a Round Robin event.");
+                    $"CalendarEvent {roundRobinEventNumber} is not a Round Robin event.");
 
-            var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == eventNumber);
+            var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == fullSeasonEventNumber);
 
             var ranked = hydratedRidesForEvent
                 .Where(r => r.Status == RideStatus.Valid)
@@ -94,7 +96,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             return new RoundRobinEventResultsSet(
                 roundRobinCalendar,
                 orderedHydratedRidesForEvent,
-                eventNumber);
+                roundRobinEventNumber);
         }
 
         private void AssignRoundRobinRanks()
