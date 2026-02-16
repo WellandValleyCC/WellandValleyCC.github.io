@@ -167,7 +167,7 @@ table.results {
     }
 
     table.results tbody tr:hover {
-        background-color: #f1f7ff;
+		background-color: transparent;
     }
 
     /* ===========================
