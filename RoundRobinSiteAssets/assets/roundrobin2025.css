@@ -170,6 +170,9 @@ table.results {
 		background-color: transparent;
     }
 
+.legend + main table.results {
+    margin-top: 0.2rem;
+}
     /* ===========================
    Results & Legend Colour Coding
    =========================== */
@@ -244,31 +247,26 @@ table.results {
     flex-wrap: nowrap;
     gap: 0.5em;
     overflow-x: auto;
-    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;   /* tighter gap above table */
     padding-top: 0.25em;
     font-size: 1rem;
 }
 
 .legend span {
-    padding: 0.25em 0.5em;
+    padding: 0.2em 0.4em;   /* tighter */
     border-radius: 4px;
-    font-size: 1rem;
-}
-
-/* Legend styling for Round Robin pages */
-.header-and-legend .legend {
-    margin-top: 0.5em;
-    font-size: 0.9rem; /* slightly smaller than global */
-}
-
-.header-and-legend .legend span {
-    padding: 0.2em 0.4em; /* tighter */
+    font-size: 0.95rem;
     background-color: #f2f2f2;
     white-space: nowrap;
     color: #333;
 }
 
-
+/* Legend immediately after the header on RR pages */
+header + .legend {
+    margin-top: 0.5em;      /* space from banner/nav */
+    margin-bottom: 0.05em;  /* snug to the table */
+}
 /* ===========================
    Podium Highlighting
    =========================== */
