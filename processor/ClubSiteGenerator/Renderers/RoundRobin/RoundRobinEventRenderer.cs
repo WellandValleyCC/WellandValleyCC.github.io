@@ -150,7 +150,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         private readonly List<string> columnTitles = new()
 {
-    "Name", "Round Robin Club", "Position", "Road Bike", "Actual Time", "Avg. mph"
+    "Name", "Club", "Position", "Road Bike", "Actual Time", "Avg. mph"
 };
 
         private string RenderResultsTable()
@@ -211,7 +211,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
             };
 
-            yield return ride.Name ?? "Unknown";
+            var cleanName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
+            yield return cleanName;
+
             yield return ride.RoundRobinClub;
             yield return ride.EventRank?.ToString() ?? "";
             yield return ride.EventRoadBikeRank?.ToString() ?? "";
@@ -224,8 +226,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var encoded = WebUtility.HtmlEncode(value);
             var tdClass = index switch
             {
-                2 => ride.GetEventEligibleRidersRankClass(),
-                 => ride.GetEventEligibleRoadBikeRidersRankClass(),
+                1 => ride.GetEventEligibleRidersRankClass(),
+                2 => ride.GetEventEligibleRoadBikeRidersRankClass(),
                 _ => string.Empty
             };
 
@@ -241,5 +243,16 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             { Competitor.ClaimStatus: ClaimStatus.SecondClaim } => "guest-second-claim",
             _ => "competition-eligible"
         };
+
+        private static string StripClubSuffix(string name, string? roundRobinClub)
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(roundRobinClub))
+                return name;
+
+            // Pattern: "(XYZ)" at end of string, with optional whitespace
+            var pattern = @"\s*\(" + Regex.Escape(roundRobinClub.Trim()) + @"\)\s*$";
+
+            return Regex.Replace(name, pattern, "", RegexOptions.IgnoreCase).TrimEnd();
+        }
     }
 }
