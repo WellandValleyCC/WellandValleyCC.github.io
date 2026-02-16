@@ -484,6 +484,52 @@ body.rr.event-page .event-header-core .event-host {
     border-radius: 2px;
 }
 
+/* Cancelled Event – Event Header (WVCC style) ============== */
+
+/* =========================================================
+   Cancelled Event – Event Header (WVCC style)
+   ========================================================= */
+
+/* Pale transparent red behind the header text block */
+.event-page .event-header-core.cancelled-event {
+    position: relative;
+    background-color: rgba(248, 215, 218, 0.6); /* pale red, transparent */
+    color: #721c24; /* dark red text */
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    z-index: 3; /* above banner + tint */
+}
+
+/* Diagonal CANCELLED banner (WVCC angle, transparent) */
+
+.event-page .event-header-core.cancelled-event::after {
+    content: "Cancelled";
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%) rotate(-20deg); /* WVCC angle */
+    background: rgba(200, 0, 0, 0.5); /* transparent red */
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.3rem 2.5rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 4; /* above header block */
+}
+
+/* Cancelled Event – Banner Image Red Tint ================= */
+
+/* Banner image sits at z-index: 1 via ::before */
+/* This tint sits above it, but below the header text */
+.rr-banner-header.cancelled-event::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(200, 0, 0, 0.25); /* transparent red tint */
+    z-index: 2; /* above ::before, below header text */
+    pointer-events: none;
+}
 
 
 /* =========================================================

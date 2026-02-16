@@ -122,11 +122,15 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var rrHeaderTitle = eventTitle;
             var rrHeaderDate = eventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
 
+            var headerClasses = resultsSet.CalendarEvent.IsCancelled
+                ? "event-header-core cancelled-event"
+                : "event-header-core";
+
             return $@"
 <header>
   <div class=""rr-banner-header"">
     <div class=""header-and-legend"">
-      <div class=""event-header-core"">
+      <div class=""{headerClasses}"">
         <h1>
           <span class=""event-number"">Event {eventNumber}:</span>
           {rrHeaderTitle}
