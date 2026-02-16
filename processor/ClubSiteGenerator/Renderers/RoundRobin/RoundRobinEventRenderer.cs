@@ -133,6 +133,11 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         <p class=""event-date"">{rrHeaderDate}</p>
         <p class=""event-distance"">Distance: {eventDistanceText}</p>
       </div>
+
+      <div class=""legend"">
+        <span class=""competition-eligible"">Club Member</span>
+        <span class=""guest-non-club-member"">Guest</span>
+      </div>
     </div>
 
     <nav class=""event-nav"" aria-label=""Event navigation"">
@@ -143,7 +148,6 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
   <div>
 </header>";
         }
-
         //
         // RESULTS TABLE
         //
