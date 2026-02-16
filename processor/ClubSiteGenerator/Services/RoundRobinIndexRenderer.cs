@@ -1,6 +1,7 @@
-﻿using System.Text;
-using ClubCore.Models;
+﻿using ClubCore.Models;
+using ClubProcessor.Configuration;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+using System.Text;
 
 namespace ClubSiteGenerator.Services
 {
@@ -66,6 +67,8 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine($"    <h1>Round Robin TT – {competitionYear}</h1>");
             sb.AppendLine("    <p>A multi‑club time trial series hosted across the region.</p>");
 
+            sb.AppendLine(RenderOtherSeasonsSection());
+
             sb.AppendLine(RenderCalendar());
             sb.AppendLine(RenderCompetitionsSection());
             sb.AppendLine(RenderParticipatingClubsSection(clubs));
@@ -75,6 +78,40 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  </div>");
             sb.AppendLine("</body>");
             sb.AppendLine("</html>");
+
+            return sb.ToString();
+        }
+
+        private IEnumerable<(int Year, string FileName)> GetOtherSeasons()
+        {
+            var currentRealYear = DateTime.Now.Year;
+
+            return SeasonsConfig.GetSeasons()
+                .Where(y =>
+                    y != competitionYear &&   // exclude the season being generated
+                    y <= currentRealYear)     // include all seasons up to the real-world year
+                .OrderBy(y => y)
+                .Select(y => (Year: y, FileName: GetSeasonIndexFilename(y)));
+        }
+
+        private static string GetSeasonIndexFilename(int year) => year == 2025
+            ? $"preview{year}.html"
+            : $"index{year}.html";
+
+        private string RenderOtherSeasonsSection()
+        {
+            var seasons = GetOtherSeasons().ToList();
+            if (!seasons.Any())
+                return string.Empty;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("    <h2>Other Seasons</h2>");
+            sb.AppendLine("    <ul>");
+
+            foreach (var s in seasons)
+                sb.AppendLine($"      <li><a href=\"{s.FileName}\">{s.Year} Season</a></li>");
+
+            sb.AppendLine("    </ul>");
 
             return sb.ToString();
         }
