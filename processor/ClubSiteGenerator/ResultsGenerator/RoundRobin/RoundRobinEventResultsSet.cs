@@ -106,8 +106,23 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
+            int currentRank = 1;
+
             for (int i = 0; i < rrEligible.Count; i++)
-                rrEligible[i].RREligibleRidersRank = i + 1;
+            {
+                if (i > 0 && rrEligible[i].TotalSeconds == rrEligible[i - 1].TotalSeconds)
+                {
+                    // Same time → same rank
+                    rrEligible[i].RREligibleRidersRank = rrEligible[i - 1].RREligibleRidersRank;
+                }
+                else
+                {
+                    // New time → rank = position + 1
+                    rrEligible[i].RREligibleRidersRank = currentRank;
+                }
+
+                currentRank++;
+            }
 
             // Road bike subset
             var rrEligibleRoadBike = rrEligible
@@ -115,8 +130,22 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
+            currentRank = 1;
+
             for (int i = 0; i < rrEligibleRoadBike.Count; i++)
-                rrEligibleRoadBike[i].RREligibleRoadBikeRidersRank = i + 1;
+            {
+                if (i > 0 && rrEligibleRoadBike[i].TotalSeconds == rrEligibleRoadBike[i - 1].TotalSeconds)
+                {
+                    rrEligibleRoadBike[i].RREligibleRoadBikeRidersRank =
+                        rrEligibleRoadBike[i - 1].RREligibleRoadBikeRidersRank;
+                }
+                else
+                {
+                    rrEligibleRoadBike[i].RREligibleRoadBikeRidersRank = currentRank;
+                }
+
+                currentRank++;
+            }
         }
     }
 }
