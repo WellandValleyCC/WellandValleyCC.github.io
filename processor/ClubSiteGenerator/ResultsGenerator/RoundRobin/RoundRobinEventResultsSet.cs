@@ -106,23 +106,10 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
-            int currentRank = 1;
-
-            for (int i = 0; i < rrEligible.Count; i++)
-            {
-                if (i > 0 && rrEligible[i].TotalSeconds == rrEligible[i - 1].TotalSeconds)
-                {
-                    // Same time → same rank
-                    rrEligible[i].RREligibleRidersRank = rrEligible[i - 1].RREligibleRidersRank;
-                }
-                else
-                {
-                    // New time → rank = position + 1
-                    rrEligible[i].RREligibleRidersRank = currentRank;
-                }
-
-                currentRank++;
-            }
+            AssignRanksWithTies(
+                rrEligible,
+                (ride, rank) => ride.RREligibleRidersRank = rank
+            );
 
             // Road bike subset
             var rrEligibleRoadBike = rrEligible
@@ -130,18 +117,32 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 .OrderBy(r => r.TotalSeconds)
                 .ToList();
 
-            currentRank = 1;
+            AssignRanksWithTies(
+                rrEligibleRoadBike,
+                (ride, rank) => ride.RREligibleRoadBikeRidersRank = rank
+            );
+        }
 
-            for (int i = 0; i < rrEligibleRoadBike.Count; i++)
+        private static void AssignRanksWithTies(
+            IList<Ride> rides,
+            Action<Ride, int> assignRank)
+        {
+            if (rides.Count == 0)
+                return;
+
+            int currentRank = 1;
+
+            for (int i = 0; i < rides.Count; i++)
             {
-                if (i > 0 && rrEligibleRoadBike[i].TotalSeconds == rrEligibleRoadBike[i - 1].TotalSeconds)
+                if (i > 0 && rides[i].TotalSeconds == rides[i - 1].TotalSeconds)
                 {
-                    rrEligibleRoadBike[i].RREligibleRoadBikeRidersRank =
-                        rrEligibleRoadBike[i - 1].RREligibleRoadBikeRidersRank;
+                    // Same time → same rank
+                    assignRank(rides[i], rides[i - 1].RREligibleRidersRank!.Value);
                 }
                 else
                 {
-                    rrEligibleRoadBike[i].RREligibleRoadBikeRidersRank = currentRank;
+                    // New time → new rank
+                    assignRank(rides[i], currentRank);
                 }
 
                 currentRank++;
