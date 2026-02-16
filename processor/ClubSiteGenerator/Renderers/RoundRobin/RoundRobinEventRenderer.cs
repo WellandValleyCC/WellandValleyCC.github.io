@@ -214,7 +214,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var cleanName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
             yield return cleanName;
 
-            yield return ride.RoundRobinClub;
+            yield return ride.RoundRobinClub ?? "";
             yield return ride.EventRank?.ToString() ?? "";
             yield return ride.EventRoadBikeRank?.ToString() ?? "";
             yield return timeCell;
@@ -226,8 +226,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var encoded = WebUtility.HtmlEncode(value);
             var tdClass = index switch
             {
-                1 => ride.GetEventEligibleRidersRankClass(),
-                2 => ride.GetEventEligibleRoadBikeRidersRankClass(),
+                2 => ride.GetRREligibleRidersRankClass(),
+                3 => ride.GetRREligibleRoadBikeRidersRankClass(),
                 _ => string.Empty
             };
 
