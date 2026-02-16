@@ -1,6 +1,11 @@
-﻿using ClubSiteGenerator.ResultsGenerator;
+﻿using ClubCore.Models;
+using ClubCore.Models.Enums;
+using ClubSiteGenerator.Models.Extensions;
+using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Globalization;
+using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
@@ -78,21 +83,6 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         {
             var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
 
-            var prevLinkHtml = string.IsNullOrEmpty(resultsSet.PrevLink)
-                ? ""
-                : $@"<a class=""prev"" href=""{resultsSet.PrevLink}"" aria-label=""Previous"">{resultsSet.PrevLabel}</a>";
-
-            var nextLinkHtml = string.IsNullOrEmpty(resultsSet.NextLink)
-                ? ""
-                : $@"<a class=""next"" href=""{resultsSet.NextLink}"" aria-label=""Next"">{resultsSet.NextLabel}</a>";
-
-            var eventDateText = resultsSet.EventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
-
-            var hostClubName = FormatHosts(resultsSet.CalendarEvent.RoundRobinClub);
-
-            var rrHeaderTitle = eventTitle;
-            var rrHeaderDate = eventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
-
             return $@"
 <!DOCTYPE html>
 <html lang=""en"">
@@ -104,6 +94,33 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 </head>
 <body class=""rr event-page"">
 
+{RenderHeader()}
+
+<main>
+  {RenderResultsTable()}
+</main>
+
+<footer><p class=""generated"">Generated {timestamp}</p></footer>
+
+</body>
+</html>";
+        }
+
+        private string RenderHeader()
+        {
+            var prevLinkHtml = string.IsNullOrEmpty(resultsSet.PrevLink)
+                ? ""
+                : $@"<a class=""prev"" href=""{resultsSet.PrevLink}"" aria-label=""Previous"">{resultsSet.PrevLabel}</a>";
+
+            var nextLinkHtml = string.IsNullOrEmpty(resultsSet.NextLink)
+                ? ""
+                : $@"<a class=""next"" href=""{resultsSet.NextLink}"" aria-label=""Next"">{resultsSet.NextLabel}</a>";
+
+            var hostClubName = FormatHosts(resultsSet.CalendarEvent.RoundRobinClub);
+            var rrHeaderTitle = eventTitle;
+            var rrHeaderDate = eventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
+
+            return $@"
 <header>
   <div class=""rr-banner-header"">
     <div class=""header-and-legend"">
@@ -117,24 +134,112 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         <p class=""event-distance"">Distance: {eventDistanceText}</p>
       </div>
     </div>
-   
+
     <nav class=""event-nav"" aria-label=""Event navigation"">
       {prevLinkHtml}
       <a class=""index"" href=""../{indexFileName}"" aria-label=""Back to index"">Index</a>
       {nextLinkHtml}
     </nav>
   <div>
-</header>
-
-<main>
-  <p>This is a placeholder page for Round Robin event {eventNumber}.</p>
-  <p>The real renderer will output full event results here.</p>
-</main>
-
-<footer><p class=""generated"">Generated {timestamp}</p></footer>
-
-</body>
-</html>";
+</header>";
         }
+
+        //
+        // RESULTS TABLE
+        //
+
+        private readonly List<string> columnTitles = new()
+{
+    "Name", "Round Robin Club", "Position", "Road Bike", "Actual Time", "Avg. mph"
+};
+
+        private string RenderResultsTable()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<table class=\"results\">");
+            sb.AppendLine(RenderHeaderRow());
+            sb.AppendLine(RenderBody());
+            sb.AppendLine("</table>");
+            return sb.ToString();
+        }
+
+        private string RenderHeaderRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<thead><tr>");
+
+            foreach (var title in columnTitles)
+                sb.AppendLine($"<th>{WebUtility.HtmlEncode(title)}</th>");
+
+            sb.AppendLine("</tr></thead>");
+            return sb.ToString();
+        }
+
+        private string RenderBody()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tbody>");
+
+            foreach (var ride in resultsSet.Rides)
+                sb.AppendLine(RenderRow(ride));
+
+            sb.AppendLine("</tbody>");
+            return sb.ToString();
+        }
+
+        private string RenderRow(Ride ride)
+        {
+            var sb = new StringBuilder();
+            var cssClass = GetRowClass(ride);
+
+            sb.AppendLine($"<tr class=\"{cssClass}\">");
+
+            foreach (var cell in BuildCells(ride).Select((value, index) => RenderCell(value, index, ride)))
+                sb.AppendLine(cell);
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private IEnumerable<string> BuildCells(Ride ride)
+        {
+            var timeCell = ride.Status switch
+            {
+                RideStatus.DNF => "DNF",
+                RideStatus.DNS => "DNS",
+                RideStatus.DQ => "DQ",
+                _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
+            };
+
+            yield return ride.Name ?? "Unknown";
+            yield return ride.RoundRobinClub;
+            yield return ride.EventRank?.ToString() ?? "";
+            yield return ride.EventRoadBikeRank?.ToString() ?? "";
+            yield return timeCell;
+            yield return ride.AvgSpeed?.ToString("0.00") ?? string.Empty;
+        }
+
+        private string RenderCell(string value, int index, Ride ride)
+        {
+            var encoded = WebUtility.HtmlEncode(value);
+            var tdClass = index switch
+            {
+                2 => ride.GetEventEligibleRidersRankClass(),
+                 => ride.GetEventEligibleRoadBikeRidersRankClass(),
+                _ => string.Empty
+            };
+
+            return string.IsNullOrEmpty(tdClass)
+                ? $"<td>{encoded}</td>"
+                : $"<td class=\"{tdClass}\">{encoded}</td>";
+        }
+
+        private static string GetRowClass(Ride ride) => ride switch
+        {
+            { EventEligibleRidersRank: not null } => "competition-eligible",
+            { ClubNumber: null } => "guest-non-club-member",
+            { Competitor.ClaimStatus: ClaimStatus.SecondClaim } => "guest-second-claim",
+            _ => "competition-eligible"
+        };
     }
 }
