@@ -20,6 +20,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                     ev.RoundRobinEventNumber == roundRobinEventNumber && 
                     ev.IsRoundRobinEvent);
             this.Rides = rides;
+            AssignRoundRobinRanks();
         }
 
         public CalendarEvent CalendarEvent => roundRobinEvent;
@@ -94,6 +95,28 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 roundRobinCalendar,
                 orderedHydratedRidesForEvent,
                 eventNumber);
+        }
+
+        private void AssignRoundRobinRanks()
+        {
+            // RR-eligible = riders with a RoundRobinClub (not guests) and valid rides
+            var rrEligible = Rides
+                .Where(r => !string.IsNullOrWhiteSpace(r.RoundRobinClub) &&
+                            r.Status == RideStatus.Valid)
+                .OrderBy(r => r.TotalSeconds)
+                .ToList();
+
+            for (int i = 0; i < rrEligible.Count; i++)
+                rrEligible[i].RREligibleRidersRank = i + 1;
+
+            // Road bike subset
+            var rrEligibleRoadBike = rrEligible
+                .Where(r => r.IsRoadBike)
+                .OrderBy(r => r.TotalSeconds)
+                .ToList();
+
+            for (int i = 0; i < rrEligibleRoadBike.Count; i++)
+                rrEligibleRoadBike[i].RREligibleRoadBikeRidersRank = i + 1;
         }
     }
 }
