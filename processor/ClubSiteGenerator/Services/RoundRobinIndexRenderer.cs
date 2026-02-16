@@ -205,22 +205,23 @@ namespace ClubSiteGenerator.Services
         private string RenderEventCell(CalendarEvent ev, int day)
         {
             var link = $"events/{competitionYear}-rr-event-{ev.RoundRobinEventNumber:D2}.html";
-            
+
             var classes = new List<string> { "day-cell", "rr-event" };
 
-            // No background logos anymore
+            if (ev.IsCancelled)
+                classes.Add("cancelled-event");
+
             var classAttr = string.Join(" ", classes);
 
-            // Club shortname (mixed case preserved)
             var clubShort = ev.RoundRobinClub;
 
             return
-        $@"    <div class=""{classAttr}"">
-            <div class=""cell-content"">
-                <a href=""{link}"" title=""{ev.EventName}"">{day}</a>
-                <div class=""club-shortname"">{clubShort}</div>
-            </div>
-        </div>";
+        $@"    <div class=""cell {classAttr}"">
+        <div class=""cell-content"">
+            <a href=""{link}"" title=""{ev.EventName}"">{day}</a>
+            <div class=""club-shortname"">{clubShort}</div>
+        </div>
+    </div>";
         }
 
         // ------------------------------------------------------------
@@ -293,15 +294,6 @@ namespace ClubSiteGenerator.Services
         {
             var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
             return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
-        }
-
-        private RoundRobinClub? FindClubForEvent(CalendarEvent ev)
-        {
-            if (string.IsNullOrWhiteSpace(ev.RoundRobinClub))
-                return null;
-
-            return clubs.FirstOrDefault(c =>
-                string.Equals(c.ShortName, ev.RoundRobinClub, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
