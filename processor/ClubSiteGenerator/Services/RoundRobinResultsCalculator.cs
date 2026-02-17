@@ -73,13 +73,23 @@ namespace ClubSiteGenerator.Services
                 : (double?)null;
 
             // Event-level dictionaries
-            var eventPoints = rrRides.ToDictionary(
-                r => r.EventNumber,
-                r => r.Status == RideStatus.Valid ? pointsSelector(r) : null);
+            var eventPoints = rrRides
+                .GroupBy(r => r.CalendarEvent!.RoundRobinEventNumber)
+                .ToDictionary(
+                    g => g.Key,
+                    g =>
+                    {
+                        var ride = g.First();
+                        return ride.Status == RideStatus.Valid ? pointsSelector(ride) : null;
+                    });
 
-            var eventStatuses = rrRides.ToDictionary(
-                r => r.EventNumber,
-                r => r.Status);
+            var eventStatuses = rrRides
+                .GroupBy(r => r.CalendarEvent!.RoundRobinEventNumber)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Any(r => r.Status == RideStatus.Valid)
+                            ? RideStatus.Valid
+                            : g.First().Status);
 
             // Determine identity for display
             var competitor = rrRides.Last().Competitor;
@@ -123,9 +133,9 @@ namespace ClubSiteGenerator.Services
             int openCount = rules.RoundRobin.Team.OpenCount;   // e.g. 4
             int womenCount = rules.RoundRobin.Team.WomenCount; // e.g. 1
 
-            // Group all rides for this club by event
+            // Group all rides for this club by RR event number
             var eventGroups = rrRides
-                .GroupBy(r => r.EventNumber)
+                .GroupBy(r => r.CalendarEvent!.RoundRobinEventNumber)
                 .ToList();
 
             var eventPoints = new Dictionary<int, double?>();
@@ -133,7 +143,7 @@ namespace ClubSiteGenerator.Services
 
             foreach (var ev in eventGroups)
             {
-                int eventNumber = ev.Key;
+                int eventNumber = ev.Key; // RR event number
                 var ridesInEvent = ev.ToList();
 
                 var valid = ridesInEvent
@@ -147,7 +157,6 @@ namespace ClubSiteGenerator.Services
                     continue;
                 }
 
-                // Best 4 Open scores in this event
                 var bestOpen = valid
                     .Select(r => r.RoundRobinPoints)
                     .Where(p => p.HasValue)
@@ -156,7 +165,6 @@ namespace ClubSiteGenerator.Services
                     .Take(openCount)
                     .ToList();
 
-                // Best 1 Women score in this event
                 var bestWomen = valid
                     .Select(r => r.RoundRobinWomenPoints)
                     .Where(p => p.HasValue)
