@@ -7,6 +7,10 @@
     /// </summary>
     public interface ICompetitionRules
     {
+        // ------------------------------------------------------------
+        // Existing WVCC rules
+        // ------------------------------------------------------------
+
         /// <summary>
         /// The name of the organization or company sponsoring the league. Used in the page titles.
         /// </summary>
@@ -51,5 +55,15 @@
         /// Narrative rule text for the 10 TTs scoring.
         /// </summary>
         string RuleTextTensCompetition { get; }
+
+        // ------------------------------------------------------------
+        // NEW: Round Robin rules
+        // ------------------------------------------------------------
+
+        /// <summary>
+        /// Round Robin scoring rules (Open, Women, Team).
+        /// Always present: if omitted in config (e.g. 2024), defaults are applied.
+        /// </summary>
+        RoundRobinRules RoundRobin { get; }
     }
 }

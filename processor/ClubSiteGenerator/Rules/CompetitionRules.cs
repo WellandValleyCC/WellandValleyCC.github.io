@@ -35,9 +35,9 @@
 
         public RoundRobinRules RoundRobin { get; }
 
-        // -----------------------------
-        // Constructor
-        // -----------------------------
+        // ------------------------------------------------------------
+        // NEW full constructor (used by CompetitionRulesProvider)
+        // ------------------------------------------------------------
         public CompetitionRules(
             int tenMileCount,
             int nonTenMinimum,
@@ -53,7 +53,7 @@
             // If roundRobinRules is null (e.g. 2024), provide safe defaults
             RoundRobin = roundRobinRules ?? new RoundRobinRules
             {
-                Count = mixedEventCount,   // fallback: same as mixed-distance
+                Count = mixedEventCount,
                 Minimum = 0,
                 Team = new RoundRobinTeamRules
                 {
@@ -62,5 +62,23 @@
                 }
             };
         }
+
+        // ------------------------------------------------------------
+        // LEGACY constructor (keeps all existing tests working)
+        // ------------------------------------------------------------
+        public CompetitionRules(
+            int tenMileCount,
+            int nonTenMinimum,
+            int mixedEventCount,
+            string? leagueSponsor)
+            : this(
+                tenMileCount,
+                nonTenMinimum,
+                mixedEventCount,
+                leagueSponsor,
+                null) // null triggers default RR rules
+        {
+        }
+
     }
 }

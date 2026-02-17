@@ -59,13 +59,9 @@ namespace ClubSiteGenerator.Rules
 
             if (config.RoundRobin != null)
             {
-                // RR count (fixed or formula)
                 int rrCount = Resolve(config.RoundRobin, relevantEvents);
-
-                // RR minimum rides
                 int rrMinimum = config.RoundRobin.Minimum ?? 0;
 
-                // RR team scoring rules
                 var team = new RoundRobinTeamRules
                 {
                     OpenCount = config.RoundRobin.Team?.OpenCount ?? 4,
@@ -80,10 +76,6 @@ namespace ClubSiteGenerator.Rules
                 };
             }
 
-            //
-            // Construct final rules object
-            // (rrRules may be null — CompetitionRules will apply defaults)
-            //
             return new CompetitionRules(
                 tenMileCount,
                 nonTenMinimum,
@@ -92,6 +84,9 @@ namespace ClubSiteGenerator.Rules
                 rrRules);
         }
 
+        // ------------------------------------------------------------
+        // Resolve for standard RuleDefinition (tenMile, mixedDistance)
+        // ------------------------------------------------------------
         private int Resolve(RuleDefinition rule, int calendarEvents)
         {
             if (rule.Count.HasValue)
@@ -106,6 +101,25 @@ namespace ClubSiteGenerator.Rules
             }
 
             throw new InvalidOperationException("Rule definition must have either Count or Formula.");
+        }
+
+        // ------------------------------------------------------------
+        // Resolve for RoundRobinRuleDefinition (roundRobin)
+        // ------------------------------------------------------------
+        private int Resolve(RoundRobinRuleDefinition rule, int calendarEvents)
+        {
+            if (rule.Count.HasValue)
+                return rule.Count.Value;
+
+            if (!string.IsNullOrWhiteSpace(rule.Formula))
+            {
+                int value = EvaluateFormula(rule.Formula, calendarEvents);
+                if (rule.Cap.HasValue)
+                    value = Math.Min(value, rule.Cap.Value);
+                return value;
+            }
+
+            throw new InvalidOperationException("Round Robin rule definition must have either Count or Formula.");
         }
 
         private int EvaluateFormula(string formula, int calendarEvents)
