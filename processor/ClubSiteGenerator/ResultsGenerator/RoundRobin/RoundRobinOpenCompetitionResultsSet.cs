@@ -77,14 +77,14 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 
             // Build results using RoundRobinPoints
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                .Select(group => WvccCompetitionResultsCalculator.BuildCompetitorResult(
                     group.ToList(),
                     rrCalendar,
                     r => r.RoundRobinPoints,
                     rules))
                 .ToList();
 
-            results = CompetitionResultsCalculator.SortResults(results).ToList();
+            results = WvccCompetitionResultsCalculator.SortResults(results).ToList();
 
             return new RoundRobinOpenCompetitionResultsSet(rrCalendar, results);
         }

@@ -31,5 +31,9 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         protected static bool HasNonChampionshipEvents(IEnumerable<CalendarEvent> calendar) =>
             calendar.Any(ev => !ev.IsClubChampionship);
+
+        protected static bool HasNonRoundRobinEvents(IEnumerable<CalendarEvent> calendar) =>
+    calendar.Any(ev => !ev.IsRoundRobinEvent);
+
     }
 }
