@@ -1,10 +1,13 @@
+using ClubCore.Interfaces;
 using ClubCore.Models;
 using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Renderers.RoundRobin;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Utilities;
+using System.Data;
 using System.Text;
 
 namespace ClubSiteGenerator.Services
@@ -18,6 +21,9 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<Competitor> competitors;
         private readonly IEnumerable<CalendarEvent> calendar;
         private readonly IEnumerable<RoundRobinClub> clubs;
+
+        private readonly ICompetitionRulesProvider rulesProvider;
+        private readonly ICompetitionRules rules;
 
         private readonly int competitionYear;
 
@@ -46,6 +52,17 @@ namespace ClubSiteGenerator.Services
 
             // Determine competition year from first event
             competitionYear = calendar.First().EventDate.Year;
+
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var configDir = folderLocator.GetConfigDirectory();
+            var configFilePath = Path.Combine(configDir, "competition-rules.json");
+            rulesProvider = new CompetitionRulesProvider(configFilePath);
+
+            // Resolve rules for this season
+            rules = rulesProvider.GetRules(competitionYear, calendar);
         }
 
         public void GenerateAll(string indexFileName)
@@ -67,6 +84,24 @@ namespace ClubSiteGenerator.Services
                         rides,
                         ev.RoundRobinEventNumber));
             }
+
+            // 2. Build Open competition results
+            //    Only rides for events in the calendar with a RoundRobinClub participate
+            var rrEventNumbers = calendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
+            var rrRides = rides
+                .Where(r => r.RoundRobinClub != null &&
+                            rrEventNumbers.Contains(r.EventNumber))
+                .ToList();
+
+            resultsSets.Add(
+                RoundRobinOpenCompetitionResultsSet.CreateFrom(
+                    rrRides,
+                    calendar,   // already guaranteed to be RR events
+                    rules));
+
         }
 
         private void WirePrevNextLinks()
