@@ -5,7 +5,7 @@ namespace ClubSiteGenerator.Models
 {
     public class CompetitorResult
     {
-        public Competitor? Competitor { get; set; } = default!;
+        public Competitor Competitor { get; set; } = default!;
 
         //
         // Round Robin rider (null for WVCC competitors)

@@ -95,11 +95,8 @@ namespace ClubSiteGenerator.Services
             var competitor = rrRides.Last().Competitor;
             var rrRider = rrRides.Last().RoundRobinRider;
 
-            return new CompetitorResult
+            var result = new CompetitorResult
             {
-                Competitor = competitor,   // null for non-WVCC
-                RoundRobinRider = rrRider,
-
                 Rides = rrRides,
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
@@ -118,6 +115,16 @@ namespace ClubSiteGenerator.Services
                     Rides = scoringRides
                 }
             };
+
+            // Only set Competitor if present
+            if (competitor != null)
+                result.Competitor = competitor;
+
+            // Only set RR rider if present
+            if (rrRider != null)
+                result.RoundRobinRider = rrRider;
+
+            return result;
         }
 
         // ------------------------------------------------------------
