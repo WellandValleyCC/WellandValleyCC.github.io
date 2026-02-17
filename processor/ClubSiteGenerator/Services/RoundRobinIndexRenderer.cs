@@ -238,7 +238,7 @@ namespace ClubSiteGenerator.Services
 <ul class=""competitions"">
     <li><a href=""competitions/{competitionYear}-rr-open.html"">Open Competition</a></li>
     <li><a href=""competitions/{competitionYear}-rr-women.html"">Women’s Competition</a></li>
-    <li><a href=""competitions/{competitionYear}-rr-club.html"">Club Competition</a></li>
+    <li><a href=""competitions/{competitionYear}-rr-team.html"">Club Competition</a></li>
 </ul>";
         }
 

@@ -126,14 +126,14 @@ namespace ClubSiteGenerator.Services
                     calendar,
                     rules));
 
-            ////
-            //// 6. Team competition (all RR riders, no gender filtering)
-            ////
-            //resultsSets.Add(
-            //    RoundRobinTeamCompetitionResultsSet.CreateFrom(
-            //        rrRides,
-            //        calendar,
-            //        rules));
+            //
+            // 6. Team competition (all RR riders, no gender filtering)
+            //
+            resultsSets.Add(
+                RoundRobinTeamCompetitionResultsSet.CreateFrom(
+                    rrRides,
+                    calendar,
+                    rules));
         }
 
         private void WirePrevNextLinks()

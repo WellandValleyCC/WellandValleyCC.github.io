@@ -120,52 +120,73 @@ namespace ClubSiteGenerator.Services
         {
             ValidateCalendar(rrCalendar);
 
+            int openCount = rules.RoundRobin.Team.OpenCount;   // e.g. 4
+            int womenCount = rules.RoundRobin.Team.WomenCount; // e.g. 1
+
+            // Group all rides for this club by event
+            var eventGroups = rrRides
+                .GroupBy(r => r.EventNumber)
+                .ToList();
+
+            var eventPoints = new Dictionary<int, double?>();
+            var eventStatuses = new Dictionary<int, RideStatus>();
+
+            foreach (var ev in eventGroups)
+            {
+                int eventNumber = ev.Key;
+                var ridesInEvent = ev.ToList();
+
+                var valid = ridesInEvent
+                    .Where(r => r.Status == RideStatus.Valid)
+                    .ToList();
+
+                if (!valid.Any())
+                {
+                    eventPoints[eventNumber] = null;
+                    eventStatuses[eventNumber] = ridesInEvent.First().Status;
+                    continue;
+                }
+
+                // Best 4 Open scores in this event
+                var bestOpen = valid
+                    .Select(r => r.RoundRobinPoints)
+                    .Where(p => p.HasValue)
+                    .Select(p => p!.Value)
+                    .OrderByDescending(p => p)
+                    .Take(openCount)
+                    .ToList();
+
+                // Best 1 Women score in this event
+                var bestWomen = valid
+                    .Select(r => r.RoundRobinWomenPoints)
+                    .Where(p => p.HasValue)
+                    .Select(p => p!.Value)
+                    .OrderByDescending(p => p)
+                    .Take(womenCount)
+                    .ToList();
+
+                double eventScore = bestOpen.Sum() + bestWomen.Sum();
+
+                eventPoints[eventNumber] = eventScore;
+                eventStatuses[eventNumber] = RideStatus.Valid;
+            }
+
+            // Total = sum of all event scores (no best-N across events)
+            double? totalPoints =
+                eventPoints.Values.Any(v => v.HasValue)
+                    ? eventPoints.Values.Where(v => v.HasValue).Sum(v => v!.Value)
+                    : (double?)null;
+
             var validRides = rrRides
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
-            // Team scoring rules from config
-            int openCount = rules.RoundRobin.Team.OpenCount;
-            int womenCount = rules.RoundRobin.Team.WomenCount;
-
-            // Best N Open points
-            var bestOpen = validRides
-                .Select(r => r.RoundRobinPoints)
-                .Where(p => p.HasValue)
-                .Select(p => p!.Value)
-                .OrderByDescending(p => p)
-                .Take(openCount)
-                .ToList();
-
-            // Best M Women points
-            var bestWomen = validRides
-                .Select(r => r.RoundRobinWomenPoints)
-                .Where(p => p.HasValue)
-                .Select(p => p!.Value)
-                .OrderByDescending(p => p)
-                .Take(womenCount)
-                .ToList();
-
-            double? totalPoints =
-                (bestOpen.Any() || bestWomen.Any())
-                    ? bestOpen.Sum() + bestWomen.Sum()
-                    : (double?)null;
-
-            // Event-level dictionaries
-            var eventPoints = rrRides.ToDictionary(
-                r => r.EventNumber,
-                r => r.Status == RideStatus.Valid ? r.RoundRobinPoints : null);
-
-            var eventStatuses = rrRides.ToDictionary(
-                r => r.EventNumber,
-                r => r.Status);
-
-            // Team identity: use the club name from the first ride
-            var roundRobinClubName = rrRides.First().RoundRobinClub!;
+            var clubName = rrRides.First().RoundRobinClub!;
 
             return new CompetitorResult
             {
-                RoundRobinClubName = roundRobinClubName,
+                RoundRobinClubName = clubName,
+
                 Rides = rrRides,
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
