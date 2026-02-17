@@ -1,6 +1,6 @@
 {
   "2024": {
-	"leagueSponsor": "George Halls Cycles",  
+    "leagueSponsor": "George Halls Cycles",
     "tenMile": {
       "count": 6
     },
@@ -9,8 +9,9 @@
       "nonTenMinimum": 2
     }
   },
+
   "2025": {
-	"leagueSponsor": "George Halls Cycles",  
+    "leagueSponsor": "George Halls Cycles",
     "tenMile": {
       "count": 8
     },
@@ -18,10 +19,20 @@
       "formula": "calendarEvents/2+1",
       "cap": 11,
       "nonTenMinimum": 2
+    },
+    "roundRobin": {
+      "formula": "calendarEvents/2+1",
+      "cap": 11,
+      "minimum": 0,
+      "team": {
+        "openCount": 4,
+        "womenCount": 1
+      }
     }
   },
+
   "2026": {
-	"leagueSponsor": "George Halls Cycles",  
+    "leagueSponsor": "George Halls Cycles",
     "tenMile": {
       "formula": "calendarEvents/2+1",
       "cap": 11
@@ -30,6 +41,15 @@
       "formula": "calendarEvents/2+1",
       "cap": 11,
       "nonTenMinimum": 2
+    },
+    "roundRobin": {
+      "formula": "calendarEvents/2+1",
+      "cap": 11,
+      "minimum": 0,
+      "team": {
+        "openCount": 4,
+        "womenCount": 1
+      }
     }
   }
 }

@@ -7,69 +7,85 @@
     /// </summary>
     public class CompetitionRules : ICompetitionRules
     {
-        /// <summary>
-        /// The name of the sponsor of the league. Used in the page titles - e.g. in 2025 - George Halls Cycles".
-        /// </summary>
+        // -----------------------------
+        // Existing WVCC properties
+        // -----------------------------
+
         public string? LeagueSponsor { get; }
 
-        /// <summary>
-        /// Number of ten‑mile rides to count for the ten‑mile competition.
-        /// </summary>
         public int TenMileCount { get; }
-
-        /// <summary>
-        /// Minimum number of non‑ten events required in the mixed‑distance scoring.
-        /// </summary>
         public int NonTenMinimum { get; }
-
-        /// <summary>
-        /// Total number of events to count for the mixed‑distance (Scoring‑N) competition.
-        /// </summary>
         public int MixedEventCount { get; }
 
-        /// <summary>
-        /// Title text for the ten‑mile scoring column (e.g. "10-mile TTs Best 8").
-        /// </summary>
         public string TenMileTitle => $"10-mile TTs Best {TenMileCount}";
-
-        /// <summary>
-        /// Title text for use where context makes it clear it's about ten‑mile scoring (e.g. Nev Brooks).
-        /// </summary>
         public string TenMileShortTitle => $"Best {TenMileCount}";
-
-        /// <summary>
-        /// Title text for the mixed‑distance scoring column (e.g. "Scoring 11").
-        /// </summary>
         public string FullCompetitionTitle => $"Scoring {MixedEventCount}";
 
-        /// <summary>
-        /// Narrative rule text for the mixed‑distance scoring.
-        /// </summary>
-        /// <remarks>
-        /// E.g. (for 2025 with 11 mixed events scoring and 2 non-tens required):
-        /// Your competition score is the total of the points from your 2 highest scoring non-ten events, plus your best 9 other events of any distance.
-        /// </remarks>  
         public string RuleTextMixedCompetition =>
             $"Your competition score is the total of the points " +
             $"from your {NonTenMinimum} highest scoring non‑ten events, " +
             $"plus your best {MixedEventCount - NonTenMinimum} other events of any distance.";
 
-        /// <summary>
-        /// Narrative rule text for the 10 TTs scoring.
-        /// </summary>
-        /// <remarks
-        /// E.g. (for 2025 with best 8 tens):
-        /// Your overall score is the total of the points from your best 8 events.
-        /// </remarks>
-        public string RuleTextTensCompetition =>             
+        public string RuleTextTensCompetition =>
             $"Your overall score is the total of the points from your best {TenMileCount} events.";
 
-        public CompetitionRules(int tenMileCount, int nonTenMinimum, int mixedEventCount, string? leagueSponsor)
+        // -----------------------------
+        // NEW: Round Robin rules block
+        // -----------------------------
+
+        public RoundRobinRules RoundRobin { get; }
+
+        // -----------------------------
+        // Constructor
+        // -----------------------------
+        public CompetitionRules(
+            int tenMileCount,
+            int nonTenMinimum,
+            int mixedEventCount,
+            string? leagueSponsor,
+            RoundRobinRules? roundRobinRules)
         {
             TenMileCount = tenMileCount;
             NonTenMinimum = nonTenMinimum;
             MixedEventCount = mixedEventCount;
             LeagueSponsor = leagueSponsor;
+
+            // If roundRobinRules is null (e.g. 2024), provide safe defaults
+            RoundRobin = roundRobinRules ?? new RoundRobinRules
+            {
+                Count = mixedEventCount,   // fallback: same as mixed-distance
+                Minimum = 0,
+                Team = new RoundRobinTeamRules
+                {
+                    OpenCount = 4,
+                    WomenCount = 1
+                }
+            };
         }
+    }
+
+    public class RoundRobinRules
+    {
+        /// <summary>
+        /// Number of rides to count for Open/Women competitions.
+        /// May be fixed or derived from formula.
+        /// </summary>
+        public int Count { get; set; }
+
+        /// <summary>
+        /// Minimum number of rides required to qualify.
+        /// </summary>
+        public int Minimum { get; set; } = 0;
+
+        /// <summary>
+        /// Team scoring rules (best N open + best M women).
+        /// </summary>
+        public RoundRobinTeamRules Team { get; set; } = new();
+    }
+
+    public class RoundRobinTeamRules
+    {
+        public int OpenCount { get; set; }
+        public int WomenCount { get; set; }
     }
 }
