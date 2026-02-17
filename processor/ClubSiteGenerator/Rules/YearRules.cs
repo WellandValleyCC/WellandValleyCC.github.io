@@ -12,5 +12,12 @@ namespace ClubSiteGenerator.Rules
 
         [JsonPropertyName("mixedDistance")]
         public RuleDefinition MixedDistance { get; set; } = new();
+
+        //
+        // NEW: Optional Round Robin rules block
+        // (Omitted entirely for 2024, present for 2025+)
+        //
+        [JsonPropertyName("roundRobin")]
+        public RoundRobinRuleDefinition? RoundRobin { get; set; }
     }
 }

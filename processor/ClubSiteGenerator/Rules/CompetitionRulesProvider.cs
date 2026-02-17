@@ -31,7 +31,8 @@ namespace ClubSiteGenerator.Rules
                 $"[INFO] Rules: effectiveYear={effectiveYear}, " +
                 $"TenMileCount={rules.TenMileCount}, " +
                 $"MixedEventCount={rules.MixedEventCount}, " +
-                $"NonTenMinimum={rules.NonTenMinimum}");
+                $"NonTenMinimum={rules.NonTenMinimum}, " +
+                $"RoundRobinCount={rules.RoundRobin.Count}");
 
             return rules;
         }
@@ -40,14 +41,55 @@ namespace ClubSiteGenerator.Rules
         {
             int relevantEvents = calendar.Count();
 
-            // Ten‑mile
+            //
+            // WVCC: Ten‑mile rules
+            //
             int tenMileCount = Resolve(config.TenMile, relevantEvents);
 
-            // Mixed distance
+            //
+            // WVCC: Mixed‑distance rules
+            //
             int mixedCount = Resolve(config.MixedDistance, relevantEvents);
             int nonTenMinimum = config.MixedDistance.NonTenMinimum ?? 0;
 
-            return new CompetitionRules(tenMileCount, nonTenMinimum, mixedCount, config.LeagueSponsor);
+            //
+            // Round Robin rules (optional)
+            //
+            RoundRobinRules? rrRules = null;
+
+            if (config.RoundRobin != null)
+            {
+                // RR count (fixed or formula)
+                int rrCount = Resolve(config.RoundRobin, relevantEvents);
+
+                // RR minimum rides
+                int rrMinimum = config.RoundRobin.Minimum ?? 0;
+
+                // RR team scoring rules
+                var team = new RoundRobinTeamRules
+                {
+                    OpenCount = config.RoundRobin.Team?.OpenCount ?? 4,
+                    WomenCount = config.RoundRobin.Team?.WomenCount ?? 1
+                };
+
+                rrRules = new RoundRobinRules
+                {
+                    Count = rrCount,
+                    Minimum = rrMinimum,
+                    Team = team
+                };
+            }
+
+            //
+            // Construct final rules object
+            // (rrRules may be null — CompetitionRules will apply defaults)
+            //
+            return new CompetitionRules(
+                tenMileCount,
+                nonTenMinimum,
+                mixedCount,
+                config.LeagueSponsor,
+                rrRules);
         }
 
         private int Resolve(RuleDefinition rule, int calendarEvents)
