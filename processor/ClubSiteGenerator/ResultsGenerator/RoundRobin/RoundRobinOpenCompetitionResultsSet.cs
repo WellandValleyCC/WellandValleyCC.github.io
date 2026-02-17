@@ -36,15 +36,25 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             if (HasNonRoundRobinEvents(rrCalendar))
                 throw new ArgumentException($"{nameof(rrCalendar)} must contain only Round Robin events.", nameof(rrCalendar));
 
-            // Only rides that belong to a Round Robin club participate
+            //
+            // Filter rides:
+            // 1. Must belong to a Round Robin club
+            // 2. Must belong to an event in the RR calendar
+            //
+            var rrEventNumbers = rrCalendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
             var rrRides = allRides
-                .Where(r => r.RoundRobinClub != null)
+                .Where(r => r.RoundRobinClub != null &&
+                            rrEventNumbers.Contains(r.EventNumber))
                 .ToList();
 
-            // Validate hydration rules
+            //
+            // Hydration validation
+            //
             foreach (var ride in rrRides)
             {
-                // WVCC riders must have Competitor hydrated
                 if (ride.RoundRobinClub == "WVCC")
                 {
                     if (ride.Competitor == null)
@@ -54,7 +64,6 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 }
                 else
                 {
-                    // Non-WVCC riders must have RoundRobinRider hydrated
                     if (ride.RoundRobinRider == null)
                         throw new ArgumentException(
                             $"Ride {ride.Id} belongs to {ride.RoundRobinClub} but RoundRobinRider is not hydrated.",
@@ -62,29 +71,38 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 }
             }
 
-            // Filter to valid rides
+            //
+            // Only valid rides contribute to scoring
+            //
             var validRides = rrRides
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
-            // Group by individual rider identity
+            //
+            // Group by identity (WVCC competitor OR RR rider)
+            //
             var groups = validRides
                 .GroupBy(r =>
                     r.Competitor != null
-                        ? $"C:{r.Competitor.Id}"          // WVCC competitor
-                        : $"R:{r.RoundRobinRider!.Id}")   // Non-WVCC RR rider
+                        ? $"C:{r.Competitor.Id}"
+                        : $"R:{r.RoundRobinRider!.Id}")
                 .ToList();
 
-            // Build results using RoundRobinPoints
+            //
+            // Build individual results using RoundRobinPoints
+            //
             var results = groups
-                .Select(group => WvccCompetitionResultsCalculator.BuildCompetitorResult(
+                .Select(group => RoundRobinResultsCalculator.BuildIndividualResult(
                     group.ToList(),
                     rrCalendar,
                     r => r.RoundRobinPoints,
                     rules))
                 .ToList();
 
-            results = WvccCompetitionResultsCalculator.SortResults(results).ToList();
+            //
+            // Sort using RR-specific ordering
+            //
+            results = RoundRobinResultsCalculator.SortResults(results).ToList();
 
             return new RoundRobinOpenCompetitionResultsSet(rrCalendar, results);
         }
