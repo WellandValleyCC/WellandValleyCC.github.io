@@ -88,11 +88,15 @@ namespace ClubSiteGenerator.Services
 
             return SeasonsConfig.GetSeasons()
                 .Where(y =>
-                    y != competitionYear &&   // exclude the season being generated
-                    y <= currentRealYear)     // include all seasons up to the real-world year
+                    y != competitionYear &&
+                    y <= currentRealYear &&
+                    !IsPreviewSeason(y))
                 .OrderBy(y => y)
                 .Select(y => (Year: y, FileName: GetSeasonIndexFilename(y)));
         }
+
+        private static bool IsPreviewSeason(int year) =>
+            GetSeasonIndexFilename(year).StartsWith("preview", StringComparison.OrdinalIgnoreCase);
 
         private static string GetSeasonIndexFilename(int year) => year == 2025
             ? $"preview{year}.html"
