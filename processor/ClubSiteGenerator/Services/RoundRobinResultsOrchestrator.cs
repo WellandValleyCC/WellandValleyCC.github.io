@@ -75,6 +75,9 @@ namespace ClubSiteGenerator.Services
 
         private void InitializeResultsSets()
         {
+            //
+            // 1. Per‑event RR results
+            //
             foreach (var ev in calendar)
             {
                 resultsSets.Add(
@@ -84,23 +87,53 @@ namespace ClubSiteGenerator.Services
                         ev.RoundRobinEventNumber));
             }
 
-            // 2. Build Open competition results
-            //    Only rides for events in the calendar with a RoundRobinClub participate
+            //
+            // 2. Shared RR event numbers
+            //
             var rrEventNumbers = calendar
                 .Select(ev => ev.EventNumber)
                 .ToHashSet();
 
+            //
+            // 3. Base RR ride set (club + event match)
+            //
             var rrRides = rides
                 .Where(r => r.RoundRobinClub != null &&
                             rrEventNumbers.Contains(r.EventNumber))
                 .ToList();
 
+            //
+            // 4. Open competition (all RR riders)
+            //
             resultsSets.Add(
                 RoundRobinOpenCompetitionResultsSet.CreateFrom(
                     rrRides,
-                    calendar,   // already guaranteed to be RR events
+                    calendar,
                     rules));
 
+            //
+            // 5. Women’s competition (female RR riders only)
+            //
+            var rrWomenRides = rrRides
+                .Where(r =>
+                    (r.Competitor != null && r.Competitor.IsFemale) ||
+                    (r.RoundRobinRider != null && r.RoundRobinRider.IsFemale))
+                .ToList();
+
+            resultsSets.Add(
+                RoundRobinWomenCompetitionResultsSet.CreateFrom(
+                    rrWomenRides,
+                    calendar,
+                    rules));
+
+            ////
+            //// 6. Team competition (all RR riders, no gender filtering)
+            ////
+            //resultsSets.Add(
+            //    RoundRobinTeamCompetitionResultsSet.CreateFrom(
+            //        rrRides,
+            //        calendar,
+            //        rules));
         }
 
         private void WirePrevNextLinks()
