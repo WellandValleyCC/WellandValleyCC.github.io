@@ -6,6 +6,18 @@ namespace ClubSiteGenerator.Models
     public class CompetitorResult
     {
         public Competitor Competitor { get; set; } = default!;
+
+        //
+        // Round Robin rider (null for WVCC competitors)
+        //
+        public RoundRobinRider? RoundRobinRider { get; set; }
+
+        //
+        // For team competitions: the RR club short name (e.g. "Ratae", "WVCC")
+        // Null for individual competitions.
+        //
+        public string? RoundRobinClubName { get; set; }
+
         public IReadOnlyList<Ride> Rides { get; set; } = Array.Empty<Ride>();
 
         /// <summary>
