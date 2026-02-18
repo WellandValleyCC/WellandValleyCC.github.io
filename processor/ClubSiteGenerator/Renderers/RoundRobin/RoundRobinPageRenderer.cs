@@ -7,27 +7,12 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
     public abstract class RoundRobinPageRenderer
     {
         protected readonly string IndexFileName;
-        protected readonly RoundRobinEventResultsSet ResultsSet;
+        protected readonly RoundRobinResultsSet ResultsSet;
 
-        protected readonly string EventTitle;
-        protected readonly int EventNumber;
-        protected readonly DateOnly EventDate;
-        protected readonly double EventMiles;
-        protected readonly bool IsCancelled;
-        protected readonly string EventDistanceText;
-
-        protected RoundRobinPageRenderer(string indexFileName, RoundRobinEventResultsSet resultsSet)
+        protected RoundRobinPageRenderer(string indexFileName, RoundRobinResultsSet resultsSet)
         {
             IndexFileName = indexFileName;
             ResultsSet = resultsSet;
-
-            EventTitle = CleanTitle(resultsSet.DisplayName);
-            EventNumber = resultsSet.EventNumber;
-            EventDate = resultsSet.EventDate;
-            EventMiles = resultsSet.CalendarEvent.Miles;
-            IsCancelled = resultsSet.CalendarEvent.IsCancelled;
-
-            EventDistanceText = $"{resultsSet.CalendarEvent.Miles:0.#} miles";
         }
 
         // ------------------------------------------------------------
@@ -44,7 +29,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 <head>
     <meta charset=""utf-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
-    <title>{EventTitle}</title>
+    <title>{GetPageTitle()}</title>
     <link rel=""stylesheet"" href=""../assets/{ResultsSet.CssFile}"">
 </head>
 <body class=""rr event-page"">
@@ -64,60 +49,32 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         }
 
         // ------------------------------------------------------------
-        //  HEADER
+        //  ABSTRACT / VIRTUAL HOOKS
         // ------------------------------------------------------------
 
-        protected string RenderHeader()
-        {
-            var prevLinkHtml = string.IsNullOrEmpty(ResultsSet.PrevLink)
-                ? ""
-                : $@"<a class=""prev"" href=""{ResultsSet.PrevLink}"" aria-label=""Previous"">{ResultsSet.PrevLabel}</a>";
+        /// <summary>
+        /// The page title for the HTML <title> tag.
+        /// Event pages will use the event title.
+        /// Competition pages will use "Open Competition", etc.
+        /// </summary>
+        protected abstract string GetPageTitle();
 
-            var nextLinkHtml = string.IsNullOrEmpty(ResultsSet.NextLink)
-                ? ""
-                : $@"<a class=""next"" href=""{ResultsSet.NextLink}"" aria-label=""Next"">{ResultsSet.NextLabel}</a>";
+        /// <summary>
+        /// The full header block (banner + nav).
+        /// Event pages have a rich header.
+        /// Competition pages have a simpler header.
+        /// </summary>
+        protected abstract string RenderHeader();
 
-            var hostClubName = FormatHosts(ResultsSet.CalendarEvent.RoundRobinClub);
-            var rrHeaderDate = EventDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture);
-
-            var headerClasses = IsCancelled
-                ? "event-header-core cancelled-event"
-                : "event-header-core";
-
-            return $@"
-<header>
-  <div class=""rr-banner-header"">
-    <div class=""header-and-legend"">
-      <div class=""{headerClasses}"">
-        <h1>
-          <span class=""event-number"">Event {EventNumber}:</span>
-          {EventTitle}
-        </h1>
-        <p class=""event-host"">Hosted by {hostClubName}</p>
-        <p class=""event-date"">{rrHeaderDate}</p>
-        <p class=""event-distance"">Distance: {EventDistanceText}</p>
-      </div>
-    </div>
-
-    <nav class=""event-nav"" aria-label=""Event navigation"">
-      {prevLinkHtml}
-      <a class=""index"" href=""../{IndexFileName}"" aria-label=""Back to index"">Index</a>
-      {nextLinkHtml}
-    </nav>
-  <div>
-</header>";
-        }
-
-        // ------------------------------------------------------------
-        //  LEGEND HOOK (OPTIONAL)
-        // ------------------------------------------------------------
-
+        /// <summary>
+        /// Legend is optional. Event pages and individual competitions use it.
+        /// Team competition does not.
+        /// </summary>
         protected virtual string RenderLegendIfNeeded() => string.Empty;
 
-        // ------------------------------------------------------------
-        //  ABSTRACT MAIN CONTENT
-        // ------------------------------------------------------------
-
+        /// <summary>
+        /// The main content of the page (table, placeholder, etc.)
+        /// </summary>
         protected abstract string RenderMainContent();
 
         // ------------------------------------------------------------

@@ -3,7 +3,7 @@ using ClubSiteGenerator.Models.Enums;
 
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
-    public abstract class RoundRobinCompetitionResultsSet<T> : ResultsSet
+    public abstract class RoundRobinCompetitionResultsSet<T> : RoundRobinResultsSet
     {
         public IReadOnlyList<T> Results { get; }
 

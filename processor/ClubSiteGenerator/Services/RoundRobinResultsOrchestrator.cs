@@ -13,7 +13,7 @@ namespace ClubSiteGenerator.Services
 {
     public class RoundRobinResultsOrchestrator
     {
-        private readonly List<ResultsSet> resultsSets = new();
+        private readonly List<RoundRobinResultsSet> resultsSets = new();
 
         private readonly string outputDir;
         private readonly IEnumerable<Ride> rides;
@@ -162,20 +162,44 @@ namespace ClubSiteGenerator.Services
 
         private void GeneratePages(string indexFileName)
         {
-            foreach (var resultsSet in resultsSets.OfType<RoundRobinEventResultsSet>())
+            foreach (var resultsSet in resultsSets)
             {
                 resultsSet.CssFile = cssFile;
 
-                var renderer = new RoundRobinEventRenderer(indexFileName, resultsSet);
+                // ------------------------------------------------------------
+                // Select renderer based on results set type
+                // ------------------------------------------------------------
+                RoundRobinPageRenderer renderer = resultsSet switch
+                {
+                    RoundRobinEventResultsSet ev =>
+                        new RoundRobinEventRenderer(indexFileName, ev),
 
-                Console.WriteLine($"Generating RR event results for: {resultsSet.FileName}");
+                    RoundRobinOpenCompetitionResultsSet open =>
+                        new RoundRobinIndividualCompetitionRenderer(indexFileName, open),
+
+                    RoundRobinWomenCompetitionResultsSet women =>
+                        new RoundRobinIndividualCompetitionRenderer(indexFileName, women),
+
+                    RoundRobinTeamCompetitionResultsSet team =>
+                        new RoundRobinTeamCompetitionRenderer(indexFileName, team),
+
+                    _ => throw new InvalidOperationException(
+                            $"Unknown RR results set type: {resultsSet.GetType().Name}")
+                };
+
+                // ------------------------------------------------------------
+                // Emit page
+                // ------------------------------------------------------------
+                Console.WriteLine($"Generating RR page for: {resultsSet.FileName}");
 
                 var html = renderer.Render();
 
                 var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
 
-                File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
+                File.WriteAllText(
+                    Path.Combine(folderPath, $"{resultsSet.FileName}.html"),
+                    html);
             }
         }
 

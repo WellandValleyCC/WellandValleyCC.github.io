@@ -4,7 +4,7 @@ using ClubCore.Utilities;
 
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
-    public sealed class RoundRobinEventResultsSet : ResultsSet
+    public sealed class RoundRobinEventResultsSet : RoundRobinResultsSet
     {
         private readonly CalendarEvent roundRobinEvent;
         public readonly IEnumerable<Ride> Rides;
@@ -28,8 +28,6 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public DateOnly EventDate => DateOnly.FromDateTime(roundRobinEvent.EventDate);
 
         public override string SubFolderName => "events";
-
-        public string CssFile { get; set; } = "";
 
         /// <summary>
         /// E.g. 2026-rr-event-03
