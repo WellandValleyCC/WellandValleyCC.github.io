@@ -1,19 +1,18 @@
 ﻿using ClubCore.Models;
-using ClubSiteGenerator.Models;
 using ClubSiteGenerator.Models.Enums;
 
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
-    public abstract class RoundRobinCompetitionResultsSet : ResultsSet
+    public abstract class RoundRobinCompetitionResultsSet<T> : ResultsSet
     {
-        public IReadOnlyList<CompetitorResult> ScoredRides { get; }
+        public IReadOnlyList<T> Results { get; }
 
         protected RoundRobinCompetitionResultsSet(
             IEnumerable<CalendarEvent> calendar,
-            IEnumerable<CompetitorResult> scoredRides)
+            IEnumerable<T> results)
             : base(calendar)
         {
-            ScoredRides = scoredRides.ToList().AsReadOnly();
+            Results = results.ToList().AsReadOnly();
         }
 
         public abstract RoundRobinCompetitionType CompetitionType { get; }
