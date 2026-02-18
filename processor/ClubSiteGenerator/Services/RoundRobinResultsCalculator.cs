@@ -280,6 +280,10 @@ namespace ClubSiteGenerator.Services
             var eventPoints = new Dictionary<int, double?>();
             var eventStatuses = new Dictionary<int, RideStatus>();
 
+            // Per‑event contributing riders
+            var contributingOpenByEvent = new Dictionary<int, IReadOnlyList<RoundRobinRiderScore>>();
+            var contributingWomenByEvent = new Dictionary<int, IReadOnlyList<RoundRobinRiderScore>>();
+
             foreach (var ev in eventGroups)
             {
                 int eventNumber = ev.Key;
@@ -293,26 +297,54 @@ namespace ClubSiteGenerator.Services
                 {
                     eventPoints[eventNumber] = null;
                     eventStatuses[eventNumber] = ridesInEvent.First().Status;
+
+                    contributingOpenByEvent[eventNumber] = Array.Empty<RoundRobinRiderScore>();
+                    contributingWomenByEvent[eventNumber] = Array.Empty<RoundRobinRiderScore>();
                     continue;
                 }
 
-                var bestOpen = valid
-                    .Select(r => r.RoundRobinPoints)
-                    .Where(p => p.HasValue)
-                    .Select(p => p!.Value)
-                    .OrderByDescending(p => p)
+                // ---- OPEN scoring ----
+                var bestOpenRides = valid
+                    .Where(r => r.RoundRobinPoints.HasValue)
+                    .OrderByDescending(r => r.RoundRobinPoints!.Value)
                     .Take(openCount)
                     .ToList();
 
-                var bestWomen = valid
-                    .Select(r => r.RoundRobinWomenPoints)
-                    .Where(p => p.HasValue)
-                    .Select(p => p!.Value)
-                    .OrderByDescending(p => p)
+                var bestOpenPoints = bestOpenRides
+                    .Select(r => r.RoundRobinPoints!.Value)
+                    .ToList();
+
+                contributingOpenByEvent[eventNumber] =
+                    bestOpenRides
+                        .Select(r => new RoundRobinRiderScore
+                        {
+                            Rider = r.RoundRobinRider!,
+                            Points = r.RoundRobinPoints!.Value
+                        })
+                        .ToList();
+
+                // ---- WOMEN scoring ----
+                var bestWomenRides = valid
+                    .Where(r => r.RoundRobinWomenPoints.HasValue)
+                    .OrderByDescending(r => r.RoundRobinWomenPoints!.Value)
                     .Take(womenCount)
                     .ToList();
 
-                double eventScore = bestOpen.Sum() + bestWomen.Sum();
+                var bestWomenPoints = bestWomenRides
+                    .Select(r => r.RoundRobinWomenPoints!.Value)
+                    .ToList();
+
+                contributingWomenByEvent[eventNumber] =
+                    bestWomenRides
+                        .Select(r => new RoundRobinRiderScore
+                        {
+                            Rider = r.RoundRobinRider!,
+                            Points = r.RoundRobinWomenPoints!.Value
+                        })
+                        .ToList();
+
+                // ---- Event total ----
+                double eventScore = bestOpenPoints.Sum() + bestWomenPoints.Sum();
 
                 eventPoints[eventNumber] = eventScore;
                 eventStatuses[eventNumber] = RideStatus.Valid;
@@ -338,7 +370,11 @@ namespace ClubSiteGenerator.Services
                 {
                     Points = totalPoints,
                     Rides = validRides
-                }
+                },
+
+                // Per‑event breakdowns
+                ContributingOpenRidesByEvent = contributingOpenByEvent,
+                ContributingWomenRidesByEvent = contributingWomenByEvent
             };
         }
 

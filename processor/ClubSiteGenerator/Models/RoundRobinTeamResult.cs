@@ -13,17 +13,20 @@ namespace ClubSiteGenerator.Models.RoundRobin
         /// <summary>
         /// All riders contributing to this team (DB or synthetic).
         /// </summary>
-        public IReadOnlyList<RoundRobinRider> Riders { get; set; } = Array.Empty<RoundRobinRider>();
+        public IReadOnlyList<RoundRobinRider> Riders { get; set; }
+            = Array.Empty<RoundRobinRider>();
 
         /// <summary>
         /// Team points per event number.
         /// </summary>
-        public Dictionary<int, double?> EventPoints { get; set; } = new();
+        public Dictionary<int, double?> EventPoints { get; set; }
+            = new();
 
         /// <summary>
         /// Status per event number (Valid, DNS, DNF, DQ).
         /// </summary>
-        public Dictionary<int, RideStatus> EventStatuses { get; set; } = new();
+        public Dictionary<int, RideStatus> EventStatuses { get; set; }
+            = new();
 
         /// <summary>
         /// Total number of events completed by the team.
@@ -33,6 +36,17 @@ namespace ClubSiteGenerator.Models.RoundRobin
         /// <summary>
         /// The team’s overall RR score.
         /// </summary>
-        public CompetitionScore Total { get; set; } = new CompetitionScore();
+        public CompetitionScore Total { get; set; }
+            = new CompetitionScore();
+
+        /// <summary>
+        /// The N Open-category riders whose scores contributed to the team total for each event
+        /// </summary>
+        public Dictionary<int, IReadOnlyList<RoundRobinRiderScore>> ContributingOpenRidesByEvent { get; set; } = new();
+
+        /// <summary>
+        /// The M Women-category riders whose scores contributed to the team total for each event
+        /// </summary>
+        public Dictionary<int, IReadOnlyList<RoundRobinRiderScore>> ContributingWomenRidesByEvent { get; set; } = new();
     }
 }
