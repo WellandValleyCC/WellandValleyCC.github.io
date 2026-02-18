@@ -39,6 +39,7 @@ namespace ClubSiteGenerator
             RideHydrator.AttachCalendarEvents(allRides, eventCalendar);
             RideHydrator.AttachCompetitors(allRides, allCompetitors, eventCalendar);
             RideHydrator.AttachRoundRobinRiders(allRides, rrRiders);
+            RideHydrator.AttachSyntheticWvccRoundRobinRiders(allRides, allCompetitors);
 
             // Club site
             GenerateClubSite(

@@ -42,6 +42,156 @@ namespace ClubSiteGenerator.Services
                     nameof(rides));
         }
 
+        public static IList<RoundRobinRiderResult> BuildOpenResults(
+            IEnumerable<Ride> allRides,
+            IEnumerable<CalendarEvent> rrCalendar,
+            ICompetitionRules rules)
+        {
+            ValidateCalendar(rrCalendar);
+
+            var rrEventNumbers = rrCalendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
+            // Filter to RR rides only
+            var rrRides = allRides
+                .Where(r => r.RoundRobinClub != null &&
+                            rrEventNumbers.Contains(r.EventNumber))
+                .ToList();
+
+            // Hydration validation
+            foreach (var ride in rrRides)
+            {
+                if (ride.RoundRobinRider == null)
+                    throw new ArgumentException(
+                        $"Ride {ride.Id} is missing RoundRobinRider.",
+                        nameof(allRides));
+            }
+
+            // Only valid rides contribute to scoring
+            var validRides = rrRides
+                .Where(r => r.Status == RideStatus.Valid)
+                .ToList();
+
+            // Group by rider identity
+            var groups = validRides
+                .GroupBy(r => r.RoundRobinRider!.Id)
+                .ToList();
+
+            // Build results
+            var results = groups
+                .Select(g => BuildIndividualResult(
+                    g.ToList(),
+                    rrCalendar,
+                    r => r.RoundRobinPoints,
+                    rules))
+                .ToList();
+
+            return results;
+        }
+
+
+        public static IList<RoundRobinRiderResult> BuildWomenResults(
+            IEnumerable<Ride> allRides,
+            IEnumerable<CalendarEvent> rrCalendar,
+            ICompetitionRules rules)
+        {
+            ValidateCalendar(rrCalendar);
+
+            var rrEventNumbers = rrCalendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
+            // Filter to RR rides only
+            var rrRides = allRides
+                .Where(r => r.RoundRobinClub != null &&
+                            rrEventNumbers.Contains(r.EventNumber))
+                .ToList();
+
+            // Hydration validation
+            foreach (var ride in rrRides)
+            {
+                if (ride.RoundRobinRider == null)
+                    throw new ArgumentException(
+                        $"Ride {ride.Id} is missing RoundRobinRider.",
+                        nameof(allRides));
+            }
+
+            // Filter to women only
+            rrRides = rrRides
+                .Where(r => r.RoundRobinRider!.IsFemale)
+                .ToList();
+
+            // Only valid rides contribute to scoring
+            var validRides = rrRides
+                .Where(r => r.Status == RideStatus.Valid)
+                .ToList();
+
+            // Group by rider identity
+            var groups = validRides
+                .GroupBy(r => r.RoundRobinRider!.Id)
+                .ToList();
+
+            // Build results
+            var results = groups
+                .Select(g => BuildIndividualResult(
+                    g.ToList(),
+                    rrCalendar,
+                    r => r.RoundRobinWomenPoints,
+                    rules))
+                .ToList();
+
+            return results;
+        }
+
+        public static IList<RoundRobinTeamResult> BuildTeamResults(
+            IEnumerable<Ride> allRides,
+            IEnumerable<CalendarEvent> rrCalendar,
+            ICompetitionRules rules)
+        {
+            ValidateCalendar(rrCalendar);
+
+            var rrEventNumbers = rrCalendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
+            // Filter to RR rides only
+            var rrRides = allRides
+                .Where(r => r.RoundRobinClub != null &&
+                            rrEventNumbers.Contains(r.EventNumber))
+                .ToList();
+
+            // Hydration validation
+            foreach (var ride in rrRides)
+            {
+                if (ride.RoundRobinRider == null)
+                    throw new ArgumentException(
+                        $"Ride {ride.Id} is missing RoundRobinRider.",
+                        nameof(allRides));
+            }
+
+            // Only valid rides contribute to scoring
+            var validRides = rrRides
+                .Where(r => r.Status == RideStatus.Valid)
+                .ToList();
+
+            // Group by club
+            var groups = validRides
+                .GroupBy(r => r.RoundRobinClub!)
+                .ToList();
+
+            // Build team results
+            var results = groups
+                .Select(g => BuildTeamResult(
+                    g.ToList(),
+                    rrCalendar,
+                    rules))
+                .ToList();
+
+            return results;
+        }
+
+
         // ------------------------------------------------------------
         // Build INDIVIDUAL result (Open, Women)
         // ------------------------------------------------------------

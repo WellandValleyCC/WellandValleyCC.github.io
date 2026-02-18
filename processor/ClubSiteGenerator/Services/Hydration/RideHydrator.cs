@@ -119,5 +119,34 @@ namespace ClubSiteGenerator.Services.Hydration
                     details);
             }
         }
+
+        public static void AttachSyntheticWvccRoundRobinRiders(
+            IEnumerable<Ride> rides,
+            IEnumerable<Competitor> competitors)
+        {
+            // Build synthetic riders keyed by negative competitor ID
+            var synthetic = competitors
+                .ToDictionary(
+                    c => -c.Id,
+                    c => new RoundRobinRider
+                    {
+                        Id = -c.Id,
+                        Name = $"{c.GivenName} {c.Surname}",
+                        RoundRobinClub = "WVCC",
+                        IsFemale = c.IsFemale
+                    });
+
+            foreach (var ride in rides)
+            {
+                if (!string.Equals(ride.RoundRobinClub, "WVCC", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (ride.Competitor == null)
+                    throw new InvalidOperationException(
+                        $"WVCC ride {ride.Id} has no Competitor object.");
+
+                ride.RoundRobinRider = synthetic[-ride.Competitor.Id];
+            }
+        }
     }
 }
