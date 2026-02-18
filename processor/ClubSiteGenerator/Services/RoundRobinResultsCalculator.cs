@@ -2,6 +2,7 @@
 using ClubCore.Models.Enums;
 using ClubCore.Utilities;
 using ClubSiteGenerator.Models;
+using ClubSiteGenerator.Models.RoundRobin;
 using ClubSiteGenerator.Rules;
 
 namespace ClubSiteGenerator.Services
@@ -9,12 +10,10 @@ namespace ClubSiteGenerator.Services
     public static class RoundRobinResultsCalculator
     {
         // ------------------------------------------------------------
-        // Identity helper (WVCC Competitor OR RoundRobinRider)
+        // Identity helper (unified RoundRobinRider domain)
         // ------------------------------------------------------------
-        private static string GetRiderIdentity(Ride r) =>
-            r.Competitor != null
-                ? $"C:{r.Competitor.Id}"
-                : $"R:{r.RoundRobinRider!.Id}";
+        private static int GetRiderId(Ride r) =>
+            r.RoundRobinRider!.Id; // WVCC riders have synthetic negative IDs
 
         // ------------------------------------------------------------
         // Calendar validation
@@ -35,18 +34,18 @@ namespace ClubSiteGenerator.Services
             if (rides == null || rides.Count == 0)
                 throw new ArgumentException("Rides collection must not be null or empty.", nameof(rides));
 
-            var firstId = GetRiderIdentity(rides[0]);
+            var firstId = GetRiderId(rides[0]);
 
-            if (rides.Any(r => GetRiderIdentity(r) != firstId))
+            if (rides.Any(r => GetRiderId(r) != firstId))
                 throw new ArgumentException(
-                    "All rides must belong to the same competitor or Round Robin rider.",
+                    "All rides must belong to the same Round Robin rider.",
                     nameof(rides));
         }
 
         // ------------------------------------------------------------
         // Build INDIVIDUAL result (Open, Women)
         // ------------------------------------------------------------
-        public static CompetitorResult BuildIndividualResult(
+        public static RoundRobinRiderResult BuildIndividualResult(
             IReadOnlyList<Ride> rrRides,
             IEnumerable<CalendarEvent> rrCalendar,
             Func<Ride, double?> pointsSelector,
@@ -54,6 +53,8 @@ namespace ClubSiteGenerator.Services
         {
             ValidateIdentity(rrRides);
             ValidateCalendar(rrCalendar);
+
+            var rider = rrRides[0].RoundRobinRider!;
 
             var validRides = rrRides
                 .Where(r => r.Status == RideStatus.Valid)
@@ -91,46 +92,25 @@ namespace ClubSiteGenerator.Services
                             ? RideStatus.Valid
                             : g.First().Status);
 
-            // Determine identity for display
-            var competitor = rrRides.Last().Competitor;
-            var rrRider = rrRides.Last().RoundRobinRider;
-
-            var result = new CompetitorResult
+            return new RoundRobinRiderResult
             {
+                Rider = rider,
                 Rides = rrRides,
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
-
-                AllEvents = new CompetitionScore
-                {
-                    Points = totalPoints,
-                    Rides = scoringRides
-                },
-
-                TenMileCompetition = new CompetitionScore(),
-
-                FullCompetition = new CompetitionScore
+                EventsCompleted = validRides.Count,
+                Total = new CompetitionScore
                 {
                     Points = totalPoints,
                     Rides = scoringRides
                 }
             };
-
-            // Only set Competitor if present
-            if (competitor != null)
-                result.Competitor = competitor;
-
-            // Only set RR rider if present
-            if (rrRider != null)
-                result.RoundRobinRider = rrRider;
-
-            return result;
         }
 
         // ------------------------------------------------------------
-        // Build TEAM result (best 4 + best 1)
+        // Build TEAM result (best 4 open + best 1 women)
         // ------------------------------------------------------------
-        public static CompetitorResult BuildTeamResult(
+        public static RoundRobinTeamResult BuildTeamResult(
             IReadOnlyList<Ride> rrRides,
             IEnumerable<CalendarEvent> rrCalendar,
             ICompetitionRules rules)
@@ -139,6 +119,8 @@ namespace ClubSiteGenerator.Services
 
             int openCount = rules.RoundRobin.Team.OpenCount;   // e.g. 4
             int womenCount = rules.RoundRobin.Team.WomenCount; // e.g. 1
+
+            var clubName = rrRides.First().RoundRobinClub!;
 
             // Group all rides for this club by RR event number
             var eventGroups = rrRides
@@ -150,7 +132,7 @@ namespace ClubSiteGenerator.Services
 
             foreach (var ev in eventGroups)
             {
-                int eventNumber = ev.Key; // RR event number
+                int eventNumber = ev.Key;
                 var ridesInEvent = ev.ToList();
 
                 var valid = ridesInEvent
@@ -186,7 +168,6 @@ namespace ClubSiteGenerator.Services
                 eventStatuses[eventNumber] = RideStatus.Valid;
             }
 
-            // Total = sum of all event scores (no best-N across events)
             double? totalPoints =
                 eventPoints.Values.Any(v => v.HasValue)
                     ? eventPoints.Values.Where(v => v.HasValue).Sum(v => v!.Value)
@@ -196,25 +177,14 @@ namespace ClubSiteGenerator.Services
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
-            var clubName = rrRides.First().RoundRobinClub!;
-
-            return new CompetitorResult
+            return new RoundRobinTeamResult
             {
-                RoundRobinClubName = clubName,
-
-                Rides = rrRides,
+                ClubShortName = clubName,
+                Riders = rrRides.Select(r => r.RoundRobinRider!).Distinct().ToList(),
                 EventPoints = eventPoints,
                 EventStatuses = eventStatuses,
-
-                AllEvents = new CompetitionScore
-                {
-                    Points = totalPoints,
-                    Rides = validRides
-                },
-
-                TenMileCompetition = new CompetitionScore(),
-
-                FullCompetition = new CompetitionScore
+                EventsCompleted = validRides.Count,
+                Total = new CompetitionScore
                 {
                     Points = totalPoints,
                     Rides = validRides
@@ -225,36 +195,33 @@ namespace ClubSiteGenerator.Services
         // ------------------------------------------------------------
         // Sorting (RR-specific)
         // ------------------------------------------------------------
-        public static IList<CompetitorResult> SortResults(IList<CompetitorResult> results)
+        public static IList<T> SortResults<T>(IList<T> results)
         {
             return results
-                .OrderByDescending(r => r.FullCompetition.Points.HasValue)
-                .ThenByDescending(r => r.FullCompetition.Points)
+                .OrderByDescending(r => GetPoints(r))
                 .ThenBy(r => GetSortName(r))
                 .ToList();
         }
 
-        private static string GetSortName(CompetitorResult r)
-        {
-            // WVCC competitor
-            if (r.Competitor != null)
+        private static double? GetPoints<T>(T r) =>
+            r switch
             {
-                var (surname, given) = NameParts.Split($"{r.Competitor.GivenName} {r.Competitor.Surname}");
-                return $"{surname} {given}";
-            }
+                RoundRobinRiderResult rr => rr.Total.Points,
+                RoundRobinTeamResult tr => tr.Total.Points,
+                _ => null
+            };
 
-            // Non-WVCC individual rider
-            if (r.RoundRobinRider != null)
+        private static string GetSortName<T>(T r) =>
+            r switch
             {
-                var (surname, given) = NameParts.Split(r.RoundRobinRider.Name);
-                return $"{surname} {given}";
-            }
+                RoundRobinRiderResult rr =>
+                    NameParts.Split(rr.Rider.Name) is var (surname, given)
+                        ? $"{surname} {given}"
+                        : rr.Rider.Name,
 
-            // Team competition
-            if (r.RoundRobinClubName != null)
-                return r.RoundRobinClubName;
+                RoundRobinTeamResult tr => tr.ClubShortName,
 
-            return "ZZZ"; // fallback
-        }
+                _ => "ZZZ"
+            };
     }
 }
