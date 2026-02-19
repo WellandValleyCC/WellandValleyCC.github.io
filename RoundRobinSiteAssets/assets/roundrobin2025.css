@@ -230,6 +230,15 @@ table.results td.tens-score,
     background-color: #EBF1DE;
 }
 
+/* Highlight Best‑N scoring rides */
+table.results td .rr-scoring {
+    background-color: #66bb6a;   /* darker green */
+    color: #fff;
+    font-weight: 600;
+    padding: 0.15em 0.35em;
+    border-radius: 4px;
+    display: inline-block;
+}
 
 /* =========================================================
    Column Widths
