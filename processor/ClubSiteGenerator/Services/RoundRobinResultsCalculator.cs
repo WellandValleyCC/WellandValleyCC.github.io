@@ -78,7 +78,7 @@ namespace ClubSiteGenerator.Services
                 .GroupBy(r => r.RoundRobinRider!.Id)
                 .ToList();
 
-            // Build results
+            // Build per‑rider results
             var results = groups
                 .Select(g => BuildIndividualResult(
                     g.ToList(),
@@ -87,9 +87,22 @@ namespace ClubSiteGenerator.Services
                     rules))
                 .ToList();
 
+            // ------------------------------------------------------------
+            // SORT by Best‑N total, then Surname, then Given name
+            // ------------------------------------------------------------
+            results = results
+                .OrderByDescending(r => r.Total.Points ?? 0)
+                .ThenBy(r => NameParts.Split(r.Rider.Name).Surname)
+                .ThenBy(r => NameParts.Split(r.Rider.Name).GivenNames)
+                .ToList();
+
+            // ------------------------------------------------------------
+            // ASSIGN RANKS (tie‑aware)
+            // ------------------------------------------------------------
+            AssignRanks(results);
+
             return results;
         }
-
 
         public static IList<RoundRobinRiderResult> BuildWomenResults(
             IEnumerable<Ride> allRides,
@@ -132,7 +145,7 @@ namespace ClubSiteGenerator.Services
                 .GroupBy(r => r.RoundRobinRider!.Id)
                 .ToList();
 
-            // Build results
+            // Build per‑rider results
             var results = groups
                 .Select(g => BuildIndividualResult(
                     g.ToList(),
@@ -140,6 +153,20 @@ namespace ClubSiteGenerator.Services
                     r => r.RoundRobinWomenPoints,
                     rules))
                 .ToList();
+
+            // ------------------------------------------------------------
+            // SORT by Best‑N total, then Surname, then Given name
+            // ------------------------------------------------------------
+            results = results
+                .OrderByDescending(r => r.Total.Points ?? 0)
+                .ThenBy(r => NameParts.Split(r.Rider.Name).Surname)
+                .ThenBy(r => NameParts.Split(r.Rider.Name).GivenNames)
+                .ToList();
+
+            // ------------------------------------------------------------
+            // ASSIGN RANKS (tie‑aware)
+            // ------------------------------------------------------------
+            AssignRanks(results);
 
             return results;
         }
@@ -409,5 +436,37 @@ namespace ClubSiteGenerator.Services
 
                 _ => "ZZZ"
             };
+
+        private static void AssignRanks(List<RoundRobinRiderResult> results)
+        {
+            int currentRank = 1;
+            double? lastScore = null;
+            int? lastAssignedRank = null;
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                var score = results[i].Total.Points;
+
+                if (score == null)
+                {
+                    results[i].Rank = null;
+                    continue;
+                }
+
+                if (lastScore != null && score == lastScore)
+                {
+                    // tie
+                    results[i].Rank = lastAssignedRank;
+                }
+                else
+                {
+                    results[i].Rank = currentRank;
+                    lastAssignedRank = currentRank;
+                }
+
+                lastScore = score;
+                currentRank++;
+            }
+        }
     }
 }

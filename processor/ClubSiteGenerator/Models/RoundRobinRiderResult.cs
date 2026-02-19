@@ -31,8 +31,13 @@ namespace ClubSiteGenerator.Models.RoundRobin
         public int EventsCompleted { get; set; }
 
         /// <summary>
-        /// The rider’s overall RR score.
+        /// The rider’s overall RR score (best N events)
         /// </summary>
         public CompetitionScore Total { get; set; } = new CompetitionScore();
+
+        /// <summary>
+        /// Where this rider's score puts them in the overall RR ranking. Null if they haven't completed any events.
+        /// </summary>
+        public int? Rank { get; set; }
     }
 }

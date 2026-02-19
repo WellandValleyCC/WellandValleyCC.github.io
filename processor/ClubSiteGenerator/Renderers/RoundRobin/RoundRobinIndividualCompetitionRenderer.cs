@@ -137,13 +137,15 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         {
             yield return riderResult.Rider.Name;
             yield return riderResult.Rider.RoundRobinClub?? "";
-            //yield return riderResult.EventPoints.Rank.ToString();
-            //yield return rider.EventsCompleted.ToString();
-            //yield return rider.BestTotal.ToString();
+            yield return riderResult.Rank?.ToString() ?? "";
+            yield return riderResult.EventsCompleted.ToString();
+            // Use a safe, non-null display value for the total score.
+            // CompetitionScore exposes PointsDisplay; if Total is null, return empty string.
+            yield return riderResult.Total?.PointsDisplay ?? "";
 
-            //// Per-event points (or blank)
-            //foreach (var evt in ResultsSet.RoundRobinEvents)
-            //    yield return rider.EventPoints.TryGetValue(evt.EventNumber, out var pts)
+            // Per-event points (or blank)
+            //foreach (var evt in ResultsSet.Calendar)
+            //    yield return riderResult.EventPoints.TryGetValue(evt.EventNumber, out var pts)
             //        ? pts.ToString()
             //        : "";
         }
