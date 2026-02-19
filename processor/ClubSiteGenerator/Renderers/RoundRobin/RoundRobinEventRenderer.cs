@@ -5,6 +5,7 @@ using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
@@ -38,6 +39,21 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         // ------------------------------------------------------------
 
         protected override string GetPageTitle() => eventTitle;
+
+        protected static string CleanTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return title;
+
+            var cleaned = Regex.Replace(
+                title,
+                @"\s*round\s*robin\s*",
+                "",
+                RegexOptions.IgnoreCase
+            );
+
+            return cleaned.Trim();
+        }
 
         // ------------------------------------------------------------
         //  HEADER (EVENT-SPECIFIC)

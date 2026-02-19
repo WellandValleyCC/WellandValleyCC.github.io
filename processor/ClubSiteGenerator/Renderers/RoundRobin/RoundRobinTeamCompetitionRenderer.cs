@@ -17,8 +17,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  PAGE TITLE
         // ------------------------------------------------------------
 
-        protected override string GetPageTitle() =>
-            CleanTitle(ResultsSet.DisplayName);
+        private string PageTitle => ResultsSet.DisplayName;
+
+        protected override string GetPageTitle() => PageTitle;
 
         // ------------------------------------------------------------
         //  HEADER (TEAM COMPETITION)
@@ -26,7 +27,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         protected override string RenderHeader()
         {
-            var title = CleanTitle(ResultsSet.DisplayName);
+            var title = PageTitle;
 
             return $@"
 <header>

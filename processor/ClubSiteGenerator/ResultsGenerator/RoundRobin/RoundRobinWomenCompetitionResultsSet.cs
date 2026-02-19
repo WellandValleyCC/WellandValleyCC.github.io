@@ -18,7 +18,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         {
         }
 
-        public override string DisplayName => "Inter‑Club Round Robin TT Series – Women";
+        public override string DisplayName => "Round Robin TT Series – Women";
         public override string FileName => $"{Year}-rr-women";
         public override string SubFolderName => "competitions";
         public override string LinkText => "Women";

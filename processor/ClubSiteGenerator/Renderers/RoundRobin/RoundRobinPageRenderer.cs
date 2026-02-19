@@ -121,21 +121,6 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 </div>";
         }
 
-        protected static string CleanTitle(string title)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-                return title;
-
-            var cleaned = Regex.Replace(
-                title,
-                @"\s*round\s*robin\s*",
-                "",
-                RegexOptions.IgnoreCase
-            );
-
-            return cleaned.Trim();
-        }
-
         protected static string FormatHosts(string rawHosts)
         {
             if (string.IsNullOrWhiteSpace(rawHosts))
