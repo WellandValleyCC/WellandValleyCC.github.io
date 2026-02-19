@@ -52,7 +52,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  LEGEND (TEAM COMPETITION DOES NOT USE IT)
         // ------------------------------------------------------------
 
-        protected override string RenderLegendIfNeeded() => string.Empty;
+        // N/A - use default legend
 
         // ------------------------------------------------------------
         //  MAIN CONTENT

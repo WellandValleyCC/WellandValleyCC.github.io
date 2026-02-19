@@ -52,11 +52,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  LEGEND (INDIVIDUAL COMPETITIONS ALWAYS SHOW IT)
         // ------------------------------------------------------------
 
-        protected override string RenderLegendIfNeeded() => @"
-<div class=""legend"">
-  <span class=""competition-eligible"">Club Member</span>
-  <span class=""guest-non-club-member"">Guest</span>
-</div>";
+        // N/A - use default legend
 
         // ------------------------------------------------------------
         //  MAIN CONTENT
