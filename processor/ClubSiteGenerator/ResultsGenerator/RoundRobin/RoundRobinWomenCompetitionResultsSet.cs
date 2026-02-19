@@ -35,7 +35,11 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             var results = RoundRobinResultsCalculator.BuildWomenResults(
                 allRides, rrCalendar, rules);
 
-            return new RoundRobinWomenCompetitionResultsSet(rrCalendar, results);
+            return new RoundRobinWomenCompetitionResultsSet(rrCalendar, results)
+            {
+                CompetitionRules = rules,
+                CssFile = "rr.css"
+            };
         }
     }
 }

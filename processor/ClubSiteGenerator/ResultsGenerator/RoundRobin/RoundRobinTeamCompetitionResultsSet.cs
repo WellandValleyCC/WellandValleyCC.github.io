@@ -35,7 +35,11 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             var results = RoundRobinResultsCalculator.BuildTeamResults(
                 allRides, rrCalendar, rules);
 
-            return new RoundRobinTeamCompetitionResultsSet(rrCalendar, results);
+            return new RoundRobinTeamCompetitionResultsSet(rrCalendar, results)
+            {
+                CompetitionRules = rules,
+                CssFile = "rr.css"
+            };
         }
     }
 }

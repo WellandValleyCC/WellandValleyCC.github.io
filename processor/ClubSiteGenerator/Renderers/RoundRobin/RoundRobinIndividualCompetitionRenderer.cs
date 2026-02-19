@@ -4,11 +4,14 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 {
     public class RoundRobinIndividualCompetitionRenderer : RoundRobinPageRenderer
     {
+        private readonly int IndividualCompetitionEventLimit;
+
         public RoundRobinIndividualCompetitionRenderer(
             string indexFileName,
             RoundRobinResultsSet resultsSet)
             : base(indexFileName, resultsSet)
         {
+            IndividualCompetitionEventLimit = resultsSet.CompetitionRules?.RoundRobin.Count ?? 0;
         }
 
         // ------------------------------------------------------------
@@ -60,7 +63,24 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         protected override string RenderMainContent()
         {
-            return "<p>Individual competition standings will appear here.</p>";
+            return $@"
+{RenderCompetitionRules()}
+
+<p>Individual competition standings will appear here.</p>";
+        }
+
+        private string RenderCompetitionRules()
+        {
+            return $@"
+<div class=""rules-and-legend"">
+  <section class=""competition-rules"">
+    <p>
+      All members of the participating clubs are eligible for this competition.
+      Your competition score is the total of the points from your {IndividualCompetitionEventLimit} highest scoring events.
+      Second‑claim riders should confirm which club they are riding for at sign‑on.
+    </p>
+  </section>
+</div>";
         }
     }
 }

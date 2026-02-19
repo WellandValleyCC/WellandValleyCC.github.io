@@ -1,4 +1,5 @@
 ﻿using ClubCore.Models;
+using ClubSiteGenerator.Rules;
 
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
@@ -10,5 +11,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         }
 
         public string CssFile { get; set; } = "";
+
+        public ICompetitionRules? CompetitionRules { get; set; }
     }
 }
