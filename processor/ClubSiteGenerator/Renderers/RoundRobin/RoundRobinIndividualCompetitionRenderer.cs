@@ -1,4 +1,5 @@
-﻿using ClubSiteGenerator.Models.RoundRobin;
+﻿using ClubCore.Utilities;
+using ClubSiteGenerator.Models.RoundRobin;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Net;
 using System.Text;
@@ -123,7 +124,16 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 
             foreach (var cell in BuildCells(rider))
-                sb.AppendLine($"<td>{WebUtility.HtmlEncode(cell)}</td>");
+            {
+                if (cell is RawHtml raw)
+                {
+                    sb.AppendLine($"<td>{raw.Value}</td>");
+                }
+                else
+                {
+                    sb.AppendLine($"<td>{WebUtility.HtmlEncode(cell?.ToString() ?? "")}</td>");
+                }
+            }
 
             sb.AppendLine("</tr>");
             return sb.ToString();
@@ -133,25 +143,33 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  CELL BUILDING
         // ------------------------------------------------------------
 
-        private IEnumerable<string> BuildCells(RoundRobinRiderResult riderResult)
+        private IEnumerable<object> BuildCells(RoundRobinRiderResult riderResult)
         {
             yield return riderResult.Rider.Name;
-            yield return riderResult.Rider.RoundRobinClub?? "";
+            yield return riderResult.Rider.RoundRobinClub ?? "";
             yield return riderResult.Rank?.ToString() ?? "";
             yield return riderResult.EventsCompleted.ToString();
-            // Use a safe, non-null display value for the total score.
-            // CompetitionScore exposes PointsDisplay; if Total is null, return empty string.
             yield return riderResult.Total?.PointsDisplay ?? "";
 
-            // Per‑event points
+            // Per‑event points with scoring highlight
             foreach (var evt in ResultsSet.Calendar)
             {
-                if (riderResult.EventPoints.TryGetValue(evt.RoundRobinEventNumber, out var pts))
-                    yield return pts?.ToString() ?? "";
-                else
-                    yield return "";
-            }
+                riderResult.EventPoints.TryGetValue(evt.RoundRobinEventNumber, out var pts);
 
+                bool isScoring = IsScoringRide(riderResult, evt.RoundRobinEventNumber);
+
+                if (isScoring)
+                    yield return new RawHtml($"<span class=\"rr-scoring\">{pts}</span>");
+                else
+                    yield return pts?.ToString() ?? "";
+            }
+        }
+
+
+        private bool IsScoringRide(RoundRobinRiderResult rider, int eventNumber)
+        {
+            return rider.Total.Rides
+                .Any(r => r.CalendarEvent!.RoundRobinEventNumber == eventNumber);
         }
     }
 }
