@@ -5,7 +5,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
     public abstract class RoundRobinCompetitionResultsSet<T> : RoundRobinResultsSet
     {
-        public IReadOnlyList<T> Results { get; }
+        public IReadOnlyList<T> Results { get; protected set; }
 
         protected RoundRobinCompetitionResultsSet(
             IEnumerable<CalendarEvent> calendar,

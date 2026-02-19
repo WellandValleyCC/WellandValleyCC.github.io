@@ -1,17 +1,19 @@
-﻿using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+﻿using ClubSiteGenerator.Models.RoundRobin;
+using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Net;
 using System.Text;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
-    public class RoundRobinIndividualCompetitionRenderer : RoundRobinPageRenderer
+    public class RoundRobinIndividualCompetitionRenderer
+        : RoundRobinCompetitionPageRenderer<RoundRobinRiderResult>
     {
         private readonly int IndividualCompetitionEventLimit;
 
         public RoundRobinIndividualCompetitionRenderer(
             string indexFileName,
-            RoundRobinResultsSet resultsSet)
-            : base(indexFileName, resultsSet)
+            RoundRobinCompetitionResultsSet<RoundRobinRiderResult> resultsSet)
+                 : base(indexFileName, resultsSet)
         {
             IndividualCompetitionEventLimit = resultsSet.CompetitionRules?.RoundRobin.Count ?? 0;
         }
@@ -92,8 +94,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             sb.AppendLine($"<th>Best {IndividualCompetitionEventLimit}</th>");
 
             // One column per event in the season
-            foreach (var evt in ResultsSet.RoundRobinEvents)
-                sb.AppendLine($"<th>{evt.EventNumber}</th>");
+            foreach (var evt in ResultsSet.Calendar)
+                sb.AppendLine($"<th>{evt.RoundRobinEventNumber}</th>");
 
             sb.AppendLine("</tr></thead>");
             return sb.ToString();
@@ -104,17 +106,17 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var sb = new StringBuilder();
             sb.AppendLine("<tbody>");
 
-            foreach (var rider in ResultsSet.IndividualStandings)
+            foreach (var rider in ResultsSet.Results)
                 sb.AppendLine(RenderRow(rider));
 
             sb.AppendLine("</tbody>");
             return sb.ToString();
         }
 
-        private string RenderRow(RoundRobinIndividualStanding rider)
+        private string RenderRow(RoundRobinRiderResult rider)
         {
             var sb = new StringBuilder();
-            var cssClass = string.IsNullOrWhiteSpace(rider.Club)
+            var cssClass = string.IsNullOrWhiteSpace(rider.Rider.RoundRobinClub)
                 ? "guest-non-club-member"
                 : "competition-eligible";
 
@@ -131,19 +133,19 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  CELL BUILDING
         // ------------------------------------------------------------
 
-        private IEnumerable<string> BuildCells(RoundRobinIndividualStanding rider)
+        private IEnumerable<string> BuildCells(RoundRobinRiderResult riderResult)
         {
-            yield return rider.Name;
-            yield return rider.Club ?? "";
-            yield return rider.Rank.ToString();
-            yield return rider.EventsCompleted.ToString();
-            yield return rider.BestTotal.ToString();
+            yield return riderResult.Rider.Name;
+            yield return riderResult.Rider.RoundRobinClub?? "";
+            //yield return riderResult.EventPoints.Rank.ToString();
+            //yield return rider.EventsCompleted.ToString();
+            //yield return rider.BestTotal.ToString();
 
-            // Per-event points (or blank)
-            foreach (var evt in ResultsSet.RoundRobinEvents)
-                yield return rider.EventPoints.TryGetValue(evt.EventNumber, out var pts)
-                    ? pts.ToString()
-                    : "";
+            //// Per-event points (or blank)
+            //foreach (var evt in ResultsSet.RoundRobinEvents)
+            //    yield return rider.EventPoints.TryGetValue(evt.EventNumber, out var pts)
+            //        ? pts.ToString()
+            //        : "";
         }
     }
 }

@@ -1,13 +1,14 @@
-﻿using ClubSiteGenerator.ResultsGenerator;
+﻿using ClubSiteGenerator.Models.RoundRobin;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
-    public class RoundRobinTeamCompetitionRenderer : RoundRobinPageRenderer
+    public class RoundRobinTeamCompetitionRenderer
+        : RoundRobinCompetitionPageRenderer<RoundRobinTeamResult>
     {
         public RoundRobinTeamCompetitionRenderer(
             string indexFileName,
-            RoundRobinResultsSet resultsSet)
+            RoundRobinCompetitionResultsSet<RoundRobinTeamResult> resultsSet)
             : base(indexFileName, resultsSet)
         {
         }
