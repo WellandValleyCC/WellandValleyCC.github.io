@@ -81,6 +81,24 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  SHARED HELPERS
         // ------------------------------------------------------------
 
+        protected string RenderNavigationPills()
+        {
+            var prevLinkHtml = string.IsNullOrEmpty(ResultsSet.PrevLink)
+                ? ""
+                : $@"<a class=""prev"" href=""{ResultsSet.PrevLink}"" aria-label=""Previous"">{ResultsSet.PrevLabel}</a>";
+
+            var nextLinkHtml = string.IsNullOrEmpty(ResultsSet.NextLink)
+                ? ""
+                : $@"<a class=""next"" href=""{ResultsSet.NextLink}"" aria-label=""Next"">{ResultsSet.NextLabel}</a>";
+
+            return $@"
+<nav class=""event-nav"" aria-label=""Page navigation"">
+  {prevLinkHtml}
+  <a class=""index"" href=""../{IndexFileName}"">Index</a>
+  {nextLinkHtml}
+</nav>";
+        }
+
         protected static string CleanTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))

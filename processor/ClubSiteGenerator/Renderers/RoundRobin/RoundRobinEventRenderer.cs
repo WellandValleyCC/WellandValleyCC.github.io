@@ -75,11 +75,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
       </div>
     </div>
 
-    <nav class=""event-nav"" aria-label=""Event navigation"">
-      {prevLinkHtml}
-      <a class=""index"" href=""../{IndexFileName}"" aria-label=""Back to index"">Index</a>
-      {nextLinkHtml}
-    </nav>
+    {RenderNavigationPills()}
   <div>
 </header>";
         }
