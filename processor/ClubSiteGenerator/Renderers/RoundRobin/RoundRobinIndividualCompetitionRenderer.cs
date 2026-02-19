@@ -89,8 +89,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             sb.AppendLine("<th>Name</th>");
             sb.AppendLine("<th>Club</th>");
-            sb.AppendLine("<th>Rank</th>");
-            sb.AppendLine("<th>Events</th>");
+            sb.AppendLine("<th>Current rank</th>");
+            sb.AppendLine("<th>Events completed</th>");
             sb.AppendLine($"<th>Best {IndividualCompetitionEventLimit}</th>");
 
             // One column per event in the season
