@@ -143,11 +143,15 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             // CompetitionScore exposes PointsDisplay; if Total is null, return empty string.
             yield return riderResult.Total?.PointsDisplay ?? "";
 
-            // Per-event points (or blank)
-            //foreach (var evt in ResultsSet.Calendar)
-            //    yield return riderResult.EventPoints.TryGetValue(evt.EventNumber, out var pts)
-            //        ? pts.ToString()
-            //        : "";
+            // Per‑event points
+            foreach (var evt in ResultsSet.Calendar)
+            {
+                if (riderResult.EventPoints.TryGetValue(evt.RoundRobinEventNumber, out var pts))
+                    yield return pts?.ToString() ?? "";
+                else
+                    yield return "";
+            }
+
         }
     }
 }
