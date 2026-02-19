@@ -1,4 +1,6 @@
 ﻿using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+using System.Net;
+using System.Text;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
@@ -58,15 +60,90 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         // N/A - use default legend
 
         // ------------------------------------------------------------
-        //  MAIN CONTENT
+        //  MAIN CONTENT (INDIVIDUAL COMPETITION TABLE)
         // ------------------------------------------------------------
 
         protected override string RenderMainContent()
         {
-            return $@"
-{RenderCompetitionRules()}
+            var sb = new StringBuilder();
 
-<p>Individual competition standings will appear here.</p>";
+            sb.AppendLine(RenderCompetitionRules());
+            sb.AppendLine("<table class=\"results\">");
+            sb.AppendLine(RenderHeaderRow());
+            sb.AppendLine(RenderBody());
+            sb.AppendLine("</table>");
+
+            return sb.ToString();
+        }
+
+        // ------------------------------------------------------------
+        //  TABLE STRUCTURE
+        // ------------------------------------------------------------
+
+        private string RenderHeaderRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<thead><tr>");
+
+            sb.AppendLine("<th>Name</th>");
+            sb.AppendLine("<th>Club</th>");
+            sb.AppendLine("<th>Rank</th>");
+            sb.AppendLine("<th>Events</th>");
+            sb.AppendLine($"<th>Best {IndividualCompetitionEventLimit}</th>");
+
+            // One column per event in the season
+            foreach (var evt in ResultsSet.RoundRobinEvents)
+                sb.AppendLine($"<th>{evt.EventNumber}</th>");
+
+            sb.AppendLine("</tr></thead>");
+            return sb.ToString();
+        }
+
+        private string RenderBody()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tbody>");
+
+            foreach (var rider in ResultsSet.IndividualStandings)
+                sb.AppendLine(RenderRow(rider));
+
+            sb.AppendLine("</tbody>");
+            return sb.ToString();
+        }
+
+        private string RenderRow(RoundRobinIndividualStanding rider)
+        {
+            var sb = new StringBuilder();
+            var cssClass = string.IsNullOrWhiteSpace(rider.Club)
+                ? "guest-non-club-member"
+                : "competition-eligible";
+
+            sb.AppendLine($"<tr class=\"{cssClass}\">");
+
+            foreach (var cell in BuildCells(rider))
+                sb.AppendLine($"<td>{WebUtility.HtmlEncode(cell)}</td>");
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        // ------------------------------------------------------------
+        //  CELL BUILDING
+        // ------------------------------------------------------------
+
+        private IEnumerable<string> BuildCells(RoundRobinIndividualStanding rider)
+        {
+            yield return rider.Name;
+            yield return rider.Club ?? "";
+            yield return rider.Rank.ToString();
+            yield return rider.EventsCompleted.ToString();
+            yield return rider.BestTotal.ToString();
+
+            // Per-event points (or blank)
+            foreach (var evt in ResultsSet.RoundRobinEvents)
+                yield return rider.EventPoints.TryGetValue(evt.EventNumber, out var pts)
+                    ? pts.ToString()
+                    : "";
         }
     }
 }
