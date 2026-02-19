@@ -138,20 +138,41 @@ namespace ClubSiteGenerator.Services
 
         private void WirePrevNextLinks()
         {
-            var orderedEvents = resultsSets
+            // 1. Order events
+            var events = resultsSets
                 .OfType<RoundRobinEventResultsSet>()
                 .OrderBy(ev => ev.EventNumber)
                 .Cast<IResultsSet>()
                 .ToList();
 
-            if (orderedEvents.Count <= 1)
+            // 2. Order competitions in fixed order
+            var competitions = resultsSets
+                .Where(rs =>
+                    rs is RoundRobinOpenCompetitionResultsSet ||
+                    rs is RoundRobinWomenCompetitionResultsSet ||
+                    rs is RoundRobinTeamCompetitionResultsSet)
+                .OrderBy(rs =>
+                    rs is RoundRobinOpenCompetitionResultsSet ? 1 :
+                    rs is RoundRobinWomenCompetitionResultsSet ? 2 :
+                    3)
+                .Cast<IResultsSet>()
+                .ToList();
+
+            // If nothing to wire, bail out
+            if (events.Count == 0 && competitions.Count == 0)
                 return;
 
-            for (int i = 0; i < orderedEvents.Count; i++)
+            // 3. Build one continuous list
+            var all = new List<IResultsSet>();
+            all.AddRange(events);
+            all.AddRange(competitions);
+
+            // 4. Wire prev/next across the entire chain
+            for (int i = 0; i < all.Count; i++)
             {
-                var current = orderedEvents[i];
-                var prev = orderedEvents[(i - 1 + orderedEvents.Count) % orderedEvents.Count];
-                var next = orderedEvents[(i + 1) % orderedEvents.Count];
+                var current = all[i];
+                var prev = all[(i - 1 + all.Count) % all.Count];
+                var next = all[(i + 1) % all.Count];
 
                 current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
                 current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";

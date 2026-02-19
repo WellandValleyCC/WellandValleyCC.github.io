@@ -21,7 +21,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public override string DisplayName => "Inter‑Club Round Robin TT Series – Team";
         public override string FileName => $"{Year}-rr-team";
         public override string SubFolderName => "competitions";
-        public override string LinkText => "RR Team";
+        public override string LinkText => "Team";
         public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Team;
 
         public override string EligibilityStatement =>

@@ -26,6 +26,14 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         {
             var title = CleanTitle(ResultsSet.DisplayName);
 
+            var prevLinkHtml = string.IsNullOrEmpty(ResultsSet.PrevLink)
+                ? ""
+                : $@"<a class=""prev"" href=""{ResultsSet.PrevLink}"" aria-label=""Previous"">{ResultsSet.PrevLabel}</a>";
+
+            var nextLinkHtml = string.IsNullOrEmpty(ResultsSet.NextLink)
+                ? ""
+                : $@"<a class=""next"" href=""{ResultsSet.NextLink}"" aria-label=""Next"">{ResultsSet.NextLabel}</a>";
+
             return $@"
 <header>
   <div class=""rr-banner-header"">
@@ -36,7 +44,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
     </div>
 
     <nav class=""event-nav"" aria-label=""Competition navigation"">
+      {prevLinkHtml}
       <a class=""index"" href=""../{IndexFileName}"">Index</a>
+      {nextLinkHtml}
     </nav>
   </div>
 </header>";
