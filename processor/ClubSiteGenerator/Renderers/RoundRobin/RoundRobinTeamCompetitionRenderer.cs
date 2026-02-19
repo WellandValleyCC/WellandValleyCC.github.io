@@ -1,14 +1,20 @@
-﻿using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+﻿using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
     public class RoundRobinTeamCompetitionRenderer : RoundRobinPageRenderer
     {
+        private readonly int OpenCompetitionEventCount;
+        private readonly int WomenCompetitionEventCount;
+
         public RoundRobinTeamCompetitionRenderer(
             string indexFileName,
             RoundRobinResultsSet resultsSet)
             : base(indexFileName, resultsSet)
         {
+            OpenCompetitionEventCount = resultsSet.CompetitionRules?.RoundRobin.Team.OpenCount ?? 0;
+            WomenCompetitionEventCount = resultsSet.CompetitionRules?.RoundRobin.Team.WomenCount ?? 0;
         }
 
         // ------------------------------------------------------------
@@ -58,9 +64,30 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  MAIN CONTENT
         // ------------------------------------------------------------
 
+
         protected override string RenderMainContent()
         {
-            return "<p>Team competition standings will appear here.</p>";
+            return $@"
+    {RenderCompetitionRules()}
+
+    <p>Team competition standings will appear here</p>";
+        }
+
+        private string RenderCompetitionRules()
+        {
+            string RiderPhrase(int n) =>
+                n == 1 ? "top rider's" : $"top {n} riders'";
+
+            return $@"
+<div class=""rules-and-legend"">
+  <section class=""competition-rules"">
+    <p>
+      Each club's score at an event is the sum of their {RiderPhrase(OpenCompetitionEventCount)} points
+      in the open competition plus the {RiderPhrase(WomenCompetitionEventCount)} points
+      in the women's competition.
+    </p>
+  </section>
+</div>";
         }
     }
 }

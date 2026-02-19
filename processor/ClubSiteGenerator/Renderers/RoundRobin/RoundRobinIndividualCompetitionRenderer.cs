@@ -72,15 +72,15 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         private string RenderCompetitionRules()
         {
             return $@"
-<div class=""rules-and-legend"">
-  <section class=""competition-rules"">
-    <p>
-      All members of the participating clubs are eligible for this competition.
-      Your competition score is the total of the points from your {IndividualCompetitionEventLimit} highest scoring events.
-      Second‑claim riders should confirm which club they are riding for at sign‑on.
-    </p>
-  </section>
-</div>";
+        <div class=""rules-and-legend"">
+          <section class=""competition-rules"">
+            <p>
+              All members of the participating clubs are eligible for this competition.
+              Your competition score is the total of the points from your {IndividualCompetitionEventLimit} highest scoring events.
+              Second‑claim riders should confirm which club they are riding for at sign‑on.
+            </p>
+          </section>
+        </div>";
         }
     }
 }
