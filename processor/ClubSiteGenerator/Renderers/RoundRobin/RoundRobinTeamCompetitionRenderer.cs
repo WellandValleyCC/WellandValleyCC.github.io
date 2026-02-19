@@ -72,22 +72,5 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
     <p>Team competition standings will appear here</p>";
         }
-
-        private string RenderCompetitionRules()
-        {
-            string RiderPhrase(int n) =>
-                n == 1 ? "top rider's" : $"top {n} riders'";
-
-            return $@"
-<div class=""rules-and-legend"">
-  <section class=""competition-rules"">
-    <p>
-      Each club's score at an event is the sum of their {RiderPhrase(OpenCompetitionEventCount)} points
-      in the open competition plus the {RiderPhrase(WomenCompetitionEventCount)} points
-      in the women's competition.
-    </p>
-  </section>
-</div>";
-        }
     }
 }

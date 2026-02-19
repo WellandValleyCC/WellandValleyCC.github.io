@@ -13,5 +13,10 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public string CssFile { get; set; } = "";
 
         public ICompetitionRules? CompetitionRules { get; set; }
+
+        public virtual string EligibilityStatement => string.Empty;
+        public virtual string ScoringStatement => string.Empty;
+        public virtual string AdditionalComments => string.Empty;
+
     }
 }

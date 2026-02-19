@@ -99,6 +99,28 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 </nav>";
         }
 
+        protected string RenderCompetitionRules()
+        {
+            // Collect only non‑empty statements
+            var parts = new[]
+            {
+        ResultsSet.EligibilityStatement,
+        ResultsSet.ScoringStatement,
+        ResultsSet.AdditionalComments
+    }
+            .Where(s => !string.IsNullOrWhiteSpace(s));
+
+            // Join with <br/> and wrap in the standard block
+            var joined = string.Join("<br/>", parts);
+
+            return $@"
+<div class=""rules-and-legend"">
+  <section class=""competition-rules"">
+    <p>{joined}</p>
+  </section>
+</div>";
+        }
+
         protected static string CleanTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))

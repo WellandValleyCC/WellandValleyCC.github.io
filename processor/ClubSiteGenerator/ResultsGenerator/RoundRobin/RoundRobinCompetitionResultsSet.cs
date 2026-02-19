@@ -16,7 +16,5 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         }
 
         public abstract RoundRobinCompetitionType CompetitionType { get; }
-
-        public abstract string EligibilityStatement { get; }
     }
 }

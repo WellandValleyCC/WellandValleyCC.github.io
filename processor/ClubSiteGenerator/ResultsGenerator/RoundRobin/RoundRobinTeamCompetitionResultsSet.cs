@@ -24,8 +24,28 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public override string LinkText => "Team";
         public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Team;
 
-        public override string EligibilityStatement =>
-            "All participating clubs are eligible for the team competition.";
+        public override string EligibilityStatement => string.Empty;
+
+        public override string ScoringStatement
+        {
+            get
+            {
+                var rules = CompetitionRules
+                    ?? throw new InvalidOperationException("CompetitionRules must be set before accessing ScoringStatement.");
+
+                var openCount = rules.RoundRobin.Team.OpenCount;
+                var womenCount = rules.RoundRobin.Team.WomenCount;
+
+                string RiderPhrase(int n) =>
+                    n == 1 ? "top rider's" : $"top {n} riders'";
+
+                return
+                    $"Each club's score at an event is the sum of their {RiderPhrase(openCount)} points " +
+                    $"in the open competition plus the {RiderPhrase(womenCount)} points in the women's competition.";
+            }
+        }
+
+        public override string AdditionalComments => string.Empty;
 
         public static RoundRobinTeamCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,

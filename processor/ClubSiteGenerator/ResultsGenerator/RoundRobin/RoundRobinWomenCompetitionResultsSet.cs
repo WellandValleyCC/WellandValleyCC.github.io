@@ -25,7 +25,21 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Women;
 
         public override string EligibilityStatement =>
-            "All female members of participating clubs are eligible for this competition.";
+            "All female members of the participating clubs are eligible for this competition.";
+
+        public override string ScoringStatement
+        {
+            get
+            {
+                var rules = CompetitionRules
+                    ?? throw new InvalidOperationException("CompetitionRules must be set before accessing ScoringStatement.");
+
+                return $"Your competition score is the total of the points from your {rules.RoundRobin.Count} highest scoring events.";
+            }
+        }
+
+        public override string AdditionalComments =>
+            "Riders should confirm which Round Robin club they are representing at sign‑on.";
 
         public static RoundRobinWomenCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
