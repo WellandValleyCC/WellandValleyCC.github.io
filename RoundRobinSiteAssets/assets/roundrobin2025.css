@@ -232,6 +232,34 @@ table.results thead tr:nth-child(3) th {
 }
 
 /* =========================================================
+   RR Competition Table – Cancelled Event Banner
+   ========================================================= */
+
+/* Base cancelled style */
+table.results thead .event-title.cancelled-event {
+    position: relative;
+    background-color: #f8d7da; /* pale red */
+    color: #721c24;           /* dark red text */
+    font-weight: 600;
+}
+
+/* Diagonal CANCELLED banner */
+table.results thead .event-title.cancelled-event::after {
+    content: "Cancelled";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-65deg);
+    background: rgba(200, 0, 0, 0.5);
+    color: white;
+    font-weight: bold;
+    padding: 0.25rem 2rem;
+    white-space: nowrap;
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+/* =========================================================
    Shared Header Background for Event + Competition Tables
    ========================================================= */
 table.results thead th {

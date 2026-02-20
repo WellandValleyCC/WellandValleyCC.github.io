@@ -120,8 +120,15 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             foreach (var ev in ResultsSet.Calendar)
             {
+                var cssClass = "event-title";
+
+                if (ev.IsCancelled)
+                {
+                    cssClass += " cancelled-event";
+                }
+
                 sb.AppendLine(
-                    $"<th class=\"event-title\" data-col-index=\"{ev.RoundRobinEventNumber}\">" +
+                    $"<th class=\"{cssClass}\" data-col-index=\"{ev.RoundRobinEventNumber}\">" +
                     $"{WebUtility.HtmlEncode(ev.EventName)}</th>");
             }
 
