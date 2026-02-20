@@ -284,7 +284,16 @@ table.results thead .event-title.cancelled-event::after {
 }
 
 .team-event-cell.expanded .rr-contributors-full {
-  display: inline;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.team-event-cell.expanded .rr-contributors-full div {
+  display: block;
+  text-align: left;
+  font-size: 0.75em;
+  color: #555;
+  line-height: 1.2;
 }
 
 .rr-contributors-short,

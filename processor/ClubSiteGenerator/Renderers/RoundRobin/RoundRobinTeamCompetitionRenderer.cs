@@ -91,7 +91,6 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Team</th>");
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Current rank</th>");
-            //sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Events completed</th>");
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Total</th>");
 
             foreach (var ev in ResultsSet.Calendar)
@@ -177,7 +176,6 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         {
             yield return team.ClubShortName;
             yield return team.Rank?.ToString() ?? "";
-            //yield return team.EventsCompleted.ToString();
             yield return team.Total?.PointsDisplay ?? "";
 
             foreach (var evt in ResultsSet.Calendar)
@@ -198,7 +196,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 var contributors = open.Concat(women).ToList();
 
                 var shortList = BuildShortContributorList(contributors);
-                var fullList = BuildFullContributorList(contributors);
+                var fullListHtml = BuildFullContributorListHtml(contributors);
 
                 bool isScoring = pts.HasValue;
 
@@ -208,7 +206,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 <div class=""team-event-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
   <span class=""rr-scoring"">{pts}</span><br/>
   <span class=""rr-contributors-short"">{shortList}</span>
-  <span class=""rr-contributors-full"">{fullList}</span>
+  <div class=""rr-contributors-full"">
+    {fullListHtml}
+  </div>
 </div>");
                 }
                 else
@@ -234,10 +234,17 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             return string.Join("; ", parts);
         }
 
-        private static string BuildFullContributorList(IEnumerable<RoundRobinRiderScore> riders)
+        private static string BuildFullContributorListHtml(IEnumerable<RoundRobinRiderScore> riders)
         {
-            return string.Join("; ",
-                riders.Select(r => $"{r.Points} {r.Rider.Name}"));
+            var sb = new StringBuilder();
+
+            foreach (var r in riders)
+            {
+                sb.AppendLine(
+                    $"<div>{r.Points} {WebUtility.HtmlEncode(r.Rider.Name)}</div>");
+            }
+
+            return sb.ToString();
         }
 
         private static string Initials(string name)
