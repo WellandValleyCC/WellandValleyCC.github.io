@@ -192,7 +192,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var cleaned = CleanTitle(title);
 
             cleaned = Regex.Replace(
-                title,
+                cleaned,
                 @"\s*10\s*mile\s*TT\s*",
                 "",
                 RegexOptions.IgnoreCase
