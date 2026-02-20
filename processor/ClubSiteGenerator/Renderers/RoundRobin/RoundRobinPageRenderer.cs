@@ -154,5 +154,51 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             return Regex.Replace(name, pattern, "", RegexOptions.IgnoreCase).TrimEnd();
         }
+
+        /// <summary>
+        /// Removes "Round Robin" from the title.
+        /// </summary>
+        /// <remarks>
+        /// Used on Round Robin Event pages since all events are part of the Round Robin, so it's redundant 
+        /// to include it in the title.
+        /// </remarks>
+        protected static string CleanTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return title;
+
+            var cleaned = Regex.Replace(
+                title,
+                @"\s*round\s*robin\s*",
+                "",
+                RegexOptions.IgnoreCase
+            );
+
+            return cleaned.Trim();
+        }
+
+        /// <summary>
+        /// Removes "Round Robin" and also "10 mile TT" from the title.
+        /// </summary>
+        /// <remarks>
+        /// Used in competition tables to keep the title short while removing extraneous details.
+        /// Lubenham Round Robin 10mile TT -> Lubenham
+        /// </remarks>
+        protected static string VeryCleanTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return title;
+
+            var cleaned = CleanTitle(title);
+
+            cleaned = Regex.Replace(
+                title,
+                @"\s*10\s*mile\s*TT\s*",
+                "",
+                RegexOptions.IgnoreCase
+            );
+
+            return cleaned.Trim();
+        }
     }
 }

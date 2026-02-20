@@ -129,7 +129,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
                 sb.AppendLine(
                     $"<th class=\"{cssClass}\" data-col-index=\"{ev.RoundRobinEventNumber}\">" +
-                    $"{WebUtility.HtmlEncode(ev.EventName)}</th>");
+                    $"{WebUtility.HtmlEncode($"{VeryCleanTitle(ev.EventName)} ({ev.RoundRobinClub})")}</th>");
             }
 
             sb.AppendLine("</tr>");
