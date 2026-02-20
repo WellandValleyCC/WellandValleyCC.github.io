@@ -16,6 +16,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         {
         }
 
+        protected override string UiHint =>
+            "Click an event score to see the contributing rides.";
+
         // ------------------------------------------------------------
         //  PAGE TITLE
         // ------------------------------------------------------------
@@ -193,10 +196,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                         ? w
                         : Array.Empty<RoundRobinRiderScore>();
 
-                var contributors = open.Concat(women).ToList();
-
-                var shortList = BuildShortContributorList(contributors);
-                var fullListHtml = BuildFullContributorListHtml(contributors);
+                var fullListHtml = BuildFullContributorListHtml(open, women);
 
                 bool isScoring = pts.HasValue;
 
@@ -204,8 +204,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 {
                     yield return new RawHtml($@"
 <div class=""team-event-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
-  <span class=""rr-scoring"">{pts}</span><br/>
-  <span class=""rr-contributors-short"">{shortList}</span>
+  <span class=""rr-scoring"">{pts}</span>
   <div class=""rr-contributors-full"">
     {fullListHtml}
   </div>
@@ -222,37 +221,28 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  CONTRIBUTOR FORMATTING
         // ------------------------------------------------------------
 
-        private static string BuildShortContributorList(IEnumerable<RoundRobinRiderScore> riders)
-        {
-            var parts = riders
-                .Select(r => $"{r.Points} {Initials(r.Rider.Name)}")
-                .ToList();
-
-            if (parts.Count > 5)
-                return string.Join("; ", parts.Take(5)) + "; …";
-
-            return string.Join("; ", parts);
-        }
-
-        private static string BuildFullContributorListHtml(IEnumerable<RoundRobinRiderScore> riders)
+        private static string BuildFullContributorListHtml(
+            IReadOnlyList<RoundRobinRiderScore> open,
+            IReadOnlyList<RoundRobinRiderScore> women)
         {
             var sb = new StringBuilder();
 
-            foreach (var r in riders)
+            sb.AppendLine(@"<div class=""rr-open-group"">");
+            foreach (var r in open)
+                sb.AppendLine($"<div>{r.Points} {WebUtility.HtmlEncode(r.Rider.Name)}</div>");
+            sb.AppendLine("</div>");
+
+            if (women.Any())
             {
-                sb.AppendLine(
-                    $"<div>{r.Points} {WebUtility.HtmlEncode(r.Rider.Name)}</div>");
+                sb.AppendLine(@"<div class=""rr-separator""></div>");
+
+                sb.AppendLine(@"<div class=""rr-women-group"">");
+                foreach (var r in women)
+                    sb.AppendLine($"<div>{r.Points} {WebUtility.HtmlEncode(r.Rider.Name)}</div>");
+                sb.AppendLine("</div>");
             }
 
             return sb.ToString();
-        }
-
-        private static string Initials(string name)
-        {
-            var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 0) return "";
-
-            return string.Concat(parts.Select(p => p[0]));
         }
     }
 }

@@ -275,31 +275,42 @@ table.results thead .event-title.cancelled-event::after {
   line-height: 1.2;
 }
 
+/* Hidden until expanded */
 .team-event-cell .rr-contributors-full {
   display: none;
 }
 
-.team-event-cell.expanded .rr-contributors-short {
-  display: none;
-}
-
+/* Expanded state */
 .team-event-cell.expanded .rr-contributors-full {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
+  padding-left: 0.5rem;   /* ← slight indent */
 }
 
-.team-event-cell.expanded .rr-contributors-full div {
+/* Each contributor row */
+.rr-open-group div,
+.rr-women-group div {
   display: block;
   text-align: left;
   font-size: 0.75em;
   color: #555;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
-.rr-contributors-short,
-.rr-contributors-full {
+/* The subtle separator */
+.rr-separator {
+  margin: 0.25rem 0 0.35rem 0;
+  border-bottom: 1px solid #ddd;
+  width: 60%;          /* ← partial width, looks elegant */
+  opacity: 0.6;        /* ← softens it */
+}
+
+.rr-contributor-row {
+  display: block;
+  text-align: left;
   font-size: 0.75em;
   color: #555;
+  line-height: 1.25;
 }
 
 /* =========================================================
@@ -777,6 +788,16 @@ body.rr.event-page main {
   .header-and-legend .event-nav {
     margin: 0.25em 0;
   }
+  
+  /* Expanded state */
+  .team-event-cell.expanded .rr-contributors-full {
+    padding-left: 0
+  }
+  
+  .rr-separator {
+    width: 100%;          /* full width looks better on mobile */
+  }
+
 }
 
 

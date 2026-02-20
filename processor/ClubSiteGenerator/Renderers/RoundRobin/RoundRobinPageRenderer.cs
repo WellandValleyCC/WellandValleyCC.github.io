@@ -15,6 +15,16 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             ResultsSet = resultsSet;
         }
 
+        /// <summary>
+        /// Optional UI hint shown on the page.
+        /// Default is empty; specific renderers may override.
+        /// </summary>
+        /// <remarks>
+        /// Only used for team competition pages at the moment, but could 
+        /// be used for other types of competitions or elsewhere in the future.
+        /// </remarks>
+        protected virtual string UiHint => string.Empty;
+
         // ------------------------------------------------------------
         //  PUBLIC ENTRY POINT
         // ------------------------------------------------------------
@@ -104,10 +114,11 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             // Collect only non‑empty statements
             var parts = new[]
             {
-        ResultsSet.EligibilityStatement,
-        ResultsSet.ScoringStatement,
-        ResultsSet.AdditionalComments
-    }
+                ResultsSet.EligibilityStatement,
+                ResultsSet.ScoringStatement,
+                ResultsSet.AdditionalComments,
+                UiHint
+            }
             .Where(s => !string.IsNullOrWhiteSpace(s));
 
             // Join with <br/> and wrap in the standard block
