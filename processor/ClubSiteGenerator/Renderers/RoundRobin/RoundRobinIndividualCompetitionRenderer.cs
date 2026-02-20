@@ -87,19 +87,60 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         private string RenderHeaderRow()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<thead><tr>");
+            sb.AppendLine("<thead>");
+            sb.AppendLine(RenderEventNumberRow()); // Row 1
+            sb.AppendLine(RenderEventTitleRow());  // Row 2
+            sb.AppendLine(RenderEventDateRow());   // Row 3
+            sb.AppendLine("</thead>");
+            return sb.ToString();
+        }
 
-            sb.AppendLine("<th>Name</th>");
-            sb.AppendLine("<th>Club</th>");
-            sb.AppendLine("<th>Current rank</th>");
-            sb.AppendLine("<th>Events completed</th>");
-            sb.AppendLine($"<th>Best {IndividualCompetitionEventLimit}</th>");
+        private string RenderEventNumberRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
 
-            // One column per event in the season
-            foreach (var evt in ResultsSet.Calendar)
-                sb.AppendLine($"<th>{evt.RoundRobinEventNumber}</th>");
+            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Name</th>");
+            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Club</th>");
+            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Current rank</th>");
+            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Events completed</th>");
+            sb.AppendLine($"<th rowspan=\"3\" class=\"fixed-column-title\">Best {IndividualCompetitionEventLimit}</th>");
 
-            sb.AppendLine("</tr></thead>");
+            foreach (var ev in ResultsSet.Calendar)
+                sb.AppendLine($"<th class=\"event-number\">{ev.RoundRobinEventNumber}</th>");
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private string RenderEventTitleRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
+
+            foreach (var ev in ResultsSet.Calendar)
+            {
+                sb.AppendLine(
+                    $"<th class=\"event-title\" data-col-index=\"{ev.RoundRobinEventNumber}\">" +
+                    $"{WebUtility.HtmlEncode(ev.EventName)}</th>");
+            }
+
+            sb.AppendLine("</tr>");
+            return sb.ToString();
+        }
+
+        private string RenderEventDateRow()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<tr>");
+
+            foreach (var ev in ResultsSet.Calendar)
+            {
+                var dateString = ev.EventDate.ToString("ddd dd/MM/yy");
+                sb.AppendLine($"<th class=\"event-date\">{dateString}</th>");
+            }
+
+            sb.AppendLine("</tr>");
             return sb.ToString();
         }
 

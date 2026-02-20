@@ -178,12 +178,73 @@ table.results tbody tr:hover {
     margin-top: 0.2rem;
 }
 
-
 /* =========================================================
-   Results & Legend Colour Coding
+   RR Competition Table – Three‑Row Header Styling
    ========================================================= */
 
-/* Eligibility (row-level) */
+/* Row 1: Event numbers */
+table.results thead .event-number {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+    padding: 1px 6px;
+    line-height: 1.1;
+}
+
+/* Row 2: Event titles */
+table.results thead .event-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    text-align: center;
+    padding: 2px 6px;
+    line-height: 1.2;
+}
+
+/* Row 3: Event dates */
+table.results thead .event-date {
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-style: italic;
+    color: #555;
+    white-space: nowrap;
+    padding: 2px 6px;
+    line-height: 1.2;
+}
+
+/* Row‑specific tweaks */
+table.results thead tr:nth-child(1) th,
+table.results thead tr:nth-child(2) th {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+table.results thead tr:nth-child(3) th {
+    font-size: 0.8rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-weight: normal;
+    color: #555;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc;
+}
+
+/* =========================================================
+   Shared Header Background for Event + Competition Tables
+   ========================================================= */
+table.results thead th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   RR Colour Coding (Event Pages + Competition Tables)
+   ========================================================= */
+
+/* --- Eligibility (event pages only) --- */
 table.results tr.competition-eligible,
 .legend .competition-eligible {
     background-color: #e0ffe0;
@@ -199,38 +260,7 @@ table.results tr.guest-non-club-member,
     background-color: #fff0e0;
 }
 
-/* Ten vs Non-Ten events */
-table.results td.ten-mile-event,
-.calendar td.ten-mile-event,
-.legend .ten-mile-event {
-    background-color: #FDE9D9;
-}
-
-table.results td.non-ten-mile-event,
-.calendar td.non-ten-mile-event,
-.legend .non-ten-mile-event {
-    background-color: #DCE6F1;
-}
-
-/* Standalone events */
-table.results td.stand-alone-event,
-.calendar td.stand-alone-event,
-.legend .stand-alone-event {
-    background-color: #E2F0D9;
-}
-
-/* Scoring columns */
-table.results td.mixed-score,
-.legend .mixed-score {
-    background-color: #CCFFCC;
-}
-
-table.results td.tens-score,
-.legend .tens-score {
-    background-color: #EBF1DE;
-}
-
-/* Highlight Best‑N scoring rides */
+/* --- Highlight Best‑N scoring rides (competition tables) --- */
 table.results td .rr-scoring {
     background-color: #66bb6a;   /* darker green */
     color: #fff;
@@ -239,6 +269,7 @@ table.results td .rr-scoring {
     border-radius: 4px;
     display: inline-block;
 }
+
 
 /* =========================================================
    Column Widths
