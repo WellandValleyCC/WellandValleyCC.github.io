@@ -39,6 +39,8 @@ namespace ClubSiteGenerator.Models.RoundRobin
         public CompetitionScore Total { get; set; }
             = new CompetitionScore();
 
+        public int? Rank { get; set; }
+
         /// <summary>
         /// The N Open-category riders whose scores contributed to the team total for each event
         /// </summary>

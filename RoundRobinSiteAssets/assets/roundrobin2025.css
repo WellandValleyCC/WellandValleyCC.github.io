@@ -267,6 +267,33 @@ table.results thead .event-title.cancelled-event::after {
 }
 
 /* =========================================================
+   RR Team Competition Table
+   ========================================================= */
+
+.team-event-cell {
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.team-event-cell .rr-contributors-full {
+  display: none;
+}
+
+.team-event-cell.expanded .rr-contributors-short {
+  display: none;
+}
+
+.team-event-cell.expanded .rr-contributors-full {
+  display: inline;
+}
+
+.rr-contributors-short,
+.rr-contributors-full {
+  font-size: 0.75em;
+  color: #555;
+}
+
+/* =========================================================
    Shared Header Background for Event + Competition Tables
    ========================================================= */
 table.results thead th {

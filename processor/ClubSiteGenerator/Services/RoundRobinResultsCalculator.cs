@@ -170,7 +170,6 @@ namespace ClubSiteGenerator.Services
 
             return results;
         }
-
         public static IList<RoundRobinTeamResult> BuildTeamResults(
             IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> rrCalendar,
@@ -215,8 +214,19 @@ namespace ClubSiteGenerator.Services
                     rules))
                 .ToList();
 
+            // ------------------------------------------------------------
+            // SORT + ASSIGN RANKS (tie‑aware)
+            // ------------------------------------------------------------
+            results = results
+                .OrderByDescending(r => r.Total.Points ?? 0)
+                .ThenBy(r => r.ClubShortName)
+                .ToList();
+
+            AssignTeamRanks(results);
+
             return results;
         }
+
 
 
         // ------------------------------------------------------------
@@ -438,6 +448,38 @@ namespace ClubSiteGenerator.Services
             };
 
         private static void AssignRanks(List<RoundRobinRiderResult> results)
+        {
+            int currentRank = 1;
+            double? lastScore = null;
+            int? lastAssignedRank = null;
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                var score = results[i].Total.Points;
+
+                if (score == null)
+                {
+                    results[i].Rank = null;
+                    continue;
+                }
+
+                if (lastScore != null && score == lastScore)
+                {
+                    // tie
+                    results[i].Rank = lastAssignedRank;
+                }
+                else
+                {
+                    results[i].Rank = currentRank;
+                    lastAssignedRank = currentRank;
+                }
+
+                lastScore = score;
+                currentRank++;
+            }
+        }
+
+        private static void AssignTeamRanks(List<RoundRobinTeamResult> results)
         {
             int currentRank = 1;
             double? lastScore = null;
