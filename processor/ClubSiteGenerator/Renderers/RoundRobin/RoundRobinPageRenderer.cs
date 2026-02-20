@@ -182,7 +182,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         /// </summary>
         /// <remarks>
         /// Used in competition tables to keep the title short while removing extraneous details.
-        /// Lubenham Round Robin 10mile TT -> Lubenham
+        /// Lubenham Round Robin 10mile TT -> Lubenham 10
         /// </remarks>
         protected static string VeryCleanTitle(string title)
         {
@@ -193,8 +193,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             cleaned = Regex.Replace(
                 cleaned,
-                @"\s*10\s*mile\s*TT\s*",
-                "",
+                @"10\s*mile\s*TT\s*",
+                "10",
                 RegexOptions.IgnoreCase
             );
 

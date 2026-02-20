@@ -231,6 +231,13 @@ table.results thead tr:nth-child(3) th {
     border-top: 1px solid #ccc;
 }
 
+/* Extra vertical spacing for clarity */
+table.results thead tr:nth-child(2) th.event-title,
+table.results thead tr:nth-child(3) th.event-date {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
 /* =========================================================
    RR Competition Table – Cancelled Event Banner
    ========================================================= */
@@ -267,6 +274,11 @@ table.results thead th {
     font-weight: bold;
 }
 
+table.results thead .event-title,
+table.results thead .event-date {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
 
 /* =========================================================
    RR Colour Coding (Event Pages + Competition Tables)
