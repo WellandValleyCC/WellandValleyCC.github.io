@@ -36,7 +36,8 @@ namespace ClubProcessor.Services
                 return false;
             }
 
-            var year = yearMatch.Groups[1].Value;
+            var year = int.Parse(yearMatch.Groups[1].Value);
+
             var eventsDir = Path.Combine(folderPath, "events");
 
             if (!Directory.Exists(eventsDir))
@@ -55,7 +56,7 @@ namespace ClubProcessor.Services
             {
                 var eventNumber = ExtractEventNumber(csvPath);
                 Console.WriteLine($"[INFO] Processing Event {eventNumber}: {csvPath}");
-                ProcessEventCsv(csvPath, eventNumber);
+                ProcessEventCsv(csvPath, eventNumber, year);
             }
 
             eventContext.SaveChanges();
@@ -85,7 +86,7 @@ namespace ClubProcessor.Services
             return match.Success ? int.Parse(match.Groups[1].Value) : -1;
         }
 
-        private void ProcessEventCsv(string csvPath, int eventNumber)
+        private void ProcessEventCsv(string csvPath, int eventNumber, int competitionYear)
         {
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -101,7 +102,7 @@ namespace ClubProcessor.Services
 
             var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
             var incomingRides = incomingRows
-                .Select(row => ParseRide(row, eventNumber))
+                .Select(row => ParseRide(row, eventNumber, competitionYear))
                 .Where(ride => ride != null)
                 .Cast<Ride>() // assert non-null
                     .Select(r =>
@@ -144,13 +145,13 @@ namespace ClubProcessor.Services
         ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X,Johnny Doe
         ///   Jane Doe (HCRC),0,21.0,57.0,,,Joe Murray (HCRC),00:21:57,X,Jane Doe
         /// </remarks>
-        private Ride? ParseRide(RideCsvRow row, int eventNumber)
+        private Ride? ParseRide(RideCsvRow row, int eventNumber, int competitionYear)
         {
             var rawNumberOrName = row.NumberOrName?.Trim();
 
             bool isClubMember = int.TryParse(rawNumberOrName, out int clubNumber);
             
-            var clubShortName = ResolveClubShortName(row, isClubMember);
+            var clubShortName = ResolveClubShortName(row, isClubMember, competitionYear);
 
             return new Ride
             {
@@ -165,7 +166,7 @@ namespace ClubProcessor.Services
             };
         }
 
-        private string? ResolveClubShortName(RideCsvRow row, bool isClubMember)
+        private string? ResolveClubShortName(RideCsvRow row, bool isClubMember, int competitionYear)
         {
             if (isClubMember)
                 return "WVCC"; // default for members
@@ -175,7 +176,7 @@ namespace ClubProcessor.Services
             if (clubName is null)
                 return null;
 
-            return LookupClubShortName(clubName);
+            return LookupClubShortName(clubName, competitionYear);
         }
 
         private string? ExtractClubNameFromName(string? name)
@@ -194,13 +195,14 @@ namespace ClubProcessor.Services
             return string.IsNullOrWhiteSpace(clubName) ? null : clubName;
         }
 
-        private string? LookupClubShortName(string clubName)
+        private string? LookupClubShortName(string clubName, int competitionYear)
         {
-            // Normalise for comparison
             var normalised = clubName.Trim().ToUpperInvariant();
 
             var club = eventContext.RoundRobinClubs
-                .FirstOrDefault(c => c.ShortName.ToUpper() == normalised);
+                .FirstOrDefault(c =>
+                    c.ShortName.ToUpper() == normalised &&
+                    c.FromYear <= competitionYear);
 
             return club?.ShortName;
         }
