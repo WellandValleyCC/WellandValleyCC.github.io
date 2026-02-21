@@ -185,7 +185,6 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             {
                 team.EventPoints.TryGetValue(evt.RoundRobinEventNumber, out var pts);
 
-                // Merge Open + Women contributors
                 var open = team.ContributingOpenRidesByEvent
                     .TryGetValue(evt.RoundRobinEventNumber, out var o)
                         ? o
