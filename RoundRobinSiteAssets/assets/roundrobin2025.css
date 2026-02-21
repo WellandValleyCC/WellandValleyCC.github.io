@@ -266,6 +266,48 @@ table.results thead .event-title.cancelled-event::after {
     border-radius: 2px;
 }
 
+/* ======================================================================
+   RR EVENT PAGE — POSITION CELL EXPANDABLE OPEN/WOMEN POINTS
+   ----------------------------------------------------------------------
+   This styles the hidden Open/Women points block injected by the renderer.
+   - Small font
+   - Initially collapsed
+   - Expands on click (class toggle)
+   - O and W both bottom-left aligned
+   ====================================================================== */
+
+/* Container for the hidden points block */
+.rr-event-points-collapsed {
+    position: relative;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: #555;
+}
+
+/* Hidden by default */
+.rr-event-points-collapsed .rr-event-points-inner {
+    display: none;
+    position: relative;
+    padding-top: 6px;
+}
+
+/* Shown when the wrapper is expanded */
+.rr-event-points-wrapper.expanded .rr-event-points-inner {
+    display: block;   /* stack vertically */
+}
+
+/* Wrapper is the clickable area */
+.rr-event-points-wrapper {
+    cursor: pointer;
+}
+
+/* Left alignment for both O and W */
+.rr-event-open,
+.rr-event-women {
+    text-align: left;
+    line-height: 1.2;
+}
+
 /* =========================================================
    RR Team Competition Table
    ========================================================= */
@@ -797,6 +839,10 @@ body.rr.event-page main {
   .rr-separator {
     width: 100%;          /* full width looks better on mobile */
   }
+
+    .rr-event-points-collapsed {
+        font-size: 0.6rem;
+    }
 
 }
 

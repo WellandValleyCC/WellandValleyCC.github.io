@@ -186,9 +186,59 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 _ => string.Empty
             };
 
+            if (index == 2)
+                return RenderPositionCell(encoded, tdClass, ride);
+
+            // Default behaviour for all other cells
             return string.IsNullOrEmpty(tdClass)
                 ? $"<td>{encoded}</td>"
                 : $"<td class=\"{tdClass}\">{encoded}</td>";
+        }
+
+        private string RenderPositionCell(string encodedRank, string tdClass, Ride ride)
+        {
+            var hidden = BuildHiddenPointsHtml(ride);
+
+            // No points → normal cell
+            if (string.IsNullOrEmpty(hidden))
+            {
+                return string.IsNullOrEmpty(tdClass)
+                    ? $"<td>{encodedRank}</td>"
+                    : $"<td class=\"{tdClass}\">{encodedRank}</td>";
+            }
+
+            // Points exist → wrap in clickable wrapper
+            var wrapper = $@"
+<div class=""rr-event-points-wrapper"" onclick=""this.classList.toggle('expanded')"">
+    <div class=""rr-pos-visible"">{encodedRank}</div>
+    {hidden}
+</div>";
+
+            return string.IsNullOrEmpty(tdClass)
+                ? $"<td>{wrapper}</td>"
+                : $"<td class=\"{tdClass}\">{wrapper}</td>";
+        }
+
+        private static string BuildHiddenPointsHtml(Ride ride)
+        {
+            if (ride.RoundRobinPoints == null && ride.RoundRobinWomenPoints == null)
+                return string.Empty;
+
+            var open = ride.RoundRobinPoints.HasValue
+                ? $"Open: {ride.RoundRobinPoints.Value} pts"
+                : string.Empty;
+
+            var women = ride.RoundRobinWomenPoints.HasValue
+                ? $"Women: {ride.RoundRobinWomenPoints.Value} pts"
+                : string.Empty;
+
+            return $@"
+<div class=""rr-event-points-collapsed"">
+  <div class=""rr-event-points-inner"">
+    <div class=""rr-event-open"">{open}</div>
+    <div class=""rr-event-women"">{women}</div>
+  </div>
+</div>";
         }
 
         // ------------------------------------------------------------
