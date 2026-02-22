@@ -75,34 +75,53 @@ namespace ClubProcessor.Orchestration
 
         public static void HydrateRoundRobinRiders(
             IEnumerable<Ride> rides,
-            IEnumerable<RoundRobinRider> rrRiders)
+            IEnumerable<RoundRobinRider> rrRiders,
+            int competitionYear)
         {
             if (rides == null) throw new ArgumentNullException(nameof(rides));
             if (rrRiders == null) throw new ArgumentNullException(nameof(rrRiders));
 
-            // Index RR riders by name for fast lookup
             var rrByName = rrRiders
                 .GroupBy(r => r.DecoratedName.Trim(), StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
             var missing = new List<(string Name, string Club)>();
 
+            // Synthetic ID generator for Guest riders
+            int nextSyntheticId = -10000;
+
             foreach (var ride in rides)
             {
-                // Only hydrate RR rides:
-                // - ClubNumber must be null
-                // - RoundRobinClub must be set
-                // - RoundRobinClub must not be WVCC
                 if (ride.ClubNumber != null) continue;
                 if (string.IsNullOrWhiteSpace(ride.RoundRobinClub)) continue;
                 if (string.Equals(ride.RoundRobinClub, "WVCC", StringComparison.OrdinalIgnoreCase)) continue;
 
                 if (string.IsNullOrWhiteSpace(ride.Name))
-                    throw new InvalidOperationException($"Ride in Event {ride.EventNumber} has no rider Name but is marked as RoundRobin.");
+                    throw new InvalidOperationException(
+                        $"Ride in Event {ride.EventNumber} has no rider Name but is marked as RoundRobin.");
 
-                // Try to match by name
-                if (!rrByName.TryGetValue(ride.Name.Trim(), out var rr))
+                var key = ride.Name.Trim();
+
+                if (!rrByName.TryGetValue(key, out var rr))
                 {
+                    // 2025-only synthetic Guest rider
+                    if (competitionYear == 2025 &&
+                        string.Equals(ride.RoundRobinClub, "Guest", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rr = new RoundRobinRider
+                        {
+                            Id = nextSyntheticId--,   // unique negative ID
+                            Name = key,
+                            RoundRobinClub = "Guest",
+                            IsFemale = false
+                        };
+
+                        rrByName[key] = rr;
+                        ride.RoundRobinRider = rr;
+                        continue;
+                    }
+
+                    // Otherwise: real missing rider
                     missing.Add((ride.Name, ride.RoundRobinClub));
                     continue;
                 }
@@ -115,8 +134,9 @@ namespace ClubProcessor.Orchestration
                 Console.WriteLine("[ERROR] Some Round Robin riders could not be matched:");
                 foreach (var m in missing.Distinct())
                     Console.WriteLine($"  - Name '{m.Name}' (Club '{m.Club}') not found in RoundRobinRiders list");
-                
-                throw new InvalidOperationException("Scoring aborted: missing RoundRobin riders detected. Please check the RoundRobinRiders sheet.");
+
+                throw new InvalidOperationException(
+                    "Scoring aborted: missing RoundRobin riders detected. Please check the RoundRobinRiders sheet.");
             }
         }
 

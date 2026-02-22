@@ -171,12 +171,28 @@ namespace ClubProcessor.Services
             if (isClubMember)
                 return "WVCC"; // default for members
 
-            // Otherwise try to extract a club name from the rider's name
-            var clubName = ExtractClubNameFromName(row.Name);
-            if (clubName is null)
+            // NEW: 2025 open competition rule
+            if (competitionYear == 2025)
+            {
+                var clubName = ExtractClubNameFromName(row.Name);
+
+                // No suffix → Guest
+                if (clubName is null)
+                    return "Guest";
+
+                // Has suffix → check if it's a valid RR club for 2025
+                var shortName = LookupClubShortName(clubName, competitionYear);
+
+                // Invalid or unknown → Guest
+                return shortName ?? "Guest";
+            }
+
+            // Default behaviour for other years
+            var extracted = ExtractClubNameFromName(row.Name);
+            if (extracted is null)
                 return null;
 
-            return LookupClubShortName(clubName, competitionYear);
+            return LookupClubShortName(extracted, competitionYear);
         }
 
         private string? ExtractClubNameFromName(string? name)

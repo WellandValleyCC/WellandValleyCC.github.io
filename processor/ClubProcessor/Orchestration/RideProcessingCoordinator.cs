@@ -34,9 +34,11 @@ namespace ClubProcessor.Orchestration
             IEnumerable<CalendarEvent> calendarEvents,
             IEnumerable<RoundRobinRider> roundRobinRiders)
         {
+            int competitionYear = calendarEvents.First().EventDate.Year;
+
             RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
             RideHydrationHelper.HydrateCompetitors(rides, competitors);
-            RideHydrationHelper.HydrateRoundRobinRiders(rides, roundRobinRiders);
+            RideHydrationHelper.HydrateRoundRobinRiders(rides, roundRobinRiders, competitionYear);
 
             var ridesByEvent = rides
                 .GroupBy(r => r.EventNumber)
