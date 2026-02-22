@@ -249,6 +249,55 @@ namespace EventProcessor.Tests
                 {
                     EventNumber = 1,
                     EventName   = "Test TT",
+                    EventDate   = new DateTime(2026, 5, 10, 19, 0, 0, DateTimeKind.Utc),
+                    Miles       = 10
+                }
+            };
+
+            var importer = new EventsImporter(eventContext, competitorContext, calendar);
+
+            var folder = TestOutputHelper.GetOutputDirectory();
+            var yearFolder = Path.Combine(folder, "2026");
+            var eventsFolder = Path.Combine(yearFolder, "events");
+            Directory.CreateDirectory(eventsFolder);
+
+            // Minimal CSV with a rider whose name includes a club in parentheses
+            File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), new[]
+            {
+                "Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed",
+                "Jane Doe (IGD),0,25,0,, ,Jane Doe (IGD),00:25:00,"
+            });
+
+            // Act
+            importer.ImportFromFolder(yearFolder);
+
+            // Assert
+            var ride = eventContext.Rides.Single(r => r.Name == "Jane Doe (IGD)");
+            ride.RoundRobinClub.Should().BeNull();
+        }
+
+        [Fact]
+        public void ImportFromFolder_RiderNameContainsNonRRClub_DoesAssignClubShortNameIn2025OpenIncludesGuests()
+        {
+            // Arrange
+            using var eventContext = DbContextFactory.CreateEventContext();
+            using var competitorContext = DbContextFactory.CreateCompetitorContext();
+
+            // Insert RoundRobinClub: HCRC
+            eventContext.RoundRobinClubs.Add(new RoundRobinClub
+            {
+                ShortName = "HCRC",
+                FullName = "Hinckley Cycle Racing Club",
+                WebsiteUrl = "https://hinckleycrc.org/"
+            });
+            eventContext.SaveChanges();
+
+            var calendar = new List<CalendarEvent>
+            {
+                new CalendarEvent
+                {
+                    EventNumber = 1,
+                    EventName   = "Test TT",
                     EventDate   = new DateTime(2025, 5, 10, 19, 0, 0, DateTimeKind.Utc),
                     Miles       = 10
                 }
@@ -273,7 +322,7 @@ namespace EventProcessor.Tests
 
             // Assert
             var ride = eventContext.Rides.Single(r => r.Name == "Jane Doe (IGD)");
-            ride.RoundRobinClub.Should().BeNull();
+            ride.RoundRobinClub.Should().Be("Guest");
         }
     }
 }
