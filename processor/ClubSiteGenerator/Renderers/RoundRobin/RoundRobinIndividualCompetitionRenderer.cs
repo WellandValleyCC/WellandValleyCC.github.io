@@ -166,9 +166,12 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         private string RenderRow(RoundRobinRiderResult rider)
         {
             var sb = new StringBuilder();
-            var cssClass = string.IsNullOrWhiteSpace(rider.Rider.RoundRobinClub)
-                ? "guest-non-club-member"
-                : "competition-eligible";
+            var cssClass =
+                string.Equals(rider.Rider.RoundRobinClub, "Guest", StringComparison.OrdinalIgnoreCase)
+                    ? "guest-non-club-member"
+                    : !string.IsNullOrWhiteSpace(rider.Rider.RoundRobinClub)
+                        ? "competition-eligible"
+                        : "guest-non-club-member";
 
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 

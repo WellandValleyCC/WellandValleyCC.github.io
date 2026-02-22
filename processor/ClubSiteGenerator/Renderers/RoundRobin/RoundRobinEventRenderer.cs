@@ -245,9 +245,14 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  ROW CLASSIFICATION
         // ------------------------------------------------------------
 
-        private static string GetRowClass(Ride ride) =>
-            !string.IsNullOrWhiteSpace(ride.RoundRobinClub)
+        private static string GetRowClass(Ride ride)
+        {
+            if (string.Equals(ride.RoundRobinClub, "Guest", StringComparison.OrdinalIgnoreCase))
+                return "guest-non-club-member";
+
+            return !string.IsNullOrWhiteSpace(ride.RoundRobinClub)
                 ? "competition-eligible"
                 : "guest-non-club-member";
+        }
     }
 }

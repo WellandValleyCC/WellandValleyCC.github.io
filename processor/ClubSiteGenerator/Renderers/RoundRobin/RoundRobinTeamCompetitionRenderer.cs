@@ -157,7 +157,11 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         private string RenderRow(RoundRobinTeamResult team)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(@"<tr class=""competition-eligible"">");
+            var cssClass =
+                string.Equals(team.ClubShortName, "Guest", StringComparison.OrdinalIgnoreCase)
+                    ? "guest-non-club-member"
+                    : "competition-eligible";
+            sb.AppendLine(@$"<tr class=""{ cssClass}"">");
 
             foreach (var cell in BuildCells(team))
             {
