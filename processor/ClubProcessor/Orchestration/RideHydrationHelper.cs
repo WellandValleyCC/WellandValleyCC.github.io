@@ -108,12 +108,14 @@ namespace ClubProcessor.Orchestration
                     if (competitionYear == 2025 &&
                         string.Equals(ride.RoundRobinClub, "Guest", StringComparison.OrdinalIgnoreCase))
                     {
+                        var isFemale = key.Contains("(W)", StringComparison.OrdinalIgnoreCase);
+
                         rr = new RoundRobinRider
                         {
                             Id = nextSyntheticId--,   // unique negative ID
                             Name = key,
                             RoundRobinClub = "Guest",
-                            IsFemale = false
+                            IsFemale = isFemale
                         };
 
                         rrByName[key] = rr;

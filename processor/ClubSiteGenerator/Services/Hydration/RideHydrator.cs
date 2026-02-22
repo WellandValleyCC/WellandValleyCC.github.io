@@ -186,12 +186,14 @@ namespace ClubSiteGenerator.Services.Hydration
                 // Reuse synthetic rider if already created
                 if (!syntheticByName.TryGetValue(key, out var rr))
                 {
+                    var isFemale = key.Contains("(W)", StringComparison.OrdinalIgnoreCase);
+
                     rr = new RoundRobinRider
                     {
                         Id = nextSyntheticId--,
                         Name = key,
                         RoundRobinClub = "Guest",
-                        IsFemale = false
+                        IsFemale = isFemale
                     };
 
                     syntheticByName[key] = rr;
