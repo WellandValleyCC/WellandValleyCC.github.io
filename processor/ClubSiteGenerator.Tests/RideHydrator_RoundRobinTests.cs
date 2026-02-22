@@ -32,7 +32,7 @@ namespace ClubSiteGenerator.Tests
             var rr = Rider("Alice Smith", "Ratae", true);
             var ride = RideFor(rr);
 
-            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr });
+            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr }, 2026);
 
             ride.RoundRobinRider.Should().Be(rr);
         }
@@ -48,7 +48,7 @@ namespace ClubSiteGenerator.Tests
                 RoundRobinClub = "Ratae"
             };
 
-            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr });
+            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr }, 2026);
 
             ride.RoundRobinRider.Should().Be(rr);
         }
@@ -64,7 +64,7 @@ namespace ClubSiteGenerator.Tests
                 RoundRobinClub = "Ratae"
             };
 
-            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr });
+            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr }, 2026);
 
             ride.RoundRobinRider.Should().Be(rr);
         }
@@ -85,7 +85,7 @@ namespace ClubSiteGenerator.Tests
                 RoundRobinClub = "Ratae"
             };
 
-            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr });
+            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr }, 2026);
 
             ride.RoundRobinRider.Should().BeNull();
         }
@@ -102,7 +102,7 @@ namespace ClubSiteGenerator.Tests
                 RoundRobinClub = ""        // skip
             };
 
-            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr });
+            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr }, 2026);
 
             ride.RoundRobinRider.Should().BeNull();
         }
@@ -119,7 +119,7 @@ namespace ClubSiteGenerator.Tests
                 RoundRobinClub = "WVCC"    // skip
             };
 
-            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr });
+            RideHydrator.AttachRoundRobinRiders(new[] { ride }, new[] { rr }, 2026);
 
             ride.RoundRobinRider.Should().BeNull();
         }
@@ -139,7 +139,7 @@ namespace ClubSiteGenerator.Tests
             };
 
             Action act = () =>
-                RideHydrator.AttachRoundRobinRiders(new[] { ride }, Array.Empty<RoundRobinRider>());
+                RideHydrator.AttachRoundRobinRiders(new[] { ride }, Array.Empty<RoundRobinRider>(), 2026);
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage("*RoundRobin*Name*");
@@ -156,7 +156,7 @@ namespace ClubSiteGenerator.Tests
             };
 
             Action act = () =>
-                RideHydrator.AttachRoundRobinRiders(new[] { ride }, Array.Empty<RoundRobinRider>());
+                RideHydrator.AttachRoundRobinRiders(new[] { ride }, Array.Empty<RoundRobinRider>(), 2026);
 
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage("*Bob Jones*");
@@ -172,7 +172,7 @@ namespace ClubSiteGenerator.Tests
             };
 
             Action act = () =>
-                RideHydrator.AttachRoundRobinRiders(rides, Array.Empty<RoundRobinRider>());
+                RideHydrator.AttachRoundRobinRiders(rides, Array.Empty<RoundRobinRider>(), 2026);
 
             var ex = act.Should().Throw<InvalidOperationException>().Which;
 

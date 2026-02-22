@@ -73,7 +73,8 @@ namespace ClubSiteGenerator.Services.Hydration
 
         public static void AttachRoundRobinRiders(
             IEnumerable<Ride> rides,
-            IEnumerable<RoundRobinRider> rrRiders)
+            IEnumerable<RoundRobinRider> rrRiders,
+            int competitionYear)
         {
             var rrByName = rrRiders
                 .GroupBy(r => r.DecoratedName.Trim(), StringComparer.OrdinalIgnoreCase)
@@ -98,6 +99,11 @@ namespace ClubSiteGenerator.Services.Hydration
 
                 if (!rrByName.TryGetValue(key, out var rr))
                 {
+                    // NEW: Skip Guest riders ONLY for 2025 — they will be attached synthetically later
+                    if (competitionYear == 2025 &&
+                        string.Equals(ride.RoundRobinClub, "Guest", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
                     missing.Add((ride.Name ?? "Name=<null>", ride.RoundRobinClub));
                     continue;
                 }
@@ -146,6 +152,52 @@ namespace ClubSiteGenerator.Services.Hydration
                         $"WVCC ride {ride.Id} has no Competitor object.");
 
                 ride.RoundRobinRider = synthetic[-ride.Competitor.Id];
+            }
+        }
+
+        public static void AttachSyntheticGuestRoundRobinRiders(
+            IEnumerable<Ride> rides,
+            int competitionYear)
+        {
+            if (competitionYear != 2025)
+                return; // Only applies to the 2025 open competition
+
+            // Synthetic Guest IDs start at -10000 and count down
+            int nextSyntheticId = -10000;
+
+            // Cache synthetic riders by name to avoid duplicates
+            var syntheticByName = new Dictionary<string, RoundRobinRider>(
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (var ride in rides)
+            {
+                // Only apply to Guest RR rides
+                if (!string.Equals(ride.RoundRobinClub, "Guest", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (string.IsNullOrWhiteSpace(ride.Name))
+                {
+                    throw new InvalidOperationException(
+                        $"Guest RR ride {ride.Id} has no Name.");
+                }
+
+                var key = ride.Name.Trim();
+
+                // Reuse synthetic rider if already created
+                if (!syntheticByName.TryGetValue(key, out var rr))
+                {
+                    rr = new RoundRobinRider
+                    {
+                        Id = nextSyntheticId--,
+                        Name = key,
+                        RoundRobinClub = "Guest",
+                        IsFemale = false
+                    };
+
+                    syntheticByName[key] = rr;
+                }
+
+                ride.RoundRobinRider = rr;
             }
         }
     }
