@@ -5,6 +5,6 @@
         Undefined,
         Open,
         Women,
-        Team
+        Club
     }
 }

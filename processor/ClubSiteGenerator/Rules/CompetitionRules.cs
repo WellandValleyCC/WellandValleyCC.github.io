@@ -55,7 +55,7 @@
             {
                 Count = mixedEventCount,
                 Minimum = 0,
-                Team = new RoundRobinTeamRules
+                Club = new RoundRobinTeamRules
                 {
                     OpenCount = 4,
                     WomenCount = 1

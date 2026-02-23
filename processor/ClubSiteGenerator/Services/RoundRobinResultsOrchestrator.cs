@@ -127,7 +127,7 @@ namespace ClubSiteGenerator.Services
                     rules));
 
             //
-            // 6. Team competition (all RR riders, no gender filtering)
+            // 6. Club competition (all RR riders, no gender filtering)
             //
             resultsSets.Add(
                 RoundRobinTeamCompetitionResultsSet.CreateFrom(

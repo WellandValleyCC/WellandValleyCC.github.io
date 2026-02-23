@@ -78,7 +78,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         /// <summary>
         /// Legend is optional. Event pages and individual competitions use it.
-        /// Team competition does not.
+        /// Club competition does not.
         /// </summary>
         protected virtual string RenderLegendIfNeeded() => string.Empty;
 

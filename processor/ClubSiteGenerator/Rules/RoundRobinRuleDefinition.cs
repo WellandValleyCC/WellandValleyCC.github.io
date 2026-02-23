@@ -20,6 +20,6 @@ namespace ClubSiteGenerator.Rules
         public int? Minimum { get; set; }
 
         [JsonPropertyName("team")]
-        public RoundRobinTeamDefinition? Team { get; set; }
+        public RoundRobinTeamDefinition? Club { get; set; }
     }
 }

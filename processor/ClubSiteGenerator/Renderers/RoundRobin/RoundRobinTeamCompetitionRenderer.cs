@@ -92,7 +92,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var sb = new StringBuilder();
             sb.AppendLine("<tr>");
 
-            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Team</th>");
+            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Club</th>");
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Current rank</th>");
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Total</th>");
 

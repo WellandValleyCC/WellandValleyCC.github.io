@@ -17,7 +17,7 @@ namespace ClubSiteGenerator.Models.RoundRobin
             = Array.Empty<RoundRobinRider>();
 
         /// <summary>
-        /// Team points per event number.
+        /// Club points per event number.
         /// </summary>
         public Dictionary<int, double?> EventPoints { get; set; }
             = new();
