@@ -25,7 +25,9 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Women;
 
         public override string EligibilityStatement =>
-            "All female members of the participating clubs are eligible for this competition.";
+            Year == 2025
+                ? "All female riders are eligible for this competition."
+                : "All female members of the participating clubs are eligible for this competition.";
 
         public override string ScoringStatement
         {
