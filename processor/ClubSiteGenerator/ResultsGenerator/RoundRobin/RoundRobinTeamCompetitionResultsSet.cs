@@ -19,7 +19,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         }
 
         public override string DisplayName => "Round Robin TT Series – Club";
-        public override string FileName => $"{Year}-rr-team";
+        public override string FileName => $"{Year}-rr-club";
         public override string SubFolderName => "competitions";
         public override string LinkText => "Club";
         public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Club;
