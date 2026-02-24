@@ -170,6 +170,7 @@ namespace ClubSiteGenerator.Services
 
             return results;
         }
+
         public static IList<RoundRobinClubResult> BuildClubResults(
             IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> rrCalendar,
@@ -206,8 +207,19 @@ namespace ClubSiteGenerator.Services
                 .GroupBy(r => r.RoundRobinClub!)
                 .ToList();
 
-            // Build club results
+            // Build club results (optionally excluding the Guest pseudo‑club)
             var results = groups
+                .Where(g =>
+                {
+                    // If Guest club inclusion is disabled, skip the "Guest" pseudo-club
+                    if (!rules.RoundRobin.IncludeGuestClub &&
+                        string.Equals(g.Key, "Guest", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
                 .Select(g => BuildClubResult(
                     g.ToList(),
                     rrCalendar,
@@ -226,8 +238,6 @@ namespace ClubSiteGenerator.Services
 
             return results;
         }
-
-
 
         // ------------------------------------------------------------
         // Build INDIVIDUAL result (Open, Women)

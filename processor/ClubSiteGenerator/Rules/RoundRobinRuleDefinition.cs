@@ -27,7 +27,7 @@ namespace ClubSiteGenerator.Rules
         /// competition scoring. Only meaningful in seasons where Guest riders
         /// receive individual Round Robin points (e.g. 2025).
         /// </summary>
-        [JsonPropertyName("includeGuestsClub")]
-        public bool? IncludeGuestsClub { get; set; }
+        [JsonPropertyName("includeGuestClub")]
+        public bool? IncludeGuestClub { get; set; }
     }
 }

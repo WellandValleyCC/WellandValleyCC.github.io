@@ -24,6 +24,6 @@
         /// Defaults to false. Only meaningful in seasons where Guest riders receive
         /// RoundRobinPoints and RoundRobinWomenPosition (e.g. 2025).
         /// </summary>
-        public bool IncludeGuestsClub { get; set; } = false;
+        public bool IncludeGuestClub { get; set; } = false;
     }
 }

@@ -60,7 +60,7 @@
                     OpenCount = 4,
                     WomenCount = 1
                 },
-                IncludeGuestsClub = false
+                IncludeGuestClub = false
             };
         }
 

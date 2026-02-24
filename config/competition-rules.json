@@ -28,7 +28,7 @@
         "openCount": 4,
         "womenCount": 1
       },
-	  "includeGuestsClub": true
+	  "includeGuestClub": false
     }
   },
 

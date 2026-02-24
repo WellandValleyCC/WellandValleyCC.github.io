@@ -73,7 +73,7 @@ namespace ClubSiteGenerator.Rules
                     Count = rrCount,
                     Minimum = rrMinimum,
                     Club = club,
-                    IncludeGuestsClub = config.RoundRobin.IncludeGuestsClub == true
+                    IncludeGuestClub = config.RoundRobin.IncludeGuestClub == true
                 };
             }
 
