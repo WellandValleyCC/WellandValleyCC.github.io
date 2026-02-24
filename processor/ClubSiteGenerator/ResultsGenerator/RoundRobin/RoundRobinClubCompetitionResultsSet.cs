@@ -9,11 +9,11 @@ using ClubSiteGenerator.Services;
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
     public sealed class RoundRobinClubCompetitionResultsSet
-        : RoundRobinCompetitionResultsSet<RoundRobinTeamResult>
+        : RoundRobinCompetitionResultsSet<RoundRobinClubResult>
     {
         private RoundRobinClubCompetitionResultsSet(
             IEnumerable<CalendarEvent> calendar,
-            IEnumerable<RoundRobinTeamResult> results)
+            IEnumerable<RoundRobinClubResult> results)
             : base(calendar, results)
         {
         }
@@ -52,7 +52,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             IEnumerable<CalendarEvent> rrCalendar,
             ICompetitionRules rules)
         {
-            var results = RoundRobinResultsCalculator.BuildTeamResults(
+            var results = RoundRobinResultsCalculator.BuildClubResults(
                 allRides, rrCalendar, rules);
 
             return new RoundRobinClubCompetitionResultsSet(rrCalendar, results)

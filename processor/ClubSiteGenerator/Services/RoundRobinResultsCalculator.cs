@@ -170,7 +170,7 @@ namespace ClubSiteGenerator.Services
 
             return results;
         }
-        public static IList<RoundRobinTeamResult> BuildTeamResults(
+        public static IList<RoundRobinClubResult> BuildClubResults(
             IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> rrCalendar,
             ICompetitionRules rules)
@@ -206,9 +206,9 @@ namespace ClubSiteGenerator.Services
                 .GroupBy(r => r.RoundRobinClub!)
                 .ToList();
 
-            // Build team results
+            // Build club results
             var results = groups
-                .Select(g => BuildTeamResult(
+                .Select(g => BuildClubResult(
                     g.ToList(),
                     rrCalendar,
                     rules))
@@ -222,7 +222,7 @@ namespace ClubSiteGenerator.Services
                 .ThenBy(r => r.ClubShortName)
                 .ToList();
 
-            AssignTeamRanks(results);
+            AssignClubRanks(results);
 
             return results;
         }
@@ -295,9 +295,9 @@ namespace ClubSiteGenerator.Services
         }
 
         // ------------------------------------------------------------
-        // Build TEAM result (best 4 open + best 1 women)
+        // Build CLUB result (best 4 open + best 1 women)
         // ------------------------------------------------------------
-        public static RoundRobinTeamResult BuildTeamResult(
+        public static RoundRobinClubResult BuildClubResult(
             IReadOnlyList<Ride> rrRides,
             IEnumerable<CalendarEvent> rrCalendar,
             ICompetitionRules rules)
@@ -396,7 +396,7 @@ namespace ClubSiteGenerator.Services
                 .Where(r => r.Status == RideStatus.Valid)
                 .ToList();
 
-            return new RoundRobinTeamResult
+            return new RoundRobinClubResult
             {
                 ClubShortName = clubName,
                 Riders = rrRides.Select(r => r.RoundRobinRider!).Distinct().ToList(),
@@ -430,7 +430,7 @@ namespace ClubSiteGenerator.Services
             r switch
             {
                 RoundRobinRiderResult rr => rr.Total.Points,
-                RoundRobinTeamResult tr => tr.Total.Points,
+                RoundRobinClubResult tr => tr.Total.Points,
                 _ => null
             };
 
@@ -442,7 +442,7 @@ namespace ClubSiteGenerator.Services
                         ? $"{surname} {given}"
                         : rr.Rider.Name,
 
-                RoundRobinTeamResult tr => tr.ClubShortName,
+                RoundRobinClubResult tr => tr.ClubShortName,
 
                 _ => "ZZZ"
             };
@@ -479,7 +479,7 @@ namespace ClubSiteGenerator.Services
             }
         }
 
-        private static void AssignTeamRanks(List<RoundRobinTeamResult> results)
+        private static void AssignClubRanks(List<RoundRobinClubResult> results)
         {
             int currentRank = 1;
             double? lastScore = null;
