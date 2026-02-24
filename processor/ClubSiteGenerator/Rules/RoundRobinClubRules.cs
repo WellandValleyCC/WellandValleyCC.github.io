@@ -1,6 +1,6 @@
 ﻿namespace ClubSiteGenerator.Rules
 {
-    public class RoundRobinTeamRules
+    public class RoundRobinClubRules
     {
         public int OpenCount { get; set; }
         public int WomenCount { get; set; }

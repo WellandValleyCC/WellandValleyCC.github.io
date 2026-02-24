@@ -2,7 +2,7 @@
 
 namespace ClubSiteGenerator.Rules
 {
-    public class RoundRobinTeamDefinition
+    public class RoundRobinClubDefinition
     {
         [JsonPropertyName("openCount")]
         public int OpenCount { get; set; }
