@@ -8,10 +8,10 @@ using ClubSiteGenerator.Services;
 
 namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 {
-    public sealed class RoundRobinTeamCompetitionResultsSet
+    public sealed class RoundRobinClubCompetitionResultsSet
         : RoundRobinCompetitionResultsSet<RoundRobinTeamResult>
     {
-        private RoundRobinTeamCompetitionResultsSet(
+        private RoundRobinClubCompetitionResultsSet(
             IEnumerable<CalendarEvent> calendar,
             IEnumerable<RoundRobinTeamResult> results)
             : base(calendar, results)
@@ -47,7 +47,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
 
         public override string AdditionalComments => string.Empty;
 
-        public static RoundRobinTeamCompetitionResultsSet CreateFrom(
+        public static RoundRobinClubCompetitionResultsSet CreateFrom(
             IEnumerable<Ride> allRides,
             IEnumerable<CalendarEvent> rrCalendar,
             ICompetitionRules rules)
@@ -55,7 +55,7 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             var results = RoundRobinResultsCalculator.BuildTeamResults(
                 allRides, rrCalendar, rules);
 
-            return new RoundRobinTeamCompetitionResultsSet(rrCalendar, results)
+            return new RoundRobinClubCompetitionResultsSet(rrCalendar, results)
             {
                 CompetitionRules = rules,
                 CssFile = "rr.css"

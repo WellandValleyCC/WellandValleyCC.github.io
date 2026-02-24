@@ -130,7 +130,7 @@ namespace ClubSiteGenerator.Services
             // 6. Club competition (all RR riders, no gender filtering)
             //
             resultsSets.Add(
-                RoundRobinTeamCompetitionResultsSet.CreateFrom(
+                RoundRobinClubCompetitionResultsSet.CreateFrom(
                     rrRides,
                     calendar,
                     rules));
@@ -150,7 +150,7 @@ namespace ClubSiteGenerator.Services
                 .Where(rs =>
                     rs is RoundRobinOpenCompetitionResultsSet ||
                     rs is RoundRobinWomenCompetitionResultsSet ||
-                    rs is RoundRobinTeamCompetitionResultsSet)
+                    rs is RoundRobinClubCompetitionResultsSet)
                 .OrderBy(rs =>
                     rs is RoundRobinOpenCompetitionResultsSet ? 1 :
                     rs is RoundRobinWomenCompetitionResultsSet ? 2 :
@@ -201,7 +201,7 @@ namespace ClubSiteGenerator.Services
                     RoundRobinWomenCompetitionResultsSet women =>
                         new RoundRobinIndividualCompetitionRenderer(indexFileName, women),
 
-                    RoundRobinTeamCompetitionResultsSet team =>
+                    RoundRobinClubCompetitionResultsSet team =>
                         new RoundRobinTeamCompetitionRenderer(indexFileName, team),
 
                     _ => throw new InvalidOperationException(
