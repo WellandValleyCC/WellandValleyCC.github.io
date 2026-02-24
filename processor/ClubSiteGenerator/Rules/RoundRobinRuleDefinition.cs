@@ -19,7 +19,15 @@ namespace ClubSiteGenerator.Rules
         [JsonPropertyName("minimum")]
         public int? Minimum { get; set; }
 
-        [JsonPropertyName("team")]
-        public RoundRobinTeamDefinition? Club { get; set; }
+        [JsonPropertyName("club")]
+        public RoundRobinClubDefinition? Club { get; set; }
+
+        /// <summary>
+        /// Whether the "Guest" pseudo‑club should be included in the Club
+        /// competition scoring. Only meaningful in seasons where Guest riders
+        /// receive individual Round Robin points (e.g. 2025).
+        /// </summary>
+        [JsonPropertyName("includeGuestsClub")]
+        public bool? IncludeGuestsClub { get; set; }
     }
 }
