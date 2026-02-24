@@ -62,7 +62,7 @@ namespace ClubSiteGenerator.Rules
                 int rrCount = Resolve(config.RoundRobin, relevantEvents);
                 int rrMinimum = config.RoundRobin.Minimum ?? 0;
 
-                var team = new RoundRobinTeamRules
+                var club = new RoundRobinClubRules
                 {
                     OpenCount = config.RoundRobin.Club?.OpenCount ?? 4,
                     WomenCount = config.RoundRobin.Club?.WomenCount ?? 1
@@ -72,7 +72,7 @@ namespace ClubSiteGenerator.Rules
                 {
                     Count = rrCount,
                     Minimum = rrMinimum,
-                    Club = team
+                    Club = club
                 };
             }
 
