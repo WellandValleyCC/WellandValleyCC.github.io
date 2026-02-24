@@ -18,11 +18,11 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
         {
         }
 
-        public override string DisplayName => "Round Robin TT Series – Team";
-        public override string FileName => $"{Year}-rr-team";
+        public override string DisplayName => "Round Robin TT Series – Club";
+        public override string FileName => $"{Year}-rr-club";
         public override string SubFolderName => "competitions";
-        public override string LinkText => "Team";
-        public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Team;
+        public override string LinkText => "Club";
+        public override RoundRobinCompetitionType CompetitionType => RoundRobinCompetitionType.Club;
 
         public override string EligibilityStatement => string.Empty;
 
@@ -33,8 +33,8 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
                 var rules = CompetitionRules
                     ?? throw new InvalidOperationException("CompetitionRules must be set before accessing ScoringStatement.");
 
-                var openCount = rules.RoundRobin.Team.OpenCount;
-                var womenCount = rules.RoundRobin.Team.WomenCount;
+                var openCount = rules.RoundRobin.Club.OpenCount;
+                var womenCount = rules.RoundRobin.Club.WomenCount;
 
                 string RiderPhrase(int n) =>
                     n == 1 ? "top rider's" : $"top {n} riders'";

@@ -64,15 +64,15 @@ namespace ClubSiteGenerator.Rules
 
                 var team = new RoundRobinTeamRules
                 {
-                    OpenCount = config.RoundRobin.Team?.OpenCount ?? 4,
-                    WomenCount = config.RoundRobin.Team?.WomenCount ?? 1
+                    OpenCount = config.RoundRobin.Club?.OpenCount ?? 4,
+                    WomenCount = config.RoundRobin.Club?.WomenCount ?? 1
                 };
 
                 rrRules = new RoundRobinRules
                 {
                     Count = rrCount,
                     Minimum = rrMinimum,
-                    Team = team
+                    Club = team
                 };
             }
 

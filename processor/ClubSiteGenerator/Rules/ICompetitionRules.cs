@@ -61,7 +61,7 @@
         // ------------------------------------------------------------
 
         /// <summary>
-        /// Round Robin scoring rules (Open, Women, Team).
+        /// Round Robin scoring rules (Open, Women, Club).
         /// Always present: if omitted in config (e.g. 2024), defaults are applied.
         /// </summary>
         RoundRobinRules RoundRobin { get; }

@@ -14,8 +14,8 @@
         public int Minimum { get; set; } = 0;
 
         /// <summary>
-        /// Team scoring rules (best N open + best M women).
+        /// Club scoring rules (best N open + best M women).
         /// </summary>
-        public RoundRobinTeamRules Team { get; set; } = new();
+        public RoundRobinTeamRules Club { get; set; } = new();
     }
 }

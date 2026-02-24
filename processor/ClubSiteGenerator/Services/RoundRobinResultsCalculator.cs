@@ -304,8 +304,8 @@ namespace ClubSiteGenerator.Services
         {
             ValidateCalendar(rrCalendar);
 
-            int openCount = rules.RoundRobin.Team.OpenCount;   // e.g. 4
-            int womenCount = rules.RoundRobin.Team.WomenCount; // e.g. 1
+            int openCount = rules.RoundRobin.Club.OpenCount;   // e.g. 4
+            int womenCount = rules.RoundRobin.Club.WomenCount; // e.g. 1
 
             var clubName = rrRides.First().RoundRobinClub!;
 
