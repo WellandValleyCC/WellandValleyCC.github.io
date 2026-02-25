@@ -1,4 +1,4 @@
-﻿using ClubCore.Models;
+using ClubCore.Models;
 using ClubProcessor.Configuration;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Text;
@@ -98,7 +98,7 @@ namespace ClubSiteGenerator.Services
         private static bool IsPreviewSeason(int year) =>
             GetSeasonIndexFilename(year).StartsWith("preview", StringComparison.OrdinalIgnoreCase);
 
-        private static string GetSeasonIndexFilename(int year) => year == 2025
+        private static string GetSeasonIndexFilename(int year) => $"index{year}.html";
             ? $"preview{year}.html"
             : $"index{year}.html";
 
