@@ -24,10 +24,11 @@
       "formula": "calendarEvents/2+1",
       "cap": 11,
       "minimum": 0,
-      "team": {
+      "club": {
         "openCount": 4,
         "womenCount": 1
-      }
+      },
+	  "includeGuestClub": false
     }
   },
 
@@ -46,7 +47,7 @@
       "formula": "calendarEvents/2+1",
       "cap": 11,
       "minimum": 0,
-      "team": {
+      "club": {
         "openCount": 4,
         "womenCount": 1
       }

@@ -55,11 +55,12 @@
             {
                 Count = mixedEventCount,
                 Minimum = 0,
-                Club = new RoundRobinTeamRules
+                Club = new RoundRobinClubRules
                 {
                     OpenCount = 4,
                     WomenCount = 1
-                }
+                },
+                IncludeGuestClub = false
             };
         }
 

@@ -7,11 +7,11 @@ using System.Text;
 namespace ClubSiteGenerator.Renderers.RoundRobin
 {
     public class RoundRobinTeamCompetitionRenderer
-        : RoundRobinCompetitionPageRenderer<RoundRobinTeamResult>
+        : RoundRobinCompetitionPageRenderer<RoundRobinClubResult>
     {
         public RoundRobinTeamCompetitionRenderer(
             string indexFileName,
-            RoundRobinCompetitionResultsSet<RoundRobinTeamResult> resultsSet)
+            RoundRobinCompetitionResultsSet<RoundRobinClubResult> resultsSet)
             : base(indexFileName, resultsSet)
         {
         }
@@ -154,7 +154,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             return sb.ToString();
         }
 
-        private string RenderRow(RoundRobinTeamResult team)
+        private string RenderRow(RoundRobinClubResult team)
         {
             var sb = new StringBuilder();
             var cssClass =
@@ -179,7 +179,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         //  CELL BUILDING
         // ------------------------------------------------------------
 
-        private IEnumerable<object> BuildCells(RoundRobinTeamResult team)
+        private IEnumerable<object> BuildCells(RoundRobinClubResult team)
         {
             yield return team.ClubShortName;
             yield return team.Rank?.ToString() ?? "";

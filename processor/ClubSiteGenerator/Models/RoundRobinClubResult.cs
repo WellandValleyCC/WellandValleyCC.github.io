@@ -3,7 +3,7 @@ using ClubCore.Models.Enums;
 
 namespace ClubSiteGenerator.Models.RoundRobin
 {
-    public class RoundRobinTeamResult
+    public class RoundRobinClubResult
     {
         /// <summary>
         /// Short club name (e.g. "Ratae", "WVCC").
