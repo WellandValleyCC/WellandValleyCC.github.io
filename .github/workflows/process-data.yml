@@ -73,7 +73,11 @@ jobs:
           fi
           echo "[INFO] Files to process:"
           echo "$CHANGED"
-          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
+          {
+            echo "changed<<EOF"
+            echo "${CHANGED:-}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
           YEAR="${{ github.event.inputs.year }}"
           if [ -z "$YEAR" ]; then
