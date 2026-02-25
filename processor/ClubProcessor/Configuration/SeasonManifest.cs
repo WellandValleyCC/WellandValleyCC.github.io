@@ -6,8 +6,11 @@ namespace ClubProcessor.Configuration
     {
         private class SeasonManifest
         {
-            [JsonPropertyName("seasons")]
-            public List<int> Seasons { get; set; } = new();
+            [JsonPropertyName("club-seasons")]
+            public List<int> ClubSeasons { get; set; } = new(); 
+            
+            [JsonPropertyName("round-robin-seasons")]
+            public List<int> RoundRobinSeasons { get; set; } = new();
         }
     }
 }

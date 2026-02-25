@@ -1,4 +1,4 @@
-using ClubCore.Models;
+﻿using ClubCore.Models;
 using ClubProcessor.Configuration;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
 using System.Text;
@@ -86,7 +86,7 @@ namespace ClubSiteGenerator.Services
         {
             var currentRealYear = DateTime.Now.Year;
 
-            return SeasonsConfig.GetSeasons()
+            return SeasonsConfig.GetRoundRobinSeasons()
                 .Where(y =>
                     y != competitionYear &&
                     y <= currentRealYear &&
@@ -99,8 +99,6 @@ namespace ClubSiteGenerator.Services
             GetSeasonIndexFilename(year).StartsWith("preview", StringComparison.OrdinalIgnoreCase);
 
         private static string GetSeasonIndexFilename(int year) => $"index{year}.html";
-            ? $"preview{year}.html"
-            : $"index{year}.html";
 
         private string RenderOtherSeasonsSection()
         {
