@@ -29,6 +29,8 @@ on:
 jobs:
   build-test-run:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
 
     steps:
       - name: Checkout repo
@@ -62,6 +64,7 @@ jobs:
         run: dotnet test processor/ClubProcessor.sln --verbosity ${{ github.event.inputs.verbosity != '' && github.event.inputs.verbosity || 'minimal' }}
  
       - name: Detect changed files and extract/process
+        id: detect
         run: |
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           if ! echo "$CHANGED" | grep -qE 'data/competitors_.*\.csv|data/ClubEvents_.*\.xlsx'; then
@@ -70,11 +73,14 @@ jobs:
           fi
           echo "[INFO] Files to process:"
           echo "$CHANGED"
+          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
+
           YEAR="${{ github.event.inputs.year }}"
           if [ -z "$YEAR" ]; then
             YEAR=$(date +'%Y')
             echo "[INFO] No year input provided — defaulting to current year: $YEAR"
           fi
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
           
           MODE=$(echo "${{ github.event.inputs.mode }}" | tr '[:upper:]' '[:lower:]')
           
@@ -123,6 +129,44 @@ jobs:
               echo "[WARN] No matching files found to process"
             fi
           fi
+
+      - name: Tag triggering commit
+        id: tag
+        run: |
+          set -euo pipefail
+
+          CHANGED="${{ steps.detect.outputs.changed }}"
+          YEAR="${{ steps.detect.outputs.year }}"
+
+          # Determine mode label
+          if [ -n "${{ github.event.inputs.mode }}" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+            MODE_LABEL="manual-${MODE}"
+          else
+            COMP_CHANGED=$(echo "$CHANGED" | grep -c 'competitors_' || true)
+            EVENTS_CHANGED=$(echo "$CHANGED" | grep -c 'ClubEvents_' || true)
+
+            if [ "$COMP_CHANGED" -gt 0 ] && [ "$EVENTS_CHANGED" -gt 0 ]; then
+              MODE_LABEL="mixed"
+            elif [ "$COMP_CHANGED" -gt 0 ]; then
+              MODE_LABEL="competitors"
+            elif [ "$EVENTS_CHANGED" -gt 0 ]; then
+              MODE_LABEL="events"
+            else
+              MODE_LABEL="unknown"
+            fi
+          fi
+
+          tag="clubdata-${MODE_LABEL}-${YEAR}-$(date +'%Y%m%d%H%M%S')"
+
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag "$tag" "${{ github.sha }}"
+          git push origin "$tag"
 
       - name: Run processor if extracted event CSVs exist
         run: |
@@ -218,6 +262,4 @@ jobs:
           db-path: ${{ env.dbPath }}
           commit-message: ${{ env.commitMessage }}
 
-
-     
       
