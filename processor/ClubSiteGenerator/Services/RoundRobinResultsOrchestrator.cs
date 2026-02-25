@@ -64,11 +64,14 @@ namespace ClubSiteGenerator.Services
             rules = rulesProvider.GetRules(competitionYear, calendar);
         }
 
-        public void GenerateAll(string indexFileName)
+        public void GenerateAll()
         {
             PrepareAssets();
             InitializeResultsSets();
             WirePrevNextLinks();
+
+            var indexFileName = 
+                RoundRobinIndexRenderer.GetSeasonIndexFilename(competitionYear);
             GeneratePages(indexFileName);
             GenerateIndex(indexFileName);
         }

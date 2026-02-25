@@ -54,14 +54,16 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<li><a href=\"/index.html\">Return to TT Home</a></li>");
             sb.AppendLine("</ul>");
 
-            // Legacy link
-            sb.AppendLine("<h2>Past Seasons</h2>");
+            // Other seasons (including legacy link)
+            sb.AppendLine("<h2>Other Seasons</h2>");
             sb.AppendLine("<ul>");
             sb.AppendLine("  <li><a href=\"/legacy/index.htm\">Legacy Results Archive</a></li>");
-            foreach (var pastYear in SeasonsConfig.GetClubSeasons().Where(y => y < competitionYear).OrderBy(y => y))
+
+            foreach (var s in GetOtherSeasons())
             {
-                sb.AppendLine($" <li><a href=\"index{pastYear}.html\">{pastYear} Season</a></li>");
+                sb.AppendLine($"  <li><a href=\"{s.FileName}\">{s.Year} Season</a></li>");
             }
+
             sb.AppendLine("</ul>");
             
             sb.AppendLine($"<h1>{competitionYear} Season Overview</h1>");
@@ -122,6 +124,27 @@ namespace ClubSiteGenerator.Services
 
             var path = Path.Combine(outputDir, $"{indexFileName}");
             File.WriteAllText(path, sb.ToString());
+        }
+
+        private static bool IsPreviewSeason(int year) =>
+            GetSeasonIndexFilename(year).StartsWith("preview", StringComparison.OrdinalIgnoreCase);
+
+        public static string GetSeasonIndexFilename(int year) => 
+            year == 2025
+            ? $"preview{year}.html"
+            : $"index{year}.html";
+
+        private IEnumerable<(int Year, string FileName)> GetOtherSeasons()
+        {
+            var currentRealYear = DateTime.Now.Year;
+
+            return SeasonsConfig.GetClubSeasons()
+                .Where(y =>
+                    y != competitionYear &&
+                    y <= currentRealYear &&
+                    !IsPreviewSeason(y))
+                .OrderBy(y => y)
+                .Select(y => (Year: y, FileName: GetSeasonIndexFilename(y)));
         }
 
         private string RenderSeasonCalendar(int year, IEnumerable<EventResultsSet> orderedEvents)

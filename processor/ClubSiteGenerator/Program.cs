@@ -21,7 +21,7 @@ namespace ClubSiteGenerator
             var year = args[yearIndex + 1];
             Console.WriteLine($"[INFO] Processing year: {year}");
 
-            var indexFilename = (year == "2025")
+            var clubSiteIndexFilename = (year == "2025")
                 ? $"preview{year}.html"
                 : $"index{year}.html";
 
@@ -48,10 +48,11 @@ namespace ClubSiteGenerator
                 allRides,
                 allCompetitors,
                 eventCalendar,
-                indexFilename
+                clubSiteIndexFilename
             );
 
             // Round Robin site
+
             var rrEventCalendar = rrCalendarFromFullCalendar(eventCalendar);
 
             var roundRobinClubs = DataLoader.LoadRoundRobinClubs(eventDb);
@@ -65,8 +66,7 @@ namespace ClubSiteGenerator
                 allRides,
                 allCompetitors,
                 rrEventCalendar,
-                activeClubs,
-                indexFilename
+                activeClubs
             );
         }
 
@@ -106,8 +106,7 @@ namespace ClubSiteGenerator
             IEnumerable<Ride> rides,
             IEnumerable<Competitor> competitors,
             IEnumerable<CalendarEvent> rrEventCalendar,
-            IEnumerable<RoundRobinClub> clubs,
-            string indexFileName)
+            IEnumerable<RoundRobinClub> clubs)
         {
             Directory.CreateDirectory(outputDir);
 
@@ -118,7 +117,7 @@ namespace ClubSiteGenerator
                 rrEventCalendar,
                 clubs);
 
-            rrOrchestrator.GenerateAll(indexFileName);
+            rrOrchestrator.GenerateAll();
         }
     }
 }

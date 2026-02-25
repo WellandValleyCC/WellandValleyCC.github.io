@@ -98,7 +98,7 @@ namespace ClubSiteGenerator.Services
         private static bool IsPreviewSeason(int year) =>
             GetSeasonIndexFilename(year).StartsWith("preview", StringComparison.OrdinalIgnoreCase);
 
-        private static string GetSeasonIndexFilename(int year) => $"index{year}.html";
+        public static string GetSeasonIndexFilename(int year) => $"index{year}.html";
 
         private string RenderOtherSeasonsSection()
         {
