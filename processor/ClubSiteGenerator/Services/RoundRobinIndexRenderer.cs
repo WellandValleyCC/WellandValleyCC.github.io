@@ -57,6 +57,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine($"  <title>Round Robin TT – {competitionYear}</title>");
             sb.AppendLine($"  <link rel=\"stylesheet\" href=\"assets/{cssFileName}\">");
+            sb.AppendLine(RenderFaviconLinks());
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
@@ -291,6 +292,16 @@ namespace ClubSiteGenerator.Services
          class=""rr-header"" />
 </div>";
         }
+
+        /// <summary>
+        /// Emits the standard favicon and touch‑icon HTML for the index page.
+        /// </summary>
+        private string RenderFaviconLinks() => @"
+<link rel=""icon"" href=""assets/favicon.svg"" type=""image/svg+xml"">
+<link rel=""icon"" sizes=""32x32"" href=""assets/favicon-32.png"">
+<link rel=""icon"" sizes=""16x16"" href=""assets/favicon-16.png"">
+<link rel=""apple-touch-icon"" sizes=""180x180"" href=""assets/apple-touch-icon.png"">
+";
 
         private string RenderGeneratedFooter()
         {

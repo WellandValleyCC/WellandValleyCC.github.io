@@ -41,6 +41,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
     <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
     <title>{GetPageTitle()}</title>
     <link rel=""stylesheet"" href=""../assets/{ResultsSet.CssFile}"">
+    {RenderFaviconLinks()}
 </head>
 <body class=""rr event-page"">
 
@@ -131,6 +132,17 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
   </section>
 </div>";
         }
+
+        /// <summary>
+        /// Emits the standard favicon and touch‑icon HTML.
+        /// Renderers can override if they need custom behaviour.
+        /// </summary>
+        protected virtual string RenderFaviconLinks() => @"
+<link rel=""icon"" href=""../assets/favicon.svg"" type=""image/svg+xml"">
+<link rel=""icon"" sizes=""32x32"" href=""../assets/favicon-32.png"">
+<link rel=""icon"" sizes=""16x16"" href=""../assets/favicon-16.png"">
+<link rel=""apple-touch-icon"" sizes=""180x180"" href=""../assets/apple-touch-icon.png"">
+";
 
         protected static string FormatHosts(string rawHosts)
         {
