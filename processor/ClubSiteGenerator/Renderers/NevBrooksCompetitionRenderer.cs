@@ -31,7 +31,7 @@ namespace ClubSiteGenerator.Renderers
             {
                 // no sub-columns in the Nev Brooks competition
                 ("Name", Array.Empty<string>()),
-                ("Current rank", Array.Empty<string>()),
+                ("Rank", Array.Empty<string>()),
                 ("Events completed", Array.Empty<string>()),
                 (Rules.TenMileShortTitle, Array.Empty<string>())
             };
@@ -76,7 +76,7 @@ namespace ClubSiteGenerator.Renderers
             // Name
             yield return result.Competitor.FullName;
 
-            // Current rank - Nev Brooks handicapped tens
+            // Rank - Nev Brooks handicapped tens
             yield return result.TenMileCompetition.RankDisplay; // Tens
 
             // Events completed split

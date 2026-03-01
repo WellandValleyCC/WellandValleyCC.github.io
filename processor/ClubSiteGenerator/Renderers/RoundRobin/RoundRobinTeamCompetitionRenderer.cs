@@ -93,7 +93,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             sb.AppendLine("<tr>");
 
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Club</th>");
-            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Current rank</th>");
+            sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Rank</th>");
             sb.AppendLine("<th rowspan=\"3\" class=\"fixed-column-title\">Total</th>");
 
             foreach (var ev in ResultsSet.Calendar)

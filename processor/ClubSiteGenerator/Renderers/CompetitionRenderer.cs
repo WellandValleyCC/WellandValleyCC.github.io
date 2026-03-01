@@ -43,7 +43,7 @@ namespace ClubSiteGenerator.Renderers
             new (string, IReadOnlyList<string>)[]
             {
                 ("Name", Array.Empty<string>()),
-                ("Current rank", new[] { "Competition", "Tens" }),
+                ("Rank", new[] { "Competition", "Tens" }),
                 ("Events completed", new[] { "Tens", "Non-tens" }),
                 (Rules.FullCompetitionTitle, Array.Empty<string>()),
                 (Rules.TenMileTitle, Array.Empty<string>())
@@ -223,7 +223,7 @@ namespace ClubSiteGenerator.Renderers
             // Name
             yield return result.Competitor.FullName;
 
-            // Current rank split
+            // Rank split
             yield return result.FullCompetition.RankDisplay;   // Full
             yield return result.TenMileCompetition.RankDisplay; // Tens
 
