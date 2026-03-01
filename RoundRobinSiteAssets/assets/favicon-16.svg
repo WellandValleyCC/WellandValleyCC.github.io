@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <rect width="16" height="16" fill="white"/>
+
+  <g transform="translate(8,8) rotate(3) translate(-8,-8)">
+
+    <!-- LEFT R -->
+    <path d="M 3 2 L 3 13" stroke="black" stroke-width="1.2" fill="none"/>
+    <path d="M 3 2 L 6 2 Q 9 2 9 5 Q 9 8 6 8 L 3 8" stroke="black" stroke-width="1.2" fill="none"/>
+    <path d="M 3 8 L 9 13" stroke="black" stroke-width="1.2" fill="none"/>
+
+    <!-- RIGHT R -->
+    <path d="M 9 3 L 9 13" stroke="black" stroke-width="1.2" fill="none"/>
+    <path d="M 9 3 L 12 3 Q 15 3 15 6 Q 15 9 12 9 L 9 9" stroke="black" stroke-width="1.2" fill="none"/>
+    <path d="M 9 9 L 15 13" stroke="black" stroke-width="1.2" fill="none"/>
+
+  </g>
+</svg>

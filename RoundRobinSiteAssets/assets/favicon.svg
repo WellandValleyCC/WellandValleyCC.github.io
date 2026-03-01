@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <rect width="180" height="180" fill="white"/>
+
+  <g transform="translate(90,90) rotate(3) translate(-90,-90)">
+
+    <!-- LEFT R -->
+    <!-- Vertical stem -->
+    <path d="M 55 35 L 55 135"
+      fill="none" stroke="black" stroke-width="12" stroke-linecap="butt"/>
+
+    <!-- Bowl -->
+    <path d="
+      M 55 35
+      L 80 35
+      Q 105 35 105 60
+      Q 105 85 80 85
+      L 55 85"
+      fill="none" stroke="black" stroke-width="12" stroke-linecap="butt" stroke-linejoin="round"/>
+
+    <!-- Diagonal leg (stops at baseline) -->
+    <path d="
+      M 55 85
+      L 105 135"
+      fill="none" stroke="black" stroke-width="12" stroke-linecap="butt" stroke-linejoin="round"/>
+
+
+    <!-- RIGHT R -->
+    <!-- Vertical stem (fractionally lower start) -->
+    <path d="M 105 45 L 105 135"
+      fill="none" stroke="black" stroke-width="12" stroke-linecap="butt"/>
+
+    <!-- Bowl (slightly more open) -->
+    <path d="
+      M 105 45
+      L 130 45
+      Q 155 45 155 70
+      Q 155 95 130 95
+      L 105 95"
+      fill="none" stroke="black" stroke-width="12" stroke-linecap="butt" stroke-linejoin="round"/>
+
+    <!-- Diagonal leg (stops at baseline) -->
+    <path d="
+      M 105 95
+      L 155 135"
+      fill="none" stroke="black" stroke-width="12" stroke-linecap="butt" stroke-linejoin="round"/>
+
+  </g>
+</svg>

@@ -58,3 +58,14 @@ dotnet serve -d RoundRobinSiteOutput -o
 renders pages exactly as they will appear when published.
 
 No duplication across repos is required for this folder.
+
+---
+
+# Favicon
+
+apple-touch-icon.png      ← correct (180×180 PNG)
+favicon-16.png            ← correct (16×16 PNG)
+favicon-16.svg            ← source only (safe to keep)
+favicon-32.png            ← correct (32×32 PNG)
+favicon-32.svg            ← source only (safe to keep)
+favicon.svg               ← correct (master SVG)
