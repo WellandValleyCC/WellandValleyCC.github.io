@@ -52,6 +52,36 @@ namespace ClubSiteGenerator.Utilities
 
             log.Info($"Copied CSS file: {cssFile}");
 
+            // 1b. Copy favicon files
+            var faviconSource = Path.Combine(assetsRoot, PathTokens.AssetsFolder);
+            var faviconDest = Path.Combine(outputRoot, PathTokens.AssetsFolder);
+
+            Directory.CreateDirectory(faviconDest);
+
+            var faviconFiles = new[]
+            {
+                "favicon.svg",
+                "favicon-32.png",
+                "favicon-16.png",
+                "apple-touch-icon.png"
+            };
+
+            foreach (var f in faviconFiles)
+            {
+                var src = Path.Combine(faviconSource, f);
+                var dst = Path.Combine(faviconDest, f);
+
+                if (File.Exists(src))
+                {
+                    log.Info($"Copying favicon: {f}");
+                    File.Copy(src, dst, overwrite: true);
+                }
+                else
+                {
+                    log.Warn($"Favicon missing: {src}");
+                }
+            }
+
             // Exclusions (e.g., markdown files)
             var exclude = new[] { PathTokens.MarkdownExtension };
 
