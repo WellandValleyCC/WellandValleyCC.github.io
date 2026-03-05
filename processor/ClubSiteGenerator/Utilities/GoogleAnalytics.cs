@@ -5,7 +5,7 @@ namespace ClubSiteGenerator.Utilities
     public static class GoogleAnalytics
     {
         // Measurement IDs for each brand
-        private const string WvccMeasurementId = "";          // TODO: replace with real WVCC ID
+        private const string WvccMeasurementId = "G-XR1XP7K9PK";          // WVCC ID
         private const string RoundRobinMeasurementId = "G-LHTWNBQEQ8";    // Round Robin ID
 
         public static string GetAnalyticsSnippet(SiteBrand site)
