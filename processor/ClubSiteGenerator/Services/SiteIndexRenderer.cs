@@ -2,6 +2,7 @@
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Utilities;
 using System.Text;
 
 namespace ClubSiteGenerator.Services
@@ -44,6 +45,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
@@ -284,6 +286,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
             sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");

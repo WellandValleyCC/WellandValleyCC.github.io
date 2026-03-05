@@ -1,4 +1,6 @@
-﻿using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+﻿using ClubSiteGenerator.Models.Enums;
+using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+using ClubSiteGenerator.Utilities;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -42,6 +44,8 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
     <title>{GetPageTitle()}</title>
     <link rel=""stylesheet"" href=""../assets/{ResultsSet.CssFile}"">
     {RenderFaviconLinks()}
+
+    {GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.RoundRobin)}
 </head>
 <body class=""rr event-page"">
 

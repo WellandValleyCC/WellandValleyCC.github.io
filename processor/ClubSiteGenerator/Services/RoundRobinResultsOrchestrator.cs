@@ -1,6 +1,7 @@
 using ClubCore.Models;
 using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.Renderers.RoundRobin;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
@@ -299,6 +300,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
             sb.AppendLine("  <title>Round Robin TT Season Index</title>");
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.RoundRobin));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
             sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");

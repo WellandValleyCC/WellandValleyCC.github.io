@@ -1,6 +1,8 @@
 ﻿using ClubCore.Models;
 using ClubProcessor.Configuration;
+using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+using ClubSiteGenerator.Utilities;
 using System.Text;
 
 namespace ClubSiteGenerator.Services
@@ -58,6 +60,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine($"  <title>Round Robin TT – {competitionYear}</title>");
             sb.AppendLine($"  <link rel=\"stylesheet\" href=\"assets/{cssFileName}\">");
             sb.AppendLine(RenderFaviconLinks());
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.RoundRobin));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
