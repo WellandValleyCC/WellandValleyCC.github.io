@@ -37,6 +37,32 @@ namespace ClubSiteGenerator.Models.Extensions
             return medal.ToCssClass();
         }
 
+        public static string GetRREligibleRidersRankClass(this Ride ride)
+        {
+            var medal = ride.RREligibleRidersRank switch
+            {
+                1 => Medal.Gold,
+                2 => Medal.Silver,
+                3 => Medal.Bronze,
+                _ => Medal.None
+            };
+
+            return medal.ToCssClass();
+        }
+
+        public static string GetRREligibleRoadBikeRidersRankClass(this Ride ride)
+        {
+            var medal = ride.RREligibleRoadBikeRidersRank switch
+            {
+                1 => Medal.Gold,
+                2 => Medal.Silver,
+                3 => Medal.Bronze,
+                _ => Medal.None
+            };
+
+            return medal.ToCssClass();
+        }
+
         /// <summary>
         /// Returns the CSS class name for the given medal.
         /// </summary>

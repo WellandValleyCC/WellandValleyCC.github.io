@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Utilities;
 using System.Text.RegularExpressions;
 
 namespace ClubSiteGenerator.ResultsGenerator
@@ -47,33 +48,27 @@ namespace ClubSiteGenerator.ResultsGenerator
             return kebab.Trim('-');
         }
 
-        private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus eligibility)
+        private static IEnumerable<Ride> OrderedIneligibleRides(IEnumerable<Ride> rides, RideStatus rideStatus)
         {
             var firstClaim = rides
-                .Where(r => r.Status == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.FirstClaim)
+                .Where(r => r.Status == rideStatus &&
+                            r.ClubNumber != null &&
+                            r.Competitor?.ClaimStatus == ClaimStatus.FirstClaim)
                 .OrderBy(r => r.Competitor!.Surname)
                 .ThenBy(r => r.Competitor!.GivenName);
 
             var secondClaim = rides
-                .Where(r => r.Status == eligibility && r.ClubNumber != null && r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
+                .Where(r => r.Status == rideStatus &&
+                            r.ClubNumber != null &&
+                            r.Competitor?.ClaimStatus == ClaimStatus.SecondClaim)
                 .OrderBy(r => r.Competitor!.Surname)
                 .ThenBy(r => r.Competitor!.GivenName);
 
             var guests = rides
-                .Where(r => r.Status == eligibility && r.ClubNumber == null)
-                .OrderBy(r =>
-                {
-                    var parts = (r.Name ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    return parts.Length > 0 ? parts[^1] : "";   // surname = last token
-                })
-                .ThenBy(r =>
-                {
-                    var parts = (r.Name ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    return parts.Length > 1
-                        ? string.Join(" ", parts.Take(parts.Length - 1)) // given names = everything before surname
-                        : r.Name ?? "";
-                });
-
+                .Where(r => r.Status == rideStatus &&
+                            r.ClubNumber == null)
+                .OrderBy(r => NameParts.Split(r.Name).Surname)
+                .ThenBy(r => NameParts.Split(r.Name).GivenNames);
 
             return firstClaim.Concat(secondClaim).Concat(guests);
         }

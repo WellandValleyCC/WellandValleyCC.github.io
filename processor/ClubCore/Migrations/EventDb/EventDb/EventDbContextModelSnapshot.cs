@@ -52,6 +52,9 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<bool>("IsNonStandard10")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsRoundRobinEvent")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -59,6 +62,10 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.Property<double>("Miles")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("RoundRobinClub")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("TEXT");
@@ -169,6 +176,21 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<int?>("RoadBikeWomenPosition")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("RoundRobinClub")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("RoundRobinPoints")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("RoundRobinPosition")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("RoundRobinWomenPoints")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("RoundRobinWomenPosition")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double?>("SeniorsPoints")
                         .HasColumnType("REAL");
 
@@ -200,6 +222,54 @@ namespace ClubProcessor.Migrations.EventDb
                     b.HasKey("Id");
 
                     b.ToTable("Rides");
+                });
+
+            modelBuilder.Entity("ClubCore.Models.RoundRobinClub", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FromYear")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WebsiteUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoundRobinClubs");
+                });
+
+            modelBuilder.Entity("ClubCore.Models.RoundRobinRider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsFemale")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoundRobinClub")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoundRobinRiders");
                 });
 #pragma warning restore 612, 618
         }

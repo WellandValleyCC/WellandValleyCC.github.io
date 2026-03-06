@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using ClubCore.Utilities;
+using System.Text;
 
 namespace ClubSiteGenerator.Utilities
 {
@@ -6,7 +7,7 @@ namespace ClubSiteGenerator.Utilities
     {
         public static void EnsureStylesheet(string outputDir)
         {
-            var assetsDir = Path.Combine(outputDir, "assets");
+            var assetsDir = Path.Combine(outputDir, PathTokens.AssetsFolder);
             Directory.CreateDirectory(assetsDir);
 
             var cssPath = Path.Combine(assetsDir, "styles.css");

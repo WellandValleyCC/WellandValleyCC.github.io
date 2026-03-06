@@ -31,7 +31,8 @@ namespace ClubSiteGenerator.Rules
                 $"[INFO] Rules: effectiveYear={effectiveYear}, " +
                 $"TenMileCount={rules.TenMileCount}, " +
                 $"MixedEventCount={rules.MixedEventCount}, " +
-                $"NonTenMinimum={rules.NonTenMinimum}");
+                $"NonTenMinimum={rules.NonTenMinimum}, " +
+                $"RoundRobinCount={rules.RoundRobin.Count}");
 
             return rules;
         }
@@ -40,16 +41,53 @@ namespace ClubSiteGenerator.Rules
         {
             int relevantEvents = calendar.Count();
 
-            // Ten‑mile
+            //
+            // WVCC: Ten‑mile rules
+            //
             int tenMileCount = Resolve(config.TenMile, relevantEvents);
 
-            // Mixed distance
+            //
+            // WVCC: Mixed‑distance rules
+            //
             int mixedCount = Resolve(config.MixedDistance, relevantEvents);
             int nonTenMinimum = config.MixedDistance.NonTenMinimum ?? 0;
 
-            return new CompetitionRules(tenMileCount, nonTenMinimum, mixedCount, config.LeagueSponsor);
+            //
+            // Round Robin rules (optional)
+            //
+            RoundRobinRules? rrRules = null;
+
+            if (config.RoundRobin != null)
+            {
+                int rrCount = Resolve(config.RoundRobin, relevantEvents);
+                int rrMinimum = config.RoundRobin.Minimum ?? 0;
+
+                var club = new RoundRobinClubRules
+                {
+                    OpenCount = config.RoundRobin.Club?.OpenCount ?? 4,
+                    WomenCount = config.RoundRobin.Club?.WomenCount ?? 1
+                };
+
+                rrRules = new RoundRobinRules
+                {
+                    Count = rrCount,
+                    Minimum = rrMinimum,
+                    Club = club,
+                    IncludeGuestClub = config.RoundRobin.IncludeGuestClub == true
+                };
+            }
+
+            return new CompetitionRules(
+                tenMileCount,
+                nonTenMinimum,
+                mixedCount,
+                config.LeagueSponsor,
+                rrRules);
         }
 
+        // ------------------------------------------------------------
+        // Resolve for standard RuleDefinition (tenMile, mixedDistance)
+        // ------------------------------------------------------------
         private int Resolve(RuleDefinition rule, int calendarEvents)
         {
             if (rule.Count.HasValue)
@@ -64,6 +102,25 @@ namespace ClubSiteGenerator.Rules
             }
 
             throw new InvalidOperationException("Rule definition must have either Count or Formula.");
+        }
+
+        // ------------------------------------------------------------
+        // Resolve for RoundRobinRuleDefinition (roundRobin)
+        // ------------------------------------------------------------
+        private int Resolve(RoundRobinRuleDefinition rule, int calendarEvents)
+        {
+            if (rule.Count.HasValue)
+                return rule.Count.Value;
+
+            if (!string.IsNullOrWhiteSpace(rule.Formula))
+            {
+                int value = EvaluateFormula(rule.Formula, calendarEvents);
+                if (rule.Cap.HasValue)
+                    value = Math.Min(value, rule.Cap.Value);
+                return value;
+            }
+
+            throw new InvalidOperationException("Round Robin rule definition must have either Count or Formula.");
         }
 
         private int EvaluateFormula(string formula, int calendarEvents)

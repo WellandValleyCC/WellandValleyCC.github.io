@@ -19,6 +19,9 @@ namespace ClubProcessor.Orchestration
             var calendar = ImportCalendar(eventContext, inputPath, year);
             if (calendar == null) return;
 
+            var roundRobinRiders = ImportRoundRobinRiders(eventContext, inputPath, year);
+            if (roundRobinRiders == null) return;
+
             var competitors = ImportLeagues(competitorContext, inputPath, year);
             if (competitors == null) return;
 
@@ -34,7 +37,7 @@ namespace ClubProcessor.Orchestration
             CompetitorExtensions.LogOverrideEligibleCompetitors(competitors);
 
             // Apply scoring and ranking
-            scorer.ProcessAll(rides, competitors, calendar);
+            scorer.ProcessAll(rides, competitors, calendar, roundRobinRiders);
 
             // Save changes
             eventContext.SaveChanges();
@@ -54,6 +57,23 @@ namespace ClubProcessor.Orchestration
             }
 
             Console.WriteLine($"[ERROR] Calendar CSV not found: {calendarCsvPath}");
+            return default;
+        }
+
+        private IEnumerable<RoundRobinRider>? ImportRoundRobinRiders(EventDbContext context, string inputPath, string year)
+        {
+            var csvPath = Path.Combine(inputPath, $"RoundRobinRiders_{year}.csv");
+            if (File.Exists(csvPath))
+            {
+                Console.WriteLine($"[INFO] Importing RoundRobinRiders from: {csvPath}");
+                var importer = new RoundRobinRiderImporter(context);
+                importer.Import(csvPath);
+                Console.WriteLine("[OK] RoundRobinRiders import complete");
+
+                return context.RoundRobinRiders.ToList();
+            }
+
+            Console.WriteLine($"[ERROR] RoundRobinRiders CSV not found: {csvPath}");
             return default;
         }
 

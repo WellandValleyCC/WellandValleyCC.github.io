@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using ClubSiteGenerator.Models.Enums;
+using ClubSiteGenerator.Utilities;
+using System.Text;
 
 namespace ClubSiteGenerator.Renderers
 {
@@ -26,6 +28,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"../assets/styles.css\">");
             var extras = HeadExtras();
             if (!string.IsNullOrEmpty(extras)) sb.AppendLine(extras);
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine($"<body class=\"{PageTypeClass}\">");
 

@@ -5,12 +5,13 @@ namespace ClubSiteGenerator.ResultsGenerator
 {
     public abstract class ResultsSet : IResultsSet
     {
-        protected readonly IEnumerable<CalendarEvent> Calendar;
+        public IReadOnlyList<CalendarEvent> Calendar { get; }
 
         protected ResultsSet(IEnumerable<CalendarEvent> calendar)
         {
-            Calendar = calendar ?? throw new ArgumentNullException(nameof(calendar));
-            Year = calendar.First().EventDate.Year;
+            var list = calendar?.ToList() ?? throw new ArgumentNullException(nameof(calendar));
+            Calendar = list;
+            Year = list.First().EventDate.Year;
         }
 
         public int Year { get; }
@@ -31,5 +32,9 @@ namespace ClubSiteGenerator.ResultsGenerator
 
         protected static bool HasNonChampionshipEvents(IEnumerable<CalendarEvent> calendar) =>
             calendar.Any(ev => !ev.IsClubChampionship);
+
+        protected static bool HasNonRoundRobinEvents(IEnumerable<CalendarEvent> calendar) =>
+    calendar.Any(ev => !ev.IsRoundRobinEvent);
+
     }
 }

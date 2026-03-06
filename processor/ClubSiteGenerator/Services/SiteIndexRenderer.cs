@@ -2,6 +2,7 @@
 using ClubSiteGenerator.Interfaces;
 using ClubSiteGenerator.Models.Enums;
 using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.Utilities;
 using System.Text;
 
 namespace ClubSiteGenerator.Services
@@ -44,6 +45,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
             sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
 
@@ -54,14 +56,16 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("<li><a href=\"/index.html\">Return to TT Home</a></li>");
             sb.AppendLine("</ul>");
 
-            // Legacy link
-            sb.AppendLine("<h2>Past Seasons</h2>");
+            // Other seasons (including legacy link)
+            sb.AppendLine("<h2>Other Seasons</h2>");
             sb.AppendLine("<ul>");
             sb.AppendLine("  <li><a href=\"/legacy/index.htm\">Legacy Results Archive</a></li>");
-            foreach (var pastYear in SeasonsConfig.GetSeasons().Where(y => y < competitionYear).OrderBy(y => y))
+
+            foreach (var s in GetOtherSeasons())
             {
-                sb.AppendLine($" <li><a href=\"index{pastYear}.html\">{pastYear} Season</a></li>");
+                sb.AppendLine($"  <li><a href=\"{s.FileName}\">{s.Year} Season</a></li>");
             }
+
             sb.AppendLine("</ul>");
             
             sb.AppendLine($"<h1>{competitionYear} Season Overview</h1>");
@@ -122,6 +126,27 @@ namespace ClubSiteGenerator.Services
 
             var path = Path.Combine(outputDir, $"{indexFileName}");
             File.WriteAllText(path, sb.ToString());
+        }
+
+        private static bool IsPreviewSeason(int year) =>
+            GetSeasonIndexFilename(year).StartsWith("preview", StringComparison.OrdinalIgnoreCase);
+
+        public static string GetSeasonIndexFilename(int year) => 
+            year == 2025
+            ? $"preview{year}.html"
+            : $"index{year}.html";
+
+        private IEnumerable<(int Year, string FileName)> GetOtherSeasons()
+        {
+            var currentRealYear = DateTime.Now.Year;
+
+            return SeasonsConfig.GetClubSeasons()
+                .Where(y =>
+                    y != competitionYear &&
+                    y <= currentRealYear &&
+                    !IsPreviewSeason(y))
+                .OrderBy(y => y)
+                .Select(y => (Year: y, FileName: GetSeasonIndexFilename(y)));
         }
 
         private string RenderSeasonCalendar(int year, IEnumerable<EventResultsSet> orderedEvents)
@@ -261,6 +286,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
             sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");

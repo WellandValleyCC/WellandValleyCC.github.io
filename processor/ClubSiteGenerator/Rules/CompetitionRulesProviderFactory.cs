@@ -6,7 +6,12 @@ namespace ClubSiteGenerator.Rules
     {
         public static ICompetitionRulesProvider CreateRulesProvider()
         {
-            var configDir = FolderLocator.GetConfigDirectory();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var configDir = folderLocator.GetConfigDirectory();
+
             var configFilePath = Path.Combine(configDir, "competition-rules.json");
             return new CompetitionRulesProvider(configFilePath);
         }

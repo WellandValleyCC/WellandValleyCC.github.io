@@ -65,14 +65,14 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                .Select(group => WvccCompetitionResultsCalculator.BuildCompetitorResult(
                     group.ToList(),
                     nevBrooksCalendar, // pass the tight calendar here
                     r => r.NevBrooksPoints,
                     rules))
                 .ToList();
 
-            results = CompetitionResultsCalculator.SortResults(results).ToList();
+            results = WvccCompetitionResultsCalculator.SortResults(results).ToList();
 
             return new NevBrooksCompetitionResultsSet(nevBrooksCalendar, results);
         }

@@ -6,7 +6,7 @@ using ClubSiteGenerator.Rules;
 
 namespace ClubSiteGenerator.Services
 {
-    public static class CompetitionResultsCalculator
+    public static class WvccCompetitionResultsCalculator
     {
         /// <summary>
         /// Builds a CompetitorResult for a single competitor's rides,

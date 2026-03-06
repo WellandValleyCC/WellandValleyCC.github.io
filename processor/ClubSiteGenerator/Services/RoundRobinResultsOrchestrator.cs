@@ -1,0 +1,317 @@
+using ClubCore.Models;
+using ClubCore.Utilities;
+using ClubSiteGenerator.Interfaces;
+using ClubSiteGenerator.Models.Enums;
+using ClubSiteGenerator.Renderers.RoundRobin;
+using ClubSiteGenerator.ResultsGenerator;
+using ClubSiteGenerator.ResultsGenerator.RoundRobin;
+using ClubSiteGenerator.Rules;
+using ClubSiteGenerator.Utilities;
+using System.Data;
+using System.Text;
+
+namespace ClubSiteGenerator.Services
+{
+    public class RoundRobinResultsOrchestrator
+    {
+        private readonly List<RoundRobinResultsSet> resultsSets = new();
+
+        private readonly string outputDir;
+        private readonly IEnumerable<Ride> rides;
+        private readonly IEnumerable<Competitor> competitors;
+        private readonly IEnumerable<CalendarEvent> calendar;
+        private readonly IEnumerable<RoundRobinClub> clubs;
+
+        private readonly ICompetitionRulesProvider rulesProvider;
+        private readonly ICompetitionRules rules;
+
+        private readonly int competitionYear;
+
+        private string cssFile = "";
+
+        public RoundRobinResultsOrchestrator(
+            string outputDir,
+            IEnumerable<Ride> rides,
+            IEnumerable<Competitor> competitors,
+            IEnumerable<CalendarEvent> calendar,
+            IEnumerable<RoundRobinClub> clubs)
+        {
+            this.outputDir = outputDir;
+            this.rides = rides;
+            this.competitors = competitors;
+            this.calendar = calendar;
+            this.clubs = clubs;
+
+            // Guard: calendar must contain only RR events
+            if (calendar.Any(ev => !ev.IsRoundRobinEvent))
+            {
+                throw new ArgumentException(
+                    "RoundRobinResultsOrchestrator must be constructed with a calendar containing only Round Robin events.",
+                    nameof(calendar));
+            }
+
+            // Determine competition year from first event
+            competitionYear = calendar.First().EventDate.Year;
+
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var configDir = folderLocator.GetConfigDirectory();
+            var configFilePath = Path.Combine(configDir, "competition-rules.json");
+            rulesProvider = new CompetitionRulesProvider(configFilePath);
+
+            // Resolve rules for this season
+            rules = rulesProvider.GetRules(competitionYear, calendar);
+        }
+
+        public void GenerateAll()
+        {
+            PrepareAssets();
+            InitializeResultsSets();
+            WirePrevNextLinks();
+
+            var indexFileName = 
+                RoundRobinIndexRenderer.GetSeasonIndexFilename(competitionYear);
+            GeneratePages(indexFileName);
+            GenerateIndex(indexFileName);
+        }
+
+        private void InitializeResultsSets()
+        {
+            //
+            // 1. Per‑event RR results
+            //
+            foreach (var ev in calendar)
+            {
+                resultsSets.Add(
+                    RoundRobinEventResultsSet.CreateFrom(
+                        calendar,
+                        rides,
+                        ev.RoundRobinEventNumber));
+            }
+
+            //
+            // 2. Shared RR event numbers
+            //
+            var rrEventNumbers = calendar
+                .Select(ev => ev.EventNumber)
+                .ToHashSet();
+
+            //
+            // 3. Base RR ride set (club + event match)
+            //
+            var rrRides = rides
+                .Where(r => r.RoundRobinClub != null &&
+                            rrEventNumbers.Contains(r.EventNumber))
+                .ToList();
+
+            //
+            // 4. Open competition (all RR riders)
+            //
+            resultsSets.Add(
+                RoundRobinOpenCompetitionResultsSet.CreateFrom(
+                    rrRides,
+                    calendar,
+                    rules));
+
+            //
+            // 5. Women’s competition (female RR riders only)
+            //
+            var rrWomenRides = rrRides
+                .Where(r =>
+                    (r.Competitor != null && r.Competitor.IsFemale) ||
+                    (r.RoundRobinRider != null && r.RoundRobinRider.IsFemale))
+                .ToList();
+
+            resultsSets.Add(
+                RoundRobinWomenCompetitionResultsSet.CreateFrom(
+                    rrWomenRides,
+                    calendar,
+                    rules));
+
+            //
+            // 6. Club competition (all RR riders, no gender filtering)
+            //
+            resultsSets.Add(
+                RoundRobinClubCompetitionResultsSet.CreateFrom(
+                    rrRides,
+                    calendar,
+                    rules));
+        }
+
+        private void WirePrevNextLinks()
+        {
+            // 1. Order events
+            var events = resultsSets
+                .OfType<RoundRobinEventResultsSet>()
+                .OrderBy(ev => ev.EventNumber)
+                .Cast<IResultsSet>()
+                .ToList();
+
+            // 2. Order competitions in fixed order
+            var competitions = resultsSets
+                .Where(rs =>
+                    rs is RoundRobinOpenCompetitionResultsSet ||
+                    rs is RoundRobinWomenCompetitionResultsSet ||
+                    rs is RoundRobinClubCompetitionResultsSet)
+                .OrderBy(rs =>
+                    rs is RoundRobinOpenCompetitionResultsSet ? 1 :
+                    rs is RoundRobinWomenCompetitionResultsSet ? 2 :
+                    3)
+                .Cast<IResultsSet>()
+                .ToList();
+
+            // If nothing to wire, bail out
+            if (events.Count == 0 && competitions.Count == 0)
+                return;
+
+            // 3. Build one continuous list
+            var all = new List<IResultsSet>();
+            all.AddRange(events);
+            all.AddRange(competitions);
+
+            // 4. Wire prev/next across the entire chain
+            for (int i = 0; i < all.Count; i++)
+            {
+                var current = all[i];
+                var prev = all[(i - 1 + all.Count) % all.Count];
+                var next = all[(i + 1) % all.Count];
+
+                current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
+                current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
+                current.PrevLabel = prev.LinkText;
+                current.NextLabel = next.LinkText;
+            }
+        }
+
+        private void GeneratePages(string indexFileName)
+        {
+            foreach (var resultsSet in resultsSets)
+            {
+                resultsSet.CssFile = cssFile;
+
+                // ------------------------------------------------------------
+                // Select renderer based on results set type
+                // ------------------------------------------------------------
+                RoundRobinPageRenderer renderer = resultsSet switch
+                {
+                    RoundRobinEventResultsSet ev =>
+                        new RoundRobinEventRenderer(indexFileName, ev),
+
+                    RoundRobinOpenCompetitionResultsSet open =>
+                        new RoundRobinIndividualCompetitionRenderer(indexFileName, open),
+
+                    RoundRobinWomenCompetitionResultsSet women =>
+                        new RoundRobinIndividualCompetitionRenderer(indexFileName, women),
+
+                    RoundRobinClubCompetitionResultsSet team =>
+                        new RoundRobinTeamCompetitionRenderer(indexFileName, team),
+
+                    _ => throw new InvalidOperationException(
+                            $"Unknown RR results set type: {resultsSet.GetType().Name}")
+                };
+
+                // ------------------------------------------------------------
+                // Emit page
+                // ------------------------------------------------------------
+                Console.WriteLine($"Generating RR page for: {resultsSet.FileName}");
+
+                var html = renderer.Render();
+
+                var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
+                Directory.CreateDirectory(folderPath);
+
+                File.WriteAllText(
+                    Path.Combine(folderPath, $"{resultsSet.FileName}.html"),
+                    html);
+            }
+        }
+
+        private void GenerateIndex(string indexFileName)
+        {
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var outputRoot = outputDir;
+
+            var rrEventResults = resultsSets
+                .OfType<RoundRobinEventResultsSet>()
+                .OrderBy(ev => ev.EventDate)
+                .ToList();
+
+            var renderer = new RoundRobinIndexRenderer(
+                calendar,
+                clubs,
+                outputRoot,
+                cssFile,
+                rrEventResults);
+
+            renderer.RenderIndex(indexFileName);
+            RenderRedirectIndex(indexFileName);
+        }
+
+        private void PrepareAssets()
+        {
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+        
+            var repoRoot = folderLocator.FindGitRepoRoot();
+            var assetsRoot = Path.Combine(repoRoot, PathTokens.RoundRobinAssetsFolder);
+            var outputRoot = outputDir;
+
+            var pipeline = CreateAssetPipeline();
+            var result = pipeline.CopyRoundRobinAssets(
+                assetsRoot,
+                outputRoot,
+                competitionYear,
+                PathTokens.RoundRobinCssPrefix,
+                "Round Robin");
+
+            cssFile = result.CssFile;
+        }
+
+        private AssetPipeline CreateAssetPipeline()
+        {
+            var directoryProvider = new DefaultDirectoryProvider();
+            var fileProvider = new DefaultFileProvider();
+            var log = new DefaultLog();
+
+            var copyHelper = new DefaultDirectoryCopyHelper(
+                directoryProvider,
+                fileProvider,
+                log);
+
+            return new AssetPipeline(
+                new DefaultAssetCopier(),
+                copyHelper,
+                directoryProvider,
+                log);
+        }
+
+        private void RenderRedirectIndex(string indexFileName)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
+            sb.AppendLine("  <title>Round Robin TT Season Index</title>");
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.RoundRobin));
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+            sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+
+            var path = Path.Combine(outputDir, "index.html");
+            File.WriteAllText(path, sb.ToString());
+
+            path = Path.Combine(outputDir, "index.htm");
+            File.WriteAllText(path, sb.ToString());
+        }
+    }
+}

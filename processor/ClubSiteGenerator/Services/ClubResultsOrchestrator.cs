@@ -1,4 +1,4 @@
-﻿using ClubCore.Models;
+using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubCore.Utilities;
 using ClubSiteGenerator.Interfaces;
@@ -7,13 +7,13 @@ using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Utilities;
 
-
 namespace ClubSiteGenerator.Services
 {
-    public class ResultsOrchestrator
+    public class ClubResultsOrchestrator
     {
         private readonly List<ResultsSet> resultsSets = new();
 
+        private readonly string outputDir;
         private readonly IEnumerable<Ride> rides;
         private readonly IEnumerable<Competitor> competitors;
         private readonly IEnumerable<CalendarEvent> calendar;
@@ -23,14 +23,13 @@ namespace ClubSiteGenerator.Services
 
         private readonly int competitionYear;
 
-        /// <param name="rides">These rides have been hydrated - i.e. Competitors (where applicable) attached and CalendarEvent attached.</param>
-        /// <param name="competitors"></param>
-        /// <param name="calendar"></param>
-        public ResultsOrchestrator(
+        public ClubResultsOrchestrator(
+            string outputDir,
             IEnumerable<Ride> rides,
             IEnumerable<Competitor> competitors,
             IEnumerable<CalendarEvent> calendar)
         {
+            this.outputDir = outputDir;
             this.rides = rides;
             this.competitors = competitors;
             this.calendar = calendar;
@@ -38,15 +37,30 @@ namespace ClubSiteGenerator.Services
             // Determine competition year from first event
             competitionYear = calendar.First().EventDate.Year;
 
-            // Construct provider once
-            var configDir = FolderLocator.GetConfigDirectory();
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var configDir = folderLocator.GetConfigDirectory();
             var configFilePath = Path.Combine(configDir, "competition-rules.json");
             rulesProvider = new CompetitionRulesProvider(configFilePath);
 
             // Resolve rules for this season
             rules = rulesProvider.GetRules(competitionYear, calendar);
+        }
 
+        public void GenerateAll(string indexFileName)
+        {
+            PrepareAssets();
             InitializeResultsSets();
+            WirePrevNextLinks();
+            GeneratePages(indexFileName);
+            GenerateIndex(indexFileName);
+        }
+
+        private void PrepareAssets()
+        {
+            StylesWriter.EnsureStylesheet(outputDir);
         }
 
         private void InitializeResultsSets()
@@ -95,41 +109,16 @@ namespace ClubSiteGenerator.Services
             }
         }
 
-        private static IEnumerable<Ride> GetChampionshipRides(
-            IEnumerable<Ride> rides,
-            IEnumerable<CalendarEvent> calendar)
+        private void WirePrevNextLinks()
         {
-            if (rides == null) throw new ArgumentNullException(nameof(rides));
-            if (calendar == null) throw new ArgumentNullException(nameof(calendar));
-
-            // Build a fast lookup of championship event numbers
-            var championshipEventNumbers = new HashSet<int>(
-                calendar.Where(ev => ev.IsClubChampionship)
-                        .Select(ev => ev.EventNumber));
-
-            // Only keep rides whose event is marked as championship
-            return rides.Where(r => championshipEventNumbers.Contains(r.EventNumber));
-        }
-
-        private static IEnumerable<CalendarEvent> GetChampionshipCalendar(
-            IEnumerable<CalendarEvent> fullCalendar)
-        {
-            if (fullCalendar == null) throw new ArgumentNullException(nameof(fullCalendar));
-
-            return fullCalendar.Where(ev => ev.IsClubChampionship);
-        }
-
-        public void GenerateAll(string indexFileName)
-        {
-            StylesWriter.EnsureStylesheet(OutputLocator.GetOutputDirectory());
-
-            // Build unified ordering and assign Prev/Next
-            var orderedEvents = resultsSets.OfType<EventResultsSet>()
+            var orderedEvents = resultsSets
+                .OfType<EventResultsSet>()
                 .OrderBy(ev => ev.EventNumber)
                 .Cast<IResultsSet>()
                 .ToList();
 
-            var orderedCompetitions = resultsSets.OfType<CompetitionResultsSet>()
+            var orderedCompetitions = resultsSets
+                .OfType<CompetitionResultsSet>()
                 .OrderBy(comp => SiteIndexRenderer.CompetitionOrder
                     .ToList()
                     .IndexOf(comp.CompetitionType))
@@ -138,37 +127,43 @@ namespace ClubSiteGenerator.Services
 
             var allResults = orderedEvents.Concat(orderedCompetitions).ToList();
 
-            // Only set up prev/next if there’s more than one
-            if (allResults.Count > 1)
+            // If 0 or 1 results, explicitly clear Prev/Next
+            if (allResults.Count <= 1)
             {
-                for (int i = 0; i < allResults.Count; i++)
+                if (allResults.Count == 1)
                 {
-                    var current = allResults[i];
-                    var prev = allResults[(i - 1 + allResults.Count) % allResults.Count];
-                    var next = allResults[(i + 1) % allResults.Count];
-
-                    current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
-                    current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
-                    current.PrevLabel = prev.LinkText;
-                    current.NextLabel = next.LinkText;
+                    var single = allResults[0];
+                    single.PrevLink = null;
+                    single.NextLink = null;
+                    single.PrevLabel = null;
+                    single.NextLabel = null;
                 }
-            }
-            else
-            {
-                // With only one result, leave links unset (null/empty)
-                var single = allResults[0];
-                single.PrevLink = null;
-                single.NextLink = null;
-                single.PrevLabel = null;
-                single.NextLabel = null;
+
+                return;
             }
 
+            // Wire circular Prev/Next for 2+ results
+            for (int i = 0; i < allResults.Count; i++)
+            {
+                var current = allResults[i];
+                var prev = allResults[(i - 1 + allResults.Count) % allResults.Count];
+                var next = allResults[(i + 1) % allResults.Count];
+
+                current.PrevLink = $"../{prev.SubFolderName}/{prev.FileName}.html";
+                current.NextLink = $"../{next.SubFolderName}/{next.FileName}.html";
+                current.PrevLabel = prev.LinkText;
+                current.NextLabel = next.LinkText;
+            }
+        }
+
+        private void GeneratePages(string indexFileName)
+        {
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())
             {
                 var renderer = new EventRenderer(indexFileName, resultsSet);
                 Console.WriteLine($"Generating results for event: {resultsSet.FileName}");
                 var html = renderer.Render();
-                var outputDir = OutputLocator.GetOutputDirectory();
+
                 var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
@@ -180,7 +175,7 @@ namespace ClubSiteGenerator.Services
 
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();
-                var outputDir = OutputLocator.GetOutputDirectory();
+
                 var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
@@ -190,8 +185,8 @@ namespace ClubSiteGenerator.Services
         public void GenerateIndex(string indexFileName)
         {
             var eventResults = resultsSets
-                .OfType<EventResultsSet>()   // filters only EventResults
-                .OrderBy(ev => ev.EventDate) // optional: sort by date
+                .OfType<EventResultsSet>()
+                .OrderBy(ev => ev.EventDate)
                 .ToList();
 
             var competitionResults = resultsSets
@@ -201,11 +196,26 @@ namespace ClubSiteGenerator.Services
                     .IndexOf(comp.CompetitionType))
                 .ToList();
 
-            var outputDir = OutputLocator.GetOutputDirectory();
             var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
             indexRenderer.RenderIndex(indexFileName);
-
             indexRenderer.RenderRedirectIndex(indexFileName);
+        }
+
+        private static IEnumerable<Ride> GetChampionshipRides(
+            IEnumerable<Ride> rides,
+            IEnumerable<CalendarEvent> calendar)
+        {
+            var championshipEventNumbers = new HashSet<int>(
+                calendar.Where(ev => ev.IsClubChampionship)
+                        .Select(ev => ev.EventNumber));
+
+            return rides.Where(r => championshipEventNumbers.Contains(r.EventNumber));
+        }
+
+        private static IEnumerable<CalendarEvent> GetChampionshipCalendar(
+            IEnumerable<CalendarEvent> fullCalendar)
+        {
+            return fullCalendar.Where(ev => ev.IsClubChampionship);
         }
     }
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Favicon Test</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .row img {
+      margin-right: 1rem;
+      background: #f0f0f0;
+      padding: 0.5rem;
+    }
+    .label {
+      font-weight: 600;
+      width: 120px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Favicon Rendering Test</h1>
+  <p>This page shows each favicon at its native size so you can confirm crispness and geometry.</p>
+
+  <div class="row">
+    <div class="label">SVG (scalable)</div>
+    <img src="assets/favicon.svg" width="192" height="192" alt="SVG favicon">
+  </div>
+
+  <div class="row">
+    <div class="label">32×32 PNG</div>
+    <img src="assets/favicon-32.png" width="32" height="32" alt="32px favicon">
+  </div>
+
+  <div class="row">
+    <div class="label">16×16 PNG</div>
+    <img src="assets/favicon-16.png" width="16" height="16" alt="16px favicon">
+  </div>
+
+  <div class="row">
+    <div class="label">Apple 180×180</div>
+    <img src="assets/apple-touch-icon.png" width="180" height="180" alt="180px apple touch icon">
+  </div>
+
+</body>
+</html>

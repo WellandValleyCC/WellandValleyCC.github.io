@@ -54,11 +54,11 @@ namespace ClubSiteGenerator.Tests
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
 
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
+                .Select(g => WvccCompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
                 .ToList();
 
             // Act  
-            results = CompetitionResultsCalculator.SortResults(results).ToList();
+            results = WvccCompetitionResultsCalculator.SortResults(results).ToList();
 
 
             // Assert
@@ -109,10 +109,10 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
+                .Select(g => WvccCompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
                 .ToList();
 
-            var ordered = CompetitionResultsCalculator.SortResults(results).ToList();
+            var ordered = WvccCompetitionResultsCalculator.SortResults(results).ToList();
 
             // None are eligible for the full competition, so results should be in 10-mile events order
             ordered[0].Competitor.FullName.Should().Be("Alice Smith");
@@ -160,14 +160,14 @@ namespace ClubSiteGenerator.Tests
 
             var groups = rides.Where(r => r.Competitor != null).GroupBy(r => r.Competitor!);
             var results = groups
-                .Select(g => CompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
+                .Select(g => WvccCompetitionResultsCalculator.BuildCompetitorResult(g.ToList(), calendar, r => r.JuvenilesPoints, rules))
                 .ToList();
 
             // Add Zoe manually with no rides
             results.Add(new CompetitorResult { Competitor = competitors.Single(c => c.Surname == "Adams") });
 
             // Act: order by full competition
-            var ordered = CompetitionResultsCalculator.SortResults(results).ToList();
+            var ordered = WvccCompetitionResultsCalculator.SortResults(results).ToList();
             
             // Assert: full competition ordering
             ordered[0].Competitor.FullName.Should().Be("Sally Davidson");

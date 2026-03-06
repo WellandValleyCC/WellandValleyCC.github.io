@@ -3,8 +3,6 @@ using ClubCore.Models;
 using ClubCore.Models.Csv;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Globalization;
 
 namespace ClubProcessor.Services
@@ -76,8 +74,8 @@ namespace ClubProcessor.Services
 
             var requiredHeaders = new[]
             {
-                "Event Number","Date","Start time","Event Name","Miles","Location / Course",
-                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","isCancelled"
+                "Event Number","Date","Start time","Event Name","Round Robin Club", "Miles","Location / Course",
+                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled"
             };
 
             foreach (var required in requiredHeaders)
@@ -98,6 +96,7 @@ namespace ClubProcessor.Services
             return a.EventDate == b.EventDate &&
                    a.StartTime == b.StartTime &&
                    a.EventName == b.EventName &&
+                   a.RoundRobinClub == b.RoundRobinClub &&
                    a.Miles == b.Miles &&
                    a.Location == b.Location &&
                    a.IsHillClimb == b.IsHillClimb &&
@@ -105,6 +104,7 @@ namespace ClubProcessor.Services
                    a.IsNonStandard10 == b.IsNonStandard10 &&
                    a.IsEvening10 == b.IsEvening10 &&
                    a.IsHardRideSeries == b.IsHardRideSeries &&
+                   a.IsRoundRobinEvent == b.IsRoundRobinEvent &&
                    a.IsCancelled == b.IsCancelled;
         }
 
@@ -113,6 +113,7 @@ namespace ClubProcessor.Services
             target.EventDate = source.EventDate;
             target.StartTime = source.StartTime;
             target.EventName = source.EventName;
+            target.RoundRobinClub = source.RoundRobinClub;
             target.Miles = source.Miles;
             target.Location = source.Location;
             target.IsHillClimb = source.IsHillClimb;
@@ -120,6 +121,7 @@ namespace ClubProcessor.Services
             target.IsNonStandard10 = source.IsNonStandard10;
             target.IsEvening10 = source.IsEvening10;
             target.IsHardRideSeries = source.IsHardRideSeries;
+            target.IsRoundRobinEvent = source.IsRoundRobinEvent;
             target.IsCancelled = source.IsCancelled;
         }
 
@@ -183,6 +185,9 @@ namespace ClubProcessor.Services
                 return null;
             }
 
+            var rrClub = row.RoundRobinClub?.Trim() ?? string.Empty;
+            ValidateRoundRobinClub(rrClub, row.EventNumber);
+
             // Console.WriteLine($"[DEBUG] Event {row.EventNumber}: ClubChamp='{row.ClubChampRaw}', NonStd10='{row.NonStd10Raw}', Evening10='{row.Evening10Raw}', HardRide='{row.HardRideRaw}', Cancelled='{row.CancelledRaw}'");
 
             return new CalendarEvent
@@ -191,6 +196,7 @@ namespace ClubProcessor.Services
                 EventDate = DateTime.SpecifyKind(eventDate, DateTimeKind.Utc),
                 StartTime = startTime,
                 EventName = row.EventName,
+                RoundRobinClub = row.RoundRobinClub ?? string.Empty,
                 Miles = miles,
                 Location = row.Location,
                 IsHillClimb = IsYes(row.HillClimbRaw),
@@ -198,8 +204,40 @@ namespace ClubProcessor.Services
                 IsNonStandard10 = IsYes(row.NonStd10Raw),
                 IsEvening10 = IsYes(row.Evening10Raw),
                 IsHardRideSeries = IsYes(row.HardRideRaw),
+                IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
                 IsCancelled = IsYes(row.CancelledRaw)
             };
+        }
+
+        private void ValidateRoundRobinClub(string rrClub, int eventNumber)
+        {
+            if (string.IsNullOrWhiteSpace(rrClub))
+                return; // Empty allowed
+
+            // Split CSV list: "Ratae, WVCC" --> ["Ratae", "WVCC"]
+            var clubs = rrClub
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(c => c.Trim())
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .ToList();
+
+            foreach (var club in clubs)
+            {
+                var normalised = club.ToUpperInvariant();
+
+                // WVCC always allowed
+                if (normalised == "WVCC")
+                    continue;
+
+                var exists = _db.RoundRobinClubs
+                    .Any(c => c.ShortName.ToUpper() == normalised);
+
+                if (!exists)
+                {
+                    throw new InvalidOperationException(
+                        $"Event {eventNumber}: Round Robin Club '{club}' is not a known round robin club.");
+                }
+            }
         }
 
         private static bool IsYes(string? raw) =>

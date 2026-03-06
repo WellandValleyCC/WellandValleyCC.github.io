@@ -7,6 +7,7 @@ using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Rules;
 using ClubSiteGenerator.Services;
+using ClubSiteGenerator.Services.Hydration;
 using ClubSiteGenerator.Tests.Helpers;
 using FluentAssertions;
 
@@ -100,7 +101,9 @@ namespace ClubSiteGenerator.Tests
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);
@@ -178,7 +181,9 @@ namespace ClubSiteGenerator.Tests
 
             var rides = CsvTestLoader.LoadRidesFromCsv(ridesCsv, competitors);
 
-            DataLoader.AttachReferencesToRides(rides, competitors, calendar);
+            RideHydrator.AttachCalendarEvents(rides, calendar);
+            RideHydrator.AttachCompetitors(rides, competitors, calendar);
+            // RideHydrator.AttachRoundRobinRiders(rides, riders);
 
             var resultsSet = JuvenilesCompetitionResultsSet.CreateFrom(rides, calendar, rules);
             var renderer = new CompetitionRenderer("index2025.html", resultsSet, rules);

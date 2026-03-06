@@ -3,6 +3,7 @@ using ClubCore.Models;
 using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -35,7 +36,8 @@ namespace ClubProcessor.Services
                 return false;
             }
 
-            var year = yearMatch.Groups[1].Value;
+            var year = int.Parse(yearMatch.Groups[1].Value);
+
             var eventsDir = Path.Combine(folderPath, "events");
 
             if (!Directory.Exists(eventsDir))
@@ -54,7 +56,7 @@ namespace ClubProcessor.Services
             {
                 var eventNumber = ExtractEventNumber(csvPath);
                 Console.WriteLine($"[INFO] Processing Event {eventNumber}: {csvPath}");
-                ProcessEventCsv(csvPath, eventNumber);
+                ProcessEventCsv(csvPath, eventNumber, year);
             }
 
             eventContext.SaveChanges();
@@ -84,7 +86,7 @@ namespace ClubProcessor.Services
             return match.Success ? int.Parse(match.Groups[1].Value) : -1;
         }
 
-        private void ProcessEventCsv(string csvPath, int eventNumber)
+        private void ProcessEventCsv(string csvPath, int eventNumber, int competitionYear)
         {
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -100,7 +102,7 @@ namespace ClubProcessor.Services
 
             var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
             var incomingRides = incomingRows
-                .Select(row => ParseRide(row, eventNumber))
+                .Select(row => ParseRide(row, eventNumber, competitionYear))
                 .Where(ride => ride != null)
                 .Cast<Ride>() // assert non-null
                     .Select(r =>
@@ -138,31 +140,87 @@ namespace ClubProcessor.Services
         }
 
         /// <remarks>
-        ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
-        ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,
-        ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X             * 
+        ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed,Number/Raw Name
+        ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,,9999
+        ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X,Johnny Doe
+        ///   Jane Doe (HCRC),0,21.0,57.0,,,Joe Murray (HCRC),00:21:57,X,Jane Doe
         /// </remarks>
-        private Ride? ParseRide(RideCsvRow row, int eventNumber)
+        private Ride? ParseRide(RideCsvRow row, int eventNumber, int competitionYear)
         {
-            // TODO: Parse columns from dynamic row
-            // TODO: Compute calculated fields (points, standard time, etc.)
-            // TODO: Handle DNS/DNF/DQ and set RideEligibility
-
             var rawNumberOrName = row.NumberOrName?.Trim();
 
             bool isClubMember = int.TryParse(rawNumberOrName, out int clubNumber);
-            string? name = isClubMember ? null : rawNumberOrName;
+            
+            var clubShortName = ResolveClubShortName(row, isClubMember, competitionYear);
 
             return new Ride
             {
                 EventNumber = eventNumber,
                 Name = row.Name,
                 ClubNumber = isClubMember ? clubNumber : null,
+                RoundRobinClub = clubShortName,
                 TotalSeconds = row.TotalSeconds,
                 AvgSpeed = row.TotalSeconds > 0 ? 25.0 * 1000 / row.TotalSeconds * 3.6 : null, // Example: 25 km course
                 IsRoadBike = row.IsRoadBike,
                 Status = row.Eligibility,
             };
+        }
+
+        private string? ResolveClubShortName(RideCsvRow row, bool isClubMember, int competitionYear)
+        {
+            if (isClubMember)
+                return "WVCC"; // default for members
+
+            // NEW: 2025 open competition rule
+            if (competitionYear == 2025)
+            {
+                var clubName = ExtractClubNameFromName(row.Name);
+
+                // No suffix → Guest
+                if (clubName is null)
+                    return "Guest";
+
+                // Has suffix → check if it's a valid RR club for 2025
+                var shortName = LookupClubShortName(clubName, competitionYear);
+
+                // Invalid or unknown → Guest
+                return shortName ?? "Guest";
+            }
+
+            // Default behaviour for other years
+            var extracted = ExtractClubNameFromName(row.Name);
+            if (extracted is null)
+                return null;
+
+            return LookupClubShortName(extracted, competitionYear);
+        }
+
+        private string? ExtractClubNameFromName(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            // Look for "(XYZ)" at the end of the name
+            var start = name.LastIndexOf('(');
+            var end = name.LastIndexOf(')');
+
+            if (start < 0 || end < 0 || end <= start)
+                return null;
+
+            var clubName = name.Substring(start + 1, end - start - 1).Trim();
+            return string.IsNullOrWhiteSpace(clubName) ? null : clubName;
+        }
+
+        private string? LookupClubShortName(string clubName, int competitionYear)
+        {
+            var normalised = clubName.Trim().ToUpperInvariant();
+
+            var club = eventContext.RoundRobinClubs
+                .FirstOrDefault(c =>
+                    c.ShortName.ToUpper() == normalised &&
+                    c.FromYear <= competitionYear);
+
+            return club?.ShortName;
         }
     }
 }

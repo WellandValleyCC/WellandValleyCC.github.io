@@ -1,0 +1,876 @@
+﻿/* =========================================================
+   Root Variables
+   ========================================================= */
+:root {
+    --border-color: #ccc;
+    --text-color: #333;
+    --background: #fff;
+    --hover-background: #f0f0f0;
+}
+
+
+/* =========================================================
+   Calendar Grid Styling
+   ========================================================= */
+.month {
+    display: block;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 0 4px rgba(0,0,0,0.05);
+}
+
+.month h3 {
+    font-size: 1.5rem !important;
+    font-weight: bold;
+    margin: 0.25em 0;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Grid wrapper for multiple months */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16em, 25em));
+    gap: 1rem;
+    justify-content: start;
+    max-width: calc(25em * 3 + 2rem);
+}
+
+@media (max-width: 1200px) {
+    .calendar-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .calendar-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .calendar-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.month-grid .cell-content {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+}
+
+.weekday-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+
+/* =========================================================
+   Club Shortname Under Number
+   ========================================================= */
+.club-shortname {
+    position: absolute;
+    bottom: 1px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    opacity: 0.55;
+    line-height: 1;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Baseline + Body
+   ========================================================= */
+html, body {
+    font-family: system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Match club site header typography */
+body.rr.event-page .event-header-core h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+body.rr.event-page .event-header-core .event-number {
+    font-weight: 600;
+    margin-right: 0.25rem;
+    font-size: 1.2rem;
+}
+
+body.rr.event-page .event-header-core .event-date,
+body.rr.event-page .event-header-core .event-distance {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.2rem 0;
+}
+
+body.rr.event-page .event-header-core {
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   Results Table Styling
+   ========================================================= */
+table.results {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 1.4rem;
+}
+
+table.results th,
+table.results td {
+    border: 1px solid #ddd;
+    padding: 0.4em 0.6em;
+    text-align: center;
+    line-height: 1.3;
+}
+
+table.results th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+table.results thead th.invisible-cell {
+    background-color: transparent;
+    color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-weight: normal;
+    line-height: 0;
+    height: 0;
+}
+
+table.results td:first-child {
+    text-align: left;
+    font-weight: 500;
+}
+
+table.results tbody tr:hover {
+    background-color: transparent;
+}
+
+.legend + main table.results {
+    margin-top: 0.2rem;
+}
+
+/* =========================================================
+   RR Competition Table – Three‑Row Header Styling
+   ========================================================= */
+
+/* Row 1: Event numbers */
+table.results thead .event-number {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+    padding: 1px 6px;
+    line-height: 1.1;
+}
+
+/* Row 2: Event titles */
+table.results thead .event-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    text-align: center;
+    padding: 2px 6px;
+    line-height: 1.2;
+}
+
+/* Row 3: Event dates */
+table.results thead .event-date {
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-style: italic;
+    color: #555;
+    white-space: nowrap;
+    padding: 2px 6px;
+    line-height: 1.2;
+}
+
+/* Row‑specific tweaks */
+table.results thead tr:nth-child(1) th,
+table.results thead tr:nth-child(2) th {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+table.results thead tr:nth-child(3) th {
+    font-size: 0.8rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-weight: normal;
+    color: #555;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc;
+}
+
+/* Extra vertical spacing for clarity */
+table.results thead tr:nth-child(2) th.event-title,
+table.results thead tr:nth-child(3) th.event-date {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* =========================================================
+   RR Competition Table – Cancelled Event Banner
+   ========================================================= */
+
+/* Base cancelled style */
+table.results thead .event-title.cancelled-event {
+    position: relative;
+    background-color: #f8d7da; /* pale red */
+    color: #721c24;           /* dark red text */
+    font-weight: 600;
+}
+
+/* Diagonal CANCELLED banner */
+table.results thead .event-title.cancelled-event::after {
+    content: "Cancelled";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-65deg);
+    background: rgba(200, 0, 0, 0.5);
+    color: white;
+    font-weight: bold;
+    padding: 0.25rem 2rem;
+    white-space: nowrap;
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+/* ======================================================================
+   RR EVENT PAGE — POSITION CELL EXPANDABLE OPEN/WOMEN POINTS
+   ----------------------------------------------------------------------
+   This styles the hidden Open/Women points block injected by the renderer.
+   - Small font
+   - Initially collapsed
+   - Expands on click (class toggle)
+   - O and W both bottom-left aligned
+   ====================================================================== */
+
+/* Container for the hidden points block */
+.rr-event-points-collapsed {
+    position: relative;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: #555;
+}
+
+/* Hidden by default */
+.rr-event-points-collapsed .rr-event-points-inner {
+    display: none;
+    position: relative;
+    padding-top: 6px;
+}
+
+/* Shown when the wrapper is expanded */
+.rr-event-points-wrapper.expanded .rr-event-points-inner {
+    display: block;   /* stack vertically */
+}
+
+/* Wrapper is the clickable area */
+.rr-event-points-wrapper {
+    cursor: pointer;
+}
+
+/* Left alignment for both O and W */
+.rr-event-open,
+.rr-event-women {
+    text-align: left;
+    line-height: 1.2;
+}
+
+/* =========================================================
+   RR Team Competition Table
+   ========================================================= */
+
+.team-event-cell {
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+/* Hidden until expanded */
+.team-event-cell .rr-contributors-full {
+  display: none;
+}
+
+/* Expanded state */
+.team-event-cell.expanded .rr-contributors-full {
+  display: block;
+  margin-top: 0.35rem;
+  padding-left: 0.5rem;   /* ← slight indent */
+}
+
+/* Each contributor row */
+.rr-open-group div,
+.rr-women-group div {
+  display: block;
+  text-align: left;
+  font-size: 0.75em;
+  color: #555;
+  line-height: 1.25;
+}
+
+/* The subtle separator */
+.rr-separator {
+  margin: 0.25rem 0 0.35rem 0;
+  border-bottom: 1px solid #ddd;
+  width: 60%;          /* ← partial width, looks elegant */
+  opacity: 0.6;        /* ← softens it */
+}
+
+.rr-contributor-row {
+  display: block;
+  text-align: left;
+  font-size: 0.75em;
+  color: #555;
+  line-height: 1.25;
+}
+
+/* =========================================================
+   Shared Header Background for Event + Competition Tables
+   ========================================================= */
+table.results thead th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+table.results thead .event-title,
+table.results thead .event-date {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* =========================================================
+   RR Colour Coding (Event Pages + Competition Tables)
+   ========================================================= */
+
+/* --- Eligibility (event pages only) --- */
+table.results tr.competition-eligible,
+.legend .competition-eligible {
+    background-color: #e0ffe0;
+}
+
+table.results tr.guest-second-claim,
+.legend .guest-second-claim {
+    background-color: #e0f0ff;
+}
+
+table.results tr.guest-non-club-member,
+.legend .guest-non-club-member {
+    background-color: #fff0e0;
+}
+
+/* --- Highlight Best‑N scoring rides (competition tables) --- */
+table.results td .rr-scoring {
+    background-color: #66bb6a;   /* darker green */
+    color: #fff;
+    font-weight: 600;
+    padding: 0.15em 0.35em;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+
+/* =========================================================
+   Column Widths
+   ========================================================= */
+table.results th.tens-score,
+table.results td.tens-score {
+    min-width: 70px;
+}
+
+table.results th.mixed-score,
+table.results td.mixed-score {
+    min-width: 65px;
+}
+
+
+/* =========================================================
+   Legend Styling (Global)
+   ========================================================= */
+.legend {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5em;
+    overflow-x: auto;
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    padding-top: 0.25em;
+    font-size: 1rem;
+}
+
+.legend span {
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background-color: #f2f2f2;
+    white-space: nowrap;
+    color: #333;
+}
+
+/* Legend immediately after header on RR pages */
+header + .legend {
+    margin-top: 0.5em;
+    margin-bottom: 0.05em;
+}
+
+
+/* =========================================================
+   Podium Highlighting
+   ========================================================= */
+table.results td.mixed-score.gold,
+table.results td.tens-score.gold,
+table.results td.gold,
+.legend .gold {
+    background-color: #cfb53b;
+}
+
+table.results td.mixed-score.silver,
+table.results td.tens-score.silver,
+table.results td.silver,
+.legend .silver {
+    background-color: #c4c4c4;
+}
+
+table.results td.mixed-score.bronze,
+table.results td.tens-score.bronze,
+table.results td.bronze,
+.legend .bronze {
+    background-color: #a48347;
+    color: #DDD9C4;
+}
+
+
+/* =========================================================
+   Clubs Grid
+   ========================================================= */
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+    max-width: calc(12rem * 3 + 3rem);
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.club {
+    text-align: center;
+}
+
+.club-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.club-logo img {
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+}
+
+.club-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Footer
+   ========================================================= */
+footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+    text-align: center;
+}
+
+footer .generated {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0.5rem 0 0;
+}
+
+
+/* =========================================================
+   RR Hero Banner
+   ========================================================= */
+.rr-hero img.rr-header {
+    height: auto;
+    max-width: 100%;
+    display: block;
+}
+
+
+/* =========================================================
+   RR Base Styles (Independent of Club Site)
+   ========================================================= */
+body.rr.event-page {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, sans-serif;
+    background: #fff;
+    color: #222;
+    line-height: 1.5;
+}
+
+/* Headings */
+body.rr.event-page h1,
+body.rr.event-page h2,
+body.rr.event-page h3 {
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+}
+
+/* Paragraphs */
+body.rr.event-page p {
+    margin: 0 0 1rem 0;
+}
+
+/* Links */
+body.rr.event-page a {
+    color: #005bbb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+body.rr.event-page a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   Header + Event Metadata
+   ========================================================= */
+body.rr.event-page .header-and-legend {
+    padding: 0;
+    border-bottom: 1px solid #ddd;
+    background: transparent;
+}
+
+body.rr.event-page .event-header-core h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+}
+
+body.rr.event-page .event-header-core .event-date,
+body.rr.event-page .event-header-core .event-distance {
+    margin: 0.2rem 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.rr-banner-header {
+    position: relative;
+    padding: 0.25rem 0;
+}
+
+.rr-banner-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../logos/round-robin/rr-header-2026.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+.rr-banner-header > * {
+    position: relative;
+}
+
+body.rr.event-page .event-header-core .event-host {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0.2rem 0 0.8rem 0;
+    font-style: italic;
+}
+
+
+/* =========================================================
+   Shared Components
+   (Used by both calendar tiles and event pages)
+   ========================================================= */
+
+/* Base cancelled style for calendar cell */
+.day-cell.cancelled-event {
+    position: relative;
+}
+
+/* Diagonal banner */
+.day-cell.cancelled-event::after {
+    content: "Cancelled";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background: rgba(200, 0, 0, 0.45);
+    color: white;
+    font-weight: bold;
+    font-size: 0.55rem;
+    padding: 0.1rem 1.2rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: 2px;
+}
+
+/* Cancelled Event – Event Header (WVCC style) ============== */
+
+/* =========================================================
+   Cancelled Event – Event Header (WVCC style)
+   ========================================================= */
+
+/* Pale transparent red behind the header text block */
+.event-page .event-header-core.cancelled-event {
+    position: relative;
+    background-color: rgba(248, 215, 218, 0.6); /* pale red, transparent */
+    color: #721c24; /* dark red text */
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    z-index: 3; /* above banner + tint */
+}
+
+/* Diagonal CANCELLED banner (WVCC angle, transparent) */
+
+.event-page .event-header-core.cancelled-event::after {
+    content: "Cancelled";
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%) rotate(-20deg); /* WVCC angle */
+    background: rgba(200, 0, 0, 0.5); /* transparent red */
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.3rem 2.5rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 4; /* above header block */
+}
+
+/* Cancelled Event – Banner Image Red Tint ================= */
+
+/* Banner image sits at z-index: 1 via ::before */
+/* This tint sits above it, but below the header text */
+.rr-banner-header.cancelled-event::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(200, 0, 0, 0.25); /* transparent red tint */
+    z-index: 2; /* above ::before, below header text */
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Navigation
+   ========================================================= */
+.event-nav a.prev::before,
+.competition-nav a.prev::before { content: "← "; }
+
+.event-nav a.next::after,
+.competition-nav a.next::after { content: " →"; }
+
+
+/* =========================================================
+   Navigation — Prev Left, Index Centre, Next Right
+   ========================================================= */
+body.rr.event-page .event-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.2rem;
+    width: 100%;
+}
+
+body.rr.event-page .event-nav .index {
+    margin: 0 auto;
+}
+
+.event-nav a {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9px;
+    border: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--text-color);
+    background: var(--background);
+}
+
+.event-nav a:hover {
+    background: var(--hover-background);
+}
+
+
+/* =========================================================
+   Main Content
+   ========================================================= */
+body.rr.event-page main {
+    padding: 0;
+    max-width: none;
+    margin: 0;
+}
+
+
+/* =========================================================
+   Mobile Layout (≤600px)
+   ========================================================= */
+@media (max-width: 600px) {
+
+  html, body {
+    font-size: 1rem;
+  }
+
+  body.rr header h1 {
+    font-size: 1.2rem;
+  }
+
+  .event-number {
+    font-size: 1.2rem;
+  }
+
+  header .event-date,
+  header .event-distance,
+  header .event-host {
+    font-size: 0.9rem;
+  }
+
+  table.results {
+    font-size: 0.9rem;
+  }
+
+  table.results th,
+  table.results td {
+    padding: 0.25em 0.4em;
+    line-height: 1.2;
+  }
+
+  .event-nav {
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5em;
+  }
+
+  .event-nav a {
+    flex: 0 0 auto;
+    font-size: 0.9rem;
+    padding: 0.5em 0.8em;
+  }
+
+  footer {
+    font-size: 0.7rem;
+  }
+
+  .header-and-legend {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.25em;
+    margin-bottom: 1em;
+  }
+
+  .header-and-legend .legend {
+    font-size: 0.85rem;
+    gap: 0.4em;
+    overflow-x: auto;
+    padding: 0.25em 0;
+  }
+
+  .header-and-legend .legend span {
+    padding: 0.15em 0.35em;
+    font-size: 0.8rem;
+  }
+
+  .header-and-legend h1,
+  .header-and-legend .event-date,
+  .header-and-legend .event-distance,
+  .header-and-legend .event-host,
+  .header-and-legend .event-nav {
+    margin: 0.25em 0;
+  }
+  
+  /* Expanded state */
+  .team-event-cell.expanded .rr-contributors-full {
+    padding-left: 0
+  }
+  
+  .rr-separator {
+    width: 100%;          /* full width looks better on mobile */
+  }
+
+    .rr-event-points-collapsed {
+        font-size: 0.6rem;
+    }
+
+}
+
+
+/* =========================================================
+   Even Narrower Screens (≤420px)
+   ========================================================= */
+@media (max-width: 420px) {
+
+  html {
+    font-size: 1.05rem;
+  }
+
+  body.rr header h1 {
+    font-size: 1.1rem;
+  }
+
+  table.results {
+    font-size: 0.85rem;
+  }
+
+  table.results th,
+  table.results td {
+    padding: 0.2em 0.35em;
+  }
+
+  .event-nav a {
+    padding: 0.45em 0.7em;
+    font-size: 0.85rem;
+  }
+}

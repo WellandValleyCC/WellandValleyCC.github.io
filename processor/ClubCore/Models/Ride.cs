@@ -13,6 +13,7 @@ namespace ClubCore.Models
         public int EventNumber { get; set; }
         public int? ClubNumber { get; set; }
         public string? Name { get; set; } = string.Empty;
+        public string? RoundRobinClub { get; set; }
         public bool IsRoadBike { get; set; }
         public double TotalSeconds { get; set; }
 
@@ -81,6 +82,13 @@ namespace ClubCore.Models
         public double? NevBrooksSecondsApplied { get; set; }       // Capped or adjusted handicap
         public double? NevBrooksSecondsAdjustedTime { get; set; }  // Final time after handicap
 
+        public int? RoundRobinPosition { get; set; }
+        public double? RoundRobinPoints { get; set; }
+
+        public int? RoundRobinWomenPosition { get; set; }
+        public double? RoundRobinWomenPoints { get; set; }
+
+
         public bool IsGuest => ClubNumber == null && !string.IsNullOrWhiteSpace(Name);
 
         public RideStatus Status { get; set; } = RideStatus.Undefined;
@@ -88,6 +96,9 @@ namespace ClubCore.Models
 
         [NotMapped]
         public Competitor? Competitor { get; set; }
+
+        [NotMapped]
+        public RoundRobinRider? RoundRobinRider { get; set; }
 
         [NotMapped]
         public CalendarEvent? CalendarEvent { get; set; }
@@ -111,5 +122,11 @@ namespace ClubCore.Models
         [NotMapped]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string EventDateDisplay => CalendarEvent != null ? CalendarEvent.EventDate.ToShortDateString() : string.Empty;
+
+        [NotMapped]
+        public int? RREligibleRidersRank { get; set; }
+
+        [NotMapped]
+        public int? RREligibleRoadBikeRidersRank { get; set; }
     }
 }

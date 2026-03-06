@@ -1,5 +1,7 @@
-﻿using ClubCore.Utilities;
+﻿using ClubCore.Models;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Services;
+using ClubSiteGenerator.Services.Hydration;
 
 namespace ClubSiteGenerator
 {
@@ -17,27 +19,105 @@ namespace ClubSiteGenerator
             }
 
             var year = args[yearIndex + 1];
-
             Console.WriteLine($"[INFO] Processing year: {year}");
-            
-            // Decide output folder (repo-rooted TestOutput or CI temp)
-            var outputDir = OutputLocator.GetOutputDirectory();
-            Console.WriteLine($"Writing site to: {outputDir}");
 
-            // Create DbContexts (connection strings configured in OnConfiguring or appsettings.json)
+            var clubSiteIndexFilename = (year == "2025")
+                ? $"preview{year}.html"
+                : $"index{year}.html";
+
+            var outputRoot = OutputLocator.GetOutputDirectory();
+            Console.WriteLine($"Writing site to: {outputRoot}");
+
             using var competitorDb = DbContextHelper.CreateReadonlyCompetitorDbContext(year);
             using var eventDb = DbContextHelper.CreateReadonlyEventDbContext(year);
 
             var eventCalendar = DataLoader.LoadCalendar(eventDb);
             var allRides = DataLoader.LoadRides(eventDb);
             var allCompetitors = DataLoader.LoadCompetitors(competitorDb);
-            DataLoader.AttachReferencesToRides(allRides, allCompetitors, eventCalendar);
+            var rrRiders = DataLoader.LoadRoundRobinRiders(eventDb);
 
-            // Orchestrate results generation
-            var orchestrator = new ResultsOrchestrator(allRides, allCompetitors, eventCalendar);
-            var indexFileName = $"index{year}.html";
+            RideHydrator.AttachCalendarEvents(allRides, eventCalendar);
+            RideHydrator.AttachCompetitors(allRides, allCompetitors, eventCalendar);
+            RideHydrator.AttachRoundRobinRiders(allRides, rrRiders, int.Parse(year));
+            RideHydrator.AttachSyntheticWvccRoundRobinRiders(allRides, allCompetitors);
+            RideHydrator.AttachSyntheticGuestRoundRobinRiders(allRides, int.Parse(year));
+
+            // Club site
+            GenerateClubSite(
+                Path.Combine(outputRoot, "SiteOutput"),
+                allRides,
+                allCompetitors,
+                eventCalendar,
+                clubSiteIndexFilename
+            );
+
+            // Round Robin site
+
+            var rrEventCalendar = rrCalendarFromFullCalendar(eventCalendar);
+
+            var roundRobinClubs = DataLoader.LoadRoundRobinClubs(eventDb);
+
+            var activeClubs = roundRobinClubs
+                .Where(c => c.FromYear <= int.Parse(year))
+                .ToList();
+
+            GenerateRoundRobinSite(
+                Path.Combine(outputRoot, "RoundRobinSiteOutput"),
+                allRides,
+                allCompetitors,
+                rrEventCalendar,
+                activeClubs
+            );
+        }
+
+        static void GenerateClubSite(
+            string outputDir,
+            IEnumerable<Ride> rides,
+            IEnumerable<Competitor> competitors,
+            IEnumerable<CalendarEvent> calendar,
+            string indexFileName)
+        {
+            Directory.CreateDirectory(outputDir);
+
+            var orchestrator = new ClubResultsOrchestrator(
+                outputDir,
+                rides,
+                competitors,
+                calendar);
+
             orchestrator.GenerateAll(indexFileName);
-            orchestrator.GenerateIndex(indexFileName);
+        }
+
+        static List<CalendarEvent> rrCalendarFromFullCalendar(List<CalendarEvent> fullCalendar)
+        {
+            var rrEventCalendar = fullCalendar
+                .Where(e => e.IsRoundRobinEvent)
+                .OrderBy(e => e.EventNumber)
+                .ToList();
+
+            for (int i = 0; i < rrEventCalendar.Count; i++)
+                rrEventCalendar[i].RoundRobinEventNumber = i + 1;
+
+            return rrEventCalendar;
+        }
+
+        static void GenerateRoundRobinSite(
+            string outputDir,
+            IEnumerable<Ride> rides,
+            IEnumerable<Competitor> competitors,
+            IEnumerable<CalendarEvent> rrEventCalendar,
+            IEnumerable<RoundRobinClub> clubs)
+        {
+            Directory.CreateDirectory(outputDir);
+
+            var rrOrchestrator = new RoundRobinResultsOrchestrator(
+                outputDir,
+                rides,
+                competitors,
+                rrEventCalendar,
+                clubs);
+
+            rrOrchestrator.GenerateAll();
         }
     }
 }

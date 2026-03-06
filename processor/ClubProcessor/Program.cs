@@ -25,7 +25,7 @@ class Program
         }
 
         string year = InferYear(mode, inputPath);
-        Directory.CreateDirectory("data");
+        Directory.CreateDirectory(PathTokens.DataFolder);
 
         switch (mode.ToLower())
         {

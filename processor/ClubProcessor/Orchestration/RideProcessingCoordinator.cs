@@ -31,10 +31,14 @@ namespace ClubProcessor.Orchestration
         public void ProcessAll(
             IEnumerable<Ride> rides, 
             IEnumerable<Competitor> competitors, 
-            IEnumerable<CalendarEvent> calendarEvents)
+            IEnumerable<CalendarEvent> calendarEvents,
+            IEnumerable<RoundRobinRider> roundRobinRiders)
         {
+            int competitionYear = calendarEvents.First().EventDate.Year;
+
             RideHydrationHelper.HydrateCalendarEvents(rides, calendarEvents);
             RideHydrationHelper.HydrateCompetitors(rides, competitors);
+            RideHydrationHelper.HydrateRoundRobinRiders(rides, roundRobinRiders, competitionYear);
 
             var ridesByEvent = rides
                 .GroupBy(r => r.EventNumber)

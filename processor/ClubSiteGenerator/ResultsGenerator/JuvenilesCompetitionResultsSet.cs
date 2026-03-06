@@ -49,14 +49,14 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             // build results
             var results = groups
-                .Select(group => CompetitionResultsCalculator.BuildCompetitorResult(
+                .Select(group => WvccCompetitionResultsCalculator.BuildCompetitorResult(
                     group.ToList(), 
                     championshipCalendar, 
                     r => r.JuvenilesPoints,
                     rules))
                 .ToList();
 
-            results = CompetitionResultsCalculator.SortResults(results).ToList();
+            results = WvccCompetitionResultsCalculator.SortResults(results).ToList();
 
             return new JuvenilesCompetitionResultsSet(championshipCalendar, results);
         }

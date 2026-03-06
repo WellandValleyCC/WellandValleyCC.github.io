@@ -28,6 +28,29 @@ def suppress_openpyxl_header_footer_warnings():
     )
     print("[INFO] Suppressed openpyxl header/footer warnings (safe to ignore, no impact on CSV extraction)")
     
+def normalize_boolean_column(df, colname="isFemale"):
+    if colname not in df.columns:
+        return
+
+    # Convert everything to string for consistent handling
+    s = df[colname].astype(str).str.strip().str.upper()
+
+    # Try numeric conversion (handles 0, 1, 0.0, 1.0)
+    numeric = pd.to_numeric(s, errors="coerce")
+
+    # Case A: numeric values → boolean
+    numeric_mask = numeric.notna()
+    numeric_bool = (numeric != 0)
+
+    # Case B: TRUE/FALSE strings
+    string_bool = s.map({"TRUE": True, "FALSE": False})
+
+    # Combine both into a single boolean array
+    combined = numeric_bool.where(numeric_mask, string_bool)
+
+    # Final output as "True"/"False"
+    df[colname] = combined.map({True: "True", False: "False"})
+    
 def extract_club_events(xlsx_path, output_dir):
     match = re.search(r'ClubEvents_(\d{4})\.xlsx$', os.path.basename(xlsx_path))
     if not match:
@@ -75,12 +98,23 @@ def extract_club_events(xlsx_path, output_dir):
     if "Competitors" in xl.sheet_names:
         print("[INFO] Extracting Competitors sheet (reference only)")
         competitors_df = xl.parse("Competitors")
+        normalize_boolean_column(competitors_df, "isFemale")
         competitors_out = os.path.join(year_dir, f"Competitors_{year}.csv")
         competitors_df.to_csv(competitors_out, index=False)
         shutil.copy(competitors_out, os.path.join(artifact_dir, os.path.basename(competitors_out)))
         print(f"[INFO] Saved to: {competitors_out} ({len(competitors_df)} rows)")
     else:
         print("[WARN] Sheet missing: Competitors")
+        
+    if "RoundRobinRiders" in xl.sheet_names:
+        print("[OK] Extracting RoundRobinRiders sheet")
+        round_robin_riders_df = xl.parse("RoundRobinRiders")
+        round_robin_riders_out = os.path.join(year_dir, f"RoundRobinRiders_{year}.csv")
+        round_robin_riders_df.to_csv(round_robin_riders_out, index=False)
+        shutil.copy(round_robin_riders_out, os.path.join(artifact_dir, os.path.basename(round_robin_riders_out)))
+        print(f"[INFO] Saved to: {round_robin_riders_out} ({len(round_robin_riders_df)} rows)")
+    else:
+        print("[WARN] Sheet missing: RoundRobinRiders")
         
     if "Leagues" in xl.sheet_names:
         print("[OK] Extracting Leagues sheet")
