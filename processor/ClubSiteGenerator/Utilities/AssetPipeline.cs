@@ -5,8 +5,13 @@ using ClubSiteGenerator.Interfaces;
 namespace ClubSiteGenerator.Utilities
 {
     /// <summary>
-    /// Handles all asset copying for the Round Robin site.
-    /// Copies year-specific CSS, logos, and any other asset folders.
+    /// Copies all static assets required for a generated site.
+    /// This includes:
+    /// - Year-specific CSS
+    /// - Favicons
+    /// - Logos
+    /// - Any additional asset folders
+    ///
     /// Returns an AssetPipelineResult containing the selected CSS filename.
     /// </summary>
     public class AssetPipeline
@@ -28,14 +33,18 @@ namespace ClubSiteGenerator.Utilities
             this.log = log;
         }
 
-        public AssetPipelineResult CopyRoundRobinAssets(
+        /// <summary>
+        /// Executes the asset pipeline for a site.
+        /// Copies CSS, favicons, logos, and any additional asset folders.
+        /// </summary>
+        public AssetPipelineResult CopyAssets(
             string assetsRoot,
             string outputRoot,
             int year,
             string cssPrefix,
             string siteName)
         {
-            log.Info($"Starting {siteName} asset pipeline for year {year}");
+            log.Info($"Starting asset pipeline for {siteName}, year {year}");
             log.Info($"Assets root: {assetsRoot}");
             log.Info($"Output root: {outputRoot}");
 
@@ -92,12 +101,12 @@ namespace ClubSiteGenerator.Utilities
             log.Info($"Copying logos from {logosSource} to {logosDest}");
             copyHelper.CopyRecursive(logosSource, logosDest, exclude);
 
-            // 3. Copy any other asset folders that exist
+            // 3. Copy any other asset folders
             foreach (var folder in directoryProvider.GetDirectories(assetsRoot))
             {
                 var name = Path.GetFileName(folder);
 
-                // Skip folders we already handled explicitly
+                // Skip folders handled explicitly
                 if (name.Equals(PathTokens.AssetsFolder, StringComparison.OrdinalIgnoreCase)) continue;
                 if (name.Equals(PathTokens.LogosFolder, StringComparison.OrdinalIgnoreCase)) continue;
 
@@ -114,6 +123,5 @@ namespace ClubSiteGenerator.Utilities
                 CssFile = cssFile
             };
         }
-
     }
 }
