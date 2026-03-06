@@ -28,6 +28,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine($"  {TitleElement()}");
             sb.AppendLine($"  <link rel=\"stylesheet\" href=\"../assets/{CssFile}\">");
+            sb.AppendLine($"{RenderFaviconLinks()}");
             var extras = HeadExtras();
             if (!string.IsNullOrEmpty(extras)) sb.AppendLine(extras);
             sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
@@ -58,6 +59,17 @@ namespace ClubSiteGenerator.Renderers
             var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
             return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
         }
+
+        /// <summary>
+        /// Emits the standard favicon and touch‑icon HTML.
+        /// Renderers can override if they need custom behaviour.
+        /// </summary>
+        protected virtual string RenderFaviconLinks() => @"
+<link rel=""icon"" href=""../assets/favicon.svg"" type=""image/svg+xml"">
+<link rel=""icon"" sizes=""32x32"" href=""../assets/favicon-32.png"">
+<link rel=""icon"" sizes=""16x16"" href=""../assets/favicon-16.png"">
+<link rel=""apple-touch-icon"" sizes=""180x180"" href=""../assets/apple-touch-icon.png"">
+";
     }
 }
 
