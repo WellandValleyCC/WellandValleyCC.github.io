@@ -47,7 +47,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
+            sb.AppendLine($"  <link rel=\"stylesheet\" href=\"assets/{cssFileName}\">");
             sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");

@@ -213,6 +213,8 @@ namespace ClubSiteGenerator.Services
                 resultsSet.CssFile = cssFile;
 
                 var renderer = new EventRenderer(indexFileName, resultsSet);
+                renderer.CssFile = cssFile;
+
                 Console.WriteLine($"Generating results for event: {resultsSet.FileName}");
                 var html = renderer.Render();
 
@@ -226,6 +228,7 @@ namespace ClubSiteGenerator.Services
                 resultsSet.CssFile = cssFile;
 
                 var renderer = CompetitionRendererFactory.Create(indexFileName, resultsSet, calendar, rules);
+                renderer.CssFile = cssFile;
 
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
                 var html = renderer.Render();

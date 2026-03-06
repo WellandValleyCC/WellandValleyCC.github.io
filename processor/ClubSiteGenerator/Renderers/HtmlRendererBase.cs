@@ -10,6 +10,8 @@ namespace ClubSiteGenerator.Renderers
 
         protected string IndexFileName { get; }
 
+        public string CssFile { get; set; } = "";
+
         protected HtmlRendererBase(string indexFileName)
         {
             IndexFileName = indexFileName;
@@ -25,7 +27,7 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine($"  {TitleElement()}");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"../assets/styles.css\">");
+            sb.AppendLine($"  <link rel=\"stylesheet\" href=\"../assets/{CssFile}\">");
             var extras = HeadExtras();
             if (!string.IsNullOrEmpty(extras)) sb.AppendLine(extras);
             sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
