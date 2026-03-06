@@ -20,6 +20,7 @@
         public const string LogosFolder = "logos";
 
         // Filename prefixes
+        public const string ClubCssPrefix = "wvcc";
         public const string RoundRobinCssPrefix = "roundrobin";
 
         // File extensions

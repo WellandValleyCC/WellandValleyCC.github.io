@@ -12,15 +12,18 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<EventResultsSet> events;
         private readonly IEnumerable<CompetitionResultsSet> competitions;
         private readonly string outputDir;
+        private readonly string cssFileName;
         private readonly int competitionYear;
 
         public SiteIndexRenderer(IEnumerable<EventResultsSet> events,
                                  IEnumerable<CompetitionResultsSet> competitions,
-                                 string outputDir)
+                                 string outputDir,
+                                 string cssFileName)
         {
             this.events = events;
             this.competitions = competitions;
             this.outputDir = outputDir;
+            this.cssFileName = cssFileName;
             this.competitionYear = events.FirstOrDefault()?.EventDate.Year
                                    ?? DateTime.Now.Year;
         }

@@ -72,7 +72,7 @@ namespace ClubSiteGenerator.Services
             var repoRoot = folderLocator.FindGitRepoRoot();
 
             // WVCC site assets folder
-            var assetsRoot = Path.Combine(repoRoot, PathTokens.SiteAssetsFolder);
+            var assetsRoot = Path.Combine(repoRoot, PathTokens.ClubAssetsFolder);
             var outputRoot = outputDir;
 
             var pipeline = CreateAssetPipeline();
@@ -80,7 +80,7 @@ namespace ClubSiteGenerator.Services
                 assetsRoot,
                 outputRoot,
                 competitionYear,
-                PathTokens.SiteCssPrefix,
+                PathTokens.ClubCssPrefix,
                 "WVCC");
 
             cssFile = result.CssFile;
