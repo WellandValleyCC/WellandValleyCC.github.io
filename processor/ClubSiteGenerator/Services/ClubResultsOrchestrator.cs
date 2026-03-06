@@ -23,6 +23,8 @@ namespace ClubSiteGenerator.Services
 
         private readonly int competitionYear;
 
+        private string cssFile = "";
+
         public ClubResultsOrchestrator(
             string outputDir,
             IEnumerable<Ride> rides,
@@ -58,11 +60,53 @@ namespace ClubSiteGenerator.Services
             GenerateIndex(indexFileName);
         }
 
+        // --------------------------------------------------------------------
+        // Asset Pipeline (aligned with RoundRobinResultsOrchestrator)
+        // --------------------------------------------------------------------
         private void PrepareAssets()
         {
-            StylesWriter.EnsureStylesheet(outputDir);
+            var folderLocator = new DefaultFolderLocator(
+                new DefaultDirectoryProvider(),
+                new DefaultLog());
+
+            var repoRoot = folderLocator.FindGitRepoRoot();
+
+            // WVCC site assets folder
+            var assetsRoot = Path.Combine(repoRoot, PathTokens.SiteAssetsFolder);
+            var outputRoot = outputDir;
+
+            var pipeline = CreateAssetPipeline();
+            var result = pipeline.CopyAssets(
+                assetsRoot,
+                outputRoot,
+                competitionYear,
+                PathTokens.SiteCssPrefix,
+                "WVCC");
+
+            cssFile = result.CssFile;
         }
 
+        private AssetPipeline CreateAssetPipeline()
+        {
+            var directoryProvider = new DefaultDirectoryProvider();
+            var fileProvider = new DefaultFileProvider();
+            var log = new DefaultLog();
+
+            var copyHelper = new DefaultDirectoryCopyHelper(
+                directoryProvider,
+                fileProvider,
+                log);
+
+            return new AssetPipeline(
+                new DefaultAssetCopier(),
+                copyHelper,
+                directoryProvider,
+                log);
+        }
+
+        // --------------------------------------------------------------------
+        // Results Set Construction
+        // --------------------------------------------------------------------
         private void InitializeResultsSets()
         {
             // Always add event results
@@ -109,6 +153,9 @@ namespace ClubSiteGenerator.Services
             }
         }
 
+        // --------------------------------------------------------------------
+        // Prev/Next Wiring
+        // --------------------------------------------------------------------
         private void WirePrevNextLinks()
         {
             var orderedEvents = resultsSets
@@ -156,10 +203,15 @@ namespace ClubSiteGenerator.Services
             }
         }
 
+        // --------------------------------------------------------------------
+        // Page Generation
+        // --------------------------------------------------------------------
         private void GeneratePages(string indexFileName)
         {
             foreach (var resultsSet in resultsSets.OfType<EventResultsSet>())
             {
+                resultsSet.CssFile = cssFile;
+
                 var renderer = new EventRenderer(indexFileName, resultsSet);
                 Console.WriteLine($"Generating results for event: {resultsSet.FileName}");
                 var html = renderer.Render();
@@ -171,6 +223,8 @@ namespace ClubSiteGenerator.Services
 
             foreach (var resultsSet in resultsSets.OfType<CompetitionResultsSet>())
             {
+                resultsSet.CssFile = cssFile;
+
                 var renderer = CompetitionRendererFactory.Create(indexFileName, resultsSet, calendar, rules);
 
                 Console.WriteLine($"Generating results for competition: {resultsSet.FileName}");
@@ -182,6 +236,9 @@ namespace ClubSiteGenerator.Services
             }
         }
 
+        // --------------------------------------------------------------------
+        // Index Generation
+        // --------------------------------------------------------------------
         public void GenerateIndex(string indexFileName)
         {
             var eventResults = resultsSets
@@ -196,11 +253,19 @@ namespace ClubSiteGenerator.Services
                     .IndexOf(comp.CompetitionType))
                 .ToList();
 
-            var indexRenderer = new SiteIndexRenderer(eventResults, competitionResults, outputDir);
+            var indexRenderer = new SiteIndexRenderer(
+                eventResults,
+                competitionResults,
+                outputDir,
+                cssFile);
+
             indexRenderer.RenderIndex(indexFileName);
             indexRenderer.RenderRedirectIndex(indexFileName);
         }
 
+        // --------------------------------------------------------------------
+        // Helpers
+        // --------------------------------------------------------------------
         private static IEnumerable<Ride> GetChampionshipRides(
             IEnumerable<Ride> rides,
             IEnumerable<CalendarEvent> calendar)

@@ -263,7 +263,7 @@ namespace ClubSiteGenerator.Services
             var outputRoot = outputDir;
 
             var pipeline = CreateAssetPipeline();
-            var result = pipeline.CopyRoundRobinAssets(
+            var result = pipeline.CopyAssets(
                 assetsRoot,
                 outputRoot,
                 competitionYear,
