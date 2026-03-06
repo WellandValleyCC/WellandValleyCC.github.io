@@ -15,6 +15,7 @@ namespace ClubSiteGenerator.ResultsGenerator
         }
 
         public int Year { get; }
+        public string CssFile { get; set; } = "";
         public abstract string DisplayName { get; }
         public abstract string FileName { get; }
         public abstract string SubFolderName { get; }

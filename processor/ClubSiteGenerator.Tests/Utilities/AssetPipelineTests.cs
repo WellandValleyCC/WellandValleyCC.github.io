@@ -30,7 +30,7 @@ namespace ClubCore.Tests.Utilities
             var assetsRoot = Path.Combine("root", PathTokens.RoundRobinAssetsFolder);
             var outputRoot = Path.Combine("root", PathTokens.RoundRobinOutputFolder);
 
-            return pipeline.CopyRoundRobinAssets(
+            return pipeline.CopyAssets(
                 assetsRoot,
                 outputRoot,
                 2025,
@@ -109,7 +109,7 @@ namespace ClubCore.Tests.Utilities
 
             RunPipeline(pipeline);
 
-            log.Received().Info(Arg.Is<string>(s => s.Contains("Starting Round Robin asset pipeline")));
+            log.Received().Info(Arg.Is<string>(s => s.Contains("Starting asset pipeline for Round Robin")));
             log.Received().Info("Asset pipeline complete.");
         }
     }

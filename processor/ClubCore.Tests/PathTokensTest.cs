@@ -16,7 +16,7 @@ namespace ClubCore.Tests.Utilities
         public void ClubAssetsFolder_HasExpectedValue()
         {
             PathTokens.ClubAssetsFolder
-                .Should().Be("ClubSiteAssets");
+                .Should().Be("SiteAssets");
         }
 
         [Fact]

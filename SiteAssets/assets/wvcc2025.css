@@ -1,27 +1,4 @@
-﻿using ClubCore.Utilities;
-using System.Text;
 
-namespace ClubSiteGenerator.Utilities
-{
-    public static class StylesWriter
-    {
-        public static void EnsureStylesheet(string outputDir)
-        {
-            var assetsDir = Path.Combine(outputDir, PathTokens.AssetsFolder);
-            Directory.CreateDirectory(assetsDir);
-
-            var cssPath = Path.Combine(assetsDir, "styles.css");
-            File.WriteAllText(cssPath, CssContent());
-        }
-
-        private static string CssContent()
-        {
-            var builder = new StringBuilder();
-
-            /* ============================
-               Calendar Grid Styling
-               =========================== */
-            builder.AppendLine(@"
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -122,12 +99,8 @@ html {
   }
 }
 
-");
 
-            /* ===========================
-               Baseline + Body
-               =========================== */
-            builder.AppendLine(@"
+
 html, body {
   font-family: system-ui, sans-serif;
   font-size: 1rem;   /* baseline desktop size */
@@ -135,12 +108,8 @@ html, body {
   margin: 0;
   padding: 0;
 }
-");
 
-            /* ===========================
-               Results Table Styling
-               =========================== */
-            builder.AppendLine(@"
+
 table.results {
   width: 100%;
   border-collapse: collapse;
@@ -173,12 +142,8 @@ table.results td:first-child {
   font-weight: 500;
 }
 table.results tbody tr:hover { background-color: #f1f7ff; }
-");
 
-            /* ===========================
-               Results & Legend Colour Coding
-               =========================== */
-            builder.AppendLine(@"
+
 /* Eligibility (row-level) */
 table.results tr.competition-eligible,
 .legend .competition-eligible   { background-color: #e0ffe0; }
@@ -215,12 +180,8 @@ table.results td.mixed-score,
 
 table.results td.tens-score,
 .legend .tens-score                 { background-color: #EBF1DE; }
-");
 
-            /* ===========================
-            Column Widths
-            =========================== */
-            builder.AppendLine(@"
+
 /* Explicit column widths */
 table.results th.tens-score,
 table.results td.tens-score {
@@ -231,12 +192,8 @@ table.results th.mixed-score,
 table.results td.mixed-score {
   min-width: 65px;   /* baseline width for Scoring 11 */
 }
-");
 
-            /* ===========================
-               Legend Styling
-               =========================== */
-            builder.AppendLine(@"
+
 /* Default legend styling (shared baseline) */
 .legend {
   font-size: 1rem;
@@ -270,13 +227,8 @@ table.results td.mixed-score {
   flex: 1 1 300px;
   min-width: 250px;
 }
-");
 
 
-            /* ===========================
-               Podium Highlighting
-               =========================== */
-            builder.AppendLine(@"
 
 /* Gold */
 table.results td.mixed-score.gold,
@@ -303,12 +255,8 @@ table.results td.bronze,
   color: #DDD9C4;
 }
 
-");
 
-            /* ===========================
-               Header + Navigation
-               =========================== */
-            builder.AppendLine(@"
+
 header {
   font-size: 1.25rem;
 }
@@ -356,7 +304,7 @@ header .event-distance {
 
 /* Diagonal banner */
 .event-page .event-header-core.stand-alone-event::after {
-  content: ""Non-championship event"";
+  content: "Non-championship event";
   position: absolute;
   top: 50%;
   left: 65%;
@@ -380,7 +328,7 @@ table.results thead .event-title.cancelled-event {
 
 /* Diagonal banner */
 table.results thead .event-title.cancelled-event::after {
-  content: ""Cancelled"";
+  content: "Cancelled";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -403,7 +351,7 @@ table.results thead .event-title.cancelled-event::after {
 
 /* Diagonal banner */
 .event-page .event-header-core.cancelled-event::after {
-  content: ""Cancelled"";
+  content: "Cancelled";
   position: absolute;
   top: 50%;
   left: 65%;
@@ -425,7 +373,7 @@ table.results thead .event-title.cancelled-event::after {
 
 /* Diagonal banner */
 .calendar td.cancelled-event::after {
-  content: ""Cancelled"";
+  content: "Cancelled";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -536,17 +484,13 @@ table.results thead tr:nth-child(3) th {
 .event-nav a.next,
 .competition-nav a.next { text-align: right; }
 .event-nav a.prev::before,
-.competition-nav a.prev::before { content: ""←""; }
+.competition-nav a.prev::before { content: "←"; }
 .event-nav a.next::after,
-.competition-nav a.next::after { content: ""→""; }
+.competition-nav a.next::after { content: "→"; }
 .event-nav a:hover,
 .competition-nav a:hover { background-color: #e0e0e0; }
-");
 
-            /* ===========================
-            League identification badges
-            =========================== */
-            builder.AppendLine(@"
+
 td.competitor-name {
   position: relative;
   padding: 6px 8px;
@@ -567,12 +511,8 @@ td.competitor-name {
   opacity: 0.6;
   white-space: nowrap;
 }
-");
 
-            /* ===========================
-            Competition Rules Block
-            =========================== */
-            builder.AppendLine(@"
+
 .competition-rules {
   background: #f9f9f9;
   border-left: 4px solid #ccc;
@@ -582,12 +522,8 @@ td.competitor-name {
   font-size: 0.95rem;
   color: #333;
 }
-");
 
-            /* ===========================
-               Footer
-               =========================== */
-            builder.AppendLine(@"
+
 footer {
   margin-top: 2rem;
   font-size: 0.75rem;
@@ -596,12 +532,8 @@ footer {
   border-top: 1px solid #ddd;
   padding-top: 0.5em;
 }
-");
 
-            /* ===========================
-               Mobile Overrides
-               =========================== */
-            builder.AppendLine(@"
+
 @media (max-width: 600px) {
   html, body { font-size: 1rem; }
 
@@ -756,8 +688,4 @@ footer {
   }
 }
 
-");
-            return builder.ToString();
-        }
-    }
-}
+

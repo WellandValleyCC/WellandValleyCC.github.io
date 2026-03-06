@@ -145,8 +145,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 <link rel=""icon"" href=""../assets/favicon.svg"" type=""image/svg+xml"">
 <link rel=""icon"" sizes=""32x32"" href=""../assets/favicon-32.png"">
 <link rel=""icon"" sizes=""16x16"" href=""../assets/favicon-16.png"">
-<link rel=""apple-touch-icon"" sizes=""180x180"" href=""../assets/apple-touch-icon.png"">
-";
+<link rel=""apple-touch-icon"" sizes=""180x180"" href=""../assets/apple-touch-icon.png"">";
 
         protected static string FormatHosts(string rawHosts)
         {

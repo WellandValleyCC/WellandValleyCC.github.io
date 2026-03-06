@@ -45,6 +45,30 @@ namespace ClubSiteGenerator.Services
             File.WriteAllText(path, html);
         }
 
+        public void RenderRedirectIndex(string indexFileName)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("  <meta charset=\"utf-8\">");
+            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
+            sb.AppendLine("  <title>Round Robin TT Season Index</title>");
+            sb.AppendLine(RenderFaviconLinks());
+            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.RoundRobin));
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+            sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+
+            var path = Path.Combine(outputDir, "index.html");
+            File.WriteAllText(path, sb.ToString());
+
+            path = Path.Combine(outputDir, "index.htm");
+            File.WriteAllText(path, sb.ToString());
+        }
+
         // ------------------------------------------------------------
         // MAIN PAGE BUILDER
         // ------------------------------------------------------------
@@ -303,8 +327,7 @@ namespace ClubSiteGenerator.Services
 <link rel=""icon"" href=""assets/favicon.svg"" type=""image/svg+xml"">
 <link rel=""icon"" sizes=""32x32"" href=""assets/favicon-32.png"">
 <link rel=""icon"" sizes=""16x16"" href=""assets/favicon-16.png"">
-<link rel=""apple-touch-icon"" sizes=""180x180"" href=""assets/apple-touch-icon.png"">
-";
+<link rel=""apple-touch-icon"" sizes=""180x180"" href=""assets/apple-touch-icon.png"">";
 
         private string RenderGeneratedFooter()
         {

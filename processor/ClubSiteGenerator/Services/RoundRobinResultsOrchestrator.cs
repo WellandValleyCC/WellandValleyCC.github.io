@@ -249,7 +249,7 @@ namespace ClubSiteGenerator.Services
                 rrEventResults);
 
             renderer.RenderIndex(indexFileName);
-            RenderRedirectIndex(indexFileName);
+            renderer.RenderRedirectIndex(indexFileName);
         }
 
         private void PrepareAssets()
@@ -263,7 +263,7 @@ namespace ClubSiteGenerator.Services
             var outputRoot = outputDir;
 
             var pipeline = CreateAssetPipeline();
-            var result = pipeline.CopyRoundRobinAssets(
+            var result = pipeline.CopyAssets(
                 assetsRoot,
                 outputRoot,
                 competitionYear,
@@ -289,29 +289,6 @@ namespace ClubSiteGenerator.Services
                 copyHelper,
                 directoryProvider,
                 log);
-        }
-
-        private void RenderRedirectIndex(string indexFileName)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("<!DOCTYPE html>");
-            sb.AppendLine("<html lang=\"en\">");
-            sb.AppendLine("<head>");
-            sb.AppendLine("  <meta charset=\"utf-8\">");
-            sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
-            sb.AppendLine("  <title>Round Robin TT Season Index</title>");
-            sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.RoundRobin));
-            sb.AppendLine("</head>");
-            sb.AppendLine("<body>");
-            sb.AppendLine($"<p>Redirecting to <a href=\"{indexFileName}\">{competitionYear} Season</a></p>");
-            sb.AppendLine("</body>");
-            sb.AppendLine("</html>");
-
-            var path = Path.Combine(outputDir, "index.html");
-            File.WriteAllText(path, sb.ToString());
-
-            path = Path.Combine(outputDir, "index.htm");
-            File.WriteAllText(path, sb.ToString());
         }
     }
 }

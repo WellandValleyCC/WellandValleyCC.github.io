@@ -8,7 +8,7 @@
     {
         // Folder names
         public const string ClubSiteOutputFolder = "SiteOutput";
-        public const string ClubAssetsFolder = "ClubSiteAssets";
+        public const string ClubAssetsFolder = "SiteAssets";
         
         public const string RoundRobinOutputFolder = "RoundRobinSiteOutput";
         public const string RoundRobinAssetsFolder = "RoundRobinSiteAssets";
@@ -20,6 +20,7 @@
         public const string LogosFolder = "logos";
 
         // Filename prefixes
+        public const string ClubCssPrefix = "wvcc";
         public const string RoundRobinCssPrefix = "roundrobin";
 
         // File extensions

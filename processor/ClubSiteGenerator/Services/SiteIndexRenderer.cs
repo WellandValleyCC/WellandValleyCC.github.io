@@ -12,15 +12,18 @@ namespace ClubSiteGenerator.Services
         private readonly IEnumerable<EventResultsSet> events;
         private readonly IEnumerable<CompetitionResultsSet> competitions;
         private readonly string outputDir;
+        private readonly string cssFileName;
         private readonly int competitionYear;
 
         public SiteIndexRenderer(IEnumerable<EventResultsSet> events,
                                  IEnumerable<CompetitionResultsSet> competitions,
-                                 string outputDir)
+                                 string outputDir,
+                                 string cssFileName)
         {
             this.events = events;
             this.competitions = competitions;
             this.outputDir = outputDir;
+            this.cssFileName = cssFileName;
             this.competitionYear = events.FirstOrDefault()?.EventDate.Year
                                    ?? DateTime.Now.Year;
         }
@@ -44,7 +47,8 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
-            sb.AppendLine("  <link rel=\"stylesheet\" href=\"assets/styles.css\">");
+            sb.AppendLine($"  <link rel=\"stylesheet\" href=\"assets/{cssFileName}\">");
+            sb.AppendLine(RenderFaviconLinks());
             sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
@@ -286,6 +290,7 @@ namespace ClubSiteGenerator.Services
             sb.AppendLine("  <meta charset=\"utf-8\">");
             sb.AppendLine($"  <meta http-equiv=\"refresh\" content=\"0; url={indexFileName}\">");
             sb.AppendLine("  <title>Welland Valley Cycling Club - TT Season Index</title>");
+            sb.AppendLine(RenderFaviconLinks());
             sb.AppendLine(GoogleAnalytics.GetAnalyticsSnippet(SiteBrand.Wvcc));
             sb.AppendLine("</head>");
             sb.AppendLine("<body>");
@@ -300,5 +305,14 @@ namespace ClubSiteGenerator.Services
             path = Path.Combine(outputDir, "index.htm");
             File.WriteAllText(path, sb.ToString());
         }
+
+        /// <summary>
+        /// Emits the standard favicon and touch‑icon HTML for the index page.
+        /// </summary>
+        private string RenderFaviconLinks() => @"
+<link rel=""icon"" href=""assets/favicon.svg"" type=""image/svg+xml"">
+<link rel=""icon"" sizes=""32x32"" href=""assets/favicon-32.png"">
+<link rel=""icon"" sizes=""16x16"" href=""assets/favicon-16.png"">
+<link rel=""apple-touch-icon"" sizes=""180x180"" href=""assets/apple-touch-icon.png"">";
     }
 }
