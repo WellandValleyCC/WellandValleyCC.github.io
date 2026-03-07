@@ -228,7 +228,35 @@ table.results td.mixed-score {
   min-width: 250px;
 }
 
+/* WVCC banner */
 
+.wvcc-banner-header {
+    position: relative;
+    padding: 0.75rem 0;     /* slice height */
+    overflow: hidden;       /* creates the horizontal band */
+}
+
+.wvcc-banner-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: url("../logos/wvcc/wvcc-logo.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* caps the SVG width and fills the rest with yellow */
+    background-size: min(600px, 100%) auto;
+    background-color: #F8EC47;
+
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+
+.wvcc-banner-header > * {
+    position: relative;     /* ensures header content sits above */
+}
 
 /* Gold */
 table.results td.mixed-score.gold,
