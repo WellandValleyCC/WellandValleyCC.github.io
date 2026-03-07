@@ -37,9 +37,7 @@ namespace ClubSiteGenerator.Renderers
 
             // Header with title, nav, and rules (includes legend if needed)
             sb.AppendLine("<header>");
-            sb.AppendLine("<div class=\"wvcc-banner-header\">");
             sb.Append(HeaderHtml());
-            sb.AppendLine("</div>");
             sb.AppendLine("</header>");
 
             sb.Append(ResultsTableHtml());

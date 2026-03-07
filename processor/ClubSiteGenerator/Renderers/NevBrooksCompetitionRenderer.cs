@@ -43,14 +43,20 @@ namespace ClubSiteGenerator.Renderers
         {
             var sb = new StringBuilder();
 
+            // Banner area: title + nav
+            sb.AppendLine("<div class=\"wvcc-banner-header\">");
+
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(competitionTitle)}</h1>");
 
             sb.AppendLine("  <nav class=\"competition-nav\" aria-label=\"Competition navigation\">");
             sb.AppendLine($"    <a class=\"prev\" href=\"{resultsSet.PrevLink}\" aria-label=\"Previous\">{resultsSet.PrevLabel}</a>");
-            sb.AppendLine("    <a class=\"index\" href=\"../preview.html\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
+            sb.AppendLine($"    <a class=\"index\" href=\"../{IndexFileName}\" aria-current=\"page\" aria-label=\"Back to index\">Index</a>");
             sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
+            sb.AppendLine("</div>"); // end banner
+
+            // Rules + legend (outside banner)
             sb.AppendLine("<div class=\"rules-and-legend\">");
 
             sb.AppendLine("  <section class=\"competition-rules\">");
