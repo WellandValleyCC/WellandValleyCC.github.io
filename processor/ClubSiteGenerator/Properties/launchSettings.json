@@ -2,7 +2,7 @@
   "profiles": {
     "ClubSiteGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "--year 2025"
+      "commandLineArgs": "--year 2026"
     }
   }
 }
