@@ -323,11 +323,8 @@ header .event-distance {
 
 /* Base standalone style */
 .event-page .event-header-core.stand-alone-event {
-  position: relative;
-  background-color: #e2f0d9; /* pale green background */
-  color: #1c4721;           /* dark green text */
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  background-color: transparent;
+  color: inherit;
 }
 
 /* Diagonal banner */
@@ -345,6 +342,15 @@ header .event-distance {
   white-space: nowrap;
   pointer-events: none;
   z-index: 2;
+}
+
+/* Desktop / wider screens */
+@media (min-width: 700px) {
+  .event-page .event-header-core.stand-alone-event::after {
+    font-size: 1.5rem;                                 /* larger text */
+	top: 60%;                                        /* lower */
+	left: 45%;                                       /* to the left of the Index link */
+  }
 }
 
 /* Base cancelled style */
@@ -370,11 +376,8 @@ table.results thead .event-title.cancelled-event::after {
 }
 
 .event-page .event-header-core.cancelled-event {
-  position: relative;
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  background-color: transparent;
+  color: inherit;
 }
 
 /* Diagonal banner */
@@ -392,6 +395,16 @@ table.results thead .event-title.cancelled-event::after {
   white-space: nowrap;
   pointer-events: none;
   z-index: 2;
+}
+
+/* Desktop / wider screens */
+@media (min-width: 700px) {
+  .event-page .event-header-core.cancelled-event::after {
+    font-size: 2rem;                                 /* larger text */
+    padding: 0.4rem 5rem;                            /* longer ribbon */
+	top: 60%;                                        /* lower */
+	left: 35%;                                       /* to the left of the Index link */
+  }
 }
 
 /* Base cancelled style for calendar cell */
