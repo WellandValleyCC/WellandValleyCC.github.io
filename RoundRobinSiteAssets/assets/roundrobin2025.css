@@ -580,7 +580,7 @@ body.rr.event-page a:hover {
    ========================================================= */
 body.rr.event-page .header-and-legend {
     padding: 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: none;
     background: transparent;
 }
 
