@@ -328,10 +328,10 @@ header .event-distance {
 }
 
 /* Diagonal banner */
-.event-page .event-header-core.stand-alone-event::after {
+.event-page .event-header-core.stand-alone-event::before {
   content: "Non-championship event";
   position: absolute;
-  top: 50%;
+  top: 65%;
   left: 65%;
   transform: translate(-50%, -50%) rotate(-20deg);
   background: rgba(0, 128, 0, 0.5);
@@ -346,10 +346,10 @@ header .event-distance {
 
 /* Desktop / wider screens */
 @media (min-width: 700px) {
-  .event-page .event-header-core.stand-alone-event::after {
-    font-size: 1.5rem;                                 /* larger text */
-	top: 60%;                                        /* lower */
-	left: 45%;                                       /* to the left of the Index link */
+  .event-page .event-header-core.stand-alone-event::before {
+    font-size: 1.5rem;
+	left: 45%;
+	top: 65%;
   }
 }
 
@@ -364,7 +364,7 @@ table.results thead .event-title.cancelled-event {
 table.results thead .event-title.cancelled-event::after {
   content: "Cancelled";
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-65deg);
   background: rgba(200, 0, 0, 0.5); /* 50% opacity */
@@ -385,7 +385,7 @@ table.results thead .event-title.cancelled-event::after {
   content: "Cancelled";
   position: absolute;
   top: 50%;
-  left: 65%;
+  left: 35%;
   transform: translate(-50%, -50%) rotate(-20deg);
   background: rgba(200, 0, 0, 0.5);
   color: white;
@@ -400,11 +400,11 @@ table.results thead .event-title.cancelled-event::after {
 /* Desktop / wider screens */
 @media (min-width: 700px) {
   .event-page .event-header-core.cancelled-event::after {
-    font-size: 2rem;                                 /* larger text */
+    font-size: 1.5rem;                                 /* larger text */
     padding: 0.4rem 5rem;                            /* longer ribbon */
-	top: 60%;                                        /* lower */
-	left: 35%;                                       /* to the left of the Index link */
-  }
+	left: 25%;
+  	top: 55%;
+}
 }
 
 /* Base cancelled style for calendar cell */
