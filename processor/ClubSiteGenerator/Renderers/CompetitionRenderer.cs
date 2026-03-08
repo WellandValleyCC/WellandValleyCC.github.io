@@ -56,10 +56,13 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string TitleElement()
             => $"<title>{WebUtility.HtmlEncode(competitionTitle)}</title>";
-        
+
         protected override string HeaderHtml()
         {
             var sb = new StringBuilder();
+
+            // Banner area: title + nav
+            sb.AppendLine("<div class=\"wvcc-banner-header\">");
 
             sb.AppendLine($"  <h1>{WebUtility.HtmlEncode(competitionTitle)}</h1>");
 
@@ -69,6 +72,9 @@ namespace ClubSiteGenerator.Renderers
             sb.AppendLine($"    <a class=\"next\" href=\"{resultsSet.NextLink}\" aria-label=\"Next\">{resultsSet.NextLabel}</a>");
             sb.AppendLine("  </nav>");
 
+            sb.AppendLine("</div>"); // end banner
+
+            // Rules + legend (outside banner)
             sb.AppendLine("<div class=\"rules-and-legend\">");
 
             sb.AppendLine("  <section class=\"competition-rules\">");
@@ -89,6 +95,7 @@ namespace ClubSiteGenerator.Renderers
 
             return sb.ToString();
         }
+
         protected override string ResultsTableHtml()
         {
             var sb = new StringBuilder();

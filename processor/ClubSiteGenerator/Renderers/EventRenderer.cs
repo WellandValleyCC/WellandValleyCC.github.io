@@ -48,6 +48,9 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("<div class=\"header-and-legend\">");
 
+            // Banner area: event header + nav
+            sb.AppendLine("<div class=\"wvcc-banner-header\">");
+
             var headerClasses = "event-header-core";
 
             if (isStandAloneEvent)
@@ -57,6 +60,7 @@ namespace ClubSiteGenerator.Renderers
                 headerClasses += " cancelled-event";
 
             sb.AppendLine($"  <div class=\"{headerClasses}\">");
+
             if (isStandAloneEvent)
             {
                 sb.AppendLine($"    <h1>{WebUtility.HtmlEncode(eventTitle)}</h1>");
@@ -66,22 +70,27 @@ namespace ClubSiteGenerator.Renderers
                 sb.AppendLine(
                     $"    <h1><span class=\"event-number\">Event {eventNumber}:</span> {WebUtility.HtmlEncode(eventTitle)}</h1>");
             }
+
             sb.AppendLine($"    <p class=\"event-date\">{eventDate:dddd, dd MMMM yyyy}</p>");
             sb.AppendLine($"    <p class=\"event-distance\">Distance: {eventMiles:0.##} miles</p>");
             sb.AppendLine("  </div>");
 
             sb.AppendLine(RenderNav(resultsSet));
 
+            sb.AppendLine("</div>"); // end banner
+
+            // Legend outside banner
             sb.AppendLine("  <div class=\"legend\">");
             sb.AppendLine("    <span class=\"competition-eligible\">Full member</span>");
             sb.AppendLine("    <span class=\"guest-second-claim\">2nd claim</span>");
             sb.AppendLine("    <span class=\"guest-non-club-member\">Guest</span>");
             sb.AppendLine("  </div>");
 
-            sb.AppendLine("</div>");
+            sb.AppendLine("</div>"); // end header-and-legend
 
             return sb.ToString();
         }
+
 
         private string RenderNav(EventResultsSet resultsSet)
         {
