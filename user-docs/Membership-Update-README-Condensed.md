@@ -32,7 +32,11 @@ git push
 - Check GitHub Actions for the private repo.
 - Ensure the run completes and publishes competitors_YYYY.csv to the public repo.
 
-## 5. Pull updated CSV (public repo)
+## 5. Confirm public repo pipeline run
+- The commit that publishes competitors_YYYY.csv automatically triggers the Club Processor workflow (mode: competitor).
+- This rebuilds the competitor SQLite database and commits the updated DB back into the public repo.
+
+## 6. Pull updated CSV (public repo)
 - In:
   C:\repos\wvcc\WellandValleyCC.github.io
 
@@ -43,21 +47,21 @@ git pull
 - Confirm a new commit tagged like:
   clubdata-competitors-YYYY-<timestamp>
 
-## 6. Open workbooks
+## 7. Open workbooks
 - Open:
   ClubEvents_YYYY.xlsx
 - Open:
   competitors_YYYY.csv
 
-## 7. Snapshot the CSV
+## 8. Snapshot the CSV
 - Rename CSV sheet to:
   MMDD_competitors_YYYY
 
-## 8. Copy into events workbook
+## 9. Copy into events workbook
 - From CSV sheet: select A2:H<lastrow>
 - Paste into Competitors sheet at A2 in ClubEvents_YYYY.xlsx
 
-## 9. Commit updated events workbook
+## 10. Commit updated events workbook
 ```bash
 git add data/ClubEvents_YYYY.xlsx
 git commit -m "Competitors updated as per JW <date> [ci skip]"
