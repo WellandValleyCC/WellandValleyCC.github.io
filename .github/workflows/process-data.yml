@@ -269,7 +269,7 @@ jobs:
           
       - name: Trigger site generation workflow
         if: ${{ env.skipCommit != 'true' }}
-        uses: peter-evans/workflow-dispatch@v3
+        uses: peter-evans/repository-dispatch@v3
         with:
           workflow: 'Generate Static Site'
           ref: master
