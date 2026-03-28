@@ -12,19 +12,19 @@ on:
       - 'data/competitors_*.csv'
       - 'data/ClubEvents_*.xlsx'
   workflow_dispatch:
-   inputs:
-     mode:
-       description: 'Run mode: competitors or events'
-       required: false
-       default: ''
-     year:
-       description: 'Year to process (e.g. 2025)'
-       required: false
-       default: ''
-     verbosity:
-       description: 'Verbosity level for dotnet test (minimal, normal, detailed)'
-       required: false
-       default: 'minimal'
+    inputs:
+      mode:
+        description: 'Run mode: competitors or events'
+        required: false
+        default: ''
+      year:
+        description: 'Year to process (e.g. 2025)'
+        required: false
+        default: ''
+      verbosity:
+        description: 'Verbosity level for dotnet test (minimal, normal, detailed)'
+        required: false
+        default: 'minimal'
       
 jobs:
   build-test-run:
@@ -209,7 +209,7 @@ jobs:
           else
             echo "[INFO] No competitor CSV processed — skipping metrics summary"
           fi
-
+          
       - name: Prepare commit inputs for Competitor SQLite DB
         run: |
           year="${{ github.event.inputs.year }}"
@@ -257,6 +257,7 @@ jobs:
             echo "[INFO] No ClubEvents XLSX marker file — skipping commit"
             echo "skipCommit=true" >> $GITHUB_ENV
           fi
+
         shell: bash
       
       - name: Commit ClubEvents DB if needed
@@ -265,13 +266,11 @@ jobs:
         with:
           db-path: ${{ env.dbPath }}
           commit-message: ${{ env.commitMessage }}
-
-      # NEW STEP — Trigger static site generation
+          
       - name: Trigger site generation workflow
         if: ${{ env.skipCommit != 'true' }}
         uses: peter-evans/workflow-dispatch@v2
         with:
           workflow: 'Generate Static Site'
           ref: master
-          inputs:
-            year: ${{ steps.detect.outputs.year }}
+          inputs: '{"year": "${{ steps.detect.outputs.year }}"}'
