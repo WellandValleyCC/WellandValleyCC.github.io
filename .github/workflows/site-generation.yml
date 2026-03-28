@@ -16,6 +16,8 @@ on:
       year:
         description: "Year to process (e.g. 2025)"
         required: false
+  repository-dispatch:
+    types: [generate-site]
 
 jobs:
   build-site:

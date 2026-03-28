@@ -271,6 +271,7 @@ jobs:
         if: ${{ env.skipCommit != 'true' }}
         uses: peter-evans/repository-dispatch@v3
         with:
-          workflow: 'Generate Static Site'
-          ref: master
-          inputs: '{"year": "${{ steps.detect.outputs.year }}"}'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: WellandValleyCC/WellandValleyCC.github.io
+          event-type: generate-site
+          client-payload: '{"year":"${{ steps.detect.outputs.year }}"}'
