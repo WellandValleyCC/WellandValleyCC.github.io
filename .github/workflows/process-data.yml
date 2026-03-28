@@ -266,4 +266,12 @@ jobs:
           db-path: ${{ env.dbPath }}
           commit-message: ${{ env.commitMessage }}
 
-      
+      # NEW STEP — Trigger static site generation
+      - name: Trigger site generation workflow
+        if: ${{ env.skipCommit != 'true' }}
+        uses: peter-evans/workflow-dispatch@v2
+        with:
+          workflow: 'Generate Static Site'
+          ref: master
+          inputs:
+            year: ${{ steps.detect.outputs.year }}
