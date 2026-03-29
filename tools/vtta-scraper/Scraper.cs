@@ -30,7 +30,14 @@ namespace vttaScraper
             await page.FillAsync("input[name=\"custom\"]", distance);
             await page.SelectOptionAsync("select[name='units']", new[] { "miles" });
             await page.ClickAsync("button.update");
-            await page.WaitForSelectorAsync("table tbody tr");
+
+            // Wait until the table has real content
+            await page.WaitForFunctionAsync(
+                @"() => {
+                    const rows = document.querySelectorAll('table tbody tr');
+                    if (rows.length === 0) return false;
+                    return Array.from(rows).every(r => r.innerText.trim().length > 0);
+                }");
 
             var headers = (await page.Locator("table thead th").AllInnerTextsAsync()).ToList();
             var rows = await page.Locator("table tbody tr").AllAsync();
