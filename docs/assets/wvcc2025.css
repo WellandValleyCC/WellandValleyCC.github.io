@@ -141,7 +141,7 @@ table.results td:first-child {
   text-align: left;
   font-weight: 500;
 }
-table.results tbody tr:hover { background-color: #f1f7ff; }
+table.results tbody tr:hover { background-color: #f2f2f2; }
 
 
 /* Eligibility (row-level) */
