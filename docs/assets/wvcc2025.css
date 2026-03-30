@@ -143,7 +143,6 @@ table.results td:first-child {
 }
 table.results tbody tr:hover { background-color: #f2f2f2; }
 
-
 /* Eligibility (row-level) */
 table.results tr.competition-eligible,
 .legend .competition-eligible   { background-color: #e0ffe0; }
