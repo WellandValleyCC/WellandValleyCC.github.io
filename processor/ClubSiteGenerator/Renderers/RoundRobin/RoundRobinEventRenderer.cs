@@ -158,22 +158,37 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         private IEnumerable<string> BuildCells(Ride ride)
         {
+            bool noResultYet =
+                ride.Status == RideStatus.Valid &&
+                ride.TotalSeconds == 0;
+
             var timeCell = ride.Status switch
             {
                 RideStatus.DNF => "DNF",
                 RideStatus.DNS => "DNS",
                 RideStatus.DQ => "DQ",
-                _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
+
+                _ when noResultYet => string.Empty,
+
+                _ => TimeSpan.FromSeconds(ride.TotalSeconds)
+                              .ToString(@"hh\:mm\:ss")
             };
 
             var cleanName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
             yield return cleanName;
 
             yield return ride.RoundRobinClub ?? "";
-            yield return ride.EventRank?.ToString() ?? "";
+
+            yield return noResultYet
+                ? ""
+                : ride.EventEligibleRidersRank?.ToString() ?? "";
+
             yield return ride.EventRoadBikeRank?.ToString() ?? "";
             yield return timeCell;
-            yield return ride.AvgSpeed?.ToString("0.00") ?? string.Empty;
+
+            yield return noResultYet
+                ? ""
+                : ride.AvgSpeed?.ToString("0.00") ?? "";
         }
 
         private string RenderCell(string value, int index, Ride ride)
