@@ -26,7 +26,7 @@ namespace ClubCore.Models.Csv
         public string? RoadBike { get; set; }
 
         [Name("DNS/DNF/DQ")]
-        public string? EligibilityRaw { get; set; }
+        public string? RideStatusRaw { get; set; }
 
         [Name("Name")]
         public string? Name { get; set; }
@@ -63,11 +63,11 @@ namespace ClubCore.Models.Csv
         public bool IsRoadBike => string.Equals(RoadBike?.Trim(), "r", StringComparison.OrdinalIgnoreCase);
 
         [Ignore]
-        public RideStatus Eligibility
+        public RideStatus RideStatus
         {
             get
             {
-                var raw = EligibilityRaw?.Trim().ToUpperInvariant();
+                var raw = RideStatusRaw?.Trim().ToUpperInvariant();
 
                 return raw switch
                 {

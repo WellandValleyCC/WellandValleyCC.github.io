@@ -58,8 +58,8 @@ namespace ClubProcessor.Services.Validation
             if (!string.IsNullOrEmpty(row.RoadBike) && !Regex.IsMatch(row.RoadBike, "^[rR]$"))
                 issues.Add("Roadbike? must be empty or 'r'/'R'");
 
-            if (!string.IsNullOrEmpty(row.EligibilityRaw) &&
-                !Regex.IsMatch(row.EligibilityRaw, "^(DNS|DNF|DQ)$", RegexOptions.IgnoreCase))
+            if (!string.IsNullOrEmpty(row.RideStatusRaw) &&
+                !Regex.IsMatch(row.RideStatusRaw, "^(DNS|DNF|DQ)$", RegexOptions.IgnoreCase))
                 issues.Add("DNS/DNF/DQ must be empty or one of DNS/DNF/DQ");
 
             if (string.IsNullOrWhiteSpace(row.Name))

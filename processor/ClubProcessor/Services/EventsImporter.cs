@@ -162,7 +162,7 @@ namespace ClubProcessor.Services
                 TotalSeconds = row.TotalSeconds,
                 AvgSpeed = row.TotalSeconds > 0 ? 25.0 * 1000 / row.TotalSeconds * 3.6 : null, // Example: 25 km course
                 IsRoadBike = row.IsRoadBike,
-                Status = row.Eligibility,
+                Status = row.RideStatus,
             };
         }
 
