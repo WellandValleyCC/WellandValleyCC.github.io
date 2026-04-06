@@ -64,8 +64,7 @@ namespace ClubSiteGenerator.Models.Extensions
         /// </summary>
         private static bool HasResult(this Ride ride)
         {
-            return ride.Status == RideStatus.Valid &&
-                   ride.TotalSeconds > 0;
+            return ride.Status == RideStatus.Valid;
         }
     }
 }

@@ -2,6 +2,7 @@
 using AngleSharp.Html.Parser;
 using AutoFixture;
 using ClubCore.Models;
+using ClubCore.Models.Enums;
 using ClubSiteGenerator.Models.Extensions;
 using ClubSiteGenerator.Renderers;
 using ClubSiteGenerator.ResultsGenerator;
@@ -30,7 +31,11 @@ namespace ClubSiteGenerator.Tests
         public void RideExtension_GetEventRankMedal_ReturnsExpectedClass(int? rank, string expected)
         {
             // Arrange: dummy ride
-            var ride = new Ride { EventEligibleRidersRank = rank };
+            var ride = new Ride
+            {
+                EventEligibleRidersRank = rank,
+                Status = RideStatus.Valid
+            };
 
             // Act
             var cssClass = ride.GetEventEligibleRidersRankClass();
@@ -48,7 +53,11 @@ namespace ClubSiteGenerator.Tests
         public void RideExtension_GetEventRoadBikeRankMedal_ReturnsExpectedClass(int? rank, string expected)
         {
             // Arrange: dummy ride
-            var ride = new Ride { EventEligibleRoadBikeRidersRank = rank };
+            var ride = new Ride
+            {
+                EventEligibleRoadBikeRidersRank = rank,
+                Status = RideStatus.Valid
+            };
 
             // Act
             var cssClass = ride.GetEventEligibleRoadBikeRidersRankClass();

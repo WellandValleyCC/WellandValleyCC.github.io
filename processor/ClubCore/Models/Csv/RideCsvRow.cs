@@ -69,15 +69,26 @@ namespace ClubCore.Models.Csv
             {
                 var raw = RideStatusRaw?.Trim().ToUpperInvariant();
 
-                return raw switch
-                {
-                    "DNS" => RideStatus.DNS,
-                    "DNF" => RideStatus.DNF,
-                    "DQ" => RideStatus.DQ,
-                    "" => RideStatus.Valid,
-                    null => RideStatus.Valid,
-                    _ => RideStatus.Undefined
-                };
+                // Explicit statuses always win
+                if (raw == "DNS") return RideStatus.DNS;
+                if (raw == "DNF") return RideStatus.DNF;
+                if (raw == "DQ") return RideStatus.DQ;
+
+                // Detect future event: no status AND no time entered
+                bool noTimeEntered =
+                    string.IsNullOrWhiteSpace(Hours) &&
+                    string.IsNullOrWhiteSpace(Minutes) &&
+                    string.IsNullOrWhiteSpace(Seconds);
+
+                if (noTimeEntered)
+                    return RideStatus.Ready;
+
+                // No explicit status, but time is present → valid result
+                if (string.IsNullOrWhiteSpace(raw))
+                    return RideStatus.Valid;
+
+                // Anything else is malformed
+                return RideStatus.Undefined;
             }
         }
     }

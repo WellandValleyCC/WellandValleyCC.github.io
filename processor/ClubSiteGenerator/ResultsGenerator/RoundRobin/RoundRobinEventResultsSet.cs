@@ -88,8 +88,17 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             var dnss = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNS);
             var dqs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DQ);
 
+            // NEW: include Ready riders (future event entries)
+            var ready = hydratedRidesForEvent
+                .Where(r => r.Status == RideStatus.Ready)
+                .OrderBy(r => r.Name);
+
             var orderedHydratedRidesForEvent =
-                ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
+                ranked
+                .Concat(dnfs)
+                .Concat(dnss)
+                .Concat(dqs)
+                .Concat(ready);
 
             return new RoundRobinEventResultsSet(
                 roundRobinCalendar,

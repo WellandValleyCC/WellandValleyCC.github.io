@@ -155,23 +155,23 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         // ------------------------------------------------------------
         //  CELL BUILDING
         // ------------------------------------------------------------
-
         private IEnumerable<string> BuildCells(Ride ride)
         {
-            bool noResultYet =
-                ride.Status == RideStatus.Valid &&
-                ride.TotalSeconds == 0;
+            bool hasResult = ride.Status == RideStatus.Valid;
 
-            var timeCell = ride.Status switch
+            string timeCell = ride.Status switch
             {
                 RideStatus.DNF => "DNF",
                 RideStatus.DNS => "DNS",
                 RideStatus.DQ => "DQ",
 
-                _ when noResultYet => string.Empty,
+                RideStatus.Ready => "",   // future event → blank
 
-                _ => TimeSpan.FromSeconds(ride.TotalSeconds)
-                              .ToString(@"hh\:mm\:ss")
+                RideStatus.Valid => TimeSpan
+                    .FromSeconds(ride.TotalSeconds)
+                    .ToString(@"hh\\:mm\\:ss"),
+
+                _ => ""
             };
 
             var cleanName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
@@ -179,16 +179,22 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             yield return ride.RoundRobinClub ?? "";
 
-            yield return noResultYet
-                ? ""
-                : ride.EventEligibleRidersRank?.ToString() ?? "";
+            // Position (only for completed rides)
+            yield return hasResult
+                ? ride.EventEligibleRidersRank?.ToString() ?? ""
+                : "";
 
-            yield return ride.EventRoadBikeRank?.ToString() ?? "";
+            // Road bike rank (only for completed rides)
+            yield return hasResult
+                ? ride.EventRoadBikeRank?.ToString() ?? ""
+                : "";
+
             yield return timeCell;
 
-            yield return noResultYet
-                ? ""
-                : ride.AvgSpeed?.ToString("0.00") ?? "";
+            // Avg mph (only for completed rides)
+            yield return hasResult
+                ? ride.AvgSpeed?.ToString("0.00") ?? ""
+                : "";
         }
 
         private string RenderCell(string value, int index, Ride ride)
