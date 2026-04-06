@@ -26,7 +26,7 @@ namespace ClubCore.Models.Csv
         public string? RoadBike { get; set; }
 
         [Name("DNS/DNF/DQ")]
-        public string? EligibilityRaw { get; set; }
+        public string? RideStatusRaw { get; set; }
 
         [Name("Name")]
         public string? Name { get; set; }
@@ -63,21 +63,32 @@ namespace ClubCore.Models.Csv
         public bool IsRoadBike => string.Equals(RoadBike?.Trim(), "r", StringComparison.OrdinalIgnoreCase);
 
         [Ignore]
-        public RideStatus Eligibility
+        public RideStatus RideStatus
         {
             get
             {
-                var raw = EligibilityRaw?.Trim().ToUpperInvariant();
+                var raw = RideStatusRaw?.Trim().ToUpperInvariant();
 
-                return raw switch
-                {
-                    "DNS" => RideStatus.DNS,
-                    "DNF" => RideStatus.DNF,
-                    "DQ" => RideStatus.DQ,
-                    "" => RideStatus.Valid,
-                    null => RideStatus.Valid,
-                    _ => RideStatus.Undefined
-                };
+                // Explicit statuses always win
+                if (raw == "DNS") return RideStatus.DNS;
+                if (raw == "DNF") return RideStatus.DNF;
+                if (raw == "DQ") return RideStatus.DQ;
+
+                // Detect future event: no status AND no time entered
+                bool noTimeEntered =
+                    string.IsNullOrWhiteSpace(Hours) &&
+                    string.IsNullOrWhiteSpace(Minutes) &&
+                    string.IsNullOrWhiteSpace(Seconds);
+
+                if (noTimeEntered)
+                    return RideStatus.Ready;
+
+                // No explicit status, but time is present → valid result
+                if (string.IsNullOrWhiteSpace(raw))
+                    return RideStatus.Valid;
+
+                // Anything else is malformed
+                return RideStatus.Undefined;
             }
         }
     }

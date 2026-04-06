@@ -17,6 +17,9 @@ namespace ClubCore.Models.Enums
         DQ = 3,
 
         [Display(Name = "DNF")]
-        DNF = 4
+        DNF = 4,
+
+        [Display(Name = "Ready")]
+        Ready = 5
     }
 }

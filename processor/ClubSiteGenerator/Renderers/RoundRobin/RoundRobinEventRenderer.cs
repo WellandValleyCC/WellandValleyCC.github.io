@@ -155,25 +155,46 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         // ------------------------------------------------------------
         //  CELL BUILDING
         // ------------------------------------------------------------
-
         private IEnumerable<string> BuildCells(Ride ride)
         {
-            var timeCell = ride.Status switch
+            bool hasResult = ride.Status == RideStatus.Valid;
+
+            string timeCell = ride.Status switch
             {
                 RideStatus.DNF => "DNF",
                 RideStatus.DNS => "DNS",
                 RideStatus.DQ => "DQ",
-                _ => TimeSpan.FromSeconds(ride.TotalSeconds).ToString(@"hh\:mm\:ss")
+
+                RideStatus.Ready => "",   // future event → blank
+
+                RideStatus.Valid => TimeSpan
+                    .FromSeconds(ride.TotalSeconds)
+                    .ToString(@"hh\\:mm\\:ss"),
+
+                _ => ""
             };
 
             var cleanName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
             yield return cleanName;
 
             yield return ride.RoundRobinClub ?? "";
-            yield return ride.EventRank?.ToString() ?? "";
-            yield return ride.EventRoadBikeRank?.ToString() ?? "";
+
+            // Position (only for completed rides)
+            yield return hasResult
+                ? ride.EventEligibleRidersRank?.ToString() ?? ""
+                : "";
+
+            // Road bike rank (only for completed rides)
+            yield return hasResult
+                ? ride.EventRoadBikeRank?.ToString() ?? ""
+                : "";
+
             yield return timeCell;
-            yield return ride.AvgSpeed?.ToString("0.00") ?? string.Empty;
+
+            // Avg mph (only for completed rides)
+            yield return hasResult
+                ? ride.AvgSpeed?.ToString("0.00") ?? ""
+                : "";
         }
 
         private string RenderCell(string value, int index, Ride ride)

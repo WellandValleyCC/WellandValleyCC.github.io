@@ -84,16 +84,27 @@ namespace ClubSiteGenerator.ResultsGenerator
 
             var hydratedRidesForEvent = allRides.Where(r => r.EventNumber == eventNumber);
 
-            var ranked = hydratedRidesForEvent.Where(r => r.Status == RideStatus.Valid)
-                  .OrderBy(r => r.EventRank);
+            var ranked = hydratedRidesForEvent
+                .Where(r => r.Status == RideStatus.Valid)
+                .OrderBy(r => r.EventRank);
+
             var dnfs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNF);
             var dnss = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNS);
             var dqs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DQ);
 
-            var orderedHydratedRidesForEvent = ranked.Concat(dnfs).Concat(dnss).Concat(dqs);
+            // Include Ready rides (future event)
+            var ready = hydratedRidesForEvent
+                .Where(r => r.Status == RideStatus.Ready)
+                .OrderBy(r => r.Name);
+
+            var orderedHydratedRidesForEvent =
+                ranked
+                .Concat(dnfs)
+                .Concat(dnss)
+                .Concat(dqs)
+                .Concat(ready);
 
             return new EventResultsSet(fullCalendar, orderedHydratedRidesForEvent, eventNumber);
         }
     }
-
 }
