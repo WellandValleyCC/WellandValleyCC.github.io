@@ -88,10 +88,10 @@ namespace ClubSiteGenerator.ResultsGenerator.RoundRobin
             var dnss = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNS);
             var dqs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DQ);
 
-            // NEW: include Ready riders (future event entries)
+            // NEW: include Ready riders (future event entries) in the order they appear in the source spreadsheet
             var ready = hydratedRidesForEvent
                 .Where(r => r.Status == RideStatus.Ready)
-                .OrderBy(r => r.Name);
+                .OrderBy(r => r.Id);
 
             var orderedHydratedRidesForEvent =
                 ranked

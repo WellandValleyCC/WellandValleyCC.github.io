@@ -92,10 +92,10 @@ namespace ClubSiteGenerator.ResultsGenerator
             var dnss = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DNS);
             var dqs = OrderedIneligibleRides(hydratedRidesForEvent, RideStatus.DQ);
 
-            // Include Ready rides (future event)
+            // Include Ready rides (future event) in the order they appear in the source spreadsheet
             var ready = hydratedRidesForEvent
                 .Where(r => r.Status == RideStatus.Ready)
-                .OrderBy(r => r.Name);
+                .OrderBy(r => r.Id);
 
             var orderedHydratedRidesForEvent =
                 ranked

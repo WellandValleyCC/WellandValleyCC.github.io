@@ -186,7 +186,7 @@ namespace ClubSiteGenerator.Renderers
 
             // Position (only for completed rides)
             yield return hasResult
-                ? ride.EventEligibleRidersRank?.ToString() ?? ""
+                ? ride.EventRank?.ToString() ?? ""
                 : "";
 
             // Road bike rank (only for completed rides)
