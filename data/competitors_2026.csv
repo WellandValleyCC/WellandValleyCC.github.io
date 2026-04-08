@@ -178,6 +178,7 @@ ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,VetsBucket,ImportDate
 1410,Stuart,Ryan,First Claim,False,Senior,,2026-04-07
 1161,Suchocki,Maciej,First Claim,False,Senior,,2026-04-07
 890,Summerlin,Rowland,Second Claim,False,Veteran,23,2026-04-07
+1166,Tarelli,Ed,Second Claim,False,Veteran,5,2026-04-07
 45,Taylor,Ray,First Claim,False,Veteran,20,2026-04-07
 1160,Thomas,Rhys,First Claim,False,Senior,,2026-04-07
 945,Timmins,George,First Claim,False,Senior,,2026-04-07
@@ -197,7 +198,6 @@ ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,VetsBucket,ImportDate
 991,Webber,Eleanor,First Claim,True,Juvenile,,2026-04-07
 359,Welsford,John,First Claim,False,Veteran,24,2026-04-07
 1310,Weston,Thomas,First Claim,False,Senior,,2026-04-07
-1254,White,Paul,First Claim,False,Veteran,21,2026-04-07
 1200,Wilks,Jules,First Claim,False,Veteran,6,2026-04-07
 1411,Wilks,Anne,First Claim,True,Veteran,3,2026-04-07
 1412,Wilks,Fie,First Claim,True,Junior,,2026-04-07
@@ -209,5 +209,6 @@ ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,VetsBucket,ImportDate
 52,Wise,Will,First Claim,False,Senior,,2026-04-07
 62,Wilson,David,First Claim,False,Veteran,4,2026-04-07
 930,Wintersgill,Catherine,First Claim,True,Veteran,6,2026-04-07
+1254,White,Paul,First Claim,False,Veteran,21,2026-04-07
 744,Woodford,Robert,First Claim,False,Veteran,28,2026-04-07
 337,Yarnold,Linda,First Claim,True,Veteran,21,2026-04-07
