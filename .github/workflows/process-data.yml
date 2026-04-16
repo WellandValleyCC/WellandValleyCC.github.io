@@ -187,7 +187,7 @@ jobs:
           done
           
       - name: Upload extracted CSV artifacts
-        if: always()
+        if: always() && hashFiles('artifacts/extracted/**') != ''
         uses: actions/upload-artifact@v4
         with:
           name: extracted-csvs
