@@ -169,7 +169,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
                 RideStatus.Valid => TimeSpan
                     .FromSeconds(ride.TotalSeconds)
-                    .ToString(@"hh\\:mm\\:ss"),
+                    .ToString(@"hh\:mm\:ss"),
 
                 _ => ""
             };
