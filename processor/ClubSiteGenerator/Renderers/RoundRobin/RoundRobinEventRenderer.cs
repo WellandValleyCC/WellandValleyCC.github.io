@@ -187,7 +187,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             // Road bike rank (only for completed rides)
             yield return hasResult
                 ? ride.EventRoadBikeRank?.ToString() ?? ""
-                : "";
+                : ride.IsRoadBike ? "R" : "";
 
             yield return timeCell;
 

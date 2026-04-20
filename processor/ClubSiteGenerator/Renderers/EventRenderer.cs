@@ -192,7 +192,7 @@ namespace ClubSiteGenerator.Renderers
             // Road bike rank (only for completed rides)
             yield return hasResult
                 ? ride.EventRoadBikeRank?.ToString() ?? ""
-                : "";
+                : ride.IsRoadBike ? "R" : "";
 
             // Time cell (already computed)
             yield return timeCell;
