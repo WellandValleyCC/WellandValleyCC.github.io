@@ -18,7 +18,7 @@ on:
        required: false
        default: ''
      year:
-       description: 'Year to process (e.g. 2025)'
+       description: 'Year to process (e.g. 2026)'
        required: false
        default: ''
      verbosity:
