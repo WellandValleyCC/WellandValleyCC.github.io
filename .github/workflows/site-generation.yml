@@ -16,3 +16,5 @@ jobs:
     uses: ./.github/workflows/_site-core.yml
     with:
       year: ${{ github.event.inputs.year }}
+    secrets:
+      roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}

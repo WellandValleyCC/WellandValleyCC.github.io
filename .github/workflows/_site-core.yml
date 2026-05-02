@@ -6,6 +6,9 @@ on:
       year:
         required: true
         type: string
+    secrets:
+      roundrobin_pat:
+        required: true
 
 jobs:
   build-site:
@@ -180,7 +183,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: RoundRobinTT/RoundRobinTT.github.io
-          token: ${{ secrets.ROUNDROBIN_PAT }}
+          token: ${{ secrets.roundrobin_pat }}
           ref: main
           path: rrrepo
           
