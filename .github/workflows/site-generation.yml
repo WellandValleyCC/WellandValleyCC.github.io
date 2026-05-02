@@ -1,0 +1,18 @@
+name: Generate Static Site
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "Year to process (e.g. 2026)"
+        required: true
+
+jobs:
+  generate-site:
+    uses: ./.github/workflows/_site-core.yml
+    with:
+      year: ${{ github.event.inputs.year }}

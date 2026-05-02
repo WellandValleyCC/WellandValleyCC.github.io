@@ -1,21 +1,11 @@
-name: Generate Static Site
-
-permissions:
-  contents: write
-  pull-requests: write
+name: Site Core
 
 on:
-  push:
-    branches:
-      - master
-      - ci-pipeline-scaffold
-    paths:
-      - "data/club_events_*.db"
-  workflow_dispatch:
+  workflow_call:
     inputs:
       year:
-        description: "Year to process (e.g. 2025)"
-        required: false
+        required: true
+        type: string
 
 jobs:
   build-site:
@@ -46,29 +36,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          # 1) Manual input, if present
-          if [ -n "${{ github.event.inputs.year }}" ]; then
-            YEAR="${{ github.event.inputs.year }}"
-            echo "Manual trigger year: $YEAR"
-          else
-            # 2) Prefer files changed in the current commit (works with fetch-depth: 0)
-            FILES=$(git show --name-only --pretty="" "${{ github.sha }}" | grep -E 'club_events_[0-9]{4}\.db' || true)
-            YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1 || true)
+          YEAR="${{ inputs.year }}"
 
-            # 3) Fallback to scanning the data directory
-            if [ -z "${YEAR:-}" ]; then
-              FILES=$(ls -1 data/club_events_*.db 2>/dev/null || true)
-              YEAR=$(echo "$FILES" | sed -E 's/.*club_events_([0-9]{4})\.db/\1/' | sort -n | tail -n1 || true)
-              [ -n "${YEAR:-}" ] && echo "Detected year from data directory: $YEAR"
-            else
-              echo "Detected year from commit: $YEAR"
-            fi
-          fi
-
-          if [ -z "${YEAR:-}" ]; then
-            echo "No year could be detected. Ensure a club_events_YYYY.db exists or provide the input."
+          if [ -z "$YEAR" ]; then
+            echo "ERROR: Reusable workflow requires a year input"
             exit 1
           fi
+
+          echo "Using provided year: $YEAR"
 
           echo "YEAR=$YEAR" >> "$GITHUB_ENV"
           echo "year=$YEAR" >> "$GITHUB_OUTPUT"
@@ -87,7 +62,7 @@ jobs:
           git push origin "$tag"
 
       - name: Run site generator
-        run: ./scripts/generate-site.sh $YEAR
+        run: ./scripts/generate-site.sh ${{ steps.detect.outputs.year }}
 
       - name: Verify generated output
         run: ls -R /tmp/wvcc-site || echo "No files generated"
