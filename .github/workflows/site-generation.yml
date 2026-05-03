@@ -31,9 +31,8 @@ jobs:
           for i in {1..10}; do
             echo "Attempt $i..."
       
-            # Try to download metadata for the artifact
             gh api \
-              repos/${{ github.repository }}/actions/artifacts \
+              repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts \
               --jq ".artifacts[] | select(.name==\"year\") | .archive_download_url" \
               > url.txt || true
       
