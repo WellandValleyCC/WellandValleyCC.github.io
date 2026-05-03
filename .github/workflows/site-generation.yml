@@ -11,10 +11,15 @@ on:
         description: "Year to process (e.g. 2026)"
         required: true
 
+  workflow_run:
+    workflows: ["Process Club Data"]
+    types:
+      - completed
+
 jobs:
   generate-site:
     uses: ./.github/workflows/_site-core.yml
     with:
-      year: ${{ github.event.inputs.year }}
+      year: ${{ github.event.inputs.year || github.event.workflow_run.outputs.year }}
     secrets:
       roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}

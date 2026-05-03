@@ -269,12 +269,3 @@ jobs:
         with:
           db-path: ${{ env.dbPath }}
           commit-message: ${{ env.commitMessage }}
-          
-  generate-site:
-    if: ${{ needs.build-test-run.outputs.changed != '' && contains(needs.build-test-run.outputs.changed, 'ClubEvents_') }}
-    needs: build-test-run
-    uses: ./.github/workflows/_site-core.yml
-    with:
-      year: ${{ needs.build-test-run.outputs.year }}
-    secrets:
-      roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}
