@@ -20,7 +20,6 @@ on:
       - success
     branches:
       - master
-      - feature/split-process-data
 
 jobs:
   prepare:
