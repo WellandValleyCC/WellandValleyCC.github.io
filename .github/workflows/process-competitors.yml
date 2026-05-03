@@ -61,34 +61,42 @@ jobs:
       - name: Detect competitor CSV and process
         id: detect
         run: |
-          # Determine changed CSV files
+          MANUAL_YEAR="${{ github.event.inputs.year }}"
+      
+          if [ -n "$MANUAL_YEAR" ]; then
+            echo "[INFO] Manual run detected — using year $MANUAL_YEAR"
+            FILE="data/competitors_${MANUAL_YEAR}.csv"
+      
+            if [ ! -f "$FILE" ]; then
+              echo "[ERROR] File not found: $FILE"
+              exit 1
+            fi
+      
+            echo "$FILE" > .competitor_csv_path
+            echo "year=$MANUAL_YEAR" >> $GITHUB_OUTPUT
+            dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+            exit 0
+          fi
+      
+          # Automatic mode (push trigger)
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'data/competitors_.*\.csv' || true)
-
+      
           if [ -z "$CHANGED" ]; then
             echo "[WARN] No changed CSV detected — falling back to latest file"
             CHANGED=$(ls -t data/competitors_*.csv 2>/dev/null | head -n1 || true)
           fi
-
+      
           echo "[INFO] Competitor file to process:"
           echo "$CHANGED"
-
+      
           FILE="$CHANGED"
           echo "$FILE" > .competitor_csv_path
-
-          # Determine year
-          YEAR="${{ github.event.inputs.year }}"
-          if [ -z "$YEAR" ]; then
-            YEAR=$(basename "$FILE" | grep -oP '\d{4}')
-            if [ -z "$YEAR" ]; then
-              YEAR=$(date +'%Y')
-            fi
-            echo "[INFO] Auto-detected year: $YEAR"
-          fi
-
+      
+          YEAR=$(basename "$FILE" | grep -oP '\d{4}')
+          echo "[INFO] Auto-detected year: $YEAR"
           echo "year=$YEAR" >> $GITHUB_OUTPUT
-
-          # Process competitors
-          dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+      
+          dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"     
 
       - name: Tag triggering commit
         id: tag
