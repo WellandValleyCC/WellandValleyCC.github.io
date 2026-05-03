@@ -1,0 +1,142 @@
+name: Process Competitors
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - master
+      - feature/split-process-data
+    paths:
+      - 'data/competitors_*.csv'
+
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "Year to process (e.g. 2026)"
+        required: false
+        default: ""
+      verbosity:
+        description: "Verbosity level for dotnet test (minimal, normal, detailed)"
+        required: false
+        default: "minimal"
+
+jobs:
+  competitors:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas openpyxl
+
+      - name: Restore dependencies
+        run: dotnet restore processor/ClubProcessor.sln
+
+      - name: Build solution
+        run: dotnet build processor/ClubProcessor.sln --configuration Release
+
+      - name: List tests
+        run: dotnet test processor/ClubProcessor.sln --list-tests
+
+      - name: Run tests
+        run: dotnet test processor/ClubProcessor.sln --verbosity ${{ github.event.inputs.verbosity != '' && github.event.inputs.verbosity || 'minimal' }}
+
+      - name: Detect competitor CSV and process
+        id: detect
+        run: |
+          # Determine changed CSV files
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'data/competitors_.*\.csv' || true)
+
+          if [ -z "$CHANGED" ]; then
+            echo "[WARN] No changed CSV detected — falling back to latest file"
+            CHANGED=$(ls -t data/competitors_*.csv 2>/dev/null | head -n1 || true)
+          fi
+
+          echo "[INFO] Competitor file to process:"
+          echo "$CHANGED"
+
+          FILE="$CHANGED"
+          echo "$FILE" > .competitor_csv_path
+
+          # Determine year
+          YEAR="${{ github.event.inputs.year }}"
+          if [ -z "$YEAR" ]; then
+            YEAR=$(basename "$FILE" | grep -oP '\d{4}')
+            if [ -z "$YEAR" ]; then
+              YEAR=$(date +'%Y')
+            fi
+            echo "[INFO] Auto-detected year: $YEAR"
+          fi
+
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
+
+          # Process competitors
+          dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode competitors --file "$FILE"
+
+      - name: Tag triggering commit
+        id: tag
+        run: |
+          YEAR="${{ steps.detect.outputs.year }}"
+          tag="clubdata-competitors-${YEAR}-$(date +'%Y%m%d%H%M%S')"
+
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag "$tag" "${{ github.sha }}"
+          git push origin "$tag"
+
+      - name: Summarise competitor metrics
+        run: |
+          file=$(cat .competitor_csv_path)
+          year=$(basename "$file" | grep -oP '\d{4}')
+          dbPath="data/club_competitors_${year}.db"
+
+          if [ -f "$dbPath" ]; then
+            echo "[INFO] Summarising metrics for $dbPath"
+            python3 scripts/summarise_competitor_metrics.py --db "$dbPath"
+          else
+            echo "[WARN] DB not found: $dbPath — skipping metrics summary"
+          fi
+
+      - name: Prepare commit inputs for Competitor SQLite DB
+        run: |
+          file=$(cat .competitor_csv_path)
+          year=$(basename "$file" | grep -oP '\d{4}')
+          dbPath="data/club_competitors_${year}.db"
+
+          if [ -f "$dbPath" ]; then
+            echo "[INFO] Competitor DB exists: $dbPath"
+            echo "dbPath=$dbPath" >> $GITHUB_ENV
+            echo "commitMessage=Persisted competitor DB for ${year} import" >> $GITHUB_ENV
+            echo "skipCommit=false" >> $GITHUB_ENV
+          else
+            echo "[INFO] Competitor DB not found — skipping commit"
+            echo "skipCommit=true" >> $GITHUB_ENV
+          fi
+
+      - name: Commit Competitor DB if needed
+        if: ${{ env.skipCommit != 'true' }}
+        uses: ./.github/actions/commit-db
+        with:
+          db-path: ${{ env.dbPath }}
+          commit-message: ${{ env.commitMessage }}

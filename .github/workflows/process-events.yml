@@ -1,0 +1,195 @@
+name: Process Events
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - master
+      - feature/split-process-data
+    paths:
+      - 'data/ClubEvents_*.xlsx'
+
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "Year to process (e.g. 2026)"
+        required: false
+        default: ""
+      verbosity:
+        description: "Verbosity level for dotnet test (minimal, normal, detailed)"
+        required: false
+        default: "minimal"
+
+jobs:
+  events:
+    runs-on: ubuntu-latest
+    outputs:
+      year: ${{ steps.detect.outputs.year }}
+      changed: ${{ steps.detect.outputs.changed }}
+      tag: ${{ steps.tag.outputs.tag }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas openpyxl
+
+      - name: Restore dependencies
+        run: dotnet restore processor/ClubProcessor.sln
+
+      - name: Build solution
+        run: dotnet build processor/ClubProcessor.sln --configuration Release
+
+      - name: List tests
+        run: dotnet test processor/ClubProcessor.sln --list-tests
+
+      - name: Run tests
+        run: dotnet test processor/ClubProcessor.sln --verbosity ${{ github.event.inputs.verbosity != '' && github.event.inputs.verbosity || 'minimal' }}
+
+      - name: Detect changed files and extract/process
+        id: detect
+        run: |
+          # Determine changed XLSX files
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'data/ClubEvents_.*\.xlsx' || true)
+
+          if [ -z "$CHANGED" ]; then
+            echo "[WARN] No changed XLSX detected — falling back to latest file"
+            CHANGED=$(ls -t data/ClubEvents_*.xlsx 2>/dev/null | head -n1 || true)
+          fi
+
+          echo "[INFO] Events file to process:"
+          echo "$CHANGED"
+
+          {
+            echo "changed<<EOF"
+            echo "${CHANGED:-}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          # Determine year
+          YEAR="${{ github.event.inputs.year }}"
+          if [ -z "$YEAR" ]; then
+            YEAR=$(echo "$CHANGED" | grep -oP '\d{4}' | head -n1)
+            if [ -z "$YEAR" ]; then
+              YEAR=$(date +'%Y')
+            fi
+            echo "[INFO] Auto-detected year: $YEAR"
+          fi
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
+
+          # Extract events
+          FILE="$CHANGED"
+          echo "$FILE" > .club_events_xlsx_path
+          sha256sum "$FILE" || true
+          python3 scripts/extract_club_events.py "$FILE" data/extracted/
+
+      - name: Tag triggering commit
+        id: tag
+        run: |
+          YEAR="${{ steps.detect.outputs.year }}"
+          tag="clubdata-events-${YEAR}-$(date +'%Y%m%d%H%M%S')"
+
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag "$tag" "${{ github.sha }}"
+          git push origin "$tag"
+
+      - name: Run processor if extracted event CSVs exist
+        run: |
+          for year_dir in data/extracted/*; do
+            if compgen -G "$year_dir/Calendar_*.csv" > /dev/null && \
+               [[ -d "$year_dir/events" ]] && \
+               compgen -G "$year_dir/events/Event_*.csv" > /dev/null; then
+
+              echo "[INFO] Detected full extracted dataset in: $year_dir"
+              dotnet run --project processor/ClubProcessor/ClubProcessor.csproj -- --mode events --file "$year_dir"
+            else
+              echo "[INFO] Skipping $year_dir — required files not found"
+            fi
+          done
+
+      - name: Upload extracted CSV artifacts
+        if: always() && hashFiles('artifacts/extracted/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: extracted-csvs
+          path: artifacts/extracted/
+          
+      - name: Prepare commit inputs for Competitor SQLite DB
+        run: |
+          year="${{ github.event.inputs.year }}"
+          if [ -z "$year" ]; then
+            year=$(date +'%Y')
+          fi
+      
+          dbPath="data/club_competitors_${year}.db"
+      
+          if [ -f "$dbPath" ]; then
+            echo "[INFO] Competitor DB exists: $dbPath"
+            echo "dbPath=$dbPath" >> $GITHUB_ENV
+            echo "commitMessage=Persisted competitor DB for ${year} import" >> $GITHUB_ENV
+            echo "skipCommit=false" >> $GITHUB_ENV
+          else
+            echo "[INFO] Competitor DB not found — skipping commit"
+            echo "skipCommit=true" >> $GITHUB_ENV
+          fi
+        shell: bash
+      
+      - name: Commit Competitor DB if needed
+        if: ${{ env.skipCommit != 'true' }}
+        uses: ./.github/actions/commit-db
+        with:
+          db-path: ${{ env.dbPath }}
+          commit-message: ${{ env.commitMessage }}
+
+      - name: Prepare commit inputs for ClubEvents SQLite DB
+        run: |
+          file=$(cat .club_events_xlsx_path)
+          year=$(basename "$file" | grep -oP '\d{4}')
+          dbPath="data/club_events_${year}.db"
+
+          if [ -f "$dbPath" ]; then
+            echo "[INFO] Found DB: $dbPath"
+            echo "dbPath=$dbPath" >> $GITHUB_ENV
+            echo "commitMessage=Persisted ClubEvents DB for ${year} import" >> $GITHUB_ENV
+            echo "skipCommit=false" >> $GITHUB_ENV
+          else
+            echo "[INFO] DB not found — skipping commit"
+            echo "skipCommit=true" >> $GITHUB_ENV
+          fi
+
+      - name: Commit ClubEvents DB if needed
+        if: ${{ env.skipCommit != 'true' }}
+        uses: ./.github/actions/commit-db
+        with:
+          db-path: ${{ env.dbPath }}
+          commit-message: ${{ env.commitMessage }}
+
+      - name: Save year artifact
+        run: echo "${{ steps.detect.outputs.year }}" > year.txt
+
+      - name: Upload year artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: year
+          path: year.txt
