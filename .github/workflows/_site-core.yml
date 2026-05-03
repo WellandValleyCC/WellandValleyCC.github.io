@@ -163,8 +163,8 @@ jobs:
           fi
           
       - name: Create Pull Request
-        # if: steps.check_changes.outputs.no_changes == 'false'
-        if: always()
+        if: steps.check_changes.outputs.no_changes == 'false'
+        # if: always()
         uses: peter-evans/create-pull-request@v6
         with:
           base: gh-pages
