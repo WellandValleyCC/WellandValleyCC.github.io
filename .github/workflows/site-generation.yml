@@ -1,6 +1,7 @@
 name: Generate Static Site
 
 permissions:
+  actions: read
   contents: write
   pull-requests: write
 
@@ -17,7 +18,14 @@ on:
       - completed
 
 jobs:
+  debug-event:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump workflow_run payload
+        run: echo "${{ toJson(github.event.workflow_run) }}"
+
   generate-site:
+    needs: debug-event
     uses: ./.github/workflows/_site-core.yml
     with:
       year: ${{ github.event.inputs.year || github.event.workflow_run.jobs.build-test-run.outputs.year }}
