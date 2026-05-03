@@ -27,35 +27,41 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "Waiting for 'year' artifact from run ${{ github.event.workflow_run.id }}"
-      
+
           for i in {1..10}; do
             echo "Attempt $i..."
-      
+
             gh api \
               repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts \
               --jq ".artifacts[] | select(.name==\"year\") | .archive_download_url" \
               > url.txt || true
-      
+
             if [ -s url.txt ]; then
               echo "Artifact is downloadable!"
               exit 0
             fi
-      
+
             echo "Artifact not downloadable yet, waiting..."
             sleep 3
           done
-      
+
           echo "Artifact did not become downloadable in time"
           exit 1
 
-      - name: Download year artifact
-        uses: actions/download-artifact@v4
+      - name: Download year artifact via API
         env:
           GH_TOKEN: ${{ github.token }}
-        with:
-          name: year
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
+        run: |
+          echo "Fetching artifact download URL..."
+          url=$(gh api \
+            repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts \
+            --jq '.artifacts[] | select(.name=="year") | .archive_download_url')
+
+          echo "Downloading artifact..."
+          curl -L -H "Authorization: Bearer $GH_TOKEN" "$url" --output artifact.zip
+
+          echo "Extracting artifact..."
+          unzip artifact.zip
 
       - name: Read year
         id: getyear
