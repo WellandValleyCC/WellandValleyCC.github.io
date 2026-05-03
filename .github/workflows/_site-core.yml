@@ -102,6 +102,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: gh-pages
+          fetch-depth: 0
           
       - name: Download WVCC SiteOutput
         uses: actions/download-artifact@v4
@@ -185,6 +186,7 @@ jobs:
           repository: RoundRobinTT/RoundRobinTT.github.io
           token: ${{ secrets.roundrobin_pat }}
           ref: main
+          fetch-depth: 0
           path: rrrepo
           
       - name: Download RoundRobin SiteOutput
