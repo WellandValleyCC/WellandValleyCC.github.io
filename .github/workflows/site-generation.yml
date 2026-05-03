@@ -22,7 +22,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ------------------------------------------------------------
+      # MANUAL RUN: year is provided directly, skip all artifact logic
+      # ------------------------------------------------------------
+      - name: Set year from manual input
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: manualyear
+        run: echo "year=${{ github.event.inputs.year }}" >> $GITHUB_OUTPUT
+
+      # ------------------------------------------------------------
+      # AUTOMATIC RUN: wait for artifact to become downloadable
+      # ------------------------------------------------------------
       - name: Wait until artifact is downloadable
+        if: ${{ github.event_name == 'workflow_run' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -48,7 +60,11 @@ jobs:
           echo "Artifact did not become downloadable in time"
           exit 1
 
+      # ------------------------------------------------------------
+      # AUTOMATIC RUN: download artifact via GitHub API
+      # ------------------------------------------------------------
       - name: Download year artifact via API
+        if: ${{ github.event_name == 'workflow_run' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -63,17 +79,28 @@ jobs:
           echo "Extracting artifact..."
           unzip artifact.zip
 
+      # ------------------------------------------------------------
+      # UNIFIED YEAR OUTPUT: manual or automatic
+      # ------------------------------------------------------------
       - name: Read year
         id: getyear
-        run: echo "year=$(cat year.txt)" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "year=${{ github.event.inputs.year }}" >> $GITHUB_OUTPUT
+          else
+            echo "year=$(cat year.txt)" >> $GITHUB_OUTPUT
+          fi
 
     outputs:
       year: ${{ steps.getyear.outputs.year }}
 
+  # ------------------------------------------------------------
+  # SITE GENERATION
+  # ------------------------------------------------------------
   generate-site:
     needs: prepare
     uses: ./.github/workflows/_site-core.yml
     with:
-      year: ${{ github.event.inputs.year || needs.prepare.outputs.year }}
+      year: ${{ needs.prepare.outputs.year }}
     secrets:
       roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}
