@@ -21,7 +21,6 @@ on:
     branches:
       - master
       - feature/split-process-data
-    branches-ignore: []
 
 jobs:
   prepare:
