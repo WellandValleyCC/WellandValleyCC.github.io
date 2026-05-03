@@ -46,6 +46,8 @@ jobs:
 
       - name: Download year artifact
         uses: actions/download-artifact@v4
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
           name: year
           repository: ${{ github.repository }}
