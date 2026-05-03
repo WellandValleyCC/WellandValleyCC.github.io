@@ -22,26 +22,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Wait for artifact availability
+      - name: Wait until artifact is downloadable
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Checking for 'year' artifact from run ${{ github.event.workflow_run.id }}"
+          echo "Waiting for 'year' artifact from run ${{ github.event.workflow_run.id }}"
       
           for i in {1..10}; do
             echo "Attempt $i..."
-            artifacts=$(gh api repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts --jq '.artifacts[].name' || true)
       
-            if echo "$artifacts" | grep -q "year"; then
-              echo "Artifact found!"
+            # Try to download metadata for the artifact
+            gh api \
+              repos/${{ github.repository }}/actions/artifacts \
+              --jq ".artifacts[] | select(.name==\"year\") | .archive_download_url" \
+              > url.txt || true
+      
+            if [ -s url.txt ]; then
+              echo "Artifact is downloadable!"
               exit 0
             fi
       
-            echo "Artifact not yet available, waiting..."
+            echo "Artifact not downloadable yet, waiting..."
             sleep 3
           done
       
-          echo "Artifact did not appear in time"
+          echo "Artifact did not become downloadable in time"
           exit 1
 
       - name: Download year artifact
