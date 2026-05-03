@@ -13,9 +13,14 @@ on:
         required: true
 
   workflow_run:
-    workflows: ["Process Club Data"]
+    workflows: ["Process Events"]
     types:
       - completed
+    conclusions:
+      - success
+    branches:
+      - master
+      - feature/split-process-data
 
 jobs:
   prepare:
