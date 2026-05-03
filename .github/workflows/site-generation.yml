@@ -20,18 +20,40 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Wait for artifact availability
+        id: wait
+        run: |
+          echo "Checking for 'year' artifact from run ${{ github.event.workflow_run.id }}"
+
+          for i in {1..10}; do
+            echo "Attempt $i..."
+            artifacts=$(gh api repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts --jq '.artifacts[].name' || true)
+
+            if echo "$artifacts" | grep -q "year"; then
+              echo "Artifact found!"
+              exit 0
+            fi
+
+            echo "Artifact not yet available, waiting..."
+            sleep 3
+          done
+
+          echo "Artifact did not appear in time"
+          exit 1
+
       - name: Download year artifact
         uses: actions/download-artifact@v4
         with:
           name: year
-          run-id: ${{ github.event.workflow_run.id }}
           repository: ${{ github.repository }}
-  
+          run-id: ${{ github.event.workflow_run.id }}
+
       - name: Read year
         id: getyear
         run: echo "year=$(cat year.txt)" >> $GITHUB_OUTPUT
-  
+
     outputs:
       year: ${{ steps.getyear.outputs.year }}
 
