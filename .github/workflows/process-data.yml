@@ -26,9 +26,6 @@ on:
        description: 'Verbosity level for dotnet test (minimal, normal, detailed)'
        required: false
        default: 'minimal'
-
-outputs:
-  year: ${{ jobs.build-test-run.outputs.year }}
      
 jobs:
   build-test-run:

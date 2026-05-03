@@ -20,6 +20,6 @@ jobs:
   generate-site:
     uses: ./.github/workflows/_site-core.yml
     with:
-      year: ${{ github.event.inputs.year || github.event.workflow_run.outputs.year }}
+      year: ${{ github.event.inputs.year || github.event.workflow_run.jobs.build-test-run.outputs.year }}
     secrets:
       roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}
