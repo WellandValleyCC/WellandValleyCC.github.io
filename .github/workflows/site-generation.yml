@@ -18,16 +18,25 @@ on:
       - completed
 
 jobs:
-  debug-event:
+  prepare:
     runs-on: ubuntu-latest
     steps:
-      - name: Dump workflow_run payload
-        run: echo "${{ toJson(github.event.workflow_run) }}"
+      - name: Download year artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: year
+
+      - name: Read year
+        id: getyear
+        run: echo "year=$(cat year.txt)" >> $GITHUB_OUTPUT
+
+    outputs:
+      year: ${{ steps.getyear.outputs.year }}
 
   generate-site:
-    needs: debug-event
+    needs: prepare
     uses: ./.github/workflows/_site-core.yml
     with:
-      year: ${{ github.event.inputs.year || github.event.workflow_run.jobs.build-test-run.outputs.year }}
+      year: ${{ github.event.inputs.year || needs.prepare.outputs.year }}
     secrets:
       roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}

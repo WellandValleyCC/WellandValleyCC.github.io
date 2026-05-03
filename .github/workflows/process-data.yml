@@ -269,3 +269,12 @@ jobs:
         with:
           db-path: ${{ env.dbPath }}
           commit-message: ${{ env.commitMessage }}
+          
+      - name: Save year artifact
+        run: echo "${{ steps.detect.outputs.year }}" > year.txt
+
+      - name: Upload year artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: year
+          path: year.txt
