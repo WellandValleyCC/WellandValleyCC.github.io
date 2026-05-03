@@ -13,6 +13,9 @@ on:
       - 'data/ClubEvents_*.xlsx'
 
   workflow_dispatch:
+    branches:
+      - master
+      - feature/split-process-data
     inputs:
       year:
         description: "Year to process (e.g. 2026)"
