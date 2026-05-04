@@ -22,5 +22,16 @@ These Nev Brooks adjusted times are what is used to rank and score the riders at
 - Scoring is the same as in other competitionts: 60, 55, 51, etc.
 	
 
-### Why 16:35
-16:35 was chosen as the world record for a 10-mile TT.  Previously the club had used 21:00 as the Nev Brooks Standard Time, but a club member beat that time by 13 seconds and the old Excel workbook could not handle it.
+### Why 16:35?
+16:35 was chosen since it is the world record for a 10-mile TT.  When the Nev Brooks competition was introduced in 2022, the old Excel workbook which calculated the results was set to use 21:00 as the Nev Brooks Standard Time, but a club member beat that time by 13 seconds and the old Excel workbook could not handle a negative handicap.
+
+It really makes no difference what value is used since if all riders repeated their same times every race, the handicap system would make all events a draw, with every rider achieving an adjusted time of 16:35.
+
+TotalSecondsFirstEvent - NevBrooksStandardTimeSeconds = HandicapForSecondEvent
+TotalSecondsSecondEvent - HandicapForSecondEvent = NevBrooksAdjustedTime
+
+1475 - 995 = 480
+1475 - 480 = 995
+
+1595 - 995 = 600
+1595 - 600 = 995
