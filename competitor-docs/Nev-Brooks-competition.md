@@ -23,7 +23,42 @@ These adjusted times are used to rank riders at each 10‑mile TT.
 Scoring follows the standard club points system (60, 55, 51, etc.).
 	
 
-### Why 16:35?
+## Worked example – Milly Pinnock's 2025 Nev Brooks season
+
+To show how the Nev Brooks handicap evolves through a season, here is a real
+example showing Milly's 2025 10‑mile TT results. This illustrates:
+
+- how the first ride sets the initial handicap,
+- how the lowest handicap so far becomes the one applied at each event,
+- how the adjusted time is calculated at every race,
+- and how improvements (or slower days) affect the standings.
+
+The table below shows each of Milly’s 2025 10‑mile TTs, along with the
+handicap generated, the lowest handicap so far, and the adjusted time used
+for Nev Brooks scoring.
+
+| Event | Time (mm:ss) | Total Seconds | Handicap Generated | Lowest Handicap So Far | Adjusted Time | Points | Notes |
+|-------|--------------|---------------|--------------------|------------------------|---------------|--------|-------|
+| 5  | 28:42 | 1722 | 727 | n/a | n/a | n/a | First 10TT ridden — sets initial handicap |
+| 7  | -     | n/a  | n/a | n/a | n/a | n/a | Event cancelled |
+| 8  | -     | 0    | n/a | n/a | n/a | n/a | Milly did not ride |
+| 10 | 26:39 | 1599 | 604 | 727 | 872 | 48 | First event where handicap is applied (727) |
+| 12 | 25:59 | 1559 | 564 | 604 | 955 | 48 | New lowest handicap (604 → 564) |
+| 13 | 26:15 | 1575 | 580 | 564 | 1011 | 38 | Slower ride — lowest handicap remains 564 |
+| 14 | 25:57 | 1557 | 562 | 564 | 993 | 37.5 | New lowest handicap (564 → 562) |
+| 15 | 28:18 | 1698 | 703 | 562 | 1136 | 49.5 | Slower ride — lowest handicap remains 562 |
+| 16 | 27:09 | 1629 | 634 | 562 | 1067 | 44 | Slower ride — lowest handicap remains 562 |
+| 17 | 28:23 | 1703 | 708 | 562 | 1141 | 39 | Slower ride — lowest handicap remains 562 |
+| 18 | 27:38 | 1658 | 663 | 562 | 1096 | 37 | Slower ride — lowest handicap remains 562 |
+| 19 | 26:37 | 1597 | 602 | 562 | 1035 | 32.5 | Slower ride — lowest handicap remains 562 |
+| 20 | -     | n/a  | n/a | n/a | n/a | n/a | Event not ridden |
+| 21 | 26:26 | 1586 | 591 | 562 | 1024 | 39.5 | Slower ride — lowest handicap remains 562 |
+| 22 | -     | n/a  | n/a | n/a | n/a | n/a | Event not ridden |
+| 24 | 26:43 | 1603 | 608 | 562 | 1041 | 55 | Slower ride — lowest handicap remains 562 |
+| 25 | -     | n/a  | n/a | n/a | n/a | n/a | Event cancelled |
+| 26 | -     | n/a  | n/a | n/a | n/a | n/a | Event cancelled |
+
+## Why is the Nev Brooks Standard Time set at 16:35?
 16:35 was chosen since it is the world record for a 10-mile TT and is therefore unlikely to be beaten on any Welland Valley course.  When the Nev Brooks competition was introduced in 2022, the Excel workbook which calculated the results was set to use 21:00 as the Nev Brooks Standard Time, but a club member beat that time by 13 seconds and the old Excel workbook could not handle a negative handicap.
 
 It really makes no difference what value is used since if all riders repeated their same times every race, the handicap system would make all events a draw, with every rider achieving an adjusted time of 16:35 (or whatever the Nev Brooks Standard Time is).
@@ -35,7 +70,6 @@ It really makes no difference what value is used since if all riders repeated th
     TotalSecondsNextEvent   - HandicapForNextEvent         
     = NevBrooksAdjustedTime
 ```
-
 
 #### Example 1 - Rider consistently achieving 24:35
 
