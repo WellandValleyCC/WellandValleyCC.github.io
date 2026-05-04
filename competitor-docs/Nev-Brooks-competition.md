@@ -23,7 +23,7 @@ These adjusted times are used to rank riders at each 10‑mile TT.
 Scoring follows the standard club points system (60, 55, 51, etc.).
 	
 
-## Worked example – Milly Pinnock's 2025 Nev Brooks season
+### Worked example – Milly Pinnock's 2025 Nev Brooks season
 
 To show how the Nev Brooks handicap evolves through a season, here is a real
 example showing Milly's 2025 10‑mile TT results. This illustrates:
@@ -36,6 +36,9 @@ example showing Milly's 2025 10‑mile TT results. This illustrates:
 The table below shows each of Milly’s 2025 10‑mile TTs, along with the
 handicap generated, the lowest handicap so far, and the adjusted time used
 for Nev Brooks scoring.
+
+Milly has kindly given permission for her 2025 data to be used here, and we’re
+grateful to her for allowing us to include this real‑world example.
 
 | Event | Time (mm:ss) | Total Seconds | Handicap Generated | Lowest Handicap So Far | Adjusted Time | Points | Notes |
 |-------|--------------|---------------|--------------------|------------------------|---------------|--------|-------|
