@@ -61,6 +61,8 @@ grateful to her for allowing us to include this real‑world example.
 | 25 | -     | n/a  | n/a | n/a | n/a | n/a | Event cancelled |
 | 26 | -     | n/a  | n/a | n/a | n/a | n/a | Event cancelled |
 
+The Nev Brooks results for 2025 are in the preview page [here](https://wellandvalleycc.github.io/competitions/2025-nev-brooks.html)
+
 ## Why is the Nev Brooks Standard Time set at 16:35?
 16:35 was chosen since it is the world record for a 10-mile TT and is therefore unlikely to be beaten on any Welland Valley course.  When the Nev Brooks competition was introduced in 2022, the Excel workbook which calculated the results was set to use 21:00 as the Nev Brooks Standard Time, but a club member beat that time by 13 seconds and the old Excel workbook could not handle a negative handicap.
 
