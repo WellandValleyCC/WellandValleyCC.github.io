@@ -198,7 +198,7 @@ ClubNumber,Surname,GivenName,ClaimStatus,isFemale,AgeGroup,VetsBucket,ImportDate
 1129,Tincello,Doug,First Claim,False,Veteran,12,2026-05-12
 915,Twynham,Julian,First Claim,False,Veteran,8,2026-05-12
 1356,Vaal,Michiel,Second Claim,False,Veteran,15,2026-05-12
-1422,Vann-Hopewell,Laura,unknown,True,Senior,,2026-05-12
+1422,Vann-Hopewell,Laura,Second Claim,True,Senior,,2026-05-12
 860,van Nierop,Millie,First Claim,True,Senior,,2026-05-12
 756,van Nierop,Josh,First Claim,False,Senior,,2026-05-12
 407,van Nierop,Hans,First Claim,False,Veteran,5,2026-05-12
