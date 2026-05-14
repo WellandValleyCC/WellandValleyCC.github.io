@@ -189,14 +189,14 @@ namespace ClubSiteGenerator.Renderers
             // Build details panel
             var details = new StringBuilder();
 
-            details.AppendLine($"<div>Ride: {rideTime}</div>");
+            details.AppendLine($"<div>Ride: <span class=\"nb-value\">{rideTime}</span></div>");
             details.AppendLine("<div style=\"margin-top:0.25rem;\">Handicap</div>");
-            details.AppendLine($"<div>&nbsp;&nbsp;Generated: {generated}s</div>");
+            details.AppendLine($"<div>&nbsp;&nbsp;Generated: <span class=\"nb-value\">{generated}s</span></div>");
 
             if (!isHandicapEstablishing)
             {
-                details.AppendLine($"<div>&nbsp;&nbsp;Applied: {applied}s</div>");
-                details.AppendLine($"<div style=\"margin-top:0.25rem;\">Adjusted: {adjustedTime}</div>");
+                details.AppendLine($"<div>&nbsp;&nbsp;Applied: <span class=\"nb-value\">{applied}s</span></div>");
+                details.AppendLine($"<div style=\"margin-top:0.25rem;\">Adjusted: <span class=\"nb-value\">{adjustedTime}</span></div>");
             }
 
             return $@"
@@ -209,6 +209,7 @@ namespace ClubSiteGenerator.Renderers
   </div>
 </td>";
         }
+
 
 
         string FormatSecondsAsTime(double seconds)

@@ -222,6 +222,12 @@ table.results td.mixed-score {
   line-height: 1.25;
 }
 
+.nb-details .nb-value {
+  font-weight: 600;
+  color: #333;
+}
+
+
 /* Optional subtle separator (uncomment if needed)
 .nb-separator {
   margin: 0.25rem 0 0.35rem 0;
