@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Rules;
@@ -19,7 +20,7 @@ namespace ClubSiteGenerator.Renderers
 
         public NevBrooksCompetitionRenderer(
             string indexFileName, CompetitionResultsSet resultsSet, ICompetitionRules rules)
-            :base(indexFileName, resultsSet, rules)
+            : base(indexFileName, resultsSet, rules)
         {
             this.resultsSet = resultsSet;
             this.calendar = resultsSet.ClubChampionshipCalendar.OrderBy(ev => ev.EventNumber).ToList();
@@ -77,30 +78,36 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        protected override IEnumerable<string> BuildCells(CompetitorResult result)
+        protected override IEnumerable<object> BuildCells(CompetitorResult result)
         {
             // Name
             yield return result.Competitor.FullName;
 
             // Rank - Nev Brooks handicapped tens
-            yield return result.TenMileCompetition.RankDisplay; // Tens
+            yield return result.TenMileCompetition.RankDisplay;
 
             // Events completed split
-            yield return result.EventsCompletedTens.ToString();   // Tens
-            
+            yield return result.EventsCompletedTens.ToString();
+
             // Best n Tens, total points
             yield return result.TenMileCompetition.PointsDisplay;
 
             // Per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
             {
-                var hasStatus = result.EventStatuses.TryGetValue(ev.EventNumber, out var status);
-                var hasPoints = result.EventPoints.TryGetValue(ev.EventNumber, out var points);
+                result.EventStatuses.TryGetValue(ev.EventNumber, out var status);
+                result.EventPoints.TryGetValue(ev.EventNumber, out var points);
+
+                // Find the ride (may be null)
+                var ride = result.Rides.FirstOrDefault(r => r.EventNumber == ev.EventNumber);
 
                 string display;
-                if (!hasStatus)
+
+                if (!result.EventStatuses.ContainsKey(ev.EventNumber))
                 {
+                    // Did not ride
                     display = "-";
+                    ride = null;
                 }
                 else
                 {
@@ -108,40 +115,118 @@ namespace ClubSiteGenerator.Renderers
                     {
                         RideStatus.Valid => points.HasValue
                             ? Math.Round(points.Value, MidpointRounding.AwayFromZero).ToString()
-                            : string.Empty,
-                        _ => status.GetDisplayName() ?? string.Empty
+                            : "H",   // Handicap-establishing ride
+
+                        RideStatus.DNS => "DNS",
+                        RideStatus.DNF => "DNF",
+                        RideStatus.DQ => "DQ",
+
+                        _ => "-"
                     };
+
+                    // For DNS/DNF/DQ, suppress ride object
+                    if (status != RideStatus.Valid)
+                        ride = null;
                 }
 
-                yield return display;
+                yield return new NevBrooksCell
+                {
+                    Display = display,
+                    Ride = ride
+                };
             }
         }
 
-        protected override string RenderCell(string value, int index, Competitor competitor)
+
+        protected override string RenderCell(object cellValue, int index, Competitor competitor)
         {
-            var encodedValue = WebUtility.HtmlEncode(value);
-
-            // fixed column indices for Nev Brooks
-            const int nameIndex = 0;
-            const int rankTensIndex = 1;
-            const int numEventsTensIndex = 2;
-            const int pointsTensCompetitionIndex = 3;
-
+            // Fixed columns
             if (index < FirstEventIndex)
             {
+                var encoded = WebUtility.HtmlEncode(cellValue?.ToString() ?? "");
+
                 return index switch
                 {
-                    nameIndex => RenderNameCell(competitor, encodedValue),
-                    rankTensIndex => RenderRankTensCell(encodedValue),
-                    numEventsTensIndex => RenderEventsTensCell(encodedValue),
-                    pointsTensCompetitionIndex => RenderTensCompetitionPointsCell(encodedValue, competitor),
+                    0 => RenderNameCell(competitor, encoded),
+                    1 => RenderRankTensCell(encoded),
+                    2 => RenderEventsTensCell(encoded),
+                    3 => RenderTensCompetitionPointsCell(encoded, competitor),
+
                     _ => throw new InvalidOperationException($"Unexpected fixed column index {index}")
                 };
             }
 
-            // event columns: offset by FirstEventIndex
-            return RenderEventCell(encodedValue, calendar[index - FirstEventIndex]);
+            // Event columns
+            var ev = calendar[index - FirstEventIndex];
+
+            if (cellValue is NevBrooksCell nb)
+                return RenderNevBrooksEventCell(nb, ev);
+
+            return base.RenderCell(cellValue, index, competitor);
+        }
+
+        private string RenderNevBrooksEventCell(NevBrooksCell cell, CalendarEvent ev)
+        {
+            const string cssClass = "ten-mile-event";
+
+            var ride = cell.Ride;
+
+            // No ride at all → simple "-"
+            if (ride is null)
+                return $"<td class=\"{cssClass}\">-</td>";
+
+            bool isHandicapEstablishing = !ride.NevBrooksPoints.HasValue;
+
+            string display = isHandicapEstablishing
+                ? "H"
+                : ride.NevBrooksPoints.Value.ToString("0");
+
+            // Ride time in mm:ss
+            var rideTime = ride.Time.HasValue
+                ? $"{(int)ride.Time.Value.TotalMinutes}:{ride.Time.Value.Seconds:D2}"
+                : "-";
+
+            // Generated handicap
+            var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "-";
+
+            // Applied handicap (only for scoring rides)
+            var applied = ride.NevBrooksSecondsApplied?.ToString("0") ?? "-";
+
+            // Adjusted time (only for scoring rides)
+            var adjustedTime = ride.NevBrooksSecondsAdjustedTime.HasValue
+                ? FormatSecondsAsTime(ride.NevBrooksSecondsAdjustedTime.Value)
+                : "-";
+
+            // Build details panel
+            var details = new StringBuilder();
+
+            details.AppendLine($"<div>Ride: <span class=\"nb-value\">{rideTime}</span></div>");
+            details.AppendLine("<div style=\"margin-top:0.25rem;\">Handicap</div>");
+            details.AppendLine($"<div>&nbsp;&nbsp;Generated: <span class=\"nb-value\">{generated}s</span></div>");
+
+            if (!isHandicapEstablishing)
+            {
+                details.AppendLine($"<div>&nbsp;&nbsp;Applied: <span class=\"nb-value\">{applied}s</span></div>");
+                details.AppendLine($"<div style=\"margin-top:0.25rem;\">Adjusted: <span class=\"nb-value\">{adjustedTime}</span></div>");
+            }
+
+            return $@"
+<td class=""{cssClass}"">
+  <div class=""nb-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
+    <span class=""nb-points"">{WebUtility.HtmlEncode(display)}</span>
+    <div class=""nb-details"">
+      {details}
+    </div>
+  </div>
+</td>";
+        }
+
+
+
+        string FormatSecondsAsTime(double seconds)
+        {
+            var ts = TimeSpan.FromSeconds(seconds);
+            return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
         }
     }
 }
-

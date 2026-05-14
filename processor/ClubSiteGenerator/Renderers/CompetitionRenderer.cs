@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Rules;
@@ -225,7 +226,7 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        protected virtual IEnumerable<string> BuildCells(CompetitorResult result)
+        protected virtual IEnumerable<object> BuildCells(CompetitorResult result)
         {
             // Name
             yield return result.Competitor.FullName;
@@ -270,37 +271,32 @@ namespace ClubSiteGenerator.Renderers
             }
         }
 
-        protected virtual string RenderCell(string value, int index, Competitor competitor)
+        protected virtual string RenderCell(object cellValue, int index, Competitor competitor)
         {
-            var encodedValue = WebUtility.HtmlEncode(value);
+            // Convert anything to a string for the base renderer
+            var encoded = WebUtility.HtmlEncode(cellValue?.ToString() ?? "");
 
-            // fixed indices
-            const int nameIndex = 0;
-            const int rankFullIndex = 1;
-            const int rankTensIndex = 2;
-            const int numEventsTensIndex = 3;
-            const int numEventsOtherIndex = 4;
-            const int pointsFullCompetitionIndex = 5;
-            const int pointsTensCompetitionIndex = 6;
-
+            // Fixed columns
             if (index < FirstEventIndex)
             {
                 return index switch
                 {
-                    nameIndex => RenderNameCell(competitor, encodedValue),
-                    rankFullIndex => RenderRankFullCell(encodedValue),
-                    rankTensIndex => RenderRankTensCell(encodedValue),
-                    numEventsTensIndex => RenderEventsTensCell(encodedValue),
-                    numEventsOtherIndex => RenderEventsOtherCell(encodedValue),
-                    pointsFullCompetitionIndex => RenderFullCompetitionPointsCell(encodedValue, competitor),
-                    pointsTensCompetitionIndex => RenderTensCompetitionPointsCell(encodedValue, competitor),
+                    0 => RenderNameCell(competitor, encoded),
+                    1 => RenderRankFullCell(encoded),
+                    2 => RenderRankTensCell(encoded),
+                    3 => RenderEventsTensCell(encoded),
+                    4 => RenderEventsOtherCell(encoded),
+                    5 => RenderFullCompetitionPointsCell(encoded, competitor),
+                    6 => RenderTensCompetitionPointsCell(encoded, competitor),
                     _ => throw new InvalidOperationException($"Unexpected fixed column index {index}")
                 };
             }
 
-            // event columns
-            return RenderEventCell(encodedValue, calendar[index - FirstEventIndex]);
+            // Event columns (default behaviour)
+            var ev = calendar[index - FirstEventIndex];
+            return RenderEventCell(encoded, ev);
         }
+
 
         protected virtual string RenderNameCell(Competitor competitor, string encodedValue)
             => $"<td class=\"competitor-name\">{encodedValue}</td>";

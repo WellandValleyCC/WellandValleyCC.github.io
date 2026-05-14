@@ -37,11 +37,11 @@ namespace ClubSiteGenerator.ResultsGenerator
             if (HasNonChampionshipEvents(championshipCalendar))
                 throw new ArgumentException($"{nameof(championshipCalendar)} must contain only championship events.", nameof(championshipCalendar));
 
-            // build the competition-specific calendar: all 10-mile evening events after the first
+            // build the competition-specific calendar: all 10-mile evening events
+            // - even the first, where all we're doing is setting the initial handicap
             var nevBrooksCalendar = championshipCalendar
                 .Where(e => e.IsEvening10)
                 .OrderBy(e => e.EventNumber)
-                .Skip(1) // skip the first 10-mile TT
                 .ToList();
 
             var relevantTenMileEventNumbers = nevBrooksCalendar
@@ -54,7 +54,7 @@ namespace ClubSiteGenerator.ResultsGenerator
                     r.Competitor is { } c &&
                     c.IsEligible() &&
                     r.Status == RideStatus.Valid &&
-                    r.NevBrooksPoints != null &&
+                    //r.NevBrooksPoints != null &&
                     r.CalendarEvent != null &&
                     relevantTenMileEventNumbers.Contains(r.CalendarEvent.EventNumber));
 
