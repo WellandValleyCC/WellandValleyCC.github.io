@@ -1,5 +1,6 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
+using ClubCore.Utilities;
 using ClubSiteGenerator.Models;
 using ClubSiteGenerator.ResultsGenerator;
 using ClubSiteGenerator.Rules;
@@ -19,7 +20,7 @@ namespace ClubSiteGenerator.Renderers
 
         public NevBrooksCompetitionRenderer(
             string indexFileName, CompetitionResultsSet resultsSet, ICompetitionRules rules)
-            :base(indexFileName, resultsSet, rules)
+            : base(indexFileName, resultsSet, rules)
         {
             this.resultsSet = resultsSet;
             this.calendar = resultsSet.ClubChampionshipCalendar.OrderBy(ev => ev.EventNumber).ToList();
@@ -77,7 +78,7 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        protected override IEnumerable<string> BuildCells(CompetitorResult result)
+        protected override IEnumerable<object> BuildCells(CompetitorResult result)
         {
             // Name
             yield return result.Competitor.FullName;
@@ -87,18 +88,22 @@ namespace ClubSiteGenerator.Renderers
 
             // Events completed split
             yield return result.EventsCompletedTens.ToString();   // Tens
-            
+
             // Best n Tens, total points
             yield return result.TenMileCompetition.PointsDisplay;
 
             // Per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
             {
-                var hasStatus = result.EventStatuses.TryGetValue(ev.EventNumber, out var status);
-                var hasPoints = result.EventPoints.TryGetValue(ev.EventNumber, out var points);
+                result.EventStatuses.TryGetValue(ev.EventNumber, out var status);
+                result.EventPoints.TryGetValue(ev.EventNumber, out var points);
+
+                // Find the ride (may be null)
+                var ride = result.Rides.FirstOrDefault(r => r.EventNumber == ev.EventNumber);
 
                 string display;
-                if (!hasStatus)
+
+                if (!result.EventStatuses.ContainsKey(ev.EventNumber))
                 {
                     display = "-";
                 }
@@ -109,39 +114,112 @@ namespace ClubSiteGenerator.Renderers
                         RideStatus.Valid => points.HasValue
                             ? Math.Round(points.Value, MidpointRounding.AwayFromZero).ToString()
                             : string.Empty,
+
                         _ => status.GetDisplayName() ?? string.Empty
                     };
                 }
 
-                yield return display;
-            }
-        }
-
-        protected override string RenderCell(string value, int index, Competitor competitor)
-        {
-            var encodedValue = WebUtility.HtmlEncode(value);
-
-            // fixed column indices for Nev Brooks
-            const int nameIndex = 0;
-            const int rankTensIndex = 1;
-            const int numEventsTensIndex = 2;
-            const int pointsTensCompetitionIndex = 3;
-
-            if (index < FirstEventIndex)
-            {
-                return index switch
+                yield return new NevBrooksCell
                 {
-                    nameIndex => RenderNameCell(competitor, encodedValue),
-                    rankTensIndex => RenderRankTensCell(encodedValue),
-                    numEventsTensIndex => RenderEventsTensCell(encodedValue),
-                    pointsTensCompetitionIndex => RenderTensCompetitionPointsCell(encodedValue, competitor),
-                    _ => throw new InvalidOperationException($"Unexpected fixed column index {index}")
+                    Display = display,
+                    Ride = ride
                 };
             }
-
-            // event columns: offset by FirstEventIndex
-            return RenderEventCell(encodedValue, calendar[index - FirstEventIndex]);
         }
+
+        protected override string RenderCell(object cellValue, int index, Competitor competitor)
+        {
+            // Fixed columns → base behaviour
+            if (index < FirstEventIndex)
+                return base.RenderCell(cellValue, index, competitor);
+
+            var ev = calendar[index - FirstEventIndex];
+
+            // Nev Brooks special case
+            if (cellValue is NevBrooksCell nb)
+                return RenderNevBrooksEventCell(nb, ev);
+
+            // Fallback to base behaviour
+            return base.RenderCell(cellValue, index, competitor);
+        }
+
+        private string RenderNevBrooksEventCell(NevBrooksCell cell, CalendarEvent ev)
+        {
+            const string cssClass = "ten-mile-event";
+
+            // Simple cell for "-", DNS, DNF, DQ, or no ride object
+            if (cell.Ride is null ||
+                string.IsNullOrEmpty(cell.Display) ||
+                cell.Display == "-")
+            {
+                return $"<td class=\"{cssClass}\">{WebUtility.HtmlEncode(cell.Display)}</td>";
+            }
+
+            var ride = cell.Ride;
+
+            // Ride time (null if TotalSeconds == 0)
+            var rideTime = ride.Time?.ToString(@"m\:ss") ?? "-";
+
+            // Adjusted time (null if NevBrooksSecondsAdjustedTime is null or <= 0)
+            string adjustedTime = "-";
+            if (ride.NevBrooksSecondsAdjustedTime is double adj && adj > 0)
+                adjustedTime = TimeSpan.FromSeconds(adj).ToString(@"m\:ss");
+
+            // Handicap values
+            var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "0";
+            var applied = ride.NevBrooksSecondsApplied?.ToString("0") ?? "0";
+
+            return $@"
+<td class=""{cssClass}"">
+  <div class=""nb-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
+    <span class=""nb-points"">{WebUtility.HtmlEncode(cell.Display)}</span>
+
+    <div class=""nb-details"">
+      <div>Ride time: {rideTime}</div>
+      <div>Handicap generated: {generated}s</div>
+      <div>Handicap applied: {applied}s</div>
+      <div>Adjusted time: {adjustedTime}</div>
+    </div>
+  </div>
+</td>";
+        }
+
+        protected override string RenderEventCell(string encodedValue, CalendarEvent ev)
+        {
+            // All Nev Brooks events are ten-mile events
+            const string cssClass = "ten-mile-event";
+
+            // If no score, keep the simple cell
+            if (string.IsNullOrEmpty(encodedValue) || encodedValue == "-")
+                return $"<td class=\"{cssClass}\">{encodedValue}</td>";
+
+            // Build the expandable details panel
+            var detailsHtml = BuildNevBrooksDetailsHtml(ev);
+
+            return $@"
+<td class=""{cssClass}"">
+  <div class=""nb-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
+    <span class=""nb-points"">{encodedValue}</span>
+    <div class=""nb-details"">
+      {detailsHtml}
+    </div>
+  </div>
+</td>";
+        }
+
+        private string BuildNevBrooksDetailsHtml(CalendarEvent ev)
+        {
+            // You will replace this with real data from your result model
+            var sb = new StringBuilder();
+
+            sb.AppendLine("<div class=\"nb-detail-line\">Handicap used: TODO</div>");
+            sb.AppendLine("<div class=\"nb-detail-line\">Generated seconds: TODO</div>");
+            sb.AppendLine("<div class=\"nb-detail-line\">Applied seconds: TODO</div>");
+            sb.AppendLine("<div class=\"nb-detail-line\">Adjusted time: TODO</div>");
+
+            return sb.ToString();
+        }
+
     }
 }
 
