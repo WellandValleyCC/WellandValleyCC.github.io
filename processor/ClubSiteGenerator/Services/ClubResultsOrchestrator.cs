@@ -147,7 +147,7 @@ namespace ClubSiteGenerator.Services
                 .Where(evNum => championshipRides.Any(r => r.EventNumber == evNum))
                 .ToList();
 
-            if (tenMileEventsWithRides.Count >= 2)
+            if (tenMileEventsWithRides.Any())
             {
                 resultsSets.Add(NevBrooksCompetitionResultsSet.CreateFrom(championshipRides, championshipCalendar, rules));
             }
