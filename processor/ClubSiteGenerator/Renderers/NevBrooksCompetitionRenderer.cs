@@ -84,10 +84,10 @@ namespace ClubSiteGenerator.Renderers
             yield return result.Competitor.FullName;
 
             // Rank - Nev Brooks handicapped tens
-            yield return result.TenMileCompetition.RankDisplay; // Tens
+            yield return result.TenMileCompetition.RankDisplay;
 
             // Events completed split
-            yield return result.EventsCompletedTens.ToString();   // Tens
+            yield return result.EventsCompletedTens.ToString();
 
             // Best n Tens, total points
             yield return result.TenMileCompetition.PointsDisplay;
@@ -105,7 +105,9 @@ namespace ClubSiteGenerator.Renderers
 
                 if (!result.EventStatuses.ContainsKey(ev.EventNumber))
                 {
+                    // Did not ride
                     display = "-";
+                    ride = null;
                 }
                 else
                 {
@@ -113,10 +115,18 @@ namespace ClubSiteGenerator.Renderers
                     {
                         RideStatus.Valid => points.HasValue
                             ? Math.Round(points.Value, MidpointRounding.AwayFromZero).ToString()
-                            : string.Empty,
+                            : "H",   // Handicap-establishing ride
 
-                        _ => status.GetDisplayName() ?? string.Empty
+                        RideStatus.DNS => "DNS",
+                        RideStatus.DNF => "DNF",
+                        RideStatus.DQ => "DQ",
+
+                        _ => "-"
                     };
+
+                    // For DNS/DNF/DQ, suppress ride object
+                    if (status != RideStatus.Valid)
+                        ride = null;
                 }
 
                 yield return new NevBrooksCell
@@ -126,6 +136,7 @@ namespace ClubSiteGenerator.Renderers
                 };
             }
         }
+
 
         protected override string RenderCell(object cellValue, int index, Competitor competitor)
         {
@@ -147,91 +158,63 @@ namespace ClubSiteGenerator.Renderers
         {
             const string cssClass = "ten-mile-event";
 
-            // Simple cell for "-", DNS, DNF, DQ, or no ride object
-            if (cell.Ride is null ||
-                string.IsNullOrEmpty(cell.Display) ||
-                cell.Display == "-")
-            {
-                return $"<td class=\"{cssClass}\">{WebUtility.HtmlEncode(cell.Display)}</td>";
-            }
-
             var ride = cell.Ride;
 
-            // Raw seconds values
-            var totalSeconds = ride.TotalSeconds.ToString("0");
-            var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "0";
-            var applied = ride.NevBrooksSecondsApplied?.ToString("0") ?? "0";
-            var adjusted = ride.NevBrooksSecondsAdjustedTime?.ToString("0") ?? "-";
+            // No ride at all → simple "-"
+            if (ride is null)
+                return $"<td class=\"{cssClass}\">-</td>";
 
+            bool isHandicapEstablishing = !ride.NevBrooksPoints.HasValue;
+
+            string display = isHandicapEstablishing
+                ? "H"
+                : ride.NevBrooksPoints.Value.ToString("0");
+
+            // Ride time in mm:ss
             var rideTime = ride.Time.HasValue
-    ? $"{ride.Time.Value.Minutes}:{ride.Time.Value.Seconds:D2}"
-    : "-";
+                ? $"{(int)ride.Time.Value.TotalMinutes}:{ride.Time.Value.Seconds:D2}"
+                : "-";
 
+            // Generated handicap
+            var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "-";
+
+            // Applied handicap (only for scoring rides)
+            var applied = ride.NevBrooksSecondsApplied?.ToString("0") ?? "-";
+
+            // Adjusted time (only for scoring rides)
             var adjustedTime = ride.NevBrooksSecondsAdjustedTime.HasValue
                 ? FormatSecondsAsTime(ride.NevBrooksSecondsAdjustedTime.Value)
                 : "-";
 
+            // Build details panel
+            var details = new StringBuilder();
+
+            details.AppendLine($"<div>Ride: {rideTime}</div>");
+            details.AppendLine("<div style=\"margin-top:0.25rem;\">Handicap</div>");
+            details.AppendLine($"<div>&nbsp;&nbsp;Generated: {generated}s</div>");
+
+            if (!isHandicapEstablishing)
+            {
+                details.AppendLine($"<div>&nbsp;&nbsp;Applied: {applied}s</div>");
+                details.AppendLine($"<div style=\"margin-top:0.25rem;\">Adjusted: {adjustedTime}</div>");
+            }
+
             return $@"
 <td class=""{cssClass}"">
   <div class=""nb-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
-    <span class=""nb-points"">{WebUtility.HtmlEncode(cell.Display)}</span>
-
+    <span class=""nb-points"">{WebUtility.HtmlEncode(display)}</span>
     <div class=""nb-details"">
-      <div>Ride: {rideTime}</div>
-
-      <div style=""margin-top:0.25rem;"">Handicap</div>
-      <div>&nbsp;&nbsp;Generated: {generated}s</div>
-      <div>&nbsp;&nbsp;Applied: {applied}s</div>
-
-      <div style=""margin-top:0.25rem;"">Adjusted: {adjustedTime}</div>
+      {details}
     </div>
   </div>
 </td>";
-
         }
+
 
         string FormatSecondsAsTime(double seconds)
         {
             var ts = TimeSpan.FromSeconds(seconds);
             return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
         }
-
-        protected override string RenderEventCell(string encodedValue, CalendarEvent ev)
-        {
-            // All Nev Brooks events are ten-mile events
-            const string cssClass = "ten-mile-event";
-
-            // If no score, keep the simple cell
-            if (string.IsNullOrEmpty(encodedValue) || encodedValue == "-")
-                return $"<td class=\"{cssClass}\">{encodedValue}</td>";
-
-            // Build the expandable details panel
-            var detailsHtml = BuildNevBrooksDetailsHtml(ev);
-
-            return $@"
-<td class=""{cssClass}"">
-  <div class=""nb-cell collapsed"" onclick=""this.classList.toggle('expanded')"">
-    <span class=""nb-points"">{encodedValue}</span>
-    <div class=""nb-details"">
-      {detailsHtml}
-    </div>
-  </div>
-</td>";
-        }
-
-        private string BuildNevBrooksDetailsHtml(CalendarEvent ev)
-        {
-            // You will replace this with real data from your result model
-            var sb = new StringBuilder();
-
-            sb.AppendLine("<div class=\"nb-detail-line\">Handicap used: TODO</div>");
-            sb.AppendLine("<div class=\"nb-detail-line\">Generated seconds: TODO</div>");
-            sb.AppendLine("<div class=\"nb-detail-line\">Applied seconds: TODO</div>");
-            sb.AppendLine("<div class=\"nb-detail-line\">Adjusted time: TODO</div>");
-
-            return sb.ToString();
-        }
-
     }
 }
-

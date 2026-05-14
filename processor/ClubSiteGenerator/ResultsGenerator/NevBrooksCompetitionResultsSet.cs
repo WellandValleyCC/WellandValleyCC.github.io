@@ -54,7 +54,7 @@ namespace ClubSiteGenerator.ResultsGenerator
                     r.Competitor is { } c &&
                     c.IsEligible() &&
                     r.Status == RideStatus.Valid &&
-                    r.NevBrooksPoints != null &&
+                    //r.NevBrooksPoints != null &&
                     r.CalendarEvent != null &&
                     relevantTenMileEventNumbers.Contains(r.CalendarEvent.EventNumber));
 
