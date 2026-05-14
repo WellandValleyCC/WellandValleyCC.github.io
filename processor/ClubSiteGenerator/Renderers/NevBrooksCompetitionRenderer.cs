@@ -157,17 +157,19 @@ namespace ClubSiteGenerator.Renderers
 
             var ride = cell.Ride;
 
-            // Ride time (null if TotalSeconds == 0)
-            var rideTime = ride.Time?.ToString(@"m\:ss") ?? "-";
-
-            // Adjusted time (null if NevBrooksSecondsAdjustedTime is null or <= 0)
-            string adjustedTime = "-";
-            if (ride.NevBrooksSecondsAdjustedTime is double adj && adj > 0)
-                adjustedTime = TimeSpan.FromSeconds(adj).ToString(@"m\:ss");
-
-            // Handicap values
+            // Raw seconds values
+            var totalSeconds = ride.TotalSeconds.ToString("0");
             var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "0";
             var applied = ride.NevBrooksSecondsApplied?.ToString("0") ?? "0";
+            var adjusted = ride.NevBrooksSecondsAdjustedTime?.ToString("0") ?? "-";
+
+            var rideTime = ride.Time.HasValue
+    ? $"{ride.Time.Value.Minutes}:{ride.Time.Value.Seconds:D2}"
+    : "-";
+
+            var adjustedTime = ride.NevBrooksSecondsAdjustedTime.HasValue
+                ? FormatSecondsAsTime(ride.NevBrooksSecondsAdjustedTime.Value)
+                : "-";
 
             return $@"
 <td class=""{cssClass}"">
@@ -175,13 +177,23 @@ namespace ClubSiteGenerator.Renderers
     <span class=""nb-points"">{WebUtility.HtmlEncode(cell.Display)}</span>
 
     <div class=""nb-details"">
-      <div>Ride time: {rideTime}</div>
-      <div>Handicap generated: {generated}s</div>
-      <div>Handicap applied: {applied}s</div>
-      <div>Adjusted time: {adjustedTime}</div>
+      <div>Ride: {rideTime}</div>
+
+      <div style=""margin-top:0.25rem;"">Handicap</div>
+      <div>&nbsp;&nbsp;Generated: {generated}s</div>
+      <div>&nbsp;&nbsp;Applied: {applied}s</div>
+
+      <div style=""margin-top:0.25rem;"">Adjusted: {adjustedTime}</div>
     </div>
   </div>
 </td>";
+
+        }
+
+        string FormatSecondsAsTime(double seconds)
+        {
+            var ts = TimeSpan.FromSeconds(seconds);
+            return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
         }
 
         protected override string RenderEventCell(string encodedValue, CalendarEvent ev)

@@ -192,6 +192,61 @@ table.results td.mixed-score {
   min-width: 65px;   /* baseline width for Scoring 11 */
 }
 
+/* =========================================================
+   Nev Brooks Competition – Expandable Event Cell
+   ========================================================= */
+
+.nb-cell {
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+/* Hidden until expanded */
+.nb-cell .nb-details {
+  display: none;
+}
+
+/* Expanded state */
+.nb-cell.expanded .nb-details {
+  display: block;
+  margin-top: 0.35rem;
+  padding-left: 0.5rem;   /* same subtle indent as RR */
+}
+
+/* Detail rows */
+.nb-details div {
+  display: block;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.25;
+}
+
+/* Optional subtle separator (uncomment if needed)
+.nb-separator {
+  margin: 0.25rem 0 0.35rem 0;
+  border-bottom: 1px solid #ddd;
+  width: 60%;
+  opacity: 0.6;
+}
+*/
+
+/* Force Nev Brooks details to collapse inside table cells */
+td.ten-mile-event > .nb-cell > .nb-details {
+  display: none !important;
+}
+
+td.ten-mile-event > .nb-cell.expanded > .nb-details {
+  display: block !important;
+}
+
+/* Allow expanded Nev Brooks cells to grow wider */
+td.ten-mile-event .nb-cell.expanded {
+  position: relative;
+  white-space: nowrap;
+  min-width: 7rem;   /* adjust to taste */
+}
+
 
 /* Default legend styling (shared baseline) */
 .legend {
