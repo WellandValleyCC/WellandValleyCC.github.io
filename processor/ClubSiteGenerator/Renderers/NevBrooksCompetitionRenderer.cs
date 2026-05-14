@@ -140,17 +140,28 @@ namespace ClubSiteGenerator.Renderers
 
         protected override string RenderCell(object cellValue, int index, Competitor competitor)
         {
-            // Fixed columns → base behaviour
+            // Fixed columns
             if (index < FirstEventIndex)
-                return base.RenderCell(cellValue, index, competitor);
+            {
+                var encoded = WebUtility.HtmlEncode(cellValue?.ToString() ?? "");
 
+                return index switch
+                {
+                    0 => RenderNameCell(competitor, encoded),
+                    1 => RenderRankTensCell(encoded),
+                    2 => RenderEventsTensCell(encoded),
+                    3 => RenderTensCompetitionPointsCell(encoded, competitor),
+
+                    _ => throw new InvalidOperationException($"Unexpected fixed column index {index}")
+                };
+            }
+
+            // Event columns
             var ev = calendar[index - FirstEventIndex];
 
-            // Nev Brooks special case
             if (cellValue is NevBrooksCell nb)
                 return RenderNevBrooksEventCell(nb, ev);
 
-            // Fallback to base behaviour
             return base.RenderCell(cellValue, index, competitor);
         }
 
