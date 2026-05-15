@@ -200,7 +200,7 @@ namespace ClubSiteGenerator.Renderers
             // Build details panel
             var details = new StringBuilder();
 
-            details.AppendLine($"<div>Ride: <span class=\"nb-value\">{rideTime}</span></div>");
+            details.AppendLine($"<div>Time: <span class=\"nb-value\">{rideTime}</span></div>");
             details.AppendLine("<div style=\"margin-top:0.25rem;\">Handicap</div>");
             details.AppendLine($"<div>&nbsp;&nbsp;Generated: <span class=\"nb-value\">{generated}s</span></div>");
 
