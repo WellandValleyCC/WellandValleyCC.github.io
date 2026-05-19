@@ -179,7 +179,7 @@ namespace ClubSiteGenerator.Renderers
 
             string display = isHandicapEstablishing
                 ? "H"
-                : ride.NevBrooksPoints.Value.ToString("0");
+                : ride.NevBrooksPoints?.ToString("0") ?? "";
 
             // Ride time in mm:ss
             var rideTime = ride.Time.HasValue
