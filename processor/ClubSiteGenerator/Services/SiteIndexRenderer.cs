@@ -125,7 +125,8 @@ namespace ClubSiteGenerator.Services
                 sb.AppendLine("</ul>");
             }
 
-
+            sb.AppendLine(RenderGeneratedFooter());
+            
             sb.AppendLine("</body></html>");
 
             var path = Path.Combine(outputDir, $"{indexFileName}");
@@ -304,6 +305,12 @@ namespace ClubSiteGenerator.Services
             // Also write .htm version for legacy compatibility
             path = Path.Combine(outputDir, "index.htm");
             File.WriteAllText(path, sb.ToString());
+        }
+
+        private string RenderGeneratedFooter()
+        {
+            var timestamp = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm 'UTC'");
+            return $"<footer><p class=\"generated\">Generated {timestamp}</p></footer>";
         }
 
         /// <summary>
