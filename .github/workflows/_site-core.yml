@@ -170,20 +170,30 @@ jobs:
           
       - name: Create Pull Request
         if: steps.check_changes.outputs.no_changes == 'false'
-        # if: always()
         uses: peter-evans/create-pull-request@v6
         with:
           base: gh-pages
           branch: ${{ env.branch }}
-          title: "Automated WVCC site generation for ${{ needs.build-site.outputs.year }}"
+      
+          # PR title = commit message from Pixel
+          title: ${{ github.event.head_commit.message }}
+      
+          # PR body = your existing auto-generated text
           body: |
             WVCC static site for season ${{ needs.build-site.outputs.year }}.
-
-            Generated from commit tag:  
+          
+            Triggering commit:
+            [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          
+            Generated from commit tag:
             [`${{ needs.build-site.outputs.tag }}`](https://github.com/${{ github.repository }}/tree/${{ needs.build-site.outputs.tag }})
+          
+          # Commit message inside PR branch = unchanged
           commit-message: "Automated WVCC site generation for ${{ needs.build-site.outputs.year }}"
+      
           add-paths: |
             docs/**
+
             
   publish-roundrobin:
     runs-on: ubuntu-latest
@@ -273,13 +283,23 @@ jobs:
           path: rrrepo
           base: main
           branch: ${{ env.branch }}
-          title: "Automated Round Robin site generation for ${{ env.YEAR }}"
+      
+          # PR title = commit message from Pixel
+          title: ${{ github.event.head_commit.message }}
+      
+          # PR body = your existing auto-generated text
           body: |
             Round Robin static site for season ${{ env.YEAR }}.
-
-            Generated from commit tag:  
+          
+            Triggering commit:
+            [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          
+            Generated from commit tag:
             [`${{ needs.build-site.outputs.tag }}`](https://github.com/${{ github.repository }}/tree/${{ needs.build-site.outputs.tag }})
+                
+          # Commit message inside PR branch = unchanged
           commit-message: "Automated Round Robin site generation for ${{ env.YEAR }}"
+      
           add-paths: |
             docs/**
-
+      
