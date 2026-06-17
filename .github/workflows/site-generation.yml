@@ -84,19 +84,23 @@ jobs:
           unzip artifact.zip
 
       # ------------------------------------------------------------
-      # UNIFIED YEAR OUTPUT: manual or automatic
+      # UNIFIED YEAR + COMMIT MESSAGE OUTPUT: manual or automatic
       # ------------------------------------------------------------
-      - name: Read year
-        id: getyear
+      - name: Read year and commit message
+        id: getmeta
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "year=${{ github.event.inputs.year }}" >> $GITHUB_OUTPUT
+            echo "commit_message=Manual site generation for ${{ github.event.inputs.year }}" >> $GITHUB_OUTPUT
           else
             echo "year=$(cat year.txt)" >> $GITHUB_OUTPUT
+            echo "commit_message=${{ github.event.workflow_run.head_commit.message }}" >> $GITHUB_OUTPUT
           fi
 
     outputs:
-      year: ${{ steps.getyear.outputs.year }}
+      year: ${{ steps.getmeta.outputs.year }}
+      commit_message: ${{ steps.getmeta.outputs.commit_message }}
+
 
   # ------------------------------------------------------------
   # SITE GENERATION
@@ -106,6 +110,6 @@ jobs:
     uses: ./.github/workflows/_site-core.yml
     with:
       year: ${{ needs.prepare.outputs.year }}
-      commit_message: ${{ github.event.head_commit.message }}
+      commit_message: ${{ needs.prepare.outputs.commit_message }}
     secrets:
       roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}
