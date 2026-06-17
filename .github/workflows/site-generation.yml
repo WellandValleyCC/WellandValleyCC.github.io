@@ -106,5 +106,6 @@ jobs:
     uses: ./.github/workflows/_site-core.yml
     with:
       year: ${{ needs.prepare.outputs.year }}
+      commit_message: ${{ github.event.head_commit.message }}
     secrets:
       roundrobin_pat: ${{ secrets.ROUNDROBIN_PAT }}

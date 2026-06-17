@@ -10,6 +10,9 @@ on:
       year:
         required: true
         type: string
+      commit_message:
+        required: false
+        type: string
     secrets:
       roundrobin_pat:
         required: true
@@ -176,7 +179,7 @@ jobs:
           branch: ${{ env.branch }}
       
           # PR title = commit message from Pixel
-          title: ${{ github.event.head_commit.message }}
+          title: ${{ inputs.commit_message || 'Automated site update' }}
       
           # PR body = your existing auto-generated text
           body: |
@@ -285,7 +288,7 @@ jobs:
           branch: ${{ env.branch }}
       
           # PR title = commit message from Pixel
-          title: ${{ github.event.head_commit.message }}
+          title: ${{ inputs.commit_message || 'Automated site update' }}
       
           # PR body = your existing auto-generated text
           body: |
