@@ -45,8 +45,8 @@ namespace ClubSiteGenerator.Renderers
             {
                 ("Name", Array.Empty<string>()),
 
-                ("Full Competition", new[] { "Rank", "Events", Rules.FullCompetitionTitle }),
-                ("Tens Competition", new[] { "Rank", "Events", Rules.TenMileTitle }),
+                ("Full Competition", new[] { "Rank", "Ridden", Rules.FullCompetitionTitle }),
+                ("Tens Competition", new[] { "Rank", "Ridden", Rules.TenMileTitle }),
             };
 
         protected int FirstEventIndex =>
