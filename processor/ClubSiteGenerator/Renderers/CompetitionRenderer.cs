@@ -44,10 +44,10 @@ namespace ClubSiteGenerator.Renderers
             new (string, IReadOnlyList<string>)[]
             {
                 ("Name", Array.Empty<string>()),
-                ("Rank", new[] { "Competition", "Tens" }),
-                ("Events completed", new[] { "Tens", "Non-tens" }),
-                (Rules.FullCompetitionTitle, Array.Empty<string>()),
-                (Rules.TenMileTitle, Array.Empty<string>())
+
+                ("Full Competition", new[] { Rules.FullCompetitionTitle, "Rank", "Events" }),
+                ("Tens Competition", new[] { Rules.TenMileTitle, "Rank", "Events" }),
+
             };
 
         protected int FirstEventIndex =>
