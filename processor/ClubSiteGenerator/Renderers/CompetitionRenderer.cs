@@ -45,9 +45,8 @@ namespace ClubSiteGenerator.Renderers
             {
                 ("Name", Array.Empty<string>()),
 
-                ("Full Competition", new[] { Rules.FullCompetitionTitle, "Rank", "Events" }),
-                ("Tens Competition", new[] { Rules.TenMileTitle, "Rank", "Events" }),
-
+                ("Full Competition", new[] { "Rank", "Events", Rules.FullCompetitionTitle }),
+                ("Tens Competition", new[] { "Rank", "Events", Rules.TenMileTitle }),
             };
 
         protected int FirstEventIndex =>
@@ -232,14 +231,14 @@ namespace ClubSiteGenerator.Renderers
             yield return result.Competitor.FullName;
 
             // FULL COMPETITION
-            yield return result.FullCompetition.PointsDisplay;      // Best 11
             yield return result.FullCompetition.RankDisplay;        // Rank
             yield return BuildFullCompetitionEventsCell(result);    // Events (combined)
+            yield return result.FullCompetition.PointsDisplay;      // Best 11
 
             // TENS COMPETITION
-            yield return result.TenMileCompetition.PointsDisplay;   // Best 11
             yield return result.TenMileCompetition.RankDisplay;     // Rank
             yield return result.EventsCompletedTens.ToString();     // Events (tens only)
+            yield return result.TenMileCompetition.PointsDisplay;   // Best 10
 
             // Per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
@@ -299,15 +298,14 @@ namespace ClubSiteGenerator.Renderers
                 return index switch
                 {
                     0 => RenderNameCell(competitor, encoded),
-                    1 => RenderFullCompetitionPointsCell(encoded, competitor),
-                    2 => RenderRankFullCell(encoded),
 
-                    // NEW: raw HTML for combined events cell
-                    3 => RenderRawHtmlCell(cellValue.ToString()),
+                    1 => RenderRankFullCell(encoded),
+                    2 => RenderRawHtmlCell(cellValue.ToString()),
+                    3 => RenderFullCompetitionPointsCell(encoded, competitor),
 
-                    4 => RenderTensCompetitionPointsCell(encoded, competitor),
-                    5 => RenderRankTensCell(encoded),
-                    6 => RenderEventsTensCell(encoded),
+                    4 => RenderRankTensCell(encoded),
+                    5 => RenderEventsTensCell(encoded),
+                    6 => RenderTensCompetitionPointsCell(encoded, competitor),
 
                     _ => RenderEventCell(encoded, calendar[index - FirstEventIndex])
                 };
