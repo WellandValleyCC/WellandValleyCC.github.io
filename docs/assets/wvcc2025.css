@@ -166,6 +166,32 @@ table.results td.non-ten-mile-event,
   background-color: #DCE6F1; /* Other events */
 }
 
+/* Combined Events column (Full Competition) */
+.events-total-qualified {
+    color: #008000;
+    font-weight: normal;
+}
+
+.events-total-unqualified {
+    color: #cc0000;
+    font-weight: normal;
+}
+
+.events-nonten {
+    background-color: #DCE6F1;
+    padding: 0 2px;
+}
+
+.events-ten {
+    background-color: #FDE9D9;
+    padding: 0 2px;
+}
+
+.events-breakdown {
+    font-size: 0.7em;
+    opacity: 0.75;
+}
+
 /* Standalone events (not part of Club Championship) */
 table.results td.stand-alone-event,
 .calendar td.stand-alone-event,
