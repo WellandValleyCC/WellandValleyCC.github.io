@@ -19,7 +19,7 @@
 
         public string TenMileTitle => $"Best {TenMileCount}";
         public string TenMileShortTitle => $"Best {TenMileCount}";
-        public string FullCompetitionTitle => $"Best {MixedEventCount}";
+        public string FullCompetitionTitle => $"Scoring {MixedEventCount}";
 
         public string RuleTextMixedCompetition =>
             $"Your competition score is the total of the points " +
