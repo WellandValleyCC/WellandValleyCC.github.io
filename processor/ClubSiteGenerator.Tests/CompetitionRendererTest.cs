@@ -234,11 +234,18 @@ namespace ClubSiteGenerator.Tests
                 th.ClassList.Should().Contain("event-title");
 
             // Row 3: event dates
-            foreach (var th in headerRows[2].Children.Skip(5))
+            foreach (var th in headerRows[2].Children.Skip(7))
                 th.ClassList.Should().Contain("event-date");
 
             // Row 1: fixed columns
-            var fixedHeaders = new[] { "Name", "Rank", "Events completed", "10-mile TTs Best 4", "Scoring 3" };
+            var fixedHeaders = new[]
+            {
+                "Name",
+                "Full Competition",
+                "Tens Competition"
+            };
+
+
             foreach (var fixedHeader in fixedHeaders)
             {
                 var th = headerRows[0].Children.First(h => h.TextContent.Trim() == fixedHeader);
