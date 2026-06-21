@@ -44,10 +44,9 @@ namespace ClubSiteGenerator.Renderers
             new (string, IReadOnlyList<string>)[]
             {
                 ("Name", Array.Empty<string>()),
-                ("Rank", new[] { "Competition", "Tens" }),
-                ("Events completed", new[] { "Tens", "Non-tens" }),
-                (Rules.FullCompetitionTitle, Array.Empty<string>()),
-                (Rules.TenMileTitle, Array.Empty<string>())
+
+                ("Full Competition", new[] { "Rank", "Ridden", Rules.FullCompetitionTitle }),
+                ("Tens Competition", new[] { "Rank", "Ridden", Rules.TenMileTitle }),
             };
 
         protected int FirstEventIndex =>
@@ -231,19 +230,15 @@ namespace ClubSiteGenerator.Renderers
             // Name
             yield return result.Competitor.FullName;
 
-            // Rank split
-            yield return result.FullCompetition.RankDisplay;   // Full
-            yield return result.TenMileCompetition.RankDisplay; // Tens
+            // FULL COMPETITION
+            yield return result.FullCompetition.RankDisplay;        // Rank
+            yield return BuildFullCompetitionEventsCell(result);    // Events (combined)
+            yield return result.FullCompetition.PointsDisplay;      // Best 11
 
-            // Events completed split
-            yield return result.EventsCompletedTens.ToString();   // Tens
-            yield return result.EventsCompletedOther.ToString();  // Other
-
-            // Mixed score
-            yield return result.FullCompetition.PointsDisplay;
-            
-            // Tens score
-            yield return result.TenMileCompetition.PointsDisplay;
+            // TENS COMPETITION
+            yield return result.TenMileCompetition.RankDisplay;     // Rank
+            yield return result.EventsCompletedTens.ToString();     // Events (tens only)
+            yield return result.TenMileCompetition.PointsDisplay;   // Best 10
 
             // Per-event columns
             foreach (var ev in calendar.OrderBy(e => e.EventNumber))
@@ -271,6 +266,27 @@ namespace ClubSiteGenerator.Renderers
             }
         }
 
+        private string BuildFullCompetitionEventsCell(CompetitorResult result)
+        {
+            int tens = result.EventsCompletedTens;
+            int nonTens = result.EventsCompletedOther;
+            int total = tens + nonTens;
+
+            bool qualified = nonTens >= 2;
+
+            string totalClass = qualified ? "events-total-qualified" : "events-total-unqualified";
+
+            return
+                $"<span class=\"{totalClass}\">{total}</span> " +
+                $"<span class=\"events-breakdown\">(" +
+                    $"<span class=\"events-nonten\">{nonTens}</span>+" +
+                    $"<span class=\"events-ten\">{tens}</span>" +
+                $")</span>";
+        }
+
+        protected virtual string RenderRawHtmlCell(string html)
+    => $"<td>{html}</td>";
+
         protected virtual string RenderCell(object cellValue, int index, Competitor competitor)
         {
             // Convert anything to a string for the base renderer
@@ -282,13 +298,16 @@ namespace ClubSiteGenerator.Renderers
                 return index switch
                 {
                     0 => RenderNameCell(competitor, encoded),
+
                     1 => RenderRankFullCell(encoded),
-                    2 => RenderRankTensCell(encoded),
-                    3 => RenderEventsTensCell(encoded),
-                    4 => RenderEventsOtherCell(encoded),
-                    5 => RenderFullCompetitionPointsCell(encoded, competitor),
+                    2 => RenderRawHtmlCell(cellValue.ToString()),
+                    3 => RenderFullCompetitionPointsCell(encoded, competitor),
+
+                    4 => RenderRankTensCell(encoded),
+                    5 => RenderEventsTensCell(encoded),
                     6 => RenderTensCompetitionPointsCell(encoded, competitor),
-                    _ => throw new InvalidOperationException($"Unexpected fixed column index {index}")
+
+                    _ => RenderEventCell(encoded, calendar[index - FirstEventIndex])
                 };
             }
 

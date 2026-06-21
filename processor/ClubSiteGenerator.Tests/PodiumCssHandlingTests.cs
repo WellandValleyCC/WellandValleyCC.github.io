@@ -138,8 +138,8 @@ namespace ClubSiteGenerator.Tests
             // defensive check
             cells.Length.Should().BeGreaterThan(4);
 
-            // pick the 6th cell (index 5)
-            var tdClass = cells[5].GetAttribute("class") ?? string.Empty;
+            // pick the 4th cell (index 3)
+            var tdClass = cells[3].GetAttribute("class") ?? string.Empty;
 
             if (string.IsNullOrEmpty(expectedClass))
             {
