@@ -40,11 +40,11 @@ namespace ClubSiteGenerator.Rules
         private CompetitionRules BuildRules(YearRules config, IEnumerable<CalendarEvent> calendar)
         {
             int relevantEvents = calendar.Count();
-
+            int tenMileEvents = calendar.Where(e => e.IsEvening10).Count();
             //
             // WVCC: Ten‑mile rules
             //
-            int tenMileCount = Resolve(config.TenMile, relevantEvents);
+            int tenMileCount = Resolve(config.TenMile, tenMileEvents);
 
             //
             // WVCC: Mixed‑distance rules
