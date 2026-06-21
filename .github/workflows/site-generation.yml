@@ -94,8 +94,11 @@ jobs:
             echo "commit_message=Manual site generation for ${{ github.event.inputs.year }}" >> $GITHUB_OUTPUT
           else
             echo "year=$(cat year.txt)" >> $GITHUB_OUTPUT
-            echo "commit_message=${{ github.event.workflow_run.head_commit.message }}" >> $GITHUB_OUTPUT
-          fi
+      
+            echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+            echo "${{ github.event.workflow_run.head_commit.message }}" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi    
 
     outputs:
       year: ${{ steps.getmeta.outputs.year }}
