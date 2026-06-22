@@ -75,7 +75,7 @@ namespace ClubProcessor.Services
             var requiredHeaders = new[]
             {
                 "Event Number","Date","Start time","Event Name","Round Robin Club", "Miles","Location / Course",
-                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled"
+                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled", "isPostponed"
             };
 
             foreach (var required in requiredHeaders)
@@ -105,7 +105,8 @@ namespace ClubProcessor.Services
                    a.IsEvening10 == b.IsEvening10 &&
                    a.IsHardRideSeries == b.IsHardRideSeries &&
                    a.IsRoundRobinEvent == b.IsRoundRobinEvent &&
-                   a.IsCancelled == b.IsCancelled;
+                   a.IsCancelled == b.IsCancelled &&
+                   a.IsPostponed == b.IsPostponed;
         }
 
         private void UpdateEvent(CalendarEvent target, CalendarEvent source)
@@ -123,6 +124,7 @@ namespace ClubProcessor.Services
             target.IsHardRideSeries = source.IsHardRideSeries;
             target.IsRoundRobinEvent = source.IsRoundRobinEvent;
             target.IsCancelled = source.IsCancelled;
+            target.IsPostponed = source.IsPostponed;
         }
 
         private IReadOnlyList<CalendarEvent> ParseCsv(string csvPath)
@@ -205,7 +207,8 @@ namespace ClubProcessor.Services
                 IsEvening10 = IsYes(row.Evening10Raw),
                 IsHardRideSeries = IsYes(row.HardRideRaw),
                 IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
-                IsCancelled = IsYes(row.CancelledRaw)
+                IsCancelled = IsYes(row.CancelledRaw),
+                IsPostponed = IsYes(row.PostponedRaw)
             };
         }
 

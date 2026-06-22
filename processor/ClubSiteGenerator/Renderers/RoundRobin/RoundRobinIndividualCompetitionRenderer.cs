@@ -127,6 +127,11 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                     cssClass += " cancelled-event";
                 }
 
+                if (ev.IsPostponed)
+                {
+                    cssClass += " postponed-event";
+                }
+
                 sb.AppendLine(
                     $"<th class=\"{cssClass}\" data-col-index=\"{ev.RoundRobinEventNumber}\">" +
                     $"{WebUtility.HtmlEncode($"{VeryCleanTitle(ev.EventName)} ({ev.RoundRobinClub})")}</th>");

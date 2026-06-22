@@ -18,6 +18,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         private readonly DateOnly eventDate;
         private readonly double eventMiles;
         private readonly bool isCancelled;
+        private readonly bool isPostponed;
         private readonly string eventDistanceText;
 
         public RoundRobinEventRenderer(string indexFileName, RoundRobinEventResultsSet resultsSet)
@@ -30,6 +31,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             eventDate = resultsSet.EventDate;
             eventMiles = resultsSet.CalendarEvent.Miles;
             isCancelled = resultsSet.CalendarEvent.IsCancelled;
+            isPostponed = resultsSet.CalendarEvent.IsPostponed;
 
             eventDistanceText = $"{resultsSet.CalendarEvent.Miles:0.#} miles";
         }
@@ -59,7 +61,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
             var headerClasses = isCancelled
                 ? "event-header-core cancelled-event"
-                : "event-header-core";
+                : isPostponed
+                    ? "event-header-core postponed-event"
+                    : "event-header-core";
 
             return $@"
 <header>

@@ -516,6 +516,92 @@ table.results thead .event-title.cancelled-event::after {
   border-radius: 2px;
 }
 
+/* =========================================================
+   Postponed Event – Calendar Cell
+   ========================================================= */
+
+.calendar td.postponed-event {
+  position: relative;
+}
+
+.calendar td.postponed-event::after {
+  content: "Postponed";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background: rgba(200, 0, 0, 0.55); /* SAME as cancelled */
+  color: white;
+  font-weight: bold;
+  font-size: 0.55rem;
+  padding: 0.1rem 1.2rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 2px;
+}
+
+/* =========================================================
+   Postponed Event – Event Header (WVCC style)
+   ========================================================= */
+
+.event-page .event-header-core.postponed-event {
+  background-color: transparent;
+  color: inherit;
+}
+
+.event-page .event-header-core.postponed-event::after {
+  content: "Postponed";
+  position: absolute;
+  top: 50%;
+  left: 35%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  background: rgba(200, 0, 0, 0.5); /* SAME as cancelled */
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.3rem 2.5rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (min-width: 700px) {
+  .event-page .event-header-core.postponed-event::after {
+    font-size: 1.5rem;
+    padding: 0.4rem 5rem;
+    left: 25%;
+    top: 55%;
+  }
+}
+
+/* =========================================================
+   Postponed Event – Competition Table Header
+   ========================================================= */
+
+table.results thead .event-title.postponed-event {
+  position: relative;
+  background-color: #f8d7da; /* SAME pale red as cancelled */
+  color: #721c24;           /* SAME dark red text */
+  font-weight: 600;
+}
+
+table.results thead .event-title.postponed-event::after {
+  content: "Postponed";
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-65deg);
+  background: rgba(200, 0, 0, 0.5); /* SAME as cancelled */
+  color: white;
+  font-weight: bold;
+  padding: 0.25rem 2rem;
+  white-space: nowrap;
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+
 /* Championship layout (desktop) */
 .rules-and-legend {
   display: flex;

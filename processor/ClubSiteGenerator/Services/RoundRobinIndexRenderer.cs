@@ -241,6 +241,9 @@ namespace ClubSiteGenerator.Services
             if (ev.IsCancelled)
                 classes.Add("cancelled-event");
 
+            if (ev.IsPostponed)
+                classes.Add("postponed-event");
+
             var classAttr = string.Join(" ", classes);
 
             var clubShort = ev.RoundRobinClub;

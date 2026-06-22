@@ -39,8 +39,9 @@ namespace ClubSiteGenerator.Rules
 
         private CompetitionRules BuildRules(YearRules config, IEnumerable<CalendarEvent> calendar)
         {
-            int relevantEvents = calendar.Count();
-            int tenMileEvents = calendar.Where(e => e.IsEvening10).Count();
+            int relevantEvents = calendar.Where(e => !e.IsCancelled).Count();
+            int tenMileEvents = calendar.Where(e => e.IsEvening10 && !e.IsCancelled).Count();
+
             //
             // WVCC: Ten‑mile rules
             //

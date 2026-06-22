@@ -240,6 +240,11 @@ namespace ClubSiteGenerator.Services
                         cssClass += " cancelled-event";
                     }
 
+                    if (ev.CalendarEvent.IsPostponed)
+                    {
+                        cssClass += " postponed-event";
+                    }
+
                     sb.AppendLine(
                         $"      <td class=\"{cssClass.Trim()}\"><a href=\"{ev.SubFolderName}/{ev.FileName}.html\" " +
                         $"title=\"Event {ev.EventNumber}: {ev.DisplayName}\" class=\"cell-content\">{day}</a></td>");
