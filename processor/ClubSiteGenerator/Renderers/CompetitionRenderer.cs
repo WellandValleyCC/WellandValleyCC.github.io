@@ -156,6 +156,12 @@ namespace ClubSiteGenerator.Renderers
                     cssClass += " cancelled-event";
                 }
 
+                // Add postponed-event class if IsPostponed
+                if (ev.IsPostponed)
+                {
+                    cssClass += " postponed-event";
+                }
+
                 sb.AppendLine(
                     $"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(ev.EventName)}</th>"
                 );

@@ -48,5 +48,8 @@ namespace ClubCore.Models.Csv
 
         [Name("isCancelled")]
         public string CancelledRaw { get; set; } = string.Empty;
+
+        [Name("isPostponed")]
+        public string PostponedRaw { get; set; } = string.Empty;
     }
 }

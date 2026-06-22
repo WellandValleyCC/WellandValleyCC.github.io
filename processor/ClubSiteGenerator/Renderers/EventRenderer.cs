@@ -16,6 +16,7 @@ namespace ClubSiteGenerator.Renderers
         private readonly DateOnly eventDate; 
         private readonly double eventMiles;
         private readonly bool isCancelled;
+        private readonly bool isPostponed;
         private readonly bool isStandAloneEvent;
 
         protected override string PageTypeClass => "event-page";
@@ -30,6 +31,7 @@ namespace ClubSiteGenerator.Renderers
             this.eventDate = resultsSet.EventDate;
             this.eventMiles = resultsSet.CalendarEvent.Miles;
             this.isCancelled = resultsSet.CalendarEvent.IsCancelled;
+            this.isPostponed = resultsSet.CalendarEvent.IsPostponed;
             this.isStandAloneEvent = !resultsSet.CalendarEvent.IsClubChampionship;
         }
 
@@ -58,6 +60,9 @@ namespace ClubSiteGenerator.Renderers
 
             if (isCancelled)
                 headerClasses += " cancelled-event";
+
+            if (isPostponed)
+                headerClasses += " postponed-event";
 
             sb.AppendLine($"  <div class=\"{headerClasses}\">");
 

@@ -48,5 +48,7 @@ namespace ClubCore.Models
         public bool IsRoundRobinEvent { get; set; }
 
         public bool IsCancelled { get; set; }
+
+        public bool IsPostponed { get; set; }
     }
 }
