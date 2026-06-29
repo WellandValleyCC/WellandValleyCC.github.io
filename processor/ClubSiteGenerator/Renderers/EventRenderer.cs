@@ -147,28 +147,36 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tbody>");
 
+            int startNumber = 1;
+
             foreach (var ride in resultsSet.Rides)
-                sb.AppendLine(RenderRow(ride));
+            {
+                sb.AppendLine(RenderRow(ride, startNumber));
+                startNumber++;
+            }
 
             sb.AppendLine("</tbody>");
             return sb.ToString();
         }
 
-        private string RenderRow(Ride ride)
+        private string RenderRow(Ride ride, int startNumber)
         {
             var sb = new StringBuilder();
             var cssClass = GetRowClass(ride);
 
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 
-            foreach (var cell in BuildCells(ride).Select((value, index) => RenderCell(value, index, ride)))
+            foreach (var cell in BuildCells(ride, startNumber)
+                .Select((value, index) => RenderCell(value, index, ride)))
+            {
                 sb.AppendLine(cell);
+            }
 
             sb.AppendLine("</tr>");
             return sb.ToString();
         }
 
-        private IEnumerable<string> BuildCells(Ride ride)
+        private IEnumerable<string> BuildCells(Ride ride, int startNumber)
         {
             bool hasResult = ride.Status == RideStatus.Valid;
 
@@ -187,7 +195,11 @@ namespace ClubSiteGenerator.Renderers
                 _ => ""
             };
 
-            yield return ride.Name ?? "Unknown";
+            string riderName = ride.Name ?? "Unknown";
+            string nameCell = hasResult
+                ? riderName
+                : $"{startNumber}. {riderName}";
+            yield return nameCell;
 
             // Position (only for completed rides)
             yield return hasResult
