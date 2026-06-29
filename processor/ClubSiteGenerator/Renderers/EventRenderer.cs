@@ -176,7 +176,7 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private IEnumerable<string> BuildCells(Ride ride)
+        private IEnumerable<string> BuildCells(Ride ride, int startNumber)
         {
             bool hasResult = ride.Status == RideStatus.Valid;
 
@@ -195,7 +195,11 @@ namespace ClubSiteGenerator.Renderers
                 _ => ""
             };
 
-            yield return ride.Name ?? "Unknown";
+            string riderName = ride.Name ?? "Unknown";
+            string nameCell = hasResult
+                ? riderName
+                : $"{startNumber}. {riderName}";
+            yield return nameCell;
 
             // Position (only for completed rides)
             yield return hasResult
