@@ -147,8 +147,13 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tbody>");
 
+            int startNumber = 1;
+
             foreach (var ride in resultsSet.Rides)
-                sb.AppendLine(RenderRow(ride));
+            {
+                sb.AppendLine(RenderRow(ride, startNumber));
+                startNumber++;
+            }
 
             sb.AppendLine("</tbody>");
             return sb.ToString();
