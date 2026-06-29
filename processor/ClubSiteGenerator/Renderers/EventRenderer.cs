@@ -159,15 +159,18 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private string RenderRow(Ride ride)
+        private string RenderRow(Ride ride, int startNumber)
         {
             var sb = new StringBuilder();
             var cssClass = GetRowClass(ride);
 
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 
-            foreach (var cell in BuildCells(ride).Select((value, index) => RenderCell(value, index, ride)))
+            foreach (var cell in BuildCells(ride, startNumber)
+                .Select((value, index) => RenderCell(value, index, ride)))
+            {
                 sb.AppendLine(cell);
+            }
 
             sb.AppendLine("</tr>");
             return sb.ToString();
