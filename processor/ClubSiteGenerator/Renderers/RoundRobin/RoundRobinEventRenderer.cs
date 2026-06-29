@@ -135,22 +135,30 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             var sb = new StringBuilder();
             sb.AppendLine("<tbody>");
 
+            int startNumber = 1;
+
             foreach (var ride in eventResults.Rides)
-                sb.AppendLine(RenderRow(ride));
+            {
+                sb.AppendLine(RenderRow(ride, startNumber));
+                startNumber++;
+            }
 
             sb.AppendLine("</tbody>");
             return sb.ToString();
         }
 
-        private string RenderRow(Ride ride)
+        private string RenderRow(Ride ride, int startNumber)
         {
             var sb = new StringBuilder();
             var cssClass = GetRowClass(ride);
 
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 
-            foreach (var cell in BuildCells(ride).Select((value, index) => RenderCell(value, index, ride)))
+            foreach (var cell in BuildCells(ride, startNumber)
+                .Select((value, index) => RenderCell(value, index, ride)))
+            {
                 sb.AppendLine(cell);
+            }
 
             sb.AppendLine("</tr>");
             return sb.ToString();
@@ -159,7 +167,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
         // ------------------------------------------------------------
         //  CELL BUILDING
         // ------------------------------------------------------------
-        private IEnumerable<string> BuildCells(Ride ride)
+        private IEnumerable<string> BuildCells(Ride ride, int startNumber)
         {
             bool hasResult = ride.Status == RideStatus.Valid;
 
@@ -178,8 +186,11 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
                 _ => ""
             };
 
-            var cleanName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
-            yield return cleanName;
+            string riderName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
+            string nameCell = hasResult
+                ? riderName
+                : $"{startNumber}. {riderName}";
+            yield return nameCell;
 
             yield return ride.RoundRobinClub ?? "";
 
