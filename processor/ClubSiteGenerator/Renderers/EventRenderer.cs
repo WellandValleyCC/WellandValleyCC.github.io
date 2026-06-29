@@ -196,9 +196,9 @@ namespace ClubSiteGenerator.Renderers
             };
 
             string riderName = ride.Name ?? "Unknown";
-            string nameCell = hasResult
-                ? riderName
-                : $"{startNumber}. {riderName}";
+            string nameCell = ride.Status == RideStatus.Ready
+                ? $"{startNumber}. {riderName}"
+                : riderName;
             yield return nameCell;
 
             // Position (only for completed rides)

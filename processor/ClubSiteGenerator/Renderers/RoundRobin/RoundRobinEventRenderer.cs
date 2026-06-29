@@ -187,9 +187,9 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
             };
 
             string riderName = StripClubSuffix(ride.Name ?? "Unknown", ride.RoundRobinClub);
-            string nameCell = hasResult
-                ? riderName
-                : $"{startNumber}. {riderName}";
+            string nameCell = ride.Status == RideStatus.Ready
+                ? $"{startNumber}. {riderName}"
+                : riderName;
             yield return nameCell;
 
             yield return ride.RoundRobinClub ?? "";
