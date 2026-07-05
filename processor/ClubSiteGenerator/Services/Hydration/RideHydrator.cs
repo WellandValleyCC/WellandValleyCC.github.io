@@ -126,8 +126,31 @@ namespace ClubSiteGenerator.Services.Hydration
             IEnumerable<Competitor> competitors,
             IEnumerable<RoundRobinRider> rrRiders)
         {
-            // Build synthetic riders keyed by negative competitor ID
-            var synthetic = competitors.ToDictionary(
+            var synthetic = BuildSyntheticWvccRiders(competitors);
+            var wvccSecondClaim = BuildWvccSecondClaimLookup(rrRiders);
+
+            foreach (var ride in rides)
+            {
+                if (!IsWvccRide(ride))
+                    continue;
+
+                if (ride.Competitor == null)
+                    throw new InvalidOperationException(
+                        $"WVCC ride {ride.Id} has no Competitor object.");
+
+                var rr = ResolveWvccRoundRobinRider(ride, synthetic, wvccSecondClaim);
+
+                ride.RoundRobinRider = rr;
+                ride.Name = rr.Name; // decorated or synthetic
+            }
+        }
+
+        private static Dictionary<int, RoundRobinRider> BuildSyntheticWvccRiders(
+            IEnumerable<Competitor> competitors)
+        {
+            // First‑claim WVCC riders never appear in the RR CSV,
+            // so we synthesise RoundRobinRider objects for them.
+            return competitors.ToDictionary(
                 c => -c.Id,
                 c => new RoundRobinRider
                 {
@@ -136,44 +159,45 @@ namespace ClubSiteGenerator.Services.Hydration
                     RoundRobinClub = "WVCC",
                     IsFemale = c.IsFemale
                 });
+        }
 
-            var wvccSecondClaimByBaseName = rrRiders
+        private static Dictionary<string, RoundRobinRider> BuildWvccSecondClaimLookup(
+            IEnumerable<RoundRobinRider> rrRiders)
+        {
+            // Second‑claim WVCC riders may appear in the RR CSV.
+            // When they do, their CSV row contains a decorated name
+            // including their first‑claim club. We index them by base
+            // name ("GivenName Surname") so we can match them to Competitor objects.
+            return rrRiders
                 .Where(rr => string.Equals(rr.RoundRobinClub, "WVCC", StringComparison.OrdinalIgnoreCase))
                 .ToDictionary(
                     rr => GetBaseName(rr.Name),
                     rr => rr,
                     StringComparer.OrdinalIgnoreCase);
-
-            foreach (var ride in rides)
-            {
-                if (!string.Equals(ride.RoundRobinClub, "WVCC", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                if (ride.Competitor == null)
-                    throw new InvalidOperationException(
-                        $"WVCC ride {ride.Id} has no Competitor object.");
-
-                var baseName = $"{ride.Competitor.GivenName} {ride.Competitor.Surname}";
-
-                RoundRobinRider rr;
-
-                // Prefer CSV-decorated rider if we have a matching base name
-                if (wvccSecondClaimByBaseName.TryGetValue(baseName, out var csvRider))
-                {
-                    rr = csvRider;
-                }
-                else
-                {
-                    rr = synthetic[-ride.Competitor.Id];
-                }
-
-                ride.RoundRobinRider = rr;
-
-                // Use decorated name for the ride
-                ride.Name = rr.Name;
-            }
         }
 
+        private static bool IsWvccRide(Ride ride) =>
+            string.Equals(ride.RoundRobinClub, "WVCC", StringComparison.OrdinalIgnoreCase);
+
+        private static RoundRobinRider ResolveWvccRoundRobinRider(
+            Ride ride,
+            Dictionary<int, RoundRobinRider> synthetic,
+            Dictionary<string, RoundRobinRider> wvccSecondClaim)
+        {
+            var baseName = $"{ride.Competitor.GivenName} {ride.Competitor.Surname}";
+
+            // If this WVCC rider appears in the RR CSV (only true for second‑claim members),
+            // use the CSV RoundRobinRider so their decorated name appears in results.
+            if (wvccSecondClaim.TryGetValue(baseName, out var csvRider))
+            {
+                // Ensure gender is correct even if CSV loader missed it
+                csvRider.IsFemale = ride.Competitor.IsFemale;
+                return csvRider;
+            }
+
+            // Otherwise fall back to the synthetic WVCC rider.
+            return synthetic[-ride.Competitor.Id];
+        }
 
         private static string GetBaseName(string name)
         {
