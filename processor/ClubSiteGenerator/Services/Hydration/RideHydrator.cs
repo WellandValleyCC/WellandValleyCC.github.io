@@ -1,9 +1,4 @@
 ﻿using ClubCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClubSiteGenerator.Services.Hydration
 {
@@ -128,19 +123,26 @@ namespace ClubSiteGenerator.Services.Hydration
 
         public static void AttachSyntheticWvccRoundRobinRiders(
             IEnumerable<Ride> rides,
-            IEnumerable<Competitor> competitors)
+            IEnumerable<Competitor> competitors,
+            IEnumerable<RoundRobinRider> rrRiders)
         {
             // Build synthetic riders keyed by negative competitor ID
-            var synthetic = competitors
+            var synthetic = competitors.ToDictionary(
+                c => -c.Id,
+                c => new RoundRobinRider
+                {
+                    Id = -c.Id,
+                    Name = $"{c.GivenName} {c.Surname}",
+                    RoundRobinClub = "WVCC",
+                    IsFemale = c.IsFemale
+                });
+
+            var wvccSecondClaimByBaseName = rrRiders
+                .Where(rr => string.Equals(rr.RoundRobinClub, "WVCC", StringComparison.OrdinalIgnoreCase))
                 .ToDictionary(
-                    c => -c.Id,
-                    c => new RoundRobinRider
-                    {
-                        Id = -c.Id,
-                        Name = $"{c.GivenName} {c.Surname}",
-                        RoundRobinClub = "WVCC",
-                        IsFemale = c.IsFemale
-                    });
+                    rr => GetBaseName(rr.Name),
+                    rr => rr,
+                    StringComparer.OrdinalIgnoreCase);
 
             foreach (var ride in rides)
             {
@@ -151,8 +153,34 @@ namespace ClubSiteGenerator.Services.Hydration
                     throw new InvalidOperationException(
                         $"WVCC ride {ride.Id} has no Competitor object.");
 
-                ride.RoundRobinRider = synthetic[-ride.Competitor.Id];
+                var baseName = $"{ride.Competitor.GivenName} {ride.Competitor.Surname}";
+
+                RoundRobinRider rr;
+
+                // Prefer CSV-decorated rider if we have a matching base name
+                if (wvccSecondClaimByBaseName.TryGetValue(baseName, out var csvRider))
+                {
+                    rr = csvRider;
+                }
+                else
+                {
+                    rr = synthetic[-ride.Competitor.Id];
+                }
+
+                ride.RoundRobinRider = rr;
+
+                // Use decorated name for the ride
+                ride.Name = rr.Name;
             }
+        }
+
+
+        private static string GetBaseName(string name)
+        {
+            // e.g. "Leah Cuthbertson (G Fox)" -> "Leah Cuthbertson"
+            //      "Leah Cuthbertson (G Fox) (WVCC)" -> "Leah Cuthbertson"
+            var idx = name.IndexOf(" (", StringComparison.Ordinal);
+            return idx >= 0 ? name.Substring(0, idx) : name;
         }
 
         public static void AttachSyntheticGuestRoundRobinRiders(
