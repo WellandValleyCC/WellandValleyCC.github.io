@@ -30,7 +30,8 @@ playwright install
 
 ### Run the Scraper
 
-```
+``` powershell
+cd C:\repos\wvcc\WellandValleyCC.github.io\tools
 dotnet run --project vtta-scraper
 ```
 
@@ -72,6 +73,11 @@ For example:
 ```
 WellandValleyCC.github.io\data
 ```
+E.g. after running the scraper, you might execute:
+``` powershell
+cd C:\repos\wvcc\WellandValleyCC.github.io\tools
+Move-Item .\vtta-standards-combined.csv ..\data\vtta-standards-combined.2026.csv -Force
+ ```
 
 This allows the scoring processor to select the correct standards file based on season logic.
 
