@@ -87,7 +87,7 @@ def extract_club_events(xlsx_path, output_dir):
 
     if "Calendar" in xl.sheet_names:
         print("[OK] Extracting Calendar sheet")
-        calendar_df = xl.parse("Calendar")
+        calendar_df = xl.parse("Calendar", dtype={"Event Number": str})
         calendar_out = os.path.join(year_dir, f"Calendar_{year}.csv")
         calendar_df.to_csv(calendar_out, index=False)
         shutil.copy(calendar_out, os.path.join(artifact_dir, os.path.basename(calendar_out)))
