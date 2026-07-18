@@ -162,8 +162,19 @@ namespace ClubSiteGenerator.Renderers
                     cssClass += " postponed-event";
                 }
 
+                // Add shortened-event class if IsShortenedTen
+                if (ev.IsShortenedTen)
+                {
+                    cssClass += " shortened-event";
+                }
+
+                // If shortened from nominal distance, append actual miles
+                var title = ev.IsShortenedTen
+                    ? $"{ev.EventName} ({ev.Miles:0.##}mi)"
+                    : ev.EventName;
+
                 sb.AppendLine(
-                    $"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(ev.EventName)}</th>"
+                    $"<th class=\"event-title {cssClass}\" data-col-index=\"{colIndex}\">{WebUtility.HtmlEncode(title)}</th>"
                 );
                 colIndex++;
             }
