@@ -22,6 +22,26 @@ All First Claim club members are eligible, regardless of age. The aim is to rewa
 These adjusted times are used to rank riders at each 10‑mile TT.  
 Scoring follows the standard club points system (60, 55, 51, etc.).
 	
+### Shortened Events
+
+Occasionally a scheduled 10‑mile TT may need to be run on a shortened course due to roadworks or safety issues.  
+When this happens, the event still counts as a Nev Brooks scoring event, but **cannot** be used to set or update handicaps.
+
+A shortened event:
+
+- **Uses your existing handicap** (if you already have one).
+- **Does not generate a new handicap** for any rider.
+- **Does not update** your lowest handicap so far.
+- **Does not count as your first Ten** for handicap‑setting purposes.
+- **Awards Nev Brooks points only to riders who already have a handicap**, because only they have an adjusted time.
+
+This ensures shortened events do not distort future handicaps while still allowing established riders to score points in the Nev Brooks competition.
+
+**Rule summary:**
+
+> **Handicaps are only set or updated at full‑distance 10‑mile events.  
+> A rider’s first qualifying Ten for handicap purposes must be a full‑distance 10‑mile event.  
+> Shortened events use existing handicaps for scoring but never create or update handicaps, and do not count as a rider’s first Ten.**
 
 ### Worked example – Milly Pinnock's 2025 Nev Brooks season
 
