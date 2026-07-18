@@ -37,6 +37,9 @@ namespace ClubCore.Models.Csv
         [Name("Evening 10")]
         public string Evening10Raw { get; set; } = string.Empty;
 
+        [Name("Shortened Ten")]
+        public string ShortenedTenRaw { get; set; } = string.Empty;
+
         [Name("Hard Ride Series")]
         public string HardRideRaw { get; set; } = string.Empty;
 
