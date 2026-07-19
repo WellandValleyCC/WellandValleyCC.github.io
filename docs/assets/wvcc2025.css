@@ -601,6 +601,16 @@ table.results thead .event-title.postponed-event::after {
   border-radius: 2px;
 }
 
+/* =========================================================
+   Shortened Event – Competition Table Header
+   ========================================================= */
+
+table.results thead .event-title.shortened-event {
+  position: relative;
+  background: rgba(255, 200, 0, 0.25); /* soft yellow highlight */
+  color: #222;                         /* normal readable text */
+  font-weight: 600;
+}
 
 /* Championship layout (desktop) */
 .rules-and-legend {
