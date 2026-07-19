@@ -187,7 +187,11 @@ namespace ClubSiteGenerator.Renderers
                 : "-";
 
             // Generated handicap
-            var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "-";
+            var generated = ride.NevBrooksSecondsGenerated?.ToString("0") ?? "n/a";
+            var generatedDisplay = ride.NevBrooksSecondsGenerated.HasValue
+                ? $"{generated}s"
+                : "n/a";
+
 
             // Applied handicap (only for scoring rides)
             var applied = ride.NevBrooksSecondsApplied?.ToString("0") ?? "-";
@@ -202,7 +206,7 @@ namespace ClubSiteGenerator.Renderers
 
             details.AppendLine($"<div>Time: <span class=\"nb-value\">{rideTime}</span></div>");
             details.AppendLine("<div style=\"margin-top:0.25rem;\">Handicap</div>");
-            details.AppendLine($"<div>&nbsp;&nbsp;Generated: <span class=\"nb-value\">{generated}s</span></div>");
+            details.AppendLine($"<div>&nbsp;&nbsp;Generated: <span class=\"nb-value\">{generatedDisplay}</span></div>");
 
             if (!isHandicapEstablishing)
             {

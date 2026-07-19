@@ -75,7 +75,7 @@ namespace ClubProcessor.Services
             var requiredHeaders = new[]
             {
                 "Event Number","Date","Start time","Event Name","Round Robin Club", "Miles","Location / Course",
-                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled", "isPostponed"
+                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled"
             };
 
             foreach (var required in requiredHeaders)
@@ -88,6 +88,16 @@ namespace ClubProcessor.Services
                         $"Calendar CSV is missing required column: {required}. " +
                         $"Expected columns: {string.Join(", ", requiredHeaders)}");
                 }
+            }
+
+            if (!headers.Any(h => string.Equals(h, "isPostponed", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("[INFO] 'isPostponed' column missing — defaulting all events to not postponed - i.e. blank");
+            }
+
+            if (!headers.Any(h => string.Equals(h, "Shortened Ten", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("[INFO] 'Shortened Ten' column missing — defaulting all evening 10 events to handicap‑setting Tens - i.e. blank.");
             }
         }
 
@@ -103,6 +113,7 @@ namespace ClubProcessor.Services
                    a.IsClubChampionship == b.IsClubChampionship &&
                    a.IsNonStandard10 == b.IsNonStandard10 &&
                    a.IsEvening10 == b.IsEvening10 &&
+                   a.IsShortenedTen == b.IsShortenedTen &&
                    a.IsHardRideSeries == b.IsHardRideSeries &&
                    a.IsRoundRobinEvent == b.IsRoundRobinEvent &&
                    a.IsCancelled == b.IsCancelled &&
@@ -121,6 +132,7 @@ namespace ClubProcessor.Services
             target.IsClubChampionship = source.IsClubChampionship;
             target.IsNonStandard10 = source.IsNonStandard10;
             target.IsEvening10 = source.IsEvening10;
+            target.IsShortenedTen = source.IsShortenedTen;
             target.IsHardRideSeries = source.IsHardRideSeries;
             target.IsRoundRobinEvent = source.IsRoundRobinEvent;
             target.IsCancelled = source.IsCancelled;
@@ -205,6 +217,7 @@ namespace ClubProcessor.Services
                 IsClubChampionship = IsYes(row.ClubChampRaw),
                 IsNonStandard10 = IsYes(row.NonStd10Raw),
                 IsEvening10 = IsYes(row.Evening10Raw),
+                IsShortenedTen = IsYes(row.ShortenedTenRaw),
                 IsHardRideSeries = IsYes(row.HardRideRaw),
                 IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
                 IsCancelled = IsYes(row.CancelledRaw),

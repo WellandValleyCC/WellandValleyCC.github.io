@@ -50,5 +50,13 @@ namespace ClubCore.Models
         public bool IsCancelled { get; set; }
 
         public bool IsPostponed { get; set; }
+
+        /// <summary>
+        /// Indicates whether this is a shortened ten mile event.  If so, then Nev Brooks handicaps for furture 
+        /// events should be not be calculated.
+        /// Set this to true (Y in the CSV) for shortened evening tens - e.g. 11/07/2026, Gilmorton 10 was 
+        /// reduced to 6.35 miles due to roadworks.
+        /// </summary>
+        public bool IsShortenedTen { get; set; }
     }
 }
