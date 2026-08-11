@@ -20,4 +20,6 @@ Using launch settings from vtta-scraper\Properties\launchSettings.json...
 [INFO] Processing distance 20 miles.
 [INFO] Processing distance 25 miles.
 [INFO] Combined CSV written to: C:\repos\wvcc\WellandValleyCC.github.io\tools\vtta-standards-combined.csv
+PS C:\repos\wvcc\WellandValleyCC.github.io\tools> ren .\vtta-standards-combined.csv .\vtta-standards-combined.2026.csv
 ```
+
