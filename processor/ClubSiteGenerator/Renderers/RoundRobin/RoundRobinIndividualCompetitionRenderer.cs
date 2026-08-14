@@ -225,7 +225,7 @@ namespace ClubSiteGenerator.Renderers.RoundRobin
 
         private bool IsScoringRide(RoundRobinRiderResult rider, int eventNumber)
         {
-            return rider.Total.Rides
+            return rider.Rides
                 .Any(r => r.CalendarEvent!.RoundRobinEventNumber == eventNumber);
         }
     }
