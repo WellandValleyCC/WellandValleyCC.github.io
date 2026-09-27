@@ -147,11 +147,17 @@ namespace ClubSiteGenerator.Renderers
             var sb = new StringBuilder();
             sb.AppendLine("<tbody>");
 
+            bool anyFractional = resultsSet.Rides.Any(r =>
+            {
+                double ts = r.TotalSeconds;
+                return ts % 1 != 0;   // true if fractional
+            });
+
             int startNumber = 1;
 
             foreach (var ride in resultsSet.Rides)
             {
-                sb.AppendLine(RenderRow(ride, startNumber));
+                sb.AppendLine(RenderRow(ride, startNumber, anyFractional));
                 startNumber++;
             }
 
@@ -159,14 +165,14 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private string RenderRow(Ride ride, int startNumber)
+        private string RenderRow(Ride ride, int startNumber, bool showFractionalSeconds)
         {
             var sb = new StringBuilder();
             var cssClass = GetRowClass(ride);
 
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 
-            foreach (var cell in BuildCells(ride, startNumber)
+            foreach (var cell in BuildCells(ride, startNumber, showFractionalSeconds)
                 .Select((value, index) => RenderCell(value, index, ride)))
             {
                 sb.AppendLine(cell);
@@ -176,7 +182,7 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private IEnumerable<string> BuildCells(Ride ride, int startNumber)
+        private IEnumerable<string> BuildCells(Ride ride, int startNumber, bool showFractionalSeconds)
         {
             bool hasResult = ride.Status == RideStatus.Valid;
 
@@ -188,9 +194,7 @@ namespace ClubSiteGenerator.Renderers
 
                 RideStatus.Ready => "",   // future event → blank
 
-                RideStatus.Valid => TimeSpan
-                    .FromSeconds(ride.TotalSeconds)
-                    .ToString(@"hh\:mm\:ss"),
+                RideStatus.Valid => FormatTime(ride.TotalSeconds, showFractionalSeconds),
 
                 _ => ""
             };
@@ -218,6 +222,23 @@ namespace ClubSiteGenerator.Renderers
             yield return hasResult
                 ? ride.AvgSpeed?.ToString("0.00") ?? ""
                 : "";
+        }
+
+        private static string FormatTime(double totalSeconds, bool showFractionalSeconds)
+        {
+            var ts = TimeSpan.FromSeconds(totalSeconds);
+
+            if (!showFractionalSeconds)
+            {
+                // Standard hh:mm:ss
+                return ts.ToString(@"hh\:mm\:ss");
+            }
+
+            // hh:mm:ss.ff (always two decimals)
+            double secondsWithFraction = ts.Seconds + ts.Milliseconds / 1000.0;
+            string sec = secondsWithFraction.ToString("00.00");
+
+            return $"{ts.Hours:00}:{ts.Minutes:00}:{sec}";
         }
 
         private string RenderCell(string value, int index, Ride ride)
