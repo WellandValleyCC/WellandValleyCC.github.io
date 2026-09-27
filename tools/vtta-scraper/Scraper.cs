@@ -39,6 +39,9 @@ namespace vttaScraper
                     return Array.from(rows).every(r => r.innerText.trim().length > 0);
                 }");
 
+            // Extra pause to ensure the table has fully stabilised
+            await Task.Delay(2000);
+
             var headers = (await page.Locator("table thead th").AllInnerTextsAsync()).ToList();
             var rows = await page.Locator("table tbody tr").AllAsync();
 
