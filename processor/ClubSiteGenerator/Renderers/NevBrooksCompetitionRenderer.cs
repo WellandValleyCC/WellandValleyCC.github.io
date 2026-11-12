@@ -232,5 +232,91 @@ namespace ClubSiteGenerator.Renderers
             var ts = TimeSpan.FromSeconds(seconds);
             return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
         }
+
+        public string ExportCsv()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine(
+                "ClubNumber," +
+                "Name," +
+                "FinalRank," +
+                "Best10Points," +
+                "EventNumber," +
+                "EventDate," +
+                "EventName," +
+                "Course," + 
+                "IsShortenedTen," +
+                "NevBrooksBenchmarkSeconds," +
+                "RideStatus," +
+                "RideTimeSeconds," +
+                "NevBrooksPoints," +
+                "GeneratedHandicapSeconds," +
+                "AppliedHandicapSeconds," +
+                "AdjustedTimeSeconds");
+
+            foreach (var result in resultsSet.ScoredRides)
+            {
+                foreach (var ev in calendar)
+                {
+                    result.EventStatuses.TryGetValue(
+                        ev.EventNumber,
+                        out var status);
+
+                    result.EventPoints.TryGetValue(
+                        ev.EventNumber,
+                        out var points);
+
+                    var ride = result.Rides
+                        .FirstOrDefault(r => r.EventNumber == ev.EventNumber);
+
+                    sb.AppendLine(
+                        string.Join(",",
+                            result.Competitor.ClubNumber,
+                            Csv(result.Competitor.FullName),
+                            Csv(result.TenMileCompetition.RankDisplay),
+                            Csv(result.TenMileCompetition.PointsDisplay),
+
+                            ev.EventNumber,
+                            ev.EventDate.ToString("yyyy-MM-dd"),
+                            Csv(ev.EventName),
+                            Csv(ev.EventName.Split(' ')[0]),
+
+                            ev.IsShortenedTen ? "1" : "0",
+
+                            // Current implementation.
+                            // When route-specific benchmarks arrive,
+                            // replace 995 with ev.NevBrooksBenchmarkSeconds.
+                            "995",
+
+                            result.EventStatuses.ContainsKey(ev.EventNumber)
+                                ? Csv(status.ToString())
+                                : "",
+
+                            ride?.Time?.TotalSeconds.ToString("0") ?? "",
+
+                            ride?.NevBrooksPoints?.ToString("0.##") ?? "",
+
+                            ride?.NevBrooksSecondsGenerated?.ToString("0") ?? "",
+
+                            ride?.NevBrooksSecondsApplied?.ToString("0") ?? "",
+
+                            ride?.NevBrooksSecondsAdjustedTime?.ToString("0") ?? ""
+                        ));
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static string Csv(string? value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return "";
+            }
+
+            return "\"" + value.Replace("\"", "\"\"") + "\"";
+        }
     }
 }

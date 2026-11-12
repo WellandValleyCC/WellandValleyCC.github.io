@@ -236,6 +236,13 @@ namespace ClubSiteGenerator.Services
                 var folderPath = Path.Combine(outputDir, resultsSet.SubFolderName);
                 Directory.CreateDirectory(folderPath);
                 File.WriteAllText(Path.Combine(folderPath, $"{resultsSet.FileName}.html"), html);
+
+                if (renderer is NevBrooksCompetitionRenderer nevBrooksRenderer)
+                {
+                    File.WriteAllText(
+                        Path.Combine(folderPath, $"{resultsSet.FileName}.csv"),
+                        nevBrooksRenderer.ExportCsv());
+                }
             }
         }
 
