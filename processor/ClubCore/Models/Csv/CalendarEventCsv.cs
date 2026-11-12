@@ -25,6 +25,10 @@ namespace ClubCore.Models.Csv
         [Name("Location / Course")]
         public string Location { get; set; } = string.Empty;
 
+        [Name("NevBrooksBenchmarkSeconds")]
+        public string NevBrooksBenchmarkSecondsRaw { get; set; } = string.Empty;
+
+
         [Name("Hill Climb")]
         public string HillClimbRaw { get; set; } = string.Empty;
 
