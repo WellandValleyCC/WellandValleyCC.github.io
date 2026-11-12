@@ -69,6 +69,9 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<double>("Miles")
                         .HasColumnType("REAL");
 
+                    b.Property<int?>("NevBrooksBenchmarkSeconds")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("RoundRobinClub")
                         .IsRequired()
                         .HasColumnType("TEXT");
