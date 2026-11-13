@@ -109,41 +109,73 @@ namespace ClubSiteGenerator.Renderers
         private string RenderHeader()
         {
             var sb = new StringBuilder();
+
             sb.AppendLine("<thead>");
+
             sb.AppendLine(RenderEventNumberRow()); // Row 1
             sb.AppendLine(RenderEventTitleRow());  // Row 2
-            sb.AppendLine(RenderEventDateRow());   // Row 3
+
+            foreach (var row in RenderIntermediateHeaderRows())
+            {
+                sb.AppendLine(row);
+            }
+
+            sb.AppendLine(RenderEventDateRow());   // Final row
+
             sb.AppendLine("</thead>");
+
             return sb.ToString();
+        }
+
+        protected virtual int HeaderRowCount => 3;
+
+        protected virtual IEnumerable<string> RenderIntermediateHeaderRows()
+        {
+            yield break;
         }
 
         private string RenderEventNumberRow()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<tr>");
+            sb.AppendLine("<tr class=\"event-number-row\">");
 
             foreach (var (group, subs) in GroupedFixedColumns)
             {
                 if (subs.Count == 0)
-                    sb.AppendLine($"<th rowspan=\"3\" class=\"fixed-column-title\">{WebUtility.HtmlEncode(group)}</th>");
+                {
+                    sb.AppendLine(
+                        $"<th rowspan=\"{HeaderRowCount}\" class=\"fixed-column-title\">" +
+                        $"{WebUtility.HtmlEncode(group)}" +
+                        "</th>");
+                }
                 else
-                    sb.AppendLine($"<th rowspan=\"2\" colspan=\"{subs.Count}\" class=\"fixed-column-title\">{WebUtility.HtmlEncode(group)}</th>");
+                {
+                    sb.AppendLine(
+                        $"<th rowspan=\"2\" colspan=\"{subs.Count}\" class=\"fixed-column-title\">" +
+                        $"{WebUtility.HtmlEncode(group)}" +
+                        "</th>");
+                }
             }
 
             foreach (var ev in calendar)
             {
-                var cssClass = ev.IsEvening10 ? "ten-mile-event" : "non-ten-mile-event";
-                sb.AppendLine($"<th class=\"event-number {cssClass}\">{ev.EventNumber}</th>");
+                var cssClass = ev.IsEvening10
+                    ? "ten-mile-event"
+                    : "non-ten-mile-event";
+
+                sb.AppendLine(
+                    $"<th class=\"event-number {cssClass}\">{ev.EventNumber}</th>");
             }
 
             sb.AppendLine("</tr>");
+
             return sb.ToString();
         }
 
         protected virtual string RenderEventTitleRow()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<tr>");
+            sb.AppendLine("<tr class=\"event-title-row\">");
 
             var colIndex = FirstEventIndex;
             foreach (var ev in calendar)
@@ -186,7 +218,7 @@ namespace ClubSiteGenerator.Renderers
         protected virtual string RenderEventDateRow()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<tr>");
+            sb.AppendLine("<tr class=\"event-date-row\">");
 
             int colIndex = 1;
 
@@ -216,6 +248,11 @@ namespace ClubSiteGenerator.Renderers
 
             sb.AppendLine("</tr>");
             return sb.ToString();
+        }
+
+        protected virtual string RenderAdditionalHeaderRows()
+        {
+            return string.Empty;
         }
 
         private string RenderBody()
