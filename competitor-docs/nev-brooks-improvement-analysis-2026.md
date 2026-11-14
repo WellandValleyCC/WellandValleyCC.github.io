@@ -43,6 +43,7 @@
   - [Excel Formulae](#excel-formulae)
   - [Source Data](#source-data)
   - [Treatment of Shortened Events](#treatment-of-shortened-events)
+  - [Improvement Analysis](#improvement-analysis)
 
 
 ## Introduction
@@ -373,3 +374,54 @@ This approach:
 - Continues to allow shortened events to participate fully within the Nev Brooks competition.
 
 This decision may be reviewed in future if additional shortened-event data becomes available.
+
+### Improvement Analysis
+#### Background
+
+As part of the review of the Nev Brooks competition, an investigation was undertaken into rider improvement during the 2026 season.
+
+For each rider, a linear regression line was fitted to their ride times over the season. The slope of the regression line was then used as an indicator of improvement.
+
+A negative slope indicates improving performance (times becoming faster over the season), while a positive slope indicates declining performance.
+
+#### Interpretation
+
+The improvement ranking is not part of the Nev Brooks competition and has no impact on rider scores or standings.
+
+Its purpose is simply to identify season-long performance trends.
+
+In general:
+
+- Large negative slopes indicate substantial improvement.
+- Slopes close to zero indicate broadly stable performance.
+- Positive slopes indicate declining performance.
+
+#### Effect of Sample Size
+
+The analysis showed that sample size has a significant influence on confidence in the result.
+
+For example, the two strongest regression slopes were produced by riders with only four recorded rides. While these results may represent genuine improvement, they are based on relatively little data and are therefore more sensitive to individual performances.
+
+A strong regression slope based on four rides is less reliable than a weaker regression slope based on nine or more rides.
+
+#### Most Improved Rider
+
+The strongest evidence of sustained improvement during the season was provided by Ian Aldridge.
+
+Ian recorded:
+
+- 9 qualifying rides
+- A regression slope of approximately -9 seconds per event
+- An R² value of approximately 0.52
+
+Although other riders exhibited larger negative slopes, those results were based on only four rides and are therefore less statistically reliable.
+
+Excluding riders with fewer than five rides, Ian Aldridge emerged as the rider showing the strongest sustained improvement over the course of the season.
+
+#### Conclusion
+
+The improvement analysis suggests that Ian Aldridge was the most improved rider during the 2026 season.
+
+This conclusion is based not on a single exceptional performance, but on a consistent improvement trend observed across a substantial number of rides.
+
+The analysis also provides an interesting contrast with the Nev Brooks competition, which rewards riders who outperform their established handicap. The two measures therefore assess different aspects of rider performance and should not be expected to identify the same riders.
