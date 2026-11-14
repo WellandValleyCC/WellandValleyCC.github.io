@@ -54,17 +54,14 @@ namespace ClubProcessor.Calculators
                     continue;
                 }
 
-                var benchmarkSeconds = r.CalendarEvent?.NevBrooksBenchmarkSeconds ?? 995;
-
-                r.NevBrooksSecondsGenerated =
-                    r.TotalSeconds - benchmarkSeconds;
-
+                // --- RULE: Shortened Ten → DO NOT generate handicap ---
                 if (IsShortened(r))
                 {
-                    r.NevBrooksSecondsGenerated =
-                        r.NevBrooksSecondsGenerated
-                        / (r.CalendarEvent?.Miles ?? 10.0)
-                        * 10.0;
+                    r.NevBrooksSecondsGenerated = null;
+                }
+                else
+                {
+                    r.NevBrooksSecondsGenerated = r.TotalSeconds - r.CalendarEvent?.NevBrooksBenchmarkSeconds ?? 995.0;
                 }
 
                 // Apply previous handicap if available
@@ -80,7 +77,9 @@ namespace ClubProcessor.Calculators
                     r.NevBrooksSecondsAdjustedTime = null;
                 }
 
-                if (r.ClubNumber.HasValue &&
+                // --- RULE: Shortened Ten → DO NOT update handicap baseline ---
+                if (!IsShortened(r) &&
+                    r.ClubNumber.HasValue &&
                     r.NevBrooksSecondsGenerated.HasValue)
                 {
                     var clubNumber = r.ClubNumber.Value;

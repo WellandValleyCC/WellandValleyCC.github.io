@@ -243,9 +243,12 @@ namespace ClubSiteGenerator.Renderers
                     ? "ten-mile-event"
                     : "non-ten-mile-event";
 
-                var benchmarkText = ev.NevBrooksBenchmarkSeconds.HasValue
-                    ? $"Benchmark<br/>{FormatSecondsAsTime(ev.NevBrooksBenchmarkSeconds.Value)}"
-                    : string.Empty;
+                var benchmarkText =
+                    ev.IsShortenedTen
+                        ? "Benchmark<br/>n/a"
+                        : ev.NevBrooksBenchmarkSeconds.HasValue
+                            ? $"Benchmark<br/>{FormatSecondsAsTime(ev.NevBrooksBenchmarkSeconds.Value)}"
+                            : string.Empty;
 
                 sb.AppendLine($"<th class=\"event-benchmark {cssClass}\">{benchmarkText}</th>");
             }
@@ -273,7 +276,7 @@ namespace ClubSiteGenerator.Renderers
                 "EventNumber," +
                 "EventDate," +
                 "EventName," +
-                "Course," + 
+                "Course," +
                 "IsShortenedTen," +
                 "NevBrooksBenchmarkSeconds," +
                 "RideStatus," +
