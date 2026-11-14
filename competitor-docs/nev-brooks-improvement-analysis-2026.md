@@ -42,6 +42,7 @@
   - [Spreadsheet Methodology](#spreadsheet-methodology)
   - [Excel Formulae](#excel-formulae)
   - [Source Data](#source-data)
+  - [Treatment of Shortened Events](#treatment-of-shortened-events)
 
 
 ## Introduction
@@ -285,6 +286,8 @@ It may also be valuable to investigate the stability of generated handicaps over
 
 Finally, the relationship between rider improvement and Nev Brooks points scoring could be explored in greater depth to determine whether complementary awards or metrics might better recognise rider development alongside competitive success.
 
+
+
 ## Appendix
 
 ### Spreadsheet Methodology
@@ -321,3 +324,52 @@ Two versions of the data were analysed:
 - Results calculated using course-specific benchmark values derived from observed course performance data.
 
 The datasets included both rider-level and event-level information sufficient to calculate generated handicaps, competition standings and season-long improvement measures.
+
+### Treatment of Shortened Events
+#### Background
+
+A review was undertaken to determine whether shortened ten-mile events could be used to generate Nev Brooks handicaps.
+
+The original Nev Brooks design excluded shortened events from handicap generation. As part of the 2027 review, an alternative approach was investigated.
+
+The proposed alternative was:
+
+Derive a benchmark time for the shortened course using the same methodology as a full-distance course.
+
+Calculate a generated handicap relative to that benchmark.
+
+Scale the resulting handicap to a ten-mile equivalent using the ratio:
+
+Generated Handicap = (Ride Time - Benchmark Time) × (10 ÷ Course Miles)
+
+#### Findings
+
+The arithmetic was found to be correct and internally consistent.
+
+However, comparison with surrounding full-distance events showed that handicaps generated from the shortened event were frequently inconsistent with handicaps generated from normal ten-mile events.
+
+For example, riders often generated significantly smaller handicaps from the shortened event than from full-distance events immediately before and after it.
+
+The investigation concluded that the concern was not the benchmark calculation itself. Rather, the concern was the assumption that performance differences scale linearly with distance.
+
+A shortened event represents a substantially different physiological effort from a full ten-mile event. Stronger riders may be able to ride proportionally closer to their maximum effort over a shorter duration, while less experienced riders may derive less benefit from the reduced distance.
+
+As a result, a mathematically correct scaling factor does not necessarily produce a fair ten-mile equivalent handicap.
+
+#### Decision
+
+Shortened events will continue to award Nev Brooks points using the rider's existing handicap.
+
+However, shortened events will not generate a new handicap.
+
+#### Rationale
+
+This approach:
+
+- Avoids making assumptions about how performance scales between o different race distances.
+- Prevents shortened events disproportionately influencing a rider's established handicap.
+- Maintains consistency between all handicap-generating events.
+- Is straightforward to explain and administer.
+- Continues to allow shortened events to participate fully within the Nev Brooks competition.
+
+This decision may be reviewed in future if additional shortened-event data becomes available.
