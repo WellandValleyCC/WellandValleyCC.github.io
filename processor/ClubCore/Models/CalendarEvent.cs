@@ -16,8 +16,6 @@ namespace ClubCore.Models
         [NotMapped]
         public int RoundRobinEventNumber { get; set; } // Sequential number within RR subset
 
-        public string SheetName => $"Event_{EventNumber:D2}";
-
         [Required]
         public DateTime EventDate { get; set; }
 
