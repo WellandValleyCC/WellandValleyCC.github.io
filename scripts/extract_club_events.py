@@ -85,6 +85,8 @@ def extract_club_events(xlsx_path, output_dir):
     artifact_dir = os.path.join("artifacts", "extracted", year)
     os.makedirs(artifact_dir, exist_ok=True)
 
+    calendar_df = None
+
     if "Calendar" in xl.sheet_names:
         print("[OK] Extracting Calendar sheet")
         calendar_df = xl.parse("Calendar", dtype={"Event Number": str})
@@ -126,56 +128,155 @@ def extract_club_events(xlsx_path, output_dir):
     else:
         print("[WARN] Sheet missing: Leagues")
 
-    event_sheets = [s for s in xl.sheet_names if re.fullmatch(r'Event_\d{2}', s)]
-    if not event_sheets:
-        print("[WARN] No Event_nn sheets found")
+    # Event extraction driven by Calendar sheet
+    if calendar_df is None:
+        print("[WARN] Cannot extract events because Calendar sheet is missing")
     else:
-        seen_event_numbers = set()
-        manifest_entries = []
-    
-        for sheet in event_sheets:
-            event_num = re.search(r'\d+', sheet).group()
-    
-            if event_num in seen_event_numbers:
-                print(f"[ERROR] Duplicate EventNumber detected: {event_num} in sheet {sheet}")
-                continue
-            seen_event_numbers.add(event_num)
-    
-            print(f"[OK] Extracting event sheet: {sheet}")
-            df = xl.parse(sheet)
-    
-            # Trim at first blank in column A
-            first_blank_index = df[df.iloc[:, 0].isnull() | (df.iloc[:, 0].astype(str).str.strip() == "")].index.min()
-            if pd.notnull(first_blank_index):
-                df = df.iloc[:first_blank_index]
-    
-            # Normalize string columns
-            for c in df.select_dtypes(include=["object"]).columns:
-                df[c] = df[c].astype(str).str.strip().replace({"nan": ""})
-    
-            # Log header and preview
-            headers = list(df.columns)
-            missing_name_count = df['Name'].isnull().sum() if 'Name' in df.columns else 'N/A'
-            print(f"[INFO] Sheet {sheet} headers: {headers}; rows: {len(df)}; missing Names: {missing_name_count}")
-            print(f"[INFO] Preview of Event_{event_num}.csv:")
-            print(df.head(4).to_string(index=False))
-    
-            # Save CSV
-            event_out = os.path.join(events_dir, f"Event_{int(event_num):02}.csv")
-            df.to_csv(event_out, index=False)
-            shutil.copy(event_out, os.path.join(artifact_dir, os.path.basename(event_out)))
-            print(f"[INFO] Saved to: {event_out} ({len(df)} rows)")
-    
-            # Add to manifest
-            manifest_entries.append((event_num, sheet, os.path.join("events", f"Event_{int(event_num):02}.csv")))
-    
-        manifest_path = os.path.join(year_dir, f"EventManifest_{year}.csv")
-        with open(manifest_path, "w") as f:
-            f.write("EventNumber,SheetName,Filename\n")
-            for event_num, sheet_name, filename in sorted(manifest_entries, key=lambda x: int(x[0])):
-                f.write(f"{event_num},{sheet_name},{filename}\n")
-        print(f"[INFO] Manifest saved: {manifest_path}")
+        required_columns = ["Event Number", "Sheet Name"]
 
+        missing_columns = [
+            col for col in required_columns
+            if col not in calendar_df.columns
+        ]
+
+        if missing_columns:
+            print(
+                f"[ERROR] Calendar sheet missing required columns: {missing_columns}"
+            )
+        else:
+            manifest_entries = []
+            seen_event_numbers = set()
+
+            for _, row in calendar_df.iterrows():
+
+                event_number_value = row["Event Number"]
+
+                sheet_name = str(row["Sheet Name"]).strip()
+
+                if pd.isna(event_number_value):
+                    continue
+
+                try:
+                    event_num = int(event_number_value)
+                except (TypeError, ValueError):
+                    print(
+                        f"[WARN] Invalid Event Number '{event_number_value}'"
+                    )
+                    continue
+
+                if event_num in seen_event_numbers:
+                    print(
+                        f"[ERROR] Duplicate EventNumber detected in Calendar: {event_num}"
+                    )
+                    continue
+
+                seen_event_numbers.add(event_num)
+
+                if not sheet_name:
+                    print(
+                        f"[WARN] Event {event_num:02} has no Sheet Name"
+                    )
+                    continue
+
+                if sheet_name not in xl.sheet_names:
+                    print(
+                        f"[ERROR] Event {event_num:02} references missing worksheet '{sheet_name}'"
+                    )
+                    continue
+
+                print(
+                    f"[OK] Extracting Event {event_num:02} from worksheet '{sheet_name}'"
+                )
+
+                df = xl.parse(sheet_name)
+
+                # Trim at first blank row in column A
+                first_blank_index = (
+                    df[
+                        df.iloc[:, 0].isnull()
+                        | (df.iloc[:, 0].astype(str).str.strip() == "")
+                    ]
+                    .index
+                    .min()
+                )
+
+                if pd.notnull(first_blank_index):
+                    df = df.iloc[:first_blank_index]
+
+                # Normalize string columns
+                for c in df.select_dtypes(include=["object"]).columns:
+                    df[c] = (
+                        df[c]
+                        .astype(str)
+                        .str.strip()
+                        .replace({"nan": ""})
+                    )
+
+                headers = list(df.columns)
+
+                missing_name_count = (
+                    df["Name"].isnull().sum()
+                    if "Name" in df.columns else "N/A"
+                )
+
+                print(
+                    f"[INFO] Worksheet {sheet_name} headers: {headers}; "
+                    f"rows: {len(df)}; "
+                    f"missing Names: {missing_name_count}"
+                )
+
+                print(
+                    f"[INFO] Preview of Event_{event_num:02}.csv:"
+                )
+
+                print(df.head(4).to_string(index=False))
+
+                event_filename = f"{sheet_name}.csv"
+
+                event_out = os.path.join(
+                    events_dir,
+                    event_filename
+                )
+
+                df.to_csv(event_out, index=False)
+
+                shutil.copy(
+                    event_out,
+                    os.path.join(
+                        artifact_dir,
+                        os.path.basename(event_out)
+                    )
+                )
+
+                print(
+                    f"[INFO] Saved to: {event_out} ({len(df)} rows)"
+                )
+
+                manifest_entries.append(
+                    (
+                        event_num,
+                        sheet_name,
+                        os.path.join("events", event_filename)
+                    )
+                )
+
+            manifest_path = os.path.join(
+                year_dir,
+                f"EventManifest_{year}.csv"
+            )
+
+            with open(manifest_path, "w") as f:
+                f.write("EventNumber,SheetName,Filename\n")
+
+                for event_num, sheet_name, filename in sorted(
+                    manifest_entries,
+                    key=lambda x: x[0]
+                ):
+                    f.write(
+                        f"{event_num:02},{sheet_name},{filename}\n"
+                    )
+
+            print(f"[INFO] Manifest saved: {manifest_path}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

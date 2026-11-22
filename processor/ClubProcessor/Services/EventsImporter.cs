@@ -64,23 +64,27 @@ namespace ClubProcessor.Services
 
             ClearRidesForObsoleteEvents();
 
-            var csvFiles = Directory.GetFiles(eventsDir, "*.csv");
-
-            foreach (var csvPath in csvFiles.OrderBy(f => f))
+            foreach (var manifestEntry in manifest.Values
+                .OrderBy(m => m.EventNumber))
             {
-                var filename = Path.GetFileName(csvPath);
+                var csvPath = Path.Combine(
+                    folderPath,
+                    manifestEntry.Filename);
 
-                if (!manifest.TryGetValue(filename, out var eventNumber))
+                if (!File.Exists(csvPath))
                 {
                     Console.WriteLine(
-                        $"[WARN] No manifest entry found for {filename}. Skipping.");
+                        $"[WARN] Event file not found: {csvPath}");
                     continue;
                 }
 
                 Console.WriteLine(
-                    $"[INFO] Processing Event {eventNumber}: {csvPath}");
+                    $"[INFO] Processing Event {manifestEntry.EventNumber}: {csvPath}");
 
-                ProcessEventCsv(csvPath, eventNumber, year);
+                ProcessEventCsv(
+                    csvPath,
+                    manifestEntry.EventNumber,
+                    year);
             }
 
             eventContext.SaveChanges();
@@ -241,7 +245,7 @@ namespace ClubProcessor.Services
             return club?.ShortName;
         }
 
-        private Dictionary<string, int> LoadEventManifest(string manifestPath)
+        private Dictionary<string, EventManifestCsv> LoadEventManifest(string manifestPath)
         {
             using var reader = new StreamReader(manifestPath);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -249,7 +253,7 @@ namespace ClubProcessor.Services
             return csv.GetRecords<EventManifestCsv>()
                 .ToDictionary(
                     m => Path.GetFileName(m.Filename),
-                    m => m.EventNumber,
+                    m => m,
                     StringComparer.OrdinalIgnoreCase);
         }
     }
