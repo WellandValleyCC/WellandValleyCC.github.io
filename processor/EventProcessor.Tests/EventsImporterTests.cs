@@ -123,6 +123,14 @@ namespace EventProcessor.Tests
 
             File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), eventCsv);
 
+            File.WriteAllLines(
+                Path.Combine(yearFolder, "EventManifest_2025.csv"),
+                new[]
+                {
+                    "EventNumber,SheetName,Filename",
+                    "01,Event_01,events/Event_01.csv"
+                });
+
             // Sanity check: ensure folder exists before returning
             Directory.Exists(yearFolder).Should().BeTrue("Test folder should exist before import");
 
@@ -175,7 +183,7 @@ namespace EventProcessor.Tests
                 new[]
                 {
                     "EventNumber,SheetName,Filename",
-                    "1,Event_01,events\\Event_01.csv"
+                    "1,Event_01,events/Event_01.csv"
                 });
 
             // Act
@@ -274,7 +282,7 @@ namespace EventProcessor.Tests
                 new[]
                 {
                                 "EventNumber,SheetName,Filename",
-                                "1,Event_01,events\\Event_01.csv"
+                                "1,Event_01,events/Event_01.csv"
                 });
 
             // Minimal CSV with a rider whose name includes a club in parentheses
@@ -338,7 +346,7 @@ namespace EventProcessor.Tests
                 new[]
                 {
                                 "EventNumber,SheetName,Filename",
-                                "1,Event_01,events\\Event_01.csv"
+                                "1,Event_01,events/Event_01.csv"
                 });
 
             // Act

@@ -256,7 +256,7 @@ def extract_club_events(xlsx_path, output_dir):
                     (
                         event_num,
                         sheet_name,
-                        os.path.join("events", event_filename)
+                        f"events/{event_filename}"
                     )
                 )
 
