@@ -219,15 +219,6 @@ table.results td.mixed-score {
 }
 
 /* =========================================================
-   Nev Brooks Competition – Event Header
-   ========================================================= */
-
-table.results thead th.event-benchmark {
-  font-size: 0.75rem;
-  color: #666;
-}
-
-/* =========================================================
    Nev Brooks Competition – Expandable Event Cell
    ========================================================= */
 
@@ -679,33 +670,6 @@ table.results thead tr:nth-child(2) th {
   vertical-align: middle;
 }
 table.results thead tr:nth-child(3) th {
-  font-size: 0.8rem;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  font-weight: normal;
-  color: #555;
-  background-color: #f8f8f8;
-  border-top: 1px solid #ccc;
-}
-
-table.results thead tr.event-number-row th,
-table.results thead tr.event-title-row th {
-  padding-top: 4px;
-  padding-bottom: 4px;
-  font-size: 0.9rem;
-  vertical-align: middle;
-}
-
-table.results thead tr.event-benchmark-row th {
-  font-size: 0.70rem;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  font-weight: normal;
-  color: #777;
-  background-color: #f8f8f8;
-}
-
-table.results thead tr.event-date-row th {
   font-size: 0.8rem;
   padding-top: 2px;
   padding-bottom: 2px;
