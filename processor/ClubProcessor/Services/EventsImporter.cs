@@ -3,7 +3,6 @@ using ClubCore.Models;
 using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using CsvHelper;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -28,7 +27,8 @@ namespace ClubProcessor.Services
         public bool ImportFromFolder(string folderPath)
         {
             var folderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
-            var yearMatch = Regex.Match(folderName, @"\b(20\d{2})\b"); // Matches 2000–2099
+
+            var yearMatch = Regex.Match(folderName, @"\b(20\d{2})\b");
 
             if (!yearMatch.Success)
             {
@@ -46,16 +46,40 @@ namespace ClubProcessor.Services
                 return false;
             }
 
+            var manifestPath = Path.Combine(
+                folderPath,
+                $"EventManifest_{year}.csv");
+
+            if (!File.Exists(manifestPath))
+            {
+                Console.WriteLine($"[ERROR] Event manifest not found: {manifestPath}");
+                return false;
+            }
+
             Console.WriteLine($"[INFO] Processing year: {year}");
             Console.WriteLine($"[INFO] Processing events in: {eventsDir}");
+            Console.WriteLine($"[INFO] Using manifest: {manifestPath}");
+
+            var manifest = LoadEventManifest(manifestPath);
 
             ClearRidesForObsoleteEvents();
 
-            var csvFiles = Directory.GetFiles(eventsDir, "Event_*.csv");
+            var csvFiles = Directory.GetFiles(eventsDir, "*.csv");
+
             foreach (var csvPath in csvFiles.OrderBy(f => f))
             {
-                var eventNumber = ExtractEventNumber(csvPath);
-                Console.WriteLine($"[INFO] Processing Event {eventNumber}: {csvPath}");
+                var filename = Path.GetFileName(csvPath);
+
+                if (!manifest.TryGetValue(filename, out var eventNumber))
+                {
+                    Console.WriteLine(
+                        $"[WARN] No manifest entry found for {filename}. Skipping.");
+                    continue;
+                }
+
+                Console.WriteLine(
+                    $"[INFO] Processing Event {eventNumber}: {csvPath}");
+
                 ProcessEventCsv(csvPath, eventNumber, year);
             }
 
@@ -78,12 +102,6 @@ namespace ClubProcessor.Services
             eventContext.SaveChanges();
 
             Console.WriteLine($"[INFO] Removed {staleRides.Count} obsolete rides.");
-        }
-
-        private int ExtractEventNumber(string path)
-        {
-            var match = Regex.Match(Path.GetFileName(path), @"Event_(\d+)\.csv");
-            return match.Success ? int.Parse(match.Groups[1].Value) : -1;
         }
 
         private void ProcessEventCsv(string csvPath, int eventNumber, int competitionYear)
@@ -221,6 +239,18 @@ namespace ClubProcessor.Services
                     c.FromYear <= competitionYear);
 
             return club?.ShortName;
+        }
+
+        private Dictionary<string, int> LoadEventManifest(string manifestPath)
+        {
+            using var reader = new StreamReader(manifestPath);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            return csv.GetRecords<EventManifestCsv>()
+                .ToDictionary(
+                    m => Path.GetFileName(m.Filename),
+                    m => m.EventNumber,
+                    StringComparer.OrdinalIgnoreCase);
         }
     }
 }
