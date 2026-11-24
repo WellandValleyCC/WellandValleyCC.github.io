@@ -111,16 +111,26 @@ namespace ClubProcessor.Services
         private void ProcessEventCsv(string csvPath, int eventNumber, int competitionYear)
         {
             using var reader = new StreamReader(csvPath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            using var csv = new CsvReader(
+                reader,
+                new CsvHelper.Configuration.CsvConfiguration(
+                    CultureInfo.InvariantCulture)
+                {
+                    HeaderValidated = null,
+                    MissingFieldFound = null
+                });
 
-            if (!calendar.Any(ev => ev.EventNumber == eventNumber))
+            var calendarEvent = calendar
+                .SingleOrDefault(ev => ev.EventNumber == eventNumber);
+
+            if (calendarEvent == null)
             {
-                Console.WriteLine($"[WARN] skipping Event {eventNumber} - no valid entry in Calendar sheet.");
+                Console.WriteLine(
+                    $"[WARN] skipping Event {eventNumber} - no valid entry in Calendar sheet.");
                 return;
             }
 
-            var eventMiles = calendar
-                .Single(ev => ev.EventNumber == eventNumber).Miles;
+            var eventMiles = calendarEvent.Miles;
 
             var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
             var incomingRides = incomingRows
