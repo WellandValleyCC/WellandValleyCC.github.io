@@ -55,6 +55,12 @@ namespace ClubCore.Models.Csv
         [Name("Leg 2 Name")]
         public string Leg2Name { get; set; } = string.Empty;
 
+        [Name("Leg 1 Miles")]
+        public string? Leg1MilesRaw { get; set; }
+
+        [Name("Leg 2 Miles")]
+        public string? Leg2MilesRaw { get; set; }
+
         [Name("Sheet Name")]
         public string SheetName { get; set; } = string.Empty;
 
