@@ -61,6 +61,17 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<bool>("IsShortenedTen")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsTwoLegEvent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Leg1Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Leg2Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
