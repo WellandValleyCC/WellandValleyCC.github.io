@@ -41,7 +41,7 @@ namespace ClubCore.Models.Csv
         public string? Name { get; set; }
 
         [Ignore]
-        public double TotalSeconds
+        public double Leg1TotalSeconds
         {
             get
             {
@@ -52,6 +52,23 @@ namespace ClubCore.Models.Csv
                 return h * 3600 + m * 60 + s;
             }
         }
+
+        [Ignore]
+        public double Leg2TotalSeconds
+        {
+            get
+            {
+                int h = double.TryParse(Leg2Hours, out var hh) ? (int)hh : 0;
+                int m = double.TryParse(Leg2Minutes, out var mm) ? (int)mm : 0;
+                double s = double.TryParse(Leg2Seconds, out var ss) ? ss : 0;
+
+                return h * 3600 + m * 60 + s;
+            }
+        }
+
+        [Ignore]
+        public double TotalSeconds =>
+            Leg1TotalSeconds + Leg2TotalSeconds;
 
         [Ignore]
         public string ActualTime
