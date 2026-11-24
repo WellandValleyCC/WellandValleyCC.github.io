@@ -22,6 +22,15 @@ namespace ClubCore.Models.Csv
         [Name("S")]
         public string? Seconds { get; set; }
 
+        [Name("H2")]
+        public string? Leg2Hours { get; set; }
+
+        [Name("M2")]
+        public string? Leg2Minutes { get; set; }
+
+        [Name("S2")]
+        public string? Leg2Seconds { get; set; }
+
         [Name("Roadbike?")]
         public string? RoadBike { get; set; }
 
