@@ -141,7 +141,7 @@ namespace ClubProcessor.Services
 
             var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
             var incomingRides = incomingRows
-                .Select(row => ParseRide(row, eventNumber, competitionYear))
+                .Select(row => ParseRide(row, eventNumber, competitionYear, calendarEvent))
                 .Where(ride => ride != null)
                 .Cast<Ride>() // assert non-null
                     .Select(r =>
@@ -191,7 +191,6 @@ namespace ClubProcessor.Services
 
             var requiredHeaders = new[]
             {
-                "Number/Raw Name",
                 "Number/Name",
                 "H",
                 "M",
@@ -242,18 +241,35 @@ namespace ClubProcessor.Services
         }
 
         /// <remarks>
-        ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed,Number/Raw Name
-        ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,,9999
-        ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X,Johnny Doe
-        ///   Jane Doe (HCRC),0,21.0,57.0,,,Joe Murray (HCRC),00:21:57,X,Jane Doe
+        ///   Number/Raw Name,Number/Name,H,M,S,H2,M2,S2,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
+        ///   Jen Hulme,990,,15.0,23.0,,15.0,11.0, r,, Jen Hulme,00:30:34,
+        ///   Michaela Latham,1379,,13.0,23.0,,13.0,2.0, r,, Michaela Latham,00:26:25,
+        ///   JenSteven Latham,1244,,13.0,17.0,,12.0,52.0, r,, Steven Latham,00:26:09,
+        ///   
+        /// 
+        /// Note that H2, M2, S2 are optional - only present for two-leg events (e.g. 5+5 mile TT)
         /// </remarks>
-        private Ride? ParseRide(RideCsvRow row, int eventNumber, int competitionYear)
+        private Ride? ParseRide(
+            RideCsvRow row,
+            int eventNumber,
+            int competitionYear,
+            CalendarEvent calendarEvent)
         {
             var rawNumberOrName = row.NumberOrName?.Trim();
 
             bool isClubMember = int.TryParse(rawNumberOrName, out int clubNumber);
-            
+
             var clubShortName = ResolveClubShortName(row, isClubMember, competitionYear);
+
+            var leg1TotalSeconds = row.Leg1TotalSeconds;
+            var leg2TotalSeconds = row.Leg2TotalSeconds;
+
+            var totalSeconds = leg1TotalSeconds + leg2TotalSeconds;
+
+            var leg1Miles = calendarEvent.Leg1Miles;
+            var leg2Miles = calendarEvent.Leg2Miles ?? 0.0;
+
+            var totalMiles = leg1Miles + leg2Miles;
 
             return new Ride
             {
@@ -261,12 +277,23 @@ namespace ClubProcessor.Services
                 Name = row.Name,
                 ClubNumber = isClubMember ? clubNumber : null,
                 RoundRobinClub = clubShortName,
-                TotalSeconds = row.TotalSeconds,
-                AvgSpeed = row.TotalSeconds > 0 ? 25.0 * 1000 / row.TotalSeconds * 3.6 : null, // Example: 25 km course
+
+                Leg1TotalSeconds = leg1TotalSeconds,
+                Leg2TotalSeconds = leg2TotalSeconds,
+
+                AvgSpeed = CalculateSpeed(totalMiles, totalSeconds),
+                Leg1AvgSpeed = CalculateSpeed(leg1Miles, leg1TotalSeconds),
+                Leg2AvgSpeed = CalculateSpeed(leg2Miles, leg2TotalSeconds),
+
                 IsRoadBike = row.IsRoadBike,
                 Status = row.RideStatus,
             };
         }
+
+        private static double? CalculateSpeed(double miles, double totalSeconds) =>
+            totalSeconds > 0
+                ? miles / (totalSeconds / 3600.0)
+                : null;
 
         private string? ResolveClubShortName(RideCsvRow row, bool isClubMember, int competitionYear)
         {
