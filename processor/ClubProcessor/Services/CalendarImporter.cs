@@ -99,6 +99,21 @@ namespace ClubProcessor.Services
             {
                 Console.WriteLine("[INFO] 'Shortened Ten' column missing — defaulting all evening 10 events to handicap‑setting Tens - i.e. blank.");
             }
+
+            if (!headers.Any(h => string.Equals(h, "Two Leg Event", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("[INFO] 'Two Leg Event' column missing — defaulting all events to single leg events - i.e. blank");
+            }
+
+            if (!headers.Any(h => string.Equals(h, "Leg 1 Name", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("[INFO] 'Leg 1 Name' column missing — defaulting all events to single leg events - i.e. blank");
+            }
+
+            if (!headers.Any(h => string.Equals(h, "Leg 2 Name", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("[INFO] 'Leg 2 Name' column missing — defaulting all events to single leg events - i.e. blank");
+            }
         }
 
         private bool EventsAreEqual(CalendarEvent a, CalendarEvent b)
@@ -116,6 +131,9 @@ namespace ClubProcessor.Services
                    a.IsShortenedTen == b.IsShortenedTen &&
                    a.IsHardRideSeries == b.IsHardRideSeries &&
                    a.IsRoundRobinEvent == b.IsRoundRobinEvent &&
+                   a.IsTwoLegEvent == b.IsTwoLegEvent &&
+                   a.Leg1Name == b.Leg1Name &&
+                   a.Leg2Name == b.Leg2Name &&
                    a.IsCancelled == b.IsCancelled &&
                    a.IsPostponed == b.IsPostponed;
         }
@@ -135,6 +153,9 @@ namespace ClubProcessor.Services
             target.IsShortenedTen = source.IsShortenedTen;
             target.IsHardRideSeries = source.IsHardRideSeries;
             target.IsRoundRobinEvent = source.IsRoundRobinEvent;
+            target.IsTwoLegEvent = source.IsTwoLegEvent;
+            target.Leg1Name = source.Leg1Name;
+            target.Leg2Name = source.Leg2Name;
             target.IsCancelled = source.IsCancelled;
             target.IsPostponed = source.IsPostponed;
         }
@@ -220,6 +241,9 @@ namespace ClubProcessor.Services
                 IsShortenedTen = IsYes(row.ShortenedTenRaw),
                 IsHardRideSeries = IsYes(row.HardRideRaw),
                 IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
+                IsTwoLegEvent = IsYes(row.TwoLegEventRaw),
+                Leg1Name = row.Leg1Name ?? string.Empty,
+                Leg2Name = row.Leg2Name ?? string.Empty,
                 IsCancelled = IsYes(row.CancelledRaw),
                 IsPostponed = IsYes(row.PostponedRaw)
             };
