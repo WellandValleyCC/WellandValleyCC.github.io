@@ -133,6 +133,10 @@ namespace ClubProcessor.Services
                 return;
             }
 
+            ValidateHeaders(
+                csv,
+                calendarEvent);
+
             var eventMiles = calendarEvent.Miles;
 
             var incomingRows = csv.GetRecords<RideCsvRow>().ToList();
@@ -172,6 +176,69 @@ namespace ClubProcessor.Services
             eventContext.Rides.AddRange(incomingRides);
 
             Console.WriteLine($"[INFO] Replaced {existingRides.Count} existing rides with {incomingRides.Count} new rides for Event {eventNumber}");
+        }
+
+        private static void ValidateHeaders(
+            CsvReader csv,
+            CalendarEvent calendarEvent)
+        {
+            csv.Read();
+            csv.ReadHeader();
+
+            var headers = (csv.Context.Reader?.HeaderRecord ?? Array.Empty<string>())
+                .Select(h => h.Trim())
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var requiredHeaders = new[]
+            {
+                "Number/Raw Name",
+                "Number/Name",
+                "H",
+                "M",
+                "S",
+                "Roadbike?",
+                "DNS/DNF/DQ",
+                "Name",
+                "Actual Time"
+            };
+
+            foreach (var required in requiredHeaders)
+            {
+                if (!headers.Contains(required))
+                {
+                    throw new FormatException(
+                        $"Event {calendarEvent.EventNumber} CSV is missing required column: {required}");
+                }
+            }
+
+            bool hasLeg2Columns =
+                headers.Contains("H2") &&
+                headers.Contains("M2") &&
+                headers.Contains("S2");
+
+            bool hasAnyLeg2Column =
+                headers.Contains("H2") ||
+                headers.Contains("M2") ||
+                headers.Contains("S2");
+
+            if (calendarEvent.IsTwoLegEvent)
+            {
+                if (!hasLeg2Columns)
+                {
+                    throw new FormatException(
+                        $"Event {calendarEvent.EventNumber} is marked as a two-leg event " +
+                        "but one or more of H2, M2, S2 are missing.");
+                }
+            }
+            else
+            {
+                if (hasAnyLeg2Column)
+                {
+                    throw new FormatException(
+                        $"Event {calendarEvent.EventNumber} is not a two-leg event " +
+                        "but H2, M2, S2 columns are present.");
+                }
+            }
         }
 
         /// <remarks>
