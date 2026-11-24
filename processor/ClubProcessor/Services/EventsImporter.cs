@@ -3,6 +3,7 @@ using ClubCore.Models;
 using ClubCore.Models.Csv;
 using ClubCore.Models.Enums;
 using CsvHelper;
+using CsvHelper.Configuration;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -113,11 +114,13 @@ namespace ClubProcessor.Services
             using var reader = new StreamReader(csvPath);
             using var csv = new CsvReader(
                 reader,
-                new CsvHelper.Configuration.CsvConfiguration(
-                    CultureInfo.InvariantCulture)
+                new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
+                    TrimOptions = TrimOptions.Trim,
+                    IgnoreBlankLines = true,
                     HeaderValidated = null,
-                    MissingFieldFound = null
+                    MissingFieldFound = null,
+                    PrepareHeaderForMatch = args => (args.Header ?? string.Empty).Trim()
                 });
 
             var calendarEvent = calendar
