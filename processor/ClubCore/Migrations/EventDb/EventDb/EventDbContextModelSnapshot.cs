@@ -64,9 +64,15 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<bool>("IsTwoLegEvent")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("Leg1Miles")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Leg1Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<double?>("Leg2Miles")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Leg2Name")
                         .IsRequired()
