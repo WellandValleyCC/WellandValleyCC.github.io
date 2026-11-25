@@ -69,9 +69,6 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<double>("Miles")
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("NevBrooksBenchmarkSeconds")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("RoundRobinClub")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -101,7 +98,7 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("PointsAllocations");
+                    b.ToTable("PointsAllocations", (string)null);
                 });
 
             modelBuilder.Entity("ClubCore.Models.Ride", b =>
@@ -230,7 +227,7 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rides");
+                    b.ToTable("Rides", (string)null);
                 });
 
             modelBuilder.Entity("ClubCore.Models.RoundRobinClub", b =>
@@ -256,7 +253,7 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoundRobinClubs");
+                    b.ToTable("RoundRobinClubs", (string)null);
                 });
 
             modelBuilder.Entity("ClubCore.Models.RoundRobinRider", b =>
@@ -278,7 +275,7 @@ namespace ClubProcessor.Migrations.EventDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoundRobinRiders");
+                    b.ToTable("RoundRobinRiders", (string)null);
                 });
 #pragma warning restore 612, 618
         }
