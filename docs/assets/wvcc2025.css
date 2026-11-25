@@ -143,28 +143,26 @@ table.results td:first-child {
 }
 
 /* =========================================================
-   Two-leg event time display
+   Two-leg event breakdown display
    ========================================================= */
 
-.two-leg-time {
+.two-leg-breakdown {
     text-align: center;
 }
 
-.leg1-time,
-.leg2-time {
+.leg1-value,
+.leg2-value {
+    display: block;
     font-size: 0.7em;
     color: #555;
+    line-height: 1.2;
 }
 
-.leg2-time::before {
-    content: " + ";
-}
-
-.total-time {
+.total-value {
     display: block;
     font-weight: 600;
     color: #222;
-    margin-top: 0.15rem;
+    margin-top: 0.20rem;
 }
 
 table.results tbody tr:hover { background-color: #f2f2f2; }
