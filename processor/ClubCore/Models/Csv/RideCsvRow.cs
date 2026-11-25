@@ -4,9 +4,13 @@ using CsvHelper.Configuration.Attributes;
 namespace ClubCore.Models.Csv
 {
     /// <remarks>
-    ///   Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
-    ///   9999,0.0,24.0,18.0,r,DNF,John Doe,00:24:18,
-    ///   Johnny Doe,0.0,27.0,30.0,,,Johnny Doe,00:27:30,X             * 
+    ///   Number/Raw Name,Number/Name,H,M,S,H2,M2,S2,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed
+    ///   Jen Hulme,990,,15.0,23.0,,15.0,11.0, r,, Jen Hulme,00:30:34,
+    ///   Michaela Latham,1379,,13.0,23.0,,13.0,2.0, r,, Michaela Latham,00:26:25,
+    ///   JenSteven Latham,1244,,13.0,17.0,,12.0,52.0, r,, Steven Latham,00:26:09,
+    ///   
+    /// 
+    /// Note that H2, M2, S2 are optional - only present for two-leg events (e.g. 5+5 mile TT)
     /// </remarks>
     public class RideCsvRow
     {
@@ -22,6 +26,15 @@ namespace ClubCore.Models.Csv
         [Name("S")]
         public string? Seconds { get; set; }
 
+        [Name("H2")]
+        public string? Leg2Hours { get; set; }
+
+        [Name("M2")]
+        public string? Leg2Minutes { get; set; }
+
+        [Name("S2")]
+        public string? Leg2Seconds { get; set; }
+
         [Name("Roadbike?")]
         public string? RoadBike { get; set; }
 
@@ -32,7 +45,7 @@ namespace ClubCore.Models.Csv
         public string? Name { get; set; }
 
         [Ignore]
-        public double TotalSeconds
+        public double Leg1TotalSeconds
         {
             get
             {
@@ -43,6 +56,23 @@ namespace ClubCore.Models.Csv
                 return h * 3600 + m * 60 + s;
             }
         }
+
+        [Ignore]
+        public double Leg2TotalSeconds
+        {
+            get
+            {
+                int h = double.TryParse(Leg2Hours, out var hh) ? (int)hh : 0;
+                int m = double.TryParse(Leg2Minutes, out var mm) ? (int)mm : 0;
+                double s = double.TryParse(Leg2Seconds, out var ss) ? ss : 0;
+
+                return h * 3600 + m * 60 + s;
+            }
+        }
+
+        [Ignore]
+        public double TotalSeconds =>
+            Leg1TotalSeconds + Leg2TotalSeconds;
 
         [Ignore]
         public string ActualTime

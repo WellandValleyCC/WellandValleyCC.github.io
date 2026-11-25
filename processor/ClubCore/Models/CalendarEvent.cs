@@ -45,6 +45,18 @@ namespace ClubCore.Models
         public bool IsHardRideSeries { get; set; }
         public bool IsRoundRobinEvent { get; set; }
 
+        public bool IsTwoLegEvent { get; set; }
+        
+        public string Leg1Name { get; set; } = string.Empty;
+        public string Leg2Name { get; set; } = string.Empty;
+
+        [Required]
+        [Column(TypeName = "REAL")] 
+        public double Leg1Miles { get; set; }
+
+        [Column(TypeName = "REAL")] 
+        public double? Leg2Miles { get; set; }
+
         public bool IsCancelled { get; set; }
 
         public bool IsPostponed { get; set; }

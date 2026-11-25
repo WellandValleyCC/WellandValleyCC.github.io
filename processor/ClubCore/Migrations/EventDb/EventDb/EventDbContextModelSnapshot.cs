@@ -61,6 +61,23 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<bool>("IsShortenedTen")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsTwoLegEvent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Leg1Miles")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Leg1Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("Leg2Miles")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Leg2Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -149,6 +166,18 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<int?>("LeaguePosition")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double?>("Leg1AvgSpeed")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Leg1TotalSeconds")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("Leg2AvgSpeed")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Leg2TotalSeconds")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
@@ -206,9 +235,6 @@ namespace ClubProcessor.Migrations.EventDb
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("TotalSeconds")
-                        .HasColumnType("REAL");
 
                     b.Property<double?>("VeteransHandicapSeconds")
                         .HasColumnType("REAL");

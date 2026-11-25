@@ -46,6 +46,21 @@ namespace ClubCore.Models.Csv
         [Name("Round Robin Event")]
         public string RoundRobinEventRaw { get; set; } = string.Empty;
 
+        [Name("Two Leg Event")]
+        public string TwoLegEventRaw { get; set; } = string.Empty;
+
+        [Name("Leg 1 Name")]
+        public string Leg1Name { get; set; } = string.Empty;
+
+        [Name("Leg 2 Name")]
+        public string Leg2Name { get; set; } = string.Empty;
+
+        [Name("Leg 1 Miles")]
+        public string? Leg1MilesRaw { get; set; }
+
+        [Name("Leg 2 Miles")]
+        public string? Leg2MilesRaw { get; set; }
+
         [Name("Sheet Name")]
         public string SheetName { get; set; } = string.Empty;
 
