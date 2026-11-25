@@ -141,6 +141,30 @@ table.results td:first-child {
   text-align: left;
   font-weight: 500;
 }
+
+/* =========================================================
+   Two-leg event breakdown display
+   ========================================================= */
+
+.two-leg-breakdown {
+    text-align: center;
+}
+
+.leg1-value,
+.leg2-value {
+    display: block;
+    font-size: 0.7em;
+    color: #555;
+    line-height: 1.2;
+}
+
+.total-value {
+    display: block;
+    font-weight: 600;
+    color: #222;
+    margin-top: 0.20rem;
+}
+
 table.results tbody tr:hover { background-color: #f2f2f2; }
 
 /* Eligibility (row-level) */

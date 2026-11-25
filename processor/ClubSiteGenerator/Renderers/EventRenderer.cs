@@ -165,63 +165,170 @@ namespace ClubSiteGenerator.Renderers
             return sb.ToString();
         }
 
-        private string RenderRow(Ride ride, int startNumber, bool showFractionalSeconds)
+        private string RenderRow(
+            Ride ride,
+            int startNumber,
+            bool showFractionalSeconds)
         {
             var sb = new StringBuilder();
             var cssClass = GetRowClass(ride);
 
             sb.AppendLine($"<tr class=\"{cssClass}\">");
 
-            foreach (var cell in BuildCells(ride, startNumber, showFractionalSeconds)
-                .Select((value, index) => RenderCell(value, index, ride)))
-            {
-                sb.AppendLine(cell);
-            }
+            sb.AppendLine(RenderCell(
+                BuildNameCell(ride, startNumber),
+                0,
+                ride));
+
+            sb.AppendLine(RenderCell(
+                BuildPositionCell(ride),
+                1,
+                ride));
+
+            sb.AppendLine(RenderCell(
+                BuildRoadBikeCell(ride),
+                2,
+                ride));
+
+            sb.AppendLine(RenderTimeCell(
+                ride,
+                showFractionalSeconds));
+
+            sb.AppendLine(RenderAverageSpeedCell(
+                ride));
 
             sb.AppendLine("</tr>");
+
             return sb.ToString();
         }
 
-        private IEnumerable<string> BuildCells(Ride ride, int startNumber, bool showFractionalSeconds)
+        private string BuildNameCell(
+            Ride ride,
+            int startNumber)
         {
-            bool hasResult = ride.Status == RideStatus.Valid;
+            string riderName = ride.Name ?? "Unknown";
 
-            string timeCell = ride.Status switch
+            return ride.Status == RideStatus.Ready
+                ? $"{startNumber}. {riderName}"
+                : riderName;
+        }
+
+        private string BuildPositionCell(Ride ride)
+        {
+            return ride.Status == RideStatus.Valid
+                ? ride.EventRank?.ToString() ?? ""
+                : "";
+        }
+
+        private string BuildRoadBikeCell(Ride ride)
+        {
+            return ride.Status == RideStatus.Valid
+                ? ride.EventRoadBikeRank?.ToString() ?? ""
+                : ride.IsRoadBike ? "R" : "";
+        }
+
+        private string RenderAverageSpeedCell(Ride ride)
+        {
+            string content = ride.Status switch
+            {
+                RideStatus.DNF => "",
+                RideStatus.DNS => "",
+                RideStatus.DQ => "",
+
+                RideStatus.Ready => "",
+
+                RideStatus.Valid => RenderValidAverageSpeedCellContent(ride),
+
+                _ => ""
+            };
+
+            return $"<td>{content}</td>";
+        }
+
+        private string RenderValidAverageSpeedCellContent(Ride ride)
+        {
+            if (ride.CalendarEvent?.IsTwoLegEvent != true)
+            {
+                return ride.AvgSpeed?.ToString("0.00") ?? "";
+            }
+
+            string leg1Speed = ride.Leg1AvgSpeed?.ToString("0.00") ?? "";
+            string leg2Speed = ride.Leg2AvgSpeed?.ToString("0.00") ?? "";
+            string totalSpeed = ride.AvgSpeed?.ToString("0.00") ?? "";
+
+            string leg1Name = WebUtility.HtmlEncode(
+                ride.CalendarEvent?.Leg1Name ?? string.Empty);
+
+            string leg2Name = WebUtility.HtmlEncode(
+                ride.CalendarEvent?.Leg2Name ?? string.Empty);
+
+            return $"""
+                <div class="two-leg-breakdown">
+                    <span class="leg1-value" data-leg-name="{leg1Name}">L1: {leg1Speed}</span>
+                    <span class="leg2-value" data-leg-name="{leg2Name}">L2: {leg2Speed}</span>
+                    <span class="total-value">{totalSpeed}</span>
+                </div>
+                """;
+        }
+
+        private string RenderTimeCell(
+            Ride ride,
+            bool showFractionalSeconds)
+        {
+            string content = ride.Status switch
             {
                 RideStatus.DNF => "DNF",
                 RideStatus.DNS => "DNS",
                 RideStatus.DQ => "DQ",
 
-                RideStatus.Ready => "",   // future event → blank
+                RideStatus.Ready => "",
 
-                RideStatus.Valid => FormatTime(ride.TotalSeconds, showFractionalSeconds),
+                RideStatus.Valid => RenderValidTimeCellContent(
+                    ride,
+                    showFractionalSeconds),
 
                 _ => ""
             };
 
-            string riderName = ride.Name ?? "Unknown";
-            string nameCell = ride.Status == RideStatus.Ready
-                ? $"{startNumber}. {riderName}"
-                : riderName;
-            yield return nameCell;
+            return $"<td>{content}</td>";
+        }
 
-            // Position (only for completed rides)
-            yield return hasResult
-                ? ride.EventRank?.ToString() ?? ""
-                : "";
+        private string RenderValidTimeCellContent(
+            Ride ride,
+            bool showFractionalSeconds)
+        {
+            if (ride.CalendarEvent?.IsTwoLegEvent != true)
+            {
+                return FormatTime(
+                    ride.TotalSeconds,
+                    showFractionalSeconds);
+            }
 
-            // Road bike rank (only for completed rides)
-            yield return hasResult
-                ? ride.EventRoadBikeRank?.ToString() ?? ""
-                : ride.IsRoadBike ? "R" : "";
+            string leg1 = FormatTime(
+                ride.Leg1TotalSeconds,
+                showFractionalSeconds);
 
-            // Time cell (already computed)
-            yield return timeCell;
+            string leg2 = FormatTime(
+                ride.Leg2TotalSeconds,
+                showFractionalSeconds);
 
-            // Avg mph (only for completed rides)
-            yield return hasResult
-                ? ride.AvgSpeed?.ToString("0.00") ?? ""
-                : "";
+            string total = FormatTime(
+                ride.TotalSeconds,
+                showFractionalSeconds);
+
+            string leg1Name = WebUtility.HtmlEncode(
+                ride.CalendarEvent?.Leg1Name ?? string.Empty);
+
+            string leg2Name = WebUtility.HtmlEncode(
+                ride.CalendarEvent?.Leg2Name ?? string.Empty);
+
+            return $"""
+                <div class="two-leg-breakdown">
+                    <span class="leg1-value" data-leg-name="{leg1Name}">L1: {leg1}</span>
+                    <span class="leg2-value" data-leg-name="{leg2Name}">L2: {leg2}</span>
+                    <span class="total-value">{total}</span>
+                </div>
+                """;
         }
 
         private static string FormatTime(double totalSeconds, bool showFractionalSeconds)

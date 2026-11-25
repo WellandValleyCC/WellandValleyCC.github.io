@@ -15,12 +15,37 @@ namespace ClubCore.Models
         public string? Name { get; set; } = string.Empty;
         public string? RoundRobinClub { get; set; }
         public bool IsRoadBike { get; set; }
-        public double TotalSeconds { get; set; }
+        public double Leg1TotalSeconds { get; set; }
+
+        public double Leg2TotalSeconds { get; set; }
 
         [NotMapped]
-        public TimeSpan? Time => TotalSeconds > 0 ? TimeSpan.FromSeconds(TotalSeconds) : null;
+        public double TotalSeconds =>
+            Leg1TotalSeconds + Leg2TotalSeconds;
+
+        [NotMapped]
+        public TimeSpan? Leg1Time =>
+            Leg1TotalSeconds > 0
+                ? TimeSpan.FromSeconds(Leg1TotalSeconds)
+                : null;
+
+        [NotMapped]
+        public TimeSpan? Leg2Time =>
+            Leg2TotalSeconds > 0
+                ? TimeSpan.FromSeconds(Leg2TotalSeconds)
+                : null;
+
+        [NotMapped]
+        public TimeSpan? Time =>
+            TotalSeconds > 0
+                ? TimeSpan.FromSeconds(TotalSeconds)
+                : null;
 
         public double? AvgSpeed { get; set; }
+
+        public double? Leg1AvgSpeed { get; set; }
+
+        public double? Leg2AvgSpeed { get; set; }
 
         /// <summary>
         /// Overall rank in the event, used for Event page rendering

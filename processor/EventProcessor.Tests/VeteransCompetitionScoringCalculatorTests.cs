@@ -134,7 +134,8 @@ namespace EventProcessor.Tests
                 EventNumber = 1,
                 ClubNumber = competitor.ClubNumber,
                 Name = competitor.FullName,
-                TotalSeconds = totalSeconds,
+                Leg1TotalSeconds = totalSeconds,
+                Leg2TotalSeconds = 0,
                 Competitor = competitor,
                 CalendarEvent = calendarEvent,
                 Status = RideStatus.Valid

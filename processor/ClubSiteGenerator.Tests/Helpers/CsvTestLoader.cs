@@ -92,7 +92,8 @@ namespace ClubSiteGenerator.Tests.Helpers
                     Status = status,
                     EventRank = eventRank,
                     EventRoadBikeRank = eventRoadBikeRank,
-                    TotalSeconds = totalSeconds,
+                    Leg1TotalSeconds = totalSeconds,
+                    Leg2TotalSeconds = 0,
                     IsRoadBike = eventRoadBikeRank.HasValue,
                     Name = name
                 };

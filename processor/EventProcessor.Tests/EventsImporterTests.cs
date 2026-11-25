@@ -123,6 +123,14 @@ namespace EventProcessor.Tests
 
             File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), eventCsv);
 
+            File.WriteAllLines(
+                Path.Combine(yearFolder, "EventManifest_2025.csv"),
+                new[]
+                {
+                    "EventNumber,SheetName,Filename",
+                    "01,Event_01,events/Event_01.csv"
+                });
+
             // Sanity check: ensure folder exists before returning
             Directory.Exists(yearFolder).Should().BeTrue("Test folder should exist before import");
 
@@ -169,6 +177,14 @@ namespace EventProcessor.Tests
                 "Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed",
                 "101,0,24,0,, ,Theo Marlin,00:24:00,"
             });
+
+            File.WriteAllLines(
+                Path.Combine(yearFolder, "EventManifest_2025.csv"),
+                new[]
+                {
+                    "EventNumber,SheetName,Filename",
+                    "1,Event_01,events/Event_01.csv"
+                });
 
             // Act
             importer.ImportFromFolder(yearFolder);
@@ -261,6 +277,14 @@ namespace EventProcessor.Tests
             var eventsFolder = Path.Combine(yearFolder, "events");
             Directory.CreateDirectory(eventsFolder);
 
+            File.WriteAllLines(
+                Path.Combine(yearFolder, "EventManifest_2026.csv"),
+                new[]
+                {
+                                "EventNumber,SheetName,Filename",
+                                "1,Event_01,events/Event_01.csv"
+                });
+
             // Minimal CSV with a rider whose name includes a club in parentheses
             File.WriteAllLines(Path.Combine(eventsFolder, "Event_01.csv"), new[]
             {
@@ -316,6 +340,14 @@ namespace EventProcessor.Tests
                 "Number/Name,H,M,S,Roadbike?,DNS/DNF/DQ,Name,Actual Time,Guest or Not Renewed",
                 "Jane Doe (IGD),0,25,0,, ,Jane Doe (IGD),00:25:00,"
             });
+
+            File.WriteAllLines(
+                Path.Combine(yearFolder, "EventManifest_2025.csv"),
+                new[]
+                {
+                                "EventNumber,SheetName,Filename",
+                                "1,Event_01,events/Event_01.csv"
+                });
 
             // Act
             importer.ImportFromFolder(yearFolder);

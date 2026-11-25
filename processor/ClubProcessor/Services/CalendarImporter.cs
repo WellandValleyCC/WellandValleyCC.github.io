@@ -67,22 +67,36 @@ namespace ClubProcessor.Services
         {
             csv.Read();
             csv.ReadHeader();
-            
+
             var headers = (csv.Context.Reader?.HeaderRecord ?? Array.Empty<string>())
                 .Select(h => h.Trim())
-                .ToArray();
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             var requiredHeaders = new[]
             {
-                "Event Number","Date","Start time","Event Name","Round Robin Club", "Miles","Location / Course",
-                "Hill Climb","Club Championship","Non-Standard 10","Evening 10","Hard Ride Series","Round Robin Event", "isCancelled"
-            };
+        "Event Number",
+        "Date",
+        "Start time",
+        "Event Name",
+        "Round Robin Club",
+        "Miles",
+        "Location / Course",
+        "Hill Climb",
+        "Club Championship",
+        "Non-Standard 10",
+        "Evening 10",
+        "Hard Ride Series",
+        "Round Robin Event",
+        "isCancelled"
+    };
 
             foreach (var required in requiredHeaders)
             {
-                if (!headers.Any(h => string.Equals(h, required, StringComparison.OrdinalIgnoreCase)))
+                if (!headers.Contains(required))
                 {
-                    Console.WriteLine("[INFO] Headers: " + string.Join(", ", headers));
+                    Console.WriteLine(
+                        "[INFO] Headers: " +
+                        string.Join(", ", headers));
 
                     throw new FormatException(
                         $"Calendar CSV is missing required column: {required}. " +
@@ -90,14 +104,51 @@ namespace ClubProcessor.Services
                 }
             }
 
-            if (!headers.Any(h => string.Equals(h, "isPostponed", StringComparison.OrdinalIgnoreCase)))
-            {
-                Console.WriteLine("[INFO] 'isPostponed' column missing — defaulting all events to not postponed - i.e. blank");
-            }
+            ValidateOptionalHeader(
+                headers,
+                "isPostponed",
+                "defaulting all events to not postponed - i.e. blank");
 
-            if (!headers.Any(h => string.Equals(h, "Shortened Ten", StringComparison.OrdinalIgnoreCase)))
+            ValidateOptionalHeader(
+                headers,
+                "Shortened Ten",
+                "defaulting all evening 10 events to handicap-setting Tens - i.e. blank");
+
+            ValidateOptionalHeader(
+                headers,
+                "Two Leg Event",
+                "defaulting all events to single leg events - i.e. blank");
+
+            ValidateOptionalHeader(
+                headers,
+                "Leg 1 Name",
+                "defaulting all events to single leg events - i.e. blank");
+
+            ValidateOptionalHeader(
+                headers,
+                "Leg 2 Name",
+                "defaulting all events to single leg events - i.e. blank");
+
+            ValidateOptionalHeader(
+                headers,
+                "Leg 1 Miles",
+                "defaulting all events to use Miles value");
+
+            ValidateOptionalHeader(
+                headers,
+                "Leg 2 Miles",
+                "defaulting all events to single leg events");
+        }
+
+        private static void ValidateOptionalHeader(
+            HashSet<string> headers,
+            string headerName,
+            string defaultBehaviour)
+        {
+            if (!headers.Contains(headerName))
             {
-                Console.WriteLine("[INFO] 'Shortened Ten' column missing — defaulting all evening 10 events to handicap‑setting Tens - i.e. blank.");
+                Console.WriteLine(
+                    $"[INFO] '{headerName}' column missing — {defaultBehaviour}");
             }
 
             if (!headers.Any(h => string.Equals(h, "NevBrooksBenchmarkSeconds", StringComparison.OrdinalIgnoreCase)))
@@ -122,6 +173,11 @@ namespace ClubProcessor.Services
                    a.IsShortenedTen == b.IsShortenedTen &&
                    a.IsHardRideSeries == b.IsHardRideSeries &&
                    a.IsRoundRobinEvent == b.IsRoundRobinEvent &&
+                   a.IsTwoLegEvent == b.IsTwoLegEvent &&
+                   a.Leg1Name == b.Leg1Name &&
+                   a.Leg2Name == b.Leg2Name &&
+                   a.Leg1Miles == b.Leg1Miles &&
+                   a.Leg2Miles == b.Leg2Miles &&  
                    a.IsCancelled == b.IsCancelled &&
                    a.IsPostponed == b.IsPostponed;
         }
@@ -142,6 +198,11 @@ namespace ClubProcessor.Services
             target.IsShortenedTen = source.IsShortenedTen;
             target.IsHardRideSeries = source.IsHardRideSeries;
             target.IsRoundRobinEvent = source.IsRoundRobinEvent;
+            target.IsTwoLegEvent = source.IsTwoLegEvent;
+            target.Leg1Name = source.Leg1Name;
+            target.Leg2Name = source.Leg2Name;
+            target.Leg1Miles = source.Leg1Miles;
+            target.Leg2Miles = source.Leg2Miles;
             target.IsCancelled = source.IsCancelled;
             target.IsPostponed = source.IsPostponed;
         }
@@ -200,6 +261,98 @@ namespace ClubProcessor.Services
                 return null;
             }
 
+            double leg1Miles;
+
+            if (!string.IsNullOrWhiteSpace(row.Leg1MilesRaw))
+            {
+                if (!double.TryParse(row.Leg1MilesRaw, out leg1Miles))
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: invalid Leg 1 Miles '{row.Leg1MilesRaw}'");
+
+                    return null;
+                }
+            }
+            else
+            {
+                // Legacy CSV support
+                leg1Miles = miles;
+            }
+
+            double? leg2Miles = null;
+
+            if (!string.IsNullOrWhiteSpace(row.Leg2MilesRaw))
+            {
+                if (!double.TryParse(row.Leg2MilesRaw, out var parsedLeg2Miles))
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: invalid leg2 miles '{row.Leg2MilesRaw}'");
+
+                    return null;
+                }
+
+                leg2Miles = parsedLeg2Miles;
+            }
+
+            bool isTwoLegEvent = IsYes(row.TwoLegEventRaw);
+
+            if (isTwoLegEvent)
+            {
+                if (string.IsNullOrWhiteSpace(row.Leg1Name))
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: two-leg event is missing Leg 1 Name");
+
+                    return null;
+                }
+
+                if (string.IsNullOrWhiteSpace(row.Leg2Name))
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: two-leg event is missing Leg 2 Name");
+
+                    return null;
+                }
+
+                if (!leg2Miles.HasValue)
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: two-leg event is missing Leg 2 Miles");
+
+                    return null;
+                }
+            }
+            else
+            {
+                if (leg2Miles.HasValue)
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: single-leg event has Leg 2 Miles populated");
+
+                    return null;
+                }
+
+                if (!string.IsNullOrWhiteSpace(row.Leg2Name))
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: single-leg event has Leg 2 Name populated");
+
+                    return null;
+                }
+            }
+
+            var expectedMiles = leg1Miles + (leg2Miles ?? 0.0);
+
+            if (Math.Abs(expectedMiles - miles) > 0.001)
+            {
+                Console.WriteLine(
+                    $"[WARN] Skipping Event {row.EventNumber}: " +
+                    $"Miles ({miles}) does not equal " +
+                    $"Leg 1 Miles ({leg1Miles}) + Leg 2 Miles ({leg2Miles ?? 0.0})");
+
+                return null;
+            }
+
             if (string.IsNullOrWhiteSpace(row.EventName))
             {
                 Console.WriteLine($"[WARN] Skipping Event {row.EventNumber}: missing event name");
@@ -242,6 +395,11 @@ namespace ClubProcessor.Services
                 IsShortenedTen = IsYes(row.ShortenedTenRaw),
                 IsHardRideSeries = IsYes(row.HardRideRaw),
                 IsRoundRobinEvent = IsYes(row.RoundRobinEventRaw),
+                IsTwoLegEvent = isTwoLegEvent,
+                Leg1Name = row.Leg1Name ?? string.Empty,
+                Leg2Name = row.Leg2Name ?? string.Empty,
+                Leg1Miles = leg1Miles,
+                Leg2Miles = leg2Miles,
                 IsCancelled = IsYes(row.CancelledRaw),
                 IsPostponed = IsYes(row.PostponedRaw)
             };
