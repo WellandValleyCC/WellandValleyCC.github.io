@@ -61,7 +61,7 @@ namespace ClubProcessor.Calculators
                 }
                 else
                 {
-                    r.NevBrooksSecondsGenerated = r.TotalSeconds - r.CalendarEvent?.NevBrooksBenchmarkSeconds ?? 995.0;
+                    r.NevBrooksSecondsGenerated = r.TotalSeconds - (r.CalendarEvent?.NevBrooksBenchmarkSeconds ?? 995.0);
                 }
 
                 // Apply previous handicap if available

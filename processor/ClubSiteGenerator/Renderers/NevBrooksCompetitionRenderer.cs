@@ -246,9 +246,7 @@ namespace ClubSiteGenerator.Renderers
                 var benchmarkText =
                     ev.IsShortenedTen
                         ? "Benchmark<br/>n/a"
-                        : ev.NevBrooksBenchmarkSeconds.HasValue
-                            ? $"Benchmark<br/>{FormatSecondsAsTime(ev.NevBrooksBenchmarkSeconds.Value)}"
-                            : string.Empty;
+                        : $"Benchmark<br/>{FormatSecondsAsTime(ev.NevBrooksBenchmarkSeconds ?? 995.0)}";
 
                 sb.AppendLine($"<th class=\"event-benchmark {cssClass}\">{benchmarkText}</th>");
             }
