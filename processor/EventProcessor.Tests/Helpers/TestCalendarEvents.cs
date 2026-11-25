@@ -14,7 +14,8 @@ namespace EventProcessor.Tests.Helpers
                 EventNumber = eventNumber,
                 EventDate = DateTime.SpecifyKind(eventDateUtc, DateTimeKind.Utc),
                 Miles = miles,
-                IsEvening10 = isEvening10
+                IsEvening10 = isEvening10,
+                NevBrooksBenchmarkSeconds = isEvening10 ? 995 : (int?)null
             };
 
         public static IReadOnlyList<CalendarEvent> CreateSequence(

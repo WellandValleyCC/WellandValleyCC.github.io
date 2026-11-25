@@ -150,6 +150,11 @@ namespace ClubProcessor.Services
                 Console.WriteLine(
                     $"[INFO] '{headerName}' column missing — {defaultBehaviour}");
             }
+
+            if (!headers.Any(h => string.Equals(h, "NevBrooksBenchmarkSeconds", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("[INFO] 'NevBrooksBenchmarkSeconds' column missing — defaulting all events to null - i.e. blank.");
+            }
         }
 
         private bool EventsAreEqual(CalendarEvent a, CalendarEvent b)
@@ -160,6 +165,7 @@ namespace ClubProcessor.Services
                    a.RoundRobinClub == b.RoundRobinClub &&
                    a.Miles == b.Miles &&
                    a.Location == b.Location &&
+                   a.NevBrooksBenchmarkSeconds == b.NevBrooksBenchmarkSeconds &&
                    a.IsHillClimb == b.IsHillClimb &&
                    a.IsClubChampionship == b.IsClubChampionship &&
                    a.IsNonStandard10 == b.IsNonStandard10 &&
@@ -184,6 +190,7 @@ namespace ClubProcessor.Services
             target.RoundRobinClub = source.RoundRobinClub;
             target.Miles = source.Miles;
             target.Location = source.Location;
+            target.NevBrooksBenchmarkSeconds = source.NevBrooksBenchmarkSeconds;
             target.IsHillClimb = source.IsHillClimb;
             target.IsClubChampionship = source.IsClubChampionship;
             target.IsNonStandard10 = source.IsNonStandard10;
@@ -357,6 +364,20 @@ namespace ClubProcessor.Services
 
             // Console.WriteLine($"[DEBUG] Event {row.EventNumber}: ClubChamp='{row.ClubChampRaw}', NonStd10='{row.NonStd10Raw}', Evening10='{row.Evening10Raw}', HardRide='{row.HardRideRaw}', Cancelled='{row.CancelledRaw}'");
 
+            int? nevBrooksBenchmarkSeconds = null;
+
+            if (!string.IsNullOrWhiteSpace(row.NevBrooksBenchmarkSecondsRaw))
+            {
+                if (!double.TryParse(row.NevBrooksBenchmarkSecondsRaw, out var parsedValue))
+                {
+                    Console.WriteLine(
+                        $"[WARN] Skipping Event {row.EventNumber}: invalid NevBrooksBenchmarkSeconds '{row.NevBrooksBenchmarkSecondsRaw}'");
+                    return null;
+                }
+
+                nevBrooksBenchmarkSeconds = (int)Math.Round(parsedValue);
+            }
+
             return new CalendarEvent
             {
                 EventNumber = row.EventNumber,
@@ -366,6 +387,7 @@ namespace ClubProcessor.Services
                 RoundRobinClub = row.RoundRobinClub ?? string.Empty,
                 Miles = miles,
                 Location = row.Location,
+                NevBrooksBenchmarkSeconds = nevBrooksBenchmarkSeconds,
                 IsHillClimb = IsYes(row.HillClimbRaw),
                 IsClubChampionship = IsYes(row.ClubChampRaw),
                 IsNonStandard10 = IsYes(row.NonStd10Raw),

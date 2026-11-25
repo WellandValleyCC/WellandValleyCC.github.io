@@ -38,6 +38,8 @@ namespace ClubCore.Models
         [MaxLength(100)]
         public string Location { get; set; } = string.Empty;
 
+        public int? NevBrooksBenchmarkSeconds { get; set; }
+
         public bool IsHillClimb { get; set; }
         public bool IsClubChampionship { get; set; }
         public bool IsNonStandard10 { get; set; }
