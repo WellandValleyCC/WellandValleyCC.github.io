@@ -1,0 +1,1153 @@
+ClubNumber,Name,FinalRank,Best10Points,EventNumber,EventDate,EventName,Course,IsShortenedTen,NevBrooksBenchmarkSeconds,RideStatus,RideTimeSeconds,NevBrooksPoints,GeneratedHandicapSeconds,AppliedHandicapSeconds,AdjustedTimeSeconds
+846,"Roger Kockelbergh","1","486",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1664,,669,,
+846,"Roger Kockelbergh","1","486",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1608,51,613,669,939
+846,"Roger Kockelbergh","1","486",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1697,51,702,613,1084
+846,"Roger Kockelbergh","1","486",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+846,"Roger Kockelbergh","1","486",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+846,"Roger Kockelbergh","1","486",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+846,"Roger Kockelbergh","1","486",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1571,55,576,613,958
+846,"Roger Kockelbergh","1","486",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1609,55,614,576,1033
+846,"Roger Kockelbergh","1","486",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+846,"Roger Kockelbergh","1","486",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",999,46,,576,423
+846,"Roger Kockelbergh","1","486",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1541,48,546,576,965
+846,"Roger Kockelbergh","1","486",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1679,48,684,546,1133
+846,"Roger Kockelbergh","1","486",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+846,"Roger Kockelbergh","1","486",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1543,42,548,546,997
+846,"Roger Kockelbergh","1","486",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+846,"Roger Kockelbergh","1","486",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1623,46,628,546,1077
+846,"Roger Kockelbergh","1","486",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1660,44,665,546,1114
+846,"Roger Kockelbergh","1","486",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+989,"Jason Williams","2","462",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+989,"Jason Williams","2","462",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1560,,565,,
+989,"Jason Williams","2","462",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+989,"Jason Williams","2","462",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1485,51,490,565,920
+989,"Jason Williams","2","462",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1414,22,419,490,924
+989,"Jason Williams","2","462",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1430,26,435,419,1011
+989,"Jason Williams","2","462",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+989,"Jason Williams","2","462",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+989,"Jason Williams","2","462",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1454,55,459,419,1035
+989,"Jason Williams","2","462",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+989,"Jason Williams","2","462",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1424,42,429,419,1005
+989,"Jason Williams","2","462",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1524,55,529,419,1105
+989,"Jason Williams","2","462",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+989,"Jason Williams","2","462",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1389,55,394,419,970
+989,"Jason Williams","2","462",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1504,36.5,509,394,1110
+989,"Jason Williams","2","462",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1460,51,465,394,1066
+989,"Jason Williams","2","462",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1501,46,506,394,1107
+989,"Jason Williams","2","462",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1499,44,504,394,1105
+407,"Hans van Nierop","3","431",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1652,,657,,
+407,"Hans van Nierop","3","431",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+407,"Hans van Nierop","3","431",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1495,60,500,657,838
+407,"Hans van Nierop","3","431",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1422,48,427,500,922
+407,"Hans van Nierop","3","431",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1311,28,316,427,884
+407,"Hans van Nierop","3","431",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1321,29,326,316,1005
+407,"Hans van Nierop","3","431",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1381,39.5,386,316,1065
+407,"Hans van Nierop","3","431",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1392,46,397,316,1076
+407,"Hans van Nierop","3","431",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1410,42,415,316,1094
+407,"Hans van Nierop","3","431",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",902,37,,316,586
+407,"Hans van Nierop","3","431",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1327,39.5,332,316,1011
+407,"Hans van Nierop","3","431",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+407,"Hans van Nierop","3","431",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+407,"Hans van Nierop","3","431",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+407,"Hans van Nierop","3","431",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1386,48,391,316,1070
+407,"Hans van Nierop","3","431",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+407,"Hans van Nierop","3","431",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+407,"Hans van Nierop","3","431",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1427,42,432,316,1111
+1107,"Milly Pinnock","4","430",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1580,,585,,
+1107,"Milly Pinnock","4","430",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1605,36,610,585,1020
+1107,"Milly Pinnock","4","430",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1748,34,753,585,1163
+1107,"Milly Pinnock","4","430",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1107,"Milly Pinnock","4","430",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1107,"Milly Pinnock","4","430",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1554,39,559,585,969
+1107,"Milly Pinnock","4","430",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1584,51,589,559,1025
+1107,"Milly Pinnock","4","430",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1613,51,618,559,1054
+1107,"Milly Pinnock","4","430",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1689,34,694,559,1130
+1107,"Milly Pinnock","4","430",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1107,"Milly Pinnock","4","430",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1570,39.5,575,559,1011
+1107,"Milly Pinnock","4","430",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1107,"Milly Pinnock","4","430",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1107,"Milly Pinnock","4","430",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1514,60,519,559,955
+1107,"Milly Pinnock","4","430",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1593,46,598,519,1074
+1107,"Milly Pinnock","4","430",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1683,34,688,519,1164
+1107,"Milly Pinnock","4","430",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1664,39,669,519,1145
+1107,"Milly Pinnock","4","430",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1670,33,675,519,1151
+1370,"Ian Aldridge","5","429",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1370,"Ian Aldridge","5","429",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1370,"Ian Aldridge","5","429",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1370,"Ian Aldridge","5","429",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1370,"Ian Aldridge","5","429",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1370,"Ian Aldridge","5","429",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1519,,524,,
+1370,"Ian Aldridge","5","429",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1560,46,565,524,1036
+1370,"Ian Aldridge","5","429",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1370,"Ian Aldridge","5","429",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1579,51,584,524,1055
+1370,"Ian Aldridge","5","429",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1370,"Ian Aldridge","5","429",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1370,"Ian Aldridge","5","429",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1370,"Ian Aldridge","5","429",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1541,55,546,524,1017
+1370,"Ian Aldridge","5","429",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1501,51,506,524,977
+1370,"Ian Aldridge","5","429",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1534,60,539,506,1028
+1370,"Ian Aldridge","5","429",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1518,55,523,506,1012
+1370,"Ian Aldridge","5","429",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1534,60,539,506,1028
+1370,"Ian Aldridge","5","429",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1529,51,534,506,1023
+415,"Nik Kershaw","6","426",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1570,,575,,
+415,"Nik Kershaw","6","426",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+415,"Nik Kershaw","6","426",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1646,55,651,575,1071
+415,"Nik Kershaw","6","426",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1604,32,609,575,1029
+415,"Nik Kershaw","6","426",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1471,23.5,476,575,896
+415,"Nik Kershaw","6","426",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1471,32,476,476,995
+415,"Nik Kershaw","6","426",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1559,33.5,564,476,1083
+415,"Nik Kershaw","6","426",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+415,"Nik Kershaw","6","426",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1603,35,608,476,1127
+415,"Nik Kershaw","6","426",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+415,"Nik Kershaw","6","426",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1534,30,539,476,1058
+415,"Nik Kershaw","6","426",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+415,"Nik Kershaw","6","426",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1561,44,566,476,1085
+415,"Nik Kershaw","6","426",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1459,46,464,476,983
+415,"Nik Kershaw","6","426",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1543,44,548,464,1079
+415,"Nik Kershaw","6","426",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1537,48,542,464,1073
+415,"Nik Kershaw","6","426",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1589,42,594,464,1125
+415,"Nik Kershaw","6","426",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1559,46,564,464,1095
+1407,"Colin Dobson","7","410",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1407,"Colin Dobson","7","410",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1598,,603,,
+1407,"Colin Dobson","7","410",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1695,48,700,603,1092
+1407,"Colin Dobson","7","410",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1407,"Colin Dobson","7","410",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1475,30,480,603,872
+1407,"Colin Dobson","7","410",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1460,35.5,465,480,980
+1407,"Colin Dobson","7","410",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1598,24,603,465,1133
+1407,"Colin Dobson","7","410",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1407,"Colin Dobson","7","410",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1581,38,586,465,1116
+1407,"Colin Dobson","7","410",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1407,"Colin Dobson","7","410",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1509,31,514,465,1044
+1407,"Colin Dobson","7","410",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1592,51,597,465,1127
+1407,"Colin Dobson","7","410",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1531,46,536,465,1066
+1407,"Colin Dobson","7","410",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1506,34,511,465,1041
+1407,"Colin Dobson","7","410",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1407,"Colin Dobson","7","410",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1552,42,557,465,1087
+1407,"Colin Dobson","7","410",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1571,49.5,576,465,1106
+1407,"Colin Dobson","7","410",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1613,35,618,465,1148
+1195,"Charlie Hardwicke","8","402",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1195,"Charlie Hardwicke","8","402",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1706,,711,,
+1195,"Charlie Hardwicke","8","402",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1195,"Charlie Hardwicke","8","402",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1668,44,673,711,957
+1195,"Charlie Hardwicke","8","402",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1503,35.5,508,673,830
+1195,"Charlie Hardwicke","8","402",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1514,28,519,508,1006
+1195,"Charlie Hardwicke","8","402",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1195,"Charlie Hardwicke","8","402",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1617,38,622,508,1109
+1195,"Charlie Hardwicke","8","402",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1195,"Charlie Hardwicke","8","402",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",988,42,,508,480
+1195,"Charlie Hardwicke","8","402",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1551,32.5,556,508,1043
+1195,"Charlie Hardwicke","8","402",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1643,46,648,508,1135
+1195,"Charlie Hardwicke","8","402",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1569,48,574,508,1061
+1195,"Charlie Hardwicke","8","402",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1553,32,558,508,1045
+1195,"Charlie Hardwicke","8","402",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1605,40,610,508,1097
+1195,"Charlie Hardwicke","8","402",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1587,44,592,508,1079
+1195,"Charlie Hardwicke","8","402",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1195,"Charlie Hardwicke","8","402",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1144,"Jamie Kershaw","9","401",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1405,,410,,
+1144,"Jamie Kershaw","9","401",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1434,35,439,410,1024
+1144,"Jamie Kershaw","9","401",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1144,"Jamie Kershaw","9","401",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1597,29,602,410,1187
+1144,"Jamie Kershaw","9","401",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1390,21,395,410,980
+1144,"Jamie Kershaw","9","401",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1330,42,335,395,935
+1144,"Jamie Kershaw","9","401",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1405,38,410,335,1070
+1144,"Jamie Kershaw","9","401",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1144,"Jamie Kershaw","9","401",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1440,39,445,335,1105
+1144,"Jamie Kershaw","9","401",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1144,"Jamie Kershaw","9","401",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1333,46,338,335,998
+1144,"Jamie Kershaw","9","401",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1144,"Jamie Kershaw","9","401",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1144,"Jamie Kershaw","9","401",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1391,31,396,335,1056
+1144,"Jamie Kershaw","9","401",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1392,51,397,335,1057
+1144,"Jamie Kershaw","9","401",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1144,"Jamie Kershaw","9","401",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1441,49.5,446,335,1106
+1144,"Jamie Kershaw","9","401",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1451,40,456,335,1116
+990,"Jen Hulme","10","391",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+990,"Jen Hulme","10","391",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2103,,1108,,
+990,"Jen Hulme","10","391",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",2244,38,1249,1108,1136
+990,"Jen Hulme","10","391",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2092,40,1097,1108,984
+990,"Jen Hulme","10","391",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1861,44,866,1097,764
+990,"Jen Hulme","10","391",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1868,30,873,866,1002
+990,"Jen Hulme","10","391",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",2010,22,1015,866,1144
+990,"Jen Hulme","10","391",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1977,37,982,866,1111
+990,"Jen Hulme","10","391",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+990,"Jen Hulme","10","391",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1215,55,,866,349
+990,"Jen Hulme","10","391",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1895,36,900,866,1029
+990,"Jen Hulme","10","391",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+990,"Jen Hulme","10","391",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",2019,36.5,1024,866,1153
+990,"Jen Hulme","10","391",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1876,39,881,866,1010
+990,"Jen Hulme","10","391",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",2084,25,1089,866,1218
+990,"Jen Hulme","10","391",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",2090,29,1095,866,1224
+990,"Jen Hulme","10","391",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",2091,35,1096,866,1225
+990,"Jen Hulme","10","391",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",2090,28,1095,866,1224
+699,"Jonathan Durnin","11","374",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+699,"Jonathan Durnin","11","374",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+699,"Jonathan Durnin","11","374",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1642,,647,,
+699,"Jonathan Durnin","11","374",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1491,60,496,647,844
+699,"Jonathan Durnin","11","374",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1334,34,339,496,838
+699,"Jonathan Durnin","11","374",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1359,24,364,339,1020
+699,"Jonathan Durnin","11","374",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1429,31,434,339,1090
+699,"Jonathan Durnin","11","374",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1468,35,473,339,1129
+699,"Jonathan Durnin","11","374",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+699,"Jonathan Durnin","11","374",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+699,"Jonathan Durnin","11","374",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+699,"Jonathan Durnin","11","374",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1528,40,533,339,1189
+699,"Jonathan Durnin","11","374",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1468,40,473,339,1129
+699,"Jonathan Durnin","11","374",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1379,36,384,339,1040
+699,"Jonathan Durnin","11","374",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1516,29,521,339,1177
+699,"Jonathan Durnin","11","374",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1511,33,516,339,1172
+699,"Jonathan Durnin","11","374",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1540,36,545,339,1201
+699,"Jonathan Durnin","11","374",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1544,29,549,339,1205
+1192,"Dale Norris","12","368",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1549,,554,,
+1192,"Dale Norris","12","368",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1538,42,543,554,984
+1192,"Dale Norris","12","368",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1723,32,728,543,1180
+1192,"Dale Norris","12","368",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1553,35,558,543,1010
+1192,"Dale Norris","12","368",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1439,23.5,444,543,896
+1192,"Dale Norris","12","368",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1440,31,445,444,996
+1192,"Dale Norris","12","368",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1192,"Dale Norris","12","368",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1192,"Dale Norris","12","368",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1192,"Dale Norris","12","368",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1192,"Dale Norris","12","368",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1466,38,471,444,1022
+1192,"Dale Norris","12","368",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1600,44,605,444,1156
+1192,"Dale Norris","12","368",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1192,"Dale Norris","12","368",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1475,38,480,444,1031
+1192,"Dale Norris","12","368",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1564,34,569,444,1120
+1192,"Dale Norris","12","368",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1192,"Dale Norris","12","368",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1585,40,590,444,1141
+1192,"Dale Norris","12","368",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1594,34,599,444,1150
+1355,"Aubrey Elmer","13","358",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1355,"Aubrey Elmer","13","358",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1355,"Aubrey Elmer","13","358",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1636,,641,,
+1355,"Aubrey Elmer","13","358",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1355,"Aubrey Elmer","13","358",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1397,46,402,641,756
+1355,"Aubrey Elmer","13","358",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1447,19,452,402,1045
+1355,"Aubrey Elmer","13","358",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1497,30,502,402,1095
+1355,"Aubrey Elmer","13","358",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1510,39.5,515,402,1108
+1355,"Aubrey Elmer","13","358",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1523,37,528,402,1121
+1355,"Aubrey Elmer","13","358",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",927,38,,402,525
+1355,"Aubrey Elmer","13","358",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1445,32.5,450,402,1043
+1355,"Aubrey Elmer","13","358",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1355,"Aubrey Elmer","13","358",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1355,"Aubrey Elmer","13","358",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1478,29,483,402,1076
+1355,"Aubrey Elmer","13","358",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1355,"Aubrey Elmer","13","358",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1516,39,521,402,1114
+1355,"Aubrey Elmer","13","358",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1355,"Aubrey Elmer","13","358",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1490,48,495,402,1088
+1403,"Toby Lenehan","14","351",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1403,"Toby Lenehan","14","351",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1654,,659,,
+1403,"Toby Lenehan","14","351",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1403,"Toby Lenehan","14","351",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1676,34,681,659,1017
+1403,"Toby Lenehan","14","351",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1403,"Toby Lenehan","14","351",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1546,48,551,659,887
+1403,"Toby Lenehan","14","351",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1616,39.5,621,551,1065
+1403,"Toby Lenehan","14","351",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1686,33,691,551,1135
+1403,"Toby Lenehan","14","351",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1403,"Toby Lenehan","14","351",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1034,40,,551,483
+1403,"Toby Lenehan","14","351",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1550,44,555,551,999
+1403,"Toby Lenehan","14","351",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1403,"Toby Lenehan","14","351",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1403,"Toby Lenehan","14","351",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1592,34,597,551,1041
+1403,"Toby Lenehan","14","351",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1652,38.5,657,551,1101
+1403,"Toby Lenehan","14","351",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1652,40,657,551,1101
+1403,"Toby Lenehan","14","351",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1403,"Toby Lenehan","14","351",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1193,"Richard Hardwicke","15","332",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1193,"Richard Hardwicke","15","332",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1705,,710,,
+1193,"Richard Hardwicke","15","332",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1848,37,853,710,1138
+1193,"Richard Hardwicke","15","332",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1698,39,703,710,988
+1193,"Richard Hardwicke","15","332",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1543,33,548,703,840
+1193,"Richard Hardwicke","15","332",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1613,17,618,548,1065
+1193,"Richard Hardwicke","15","332",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1193,"Richard Hardwicke","15","332",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1724,31,729,548,1176
+1193,"Richard Hardwicke","15","332",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1193,"Richard Hardwicke","15","332",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1047,39,,548,499
+1193,"Richard Hardwicke","15","332",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1193,"Richard Hardwicke","15","332",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1774,39,779,548,1226
+1193,"Richard Hardwicke","15","332",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1701,36.5,706,548,1153
+1193,"Richard Hardwicke","15","332",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1654,25,659,548,1106
+1193,"Richard Hardwicke","15","332",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1762,26,767,548,1214
+1193,"Richard Hardwicke","15","332",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1827,26,832,548,1279
+1193,"Richard Hardwicke","15","332",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1193,"Richard Hardwicke","15","332",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1379,"Michaela Latham","16","331",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1379,"Michaela Latham","16","331",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1379,"Michaela Latham","16","331",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1379,"Michaela Latham","16","331",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1767,,772,,
+1379,"Michaela Latham","16","331",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1628,31,633,772,856
+1379,"Michaela Latham","16","331",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1379,"Michaela Latham","16","331",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1774,23,779,633,1141
+1379,"Michaela Latham","16","331",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1770,32,775,633,1137
+1379,"Michaela Latham","16","331",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1794,32,799,633,1161
+1379,"Michaela Latham","16","331",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1379,"Michaela Latham","16","331",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1379,"Michaela Latham","16","331",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1811,42,816,633,1178
+1379,"Michaela Latham","16","331",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1725,42,730,633,1092
+1379,"Michaela Latham","16","331",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1716,28,721,633,1083
+1379,"Michaela Latham","16","331",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1756,32.5,761,633,1123
+1379,"Michaela Latham","16","331",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1844,30,849,633,1211
+1379,"Michaela Latham","16","331",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1791,38,796,633,1158
+1379,"Michaela Latham","16","331",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1194,"Alex Hardwicke","17","320",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1194,"Alex Hardwicke","17","320",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1866,,871,,
+1194,"Alex Hardwicke","17","320",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1976,46,981,871,1105
+1194,"Alex Hardwicke","17","320",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1867,38,872,871,996
+1194,"Alex Hardwicke","17","320",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1657,42,662,871,786
+1194,"Alex Hardwicke","17","320",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1684,22.5,689,662,1022
+1194,"Alex Hardwicke","17","320",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1194,"Alex Hardwicke","17","320",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1846,30,851,662,1184
+1194,"Alex Hardwicke","17","320",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1194,"Alex Hardwicke","17","320",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1130,44,,662,468
+1194,"Alex Hardwicke","17","320",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1194,"Alex Hardwicke","17","320",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1903,38,908,662,1241
+1194,"Alex Hardwicke","17","320",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1194,"Alex Hardwicke","17","320",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1194,"Alex Hardwicke","17","320",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1853,28,858,662,1191
+1194,"Alex Hardwicke","17","320",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1855,31,860,662,1193
+1194,"Alex Hardwicke","17","320",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1194,"Alex Hardwicke","17","320",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1390,"Diego Patteri","18","318",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1390,"Diego Patteri","18","318",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1390,"Diego Patteri","18","318",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1390,"Diego Patteri","18","318",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1390,"Diego Patteri","18","318",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1390,"Diego Patteri","18","318",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1390,"Diego Patteri","18","318",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1491,,496,,
+1390,"Diego Patteri","18","318",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1390,"Diego Patteri","18","318",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1568,48,573,496,1072
+1390,"Diego Patteri","18","318",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1390,"Diego Patteri","18","318",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1422,60,427,496,926
+1390,"Diego Patteri","18","318",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1528,60,533,427,1101
+1390,"Diego Patteri","18","318",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1390,"Diego Patteri","18","318",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1425,40,430,427,998
+1390,"Diego Patteri","18","318",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1472,55,477,427,1045
+1390,"Diego Patteri","18","318",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1390,"Diego Patteri","18","318",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1526,55,531,427,1099
+1390,"Diego Patteri","18","318",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1386,"Mea Moore","19","276",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1386,"Mea Moore","19","276",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1386,"Mea Moore","19","276",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1386,"Mea Moore","19","276",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1386,"Mea Moore","19","276",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1386,"Mea Moore","19","276",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1386,"Mea Moore","19","276",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1386,"Mea Moore","19","276",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1746,,751,,
+1386,"Mea Moore","19","276",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1770,60,775,751,1019
+1386,"Mea Moore","19","276",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1386,"Mea Moore","19","276",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1688,55,693,751,937
+1386,"Mea Moore","19","276",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1386,"Mea Moore","19","276",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1386,"Mea Moore","19","276",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1686,44,691,693,993
+1386,"Mea Moore","19","276",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1772,42,777,691,1081
+1386,"Mea Moore","19","276",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1828,36,833,691,1137
+1386,"Mea Moore","19","276",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1386,"Mea Moore","19","276",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1808,39,813,691,1117
+747,"James Moore","20","275",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+747,"James Moore","20","275",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+747,"James Moore","20","275",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+747,"James Moore","20","275",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+747,"James Moore","20","275",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1296,,301,,
+747,"James Moore","20","275",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1310,27,315,301,1009
+747,"James Moore","20","275",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1410,27,415,301,1109
+747,"James Moore","20","275",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1400,42,405,301,1099
+747,"James Moore","20","275",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1423,36,428,301,1122
+747,"James Moore","20","275",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+747,"James Moore","20","275",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1331,35,336,301,1030
+747,"James Moore","20","275",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+747,"James Moore","20","275",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+747,"James Moore","20","275",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+747,"James Moore","20","275",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1402,38.5,407,301,1101
+747,"James Moore","20","275",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1437,37,442,301,1136
+747,"James Moore","20","275",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+747,"James Moore","20","275",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1475,32,480,301,1174
+35,"Matt Plews","21","262",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+35,"Matt Plews","21","262",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+35,"Matt Plews","21","262",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1673,,678,,
+35,"Matt Plews","21","262",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1633,46,638,678,955
+35,"Matt Plews","21","262",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1456,37,461,638,818
+35,"Matt Plews","21","262",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1431,38,436,461,970
+35,"Matt Plews","21","262",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1518,35,523,436,1082
+35,"Matt Plews","21","262",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+35,"Matt Plews","21","262",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+35,"Matt Plews","21","262",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+35,"Matt Plews","21","262",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1475,34,480,436,1039
+35,"Matt Plews","21","262",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+35,"Matt Plews","21","262",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+35,"Matt Plews","21","262",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1475,37,480,436,1039
+35,"Matt Plews","21","262",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1552,35,557,436,1116
+35,"Matt Plews","21","262",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+35,"Matt Plews","21","262",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+35,"Matt Plews","21","262",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+245,"David Reay","22","261",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1750,,755,,
+245,"David Reay","22","261",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1684,60,689,755,929
+245,"David Reay","22","261",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1841,35.5,846,689,1152
+245,"David Reay","22","261",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1690,37,695,689,1001
+245,"David Reay","22","261",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1581,25,586,689,892
+245,"David Reay","22","261",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1540,40,545,586,954
+245,"David Reay","22","261",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+245,"David Reay","22","261",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+245,"David Reay","22","261",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1784,27,789,545,1239
+245,"David Reay","22","261",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+245,"David Reay","22","261",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+245,"David Reay","22","261",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+245,"David Reay","22","261",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+245,"David Reay","22","261",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+245,"David Reay","22","261",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1655,36.5,660,545,1110
+245,"David Reay","22","261",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+245,"David Reay","22","261",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+245,"David Reay","22","261",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1161,"Maciej Suchocki","23","245",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1161,"Maciej Suchocki","23","245",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1161,"Maciej Suchocki","23","245",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1589,,594,,
+1161,"Maciej Suchocki","23","245",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1494,55,499,594,900
+1161,"Maciej Suchocki","23","245",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1387,27,392,499,888
+1161,"Maciej Suchocki","23","245",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1372,35.5,377,392,980
+1161,"Maciej Suchocki","23","245",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1457,36,462,377,1080
+1161,"Maciej Suchocki","23","245",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1161,"Maciej Suchocki","23","245",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1539,31,544,377,1162
+1161,"Maciej Suchocki","23","245",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1161,"Maciej Suchocki","23","245",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1161,"Maciej Suchocki","23","245",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1161,"Maciej Suchocki","23","245",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1161,"Maciej Suchocki","23","245",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1448,30,453,377,1071
+1161,"Maciej Suchocki","23","245",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1161,"Maciej Suchocki","23","245",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1161,"Maciej Suchocki","23","245",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1161,"Maciej Suchocki","23","245",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1570,30,575,377,1193
+7,"Vic Barnett","24","233",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+7,"Vic Barnett","24","233",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+7,"Vic Barnett","24","233",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+7,"Vic Barnett","24","233",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2057,,1062,,
+7,"Vic Barnett","24","233",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1811,51,816,1062,749
+7,"Vic Barnett","24","233",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1852,20,857,816,1036
+7,"Vic Barnett","24","233",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1901,32,906,816,1085
+7,"Vic Barnett","24","233",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+7,"Vic Barnett","24","233",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1955,33,960,816,1139
+7,"Vic Barnett","24","233",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+7,"Vic Barnett","24","233",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1883,29,888,816,1067
+7,"Vic Barnett","24","233",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+7,"Vic Barnett","24","233",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+7,"Vic Barnett","24","233",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+7,"Vic Barnett","24","233",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1968,30,973,816,1152
+7,"Vic Barnett","24","233",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1946,38,951,816,1130
+7,"Vic Barnett","24","233",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+7,"Vic Barnett","24","233",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+616,"Simon Ward","24","233",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+616,"Simon Ward","24","233",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+616,"Simon Ward","24","233",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+616,"Simon Ward","24","233",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1788,,793,,
+616,"Simon Ward","24","233",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1527,55,532,793,734
+616,"Simon Ward","24","233",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1516,33,521,532,984
+616,"Simon Ward","24","233",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1649,25,654,521,1128
+616,"Simon Ward","24","233",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+616,"Simon Ward","24","233",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1752,28,757,521,1231
+616,"Simon Ward","24","233",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+616,"Simon Ward","24","233",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1622,28,627,521,1101
+616,"Simon Ward","24","233",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+616,"Simon Ward","24","233",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1659,38,664,521,1138
+616,"Simon Ward","24","233",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+616,"Simon Ward","24","233",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+616,"Simon Ward","24","233",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+616,"Simon Ward","24","233",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+616,"Simon Ward","24","233",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1885,26,890,521,1364
+203,"Adrian Killworth","26","227",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+203,"Adrian Killworth","26","227",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1774,,779,,
+203,"Adrian Killworth","26","227",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1953,33,958,779,1174
+203,"Adrian Killworth","26","227",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1761,42,766,779,982
+203,"Adrian Killworth","26","227",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+203,"Adrian Killworth","26","227",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+203,"Adrian Killworth","26","227",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1648,60,653,766,882
+203,"Adrian Killworth","26","227",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+203,"Adrian Killworth","26","227",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1741,44,746,653,1088
+203,"Adrian Killworth","26","227",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1062,48,,653,409
+203,"Adrian Killworth","26","227",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+203,"Adrian Killworth","26","227",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+203,"Adrian Killworth","26","227",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+203,"Adrian Killworth","26","227",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+203,"Adrian Killworth","26","227",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+203,"Adrian Killworth","26","227",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+203,"Adrian Killworth","26","227",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+203,"Adrian Killworth","26","227",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1048,"Andy Smith","27","227",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1048,"Andy Smith","27","227",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1048,"Andy Smith","27","227",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1048,"Andy Smith","27","227",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1048,"Andy Smith","27","227",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1048,"Andy Smith","27","227",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1774,,779,,
+1048,"Andy Smith","27","227",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1048,"Andy Smith","27","227",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1048,"Andy Smith","27","227",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1048,"Andy Smith","27","227",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1120,60,,779,341
+1048,"Andy Smith","27","227",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1726,51,731,779,947
+1048,"Andy Smith","27","227",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1048,"Andy Smith","27","227",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1048,"Andy Smith","27","227",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1711,48,716,731,980
+1048,"Andy Smith","27","227",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1839,32.5,844,716,1123
+1048,"Andy Smith","27","227",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1870,35,875,716,1154
+1048,"Andy Smith","27","227",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1048,"Andy Smith","27","227",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1109,"Stuart Haycox","28","212",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1675,,680,,
+1109,"Stuart Haycox","28","212",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1626,48,631,680,946
+1109,"Stuart Haycox","28","212",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1783,35.5,788,631,1152
+1109,"Stuart Haycox","28","212",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1686,31,691,631,1055
+1109,"Stuart Haycox","28","212",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1109,"Stuart Haycox","28","212",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1109,"Stuart Haycox","28","212",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1109,"Stuart Haycox","28","212",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1109,"Stuart Haycox","28","212",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1716,46,721,631,1085
+1109,"Stuart Haycox","28","212",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1109,"Stuart Haycox","28","212",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1109,"Stuart Haycox","28","212",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1109,"Stuart Haycox","28","212",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1652,51,657,631,1021
+1109,"Stuart Haycox","28","212",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1109,"Stuart Haycox","28","212",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1109,"Stuart Haycox","28","212",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1109,"Stuart Haycox","28","212",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1109,"Stuart Haycox","28","212",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+742,"Claire Moore","29","197",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+742,"Claire Moore","29","197",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+742,"Claire Moore","29","197",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+742,"Claire Moore","29","197",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2020,,1025,,
+742,"Claire Moore","29","197",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1779,48,784,1025,754
+742,"Claire Moore","29","197",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1817,21,822,784,1033
+742,"Claire Moore","29","197",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1992,21,997,784,1208
+742,"Claire Moore","29","197",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1983,29,988,784,1199
+742,"Claire Moore","29","197",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",2033,26,1038,784,1249
+742,"Claire Moore","29","197",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+742,"Claire Moore","29","197",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+742,"Claire Moore","29","197",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+742,"Claire Moore","29","197",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+742,"Claire Moore","29","197",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+742,"Claire Moore","29","197",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+742,"Claire Moore","29","197",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",2185,25,1190,784,1401
+742,"Claire Moore","29","197",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+742,"Claire Moore","29","197",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",2093,27,1098,784,1309
+1415,"James Aldridge","30","180",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1415,"James Aldridge","30","180",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1415,"James Aldridge","30","180",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1415,"James Aldridge","30","180",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1415,"James Aldridge","30","180",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1415,"James Aldridge","30","180",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1415,"James Aldridge","30","180",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1415,"James Aldridge","30","180",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1415,"James Aldridge","30","180",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1882,,887,,
+1415,"James Aldridge","30","180",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1415,"James Aldridge","30","180",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1415,"James Aldridge","30","180",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1415,"James Aldridge","30","180",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1749,60,754,887,862
+1415,"James Aldridge","30","180",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1415,"James Aldridge","30","180",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1415,"James Aldridge","30","180",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1665,60,670,754,911
+1415,"James Aldridge","30","180",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1415,"James Aldridge","30","180",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1674,60,679,670,1004
+1237,"John Abbott","31","175",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1237,"John Abbott","31","175",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1237,"John Abbott","31","175",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1725,,730,,
+1237,"John Abbott","31","175",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1237,"John Abbott","31","175",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1237,"John Abbott","31","175",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1481,60,486,730,751
+1237,"John Abbott","31","175",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1569,33.5,574,486,1083
+1237,"John Abbott","31","175",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1576,44,581,486,1090
+1237,"John Abbott","31","175",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1237,"John Abbott","31","175",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1237,"John Abbott","31","175",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1513,37,518,486,1027
+1237,"John Abbott","31","175",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1237,"John Abbott","31","175",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1237,"John Abbott","31","175",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1237,"John Abbott","31","175",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1237,"John Abbott","31","175",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1237,"John Abbott","31","175",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1237,"John Abbott","31","175",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1055,"Austin Smith","32","170",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1055,"Austin Smith","32","170",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1588,,593,,
+1055,"Austin Smith","32","170",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1055,"Austin Smith","32","170",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1601,36,606,593,1008
+1055,"Austin Smith","32","170",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1466,29,471,593,873
+1055,"Austin Smith","32","170",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1488,25,493,471,1017
+1055,"Austin Smith","32","170",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1513,44,518,471,1042
+1055,"Austin Smith","32","170",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1055,"Austin Smith","32","170",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1055,"Austin Smith","32","170",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1055,"Austin Smith","32","170",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1055,"Austin Smith","32","170",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1055,"Austin Smith","32","170",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1055,"Austin Smith","32","170",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1055,"Austin Smith","32","170",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1055,"Austin Smith","32","170",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1055,"Austin Smith","32","170",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1055,"Austin Smith","32","170",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1617,36,622,471,1146
+1112,"Gary Ashwell","33","168",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1676,,681,,
+1112,"Gary Ashwell","33","168",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1658,44,663,681,977
+1112,"Gary Ashwell","33","168",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1769,44,774,663,1106
+1112,"Gary Ashwell","33","168",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1112,"Gary Ashwell","33","168",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1112,"Gary Ashwell","33","168",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1551,46,556,663,888
+1112,"Gary Ashwell","33","168",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1112,"Gary Ashwell","33","168",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1112,"Gary Ashwell","33","168",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1112,"Gary Ashwell","33","168",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1112,"Gary Ashwell","33","168",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1112,"Gary Ashwell","33","168",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1112,"Gary Ashwell","33","168",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1112,"Gary Ashwell","33","168",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1597,34,602,556,1041
+1112,"Gary Ashwell","33","168",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1112,"Gary Ashwell","33","168",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1112,"Gary Ashwell","33","168",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1112,"Gary Ashwell","33","168",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+741,"Rob Moore","33","168",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+741,"Rob Moore","33","168",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+741,"Rob Moore","33","168",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+741,"Rob Moore","33","168",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+741,"Rob Moore","33","168",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+741,"Rob Moore","33","168",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1390,,395,,
+741,"Rob Moore","33","168",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1448,42,453,395,1053
+741,"Rob Moore","33","168",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1464,48,469,395,1069
+741,"Rob Moore","33","168",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1494,40,499,395,1099
+741,"Rob Moore","33","168",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+741,"Rob Moore","33","168",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+741,"Rob Moore","33","168",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+741,"Rob Moore","33","168",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+741,"Rob Moore","33","168",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+741,"Rob Moore","33","168",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+741,"Rob Moore","33","168",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+741,"Rob Moore","33","168",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+741,"Rob Moore","33","168",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1517,38,522,395,1122
+915,"Julian Twynham","35","163",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1642,,647,,
+915,"Julian Twynham","35","163",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1581,55,586,647,934
+915,"Julian Twynham","35","163",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1698,39,703,586,1112
+915,"Julian Twynham","35","163",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1607,33,612,586,1021
+915,"Julian Twynham","35","163",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1416,35.5,421,586,830
+915,"Julian Twynham","35","163",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+915,"Julian Twynham","35","163",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+915,"Julian Twynham","35","163",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+915,"Julian Twynham","35","163",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+915,"Julian Twynham","35","163",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+915,"Julian Twynham","35","163",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+915,"Julian Twynham","35","163",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+915,"Julian Twynham","35","163",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+915,"Julian Twynham","35","163",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+915,"Julian Twynham","35","163",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+915,"Julian Twynham","35","163",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+915,"Julian Twynham","35","163",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+915,"Julian Twynham","35","163",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+120,"Linda Hubbard","36","160",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+120,"Linda Hubbard","36","160",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+120,"Linda Hubbard","36","160",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+120,"Linda Hubbard","36","160",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+120,"Linda Hubbard","36","160",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1532,,537,,
+120,"Linda Hubbard","36","160",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+120,"Linda Hubbard","36","160",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1644,28,649,537,1107
+120,"Linda Hubbard","36","160",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1645,39.5,650,537,1108
+120,"Linda Hubbard","36","160",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1738,30,743,537,1201
+120,"Linda Hubbard","36","160",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+120,"Linda Hubbard","36","160",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+120,"Linda Hubbard","36","160",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+120,"Linda Hubbard","36","160",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+120,"Linda Hubbard","36","160",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+120,"Linda Hubbard","36","160",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1665,31,670,537,1128
+120,"Linda Hubbard","36","160",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+120,"Linda Hubbard","36","160",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+120,"Linda Hubbard","36","160",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1715,31,720,537,1178
+23,"Chris Hyde","37","153",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1677,,682,,
+23,"Chris Hyde","37","153",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1687,37,692,682,1005
+23,"Chris Hyde","37","153",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+23,"Chris Hyde","37","153",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1748,30,753,682,1066
+23,"Chris Hyde","37","153",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1496,38.5,501,682,814
+23,"Chris Hyde","37","153",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1564,18,569,501,1063
+23,"Chris Hyde","37","153",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1605,29,610,501,1104
+23,"Chris Hyde","37","153",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+23,"Chris Hyde","37","153",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+23,"Chris Hyde","37","153",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+23,"Chris Hyde","37","153",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+23,"Chris Hyde","37","153",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+23,"Chris Hyde","37","153",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+23,"Chris Hyde","37","153",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+23,"Chris Hyde","37","153",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+23,"Chris Hyde","37","153",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+23,"Chris Hyde","37","153",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+23,"Chris Hyde","37","153",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+38,"Phil Rayner","38","151",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1498,,503,,
+38,"Phil Rayner","38","151",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1495,39,500,503,992
+38,"Phil Rayner","38","151",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+38,"Phil Rayner","38","151",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+38,"Phil Rayner","38","151",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1389,26,394,500,889
+38,"Phil Rayner","38","151",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1416,22.5,421,394,1022
+38,"Phil Rayner","38","151",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+38,"Phil Rayner","38","151",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1525,34,530,394,1131
+38,"Phil Rayner","38","151",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1614,29,619,394,1220
+38,"Phil Rayner","38","151",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+38,"Phil Rayner","38","151",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+38,"Phil Rayner","38","151",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+38,"Phil Rayner","38","151",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+38,"Phil Rayner","38","151",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+38,"Phil Rayner","38","151",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+38,"Phil Rayner","38","151",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+38,"Phil Rayner","38","151",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+38,"Phil Rayner","38","151",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+715,"Steven Coulam","39","143",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+715,"Steven Coulam","39","143",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+715,"Steven Coulam","39","143",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+715,"Steven Coulam","39","143",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+715,"Steven Coulam","39","143",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+715,"Steven Coulam","39","143",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+715,"Steven Coulam","39","143",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1672,,677,,
+715,"Steven Coulam","39","143",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1707,60,712,677,1030
+715,"Steven Coulam","39","143",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+715,"Steven Coulam","39","143",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,"Valid",1059,51,,677,382
+715,"Steven Coulam","39","143",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+715,"Steven Coulam","39","143",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+715,"Steven Coulam","39","143",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+715,"Steven Coulam","39","143",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+715,"Steven Coulam","39","143",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+715,"Steven Coulam","39","143",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1853,32,858,677,1176
+715,"Steven Coulam","39","143",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+715,"Steven Coulam","39","143",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+558,"Andrew Weatherby","40","140",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2342,,1347,,
+558,"Andrew Weatherby","40","140",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2349,38,1354,1347,1002
+558,"Andrew Weatherby","40","140",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",2454,42,1459,1347,1107
+558,"Andrew Weatherby","40","140",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+558,"Andrew Weatherby","40","140",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1947,60,952,1347,600
+558,"Andrew Weatherby","40","140",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+558,"Andrew Weatherby","40","140",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+558,"Andrew Weatherby","40","140",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+558,"Andrew Weatherby","40","140",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+558,"Andrew Weatherby","40","140",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+558,"Andrew Weatherby","40","140",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+558,"Andrew Weatherby","40","140",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+558,"Andrew Weatherby","40","140",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+558,"Andrew Weatherby","40","140",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+558,"Andrew Weatherby","40","140",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+558,"Andrew Weatherby","40","140",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+558,"Andrew Weatherby","40","140",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+558,"Andrew Weatherby","40","140",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+704,"Chris Dainty","41","135",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+704,"Chris Dainty","41","135",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1686,,691,,
+704,"Chris Dainty","41","135",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1918,31,923,691,1227
+704,"Chris Dainty","41","135",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+704,"Chris Dainty","41","135",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+704,"Chris Dainty","41","135",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1566,51,571,691,875
+704,"Chris Dainty","41","135",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+704,"Chris Dainty","41","135",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+704,"Chris Dainty","41","135",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+704,"Chris Dainty","41","135",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+704,"Chris Dainty","41","135",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+704,"Chris Dainty","41","135",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+704,"Chris Dainty","41","135",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+704,"Chris Dainty","41","135",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1675,26,680,571,1104
+704,"Chris Dainty","41","135",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1779,27,784,571,1208
+704,"Chris Dainty","41","135",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+704,"Chris Dainty","41","135",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+704,"Chris Dainty","41","135",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1254,"Paul White","42","133",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1645,,650,,
+1254,"Paul White","42","133",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1254,"Paul White","42","133",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1254,"Paul White","42","133",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1254,"Paul White","42","133",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1451,40,456,650,801
+1254,"Paul White","42","133",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1254,"Paul White","42","133",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1254,"Paul White","42","133",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1254,"Paul White","42","133",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1254,"Paul White","42","133",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1254,"Paul White","42","133",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1587,27,592,456,1131
+1254,"Paul White","42","133",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1254,"Paul White","42","133",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1590,39,595,456,1134
+1254,"Paul White","42","133",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1540,27,545,456,1084
+1254,"Paul White","42","133",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1254,"Paul White","42","133",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1254,"Paul White","42","133",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1254,"Paul White","42","133",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1404,"Millie Lenehan","43","108",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1898,,903,,
+1404,"Millie Lenehan","43","108",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1404,"Millie Lenehan","43","108",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1404,"Millie Lenehan","43","108",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1404,"Millie Lenehan","43","108",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1404,"Millie Lenehan","43","108",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1807,44,812,903,904
+1404,"Millie Lenehan","43","108",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1404,"Millie Lenehan","43","108",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1934,36,939,812,1122
+1404,"Millie Lenehan","43","108",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1404,"Millie Lenehan","43","108",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1404,"Millie Lenehan","43","108",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1404,"Millie Lenehan","43","108",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1404,"Millie Lenehan","43","108",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1404,"Millie Lenehan","43","108",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1404,"Millie Lenehan","43","108",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1404,"Millie Lenehan","43","108",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",2038,28,1043,812,1226
+1404,"Millie Lenehan","43","108",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1404,"Millie Lenehan","43","108",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1152,"Ruby Isaac","44","99",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1152,"Ruby Isaac","44","99",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1152,"Ruby Isaac","44","99",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",1594,,599,,
+1152,"Ruby Isaac","44","99",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1152,"Ruby Isaac","44","99",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1413,38.5,418,599,814
+1152,"Ruby Isaac","44","99",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1400,34,405,418,982
+1152,"Ruby Isaac","44","99",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1530,26,535,405,1125
+1152,"Ruby Isaac","44","99",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1152,"Ruby Isaac","44","99",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1152,"Ruby Isaac","44","99",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1152,"Ruby Isaac","44","99",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1152,"Ruby Isaac","44","99",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1152,"Ruby Isaac","44","99",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1152,"Ruby Isaac","44","99",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1152,"Ruby Isaac","44","99",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1152,"Ruby Isaac","44","99",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1152,"Ruby Isaac","44","99",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1152,"Ruby Isaac","44","99",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1244,"Steven Latham","45","96",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1244,"Steven Latham","45","96",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1244,"Steven Latham","45","96",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1244,"Steven Latham","45","96",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1803,,808,,
+1244,"Steven Latham","45","96",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1654,32,659,808,846
+1244,"Steven Latham","45","96",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1244,"Steven Latham","45","96",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1244,"Steven Latham","45","96",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1244,"Steven Latham","45","96",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1244,"Steven Latham","45","96",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1244,"Steven Latham","45","96",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1244,"Steven Latham","45","96",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1244,"Steven Latham","45","96",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1244,"Steven Latham","45","96",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1244,"Steven Latham","45","96",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1244,"Steven Latham","45","96",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1889,27,894,659,1230
+1244,"Steven Latham","45","96",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1831,37,836,659,1172
+1244,"Steven Latham","45","96",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+295,"Stuart Dawkins","46","55",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+295,"Stuart Dawkins","46","55",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1769,,774,,
+295,"Stuart Dawkins","46","55",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+295,"Stuart Dawkins","46","55",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+295,"Stuart Dawkins","46","55",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+295,"Stuart Dawkins","46","55",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1628,55,633,774,854
+295,"Stuart Dawkins","46","55",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+295,"Stuart Dawkins","46","55",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+295,"Stuart Dawkins","46","55",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+295,"Stuart Dawkins","46","55",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+295,"Stuart Dawkins","46","55",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+295,"Stuart Dawkins","46","55",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+295,"Stuart Dawkins","46","55",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+295,"Stuart Dawkins","46","55",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+295,"Stuart Dawkins","46","55",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+295,"Stuart Dawkins","46","55",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+295,"Stuart Dawkins","46","55",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+295,"Stuart Dawkins","46","55",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1428,"Oliver Voice","46","55",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1428,"Oliver Voice","46","55",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1428,"Oliver Voice","46","55",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1428,"Oliver Voice","46","55",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1428,"Oliver Voice","46","55",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1428,"Oliver Voice","46","55",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1428,"Oliver Voice","46","55",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1428,"Oliver Voice","46","55",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1428,"Oliver Voice","46","55",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1428,"Oliver Voice","46","55",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1428,"Oliver Voice","46","55",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1428,"Oliver Voice","46","55",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1428,"Oliver Voice","46","55",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1428,"Oliver Voice","46","55",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1428,"Oliver Voice","46","55",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1428,"Oliver Voice","46","55",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,"Valid",1570,,575,,
+1428,"Oliver Voice","46","55",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1428,"Oliver Voice","46","55",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1596,55,601,575,1021
+1347,"Stuart Simpson-Smith","48","48",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1565,,570,,
+1347,"Stuart Simpson-Smith","48","48",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1598,48,603,570,1028
+1347,"Stuart Simpson-Smith","48","48",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1347,"Stuart Simpson-Smith","48","48",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+45,"Ray Taylor","49","46",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2104,,1109,,
+45,"Ray Taylor","49","46",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",2056,46,1061,1109,947
+45,"Ray Taylor","49","46",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+45,"Ray Taylor","49","46",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+45,"Ray Taylor","49","46",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+45,"Ray Taylor","49","46",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+45,"Ray Taylor","49","46",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+45,"Ray Taylor","49","46",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+45,"Ray Taylor","49","46",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+45,"Ray Taylor","49","46",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+45,"Ray Taylor","49","46",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+45,"Ray Taylor","49","46",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+45,"Ray Taylor","49","46",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+45,"Ray Taylor","49","46",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+45,"Ray Taylor","49","46",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+45,"Ray Taylor","49","46",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+45,"Ray Taylor","49","46",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+45,"Ray Taylor","49","46",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1298,"Jane Moore","50","40",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1298,"Jane Moore","50","40",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1970,,975,,
+1298,"Jane Moore","50","40",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,"Valid",2086,40,1091,975,1111
+1298,"Jane Moore","50","40",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1298,"Jane Moore","50","40",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1298,"Jane Moore","50","40",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1298,"Jane Moore","50","40",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1298,"Jane Moore","50","40",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1298,"Jane Moore","50","40",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1298,"Jane Moore","50","40",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1298,"Jane Moore","50","40",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1298,"Jane Moore","50","40",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1298,"Jane Moore","50","40",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1298,"Jane Moore","50","40",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1298,"Jane Moore","50","40",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1298,"Jane Moore","50","40",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1298,"Jane Moore","50","40",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1298,"Jane Moore","50","40",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1094,"Andy Poulton","50","40",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1526,,531,,
+1094,"Andy Poulton","50","40",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1518,40,523,531,987
+1094,"Andy Poulton","50","40",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1094,"Andy Poulton","50","40",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1094,"Andy Poulton","50","40",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1094,"Andy Poulton","50","40",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1094,"Andy Poulton","50","40",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1094,"Andy Poulton","50","40",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1094,"Andy Poulton","50","40",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1094,"Andy Poulton","50","40",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1094,"Andy Poulton","50","40",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1094,"Andy Poulton","50","40",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1094,"Andy Poulton","50","40",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1094,"Andy Poulton","50","40",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1094,"Andy Poulton","50","40",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1094,"Andy Poulton","50","40",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1094,"Andy Poulton","50","40",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1094,"Andy Poulton","50","40",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+967,"Daniel McDonnell","52","37",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+967,"Daniel McDonnell","52","37",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+967,"Daniel McDonnell","52","37",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+967,"Daniel McDonnell","52","37",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+967,"Daniel McDonnell","52","37",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1411,,416,,
+967,"Daniel McDonnell","52","37",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",1387,37,392,416,971
+967,"Daniel McDonnell","52","37",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+967,"Daniel McDonnell","52","37",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+967,"Daniel McDonnell","52","37",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+967,"Daniel McDonnell","52","37",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+967,"Daniel McDonnell","52","37",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+967,"Daniel McDonnell","52","37",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+967,"Daniel McDonnell","52","37",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+967,"Daniel McDonnell","52","37",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+967,"Daniel McDonnell","52","37",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+967,"Daniel McDonnell","52","37",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+967,"Daniel McDonnell","52","37",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+967,"Daniel McDonnell","52","37",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+564,"Ian Murdey","52","37",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+564,"Ian Murdey","52","37",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+564,"Ian Murdey","52","37",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+564,"Ian Murdey","52","37",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+564,"Ian Murdey","52","37",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1625,,630,,
+564,"Ian Murdey","52","37",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+564,"Ian Murdey","52","37",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1704,37,709,630,1074
+564,"Ian Murdey","52","37",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+564,"Ian Murdey","52","37",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+564,"Ian Murdey","52","37",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+564,"Ian Murdey","52","37",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+564,"Ian Murdey","52","37",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+564,"Ian Murdey","52","37",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+564,"Ian Murdey","52","37",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+564,"Ian Murdey","52","37",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+564,"Ian Murdey","52","37",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+564,"Ian Murdey","52","37",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+564,"Ian Murdey","52","37",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1357,"Ian Parker","52","37",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1357,"Ian Parker","52","37",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1357,"Ian Parker","52","37",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1357,"Ian Parker","52","37",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1357,"Ian Parker","52","37",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1357,"Ian Parker","52","37",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1357,"Ian Parker","52","37",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1357,"Ian Parker","52","37",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1357,"Ian Parker","52","37",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1357,"Ian Parker","52","37",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1357,"Ian Parker","52","37",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1357,"Ian Parker","52","37",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1357,"Ian Parker","52","37",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1357,"Ian Parker","52","37",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,"Valid",1590,,595,,
+1357,"Ian Parker","52","37",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1357,"Ian Parker","52","37",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1357,"Ian Parker","52","37",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1357,"Ian Parker","52","37",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1733,37,738,595,1138
+1416,"Henry Bellamy","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1416,"Henry Bellamy","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1416,"Henry Bellamy","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1416,"Henry Bellamy","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1416,"Henry Bellamy","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1416,"Henry Bellamy","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1416,"Henry Bellamy","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,"Valid",1458,,463,,
+1416,"Henry Bellamy","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1416,"Henry Bellamy","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1416,"Henry Bellamy","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1416,"Henry Bellamy","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1416,"Henry Bellamy","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1416,"Henry Bellamy","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1416,"Henry Bellamy","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1416,"Henry Bellamy","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1416,"Henry Bellamy","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1416,"Henry Bellamy","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1416,"Henry Bellamy","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1418,"James Brown","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1418,"James Brown","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1572,,577,,
+1418,"James Brown","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1418,"James Brown","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1418,"James Brown","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1418,"James Brown","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1418,"James Brown","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1418,"James Brown","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1418,"James Brown","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1418,"James Brown","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1418,"James Brown","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1418,"James Brown","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1418,"James Brown","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1418,"James Brown","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1418,"James Brown","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1418,"James Brown","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1418,"James Brown","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1418,"James Brown","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+567,"Lawrence Cox","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+567,"Lawrence Cox","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+567,"Lawrence Cox","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+567,"Lawrence Cox","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+567,"Lawrence Cox","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+567,"Lawrence Cox","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+567,"Lawrence Cox","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+567,"Lawrence Cox","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+567,"Lawrence Cox","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,"Valid",1721,,726,,
+567,"Lawrence Cox","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+567,"Lawrence Cox","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+567,"Lawrence Cox","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+567,"Lawrence Cox","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+567,"Lawrence Cox","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+567,"Lawrence Cox","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+567,"Lawrence Cox","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+567,"Lawrence Cox","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+567,"Lawrence Cox","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1288,"Tyler Dyson","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1288,"Tyler Dyson","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1288,"Tyler Dyson","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1288,"Tyler Dyson","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1288,"Tyler Dyson","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1288,"Tyler Dyson","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1288,"Tyler Dyson","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1288,"Tyler Dyson","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1288,"Tyler Dyson","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1288,"Tyler Dyson","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1288,"Tyler Dyson","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1288,"Tyler Dyson","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1288,"Tyler Dyson","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1288,"Tyler Dyson","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1288,"Tyler Dyson","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1288,"Tyler Dyson","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1288,"Tyler Dyson","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,"Valid",1457,,462,,
+1288,"Tyler Dyson","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1419,"Ethan Marsh","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1419,"Ethan Marsh","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1631,,636,,
+1419,"Ethan Marsh","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1419,"Ethan Marsh","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1419,"Ethan Marsh","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1419,"Ethan Marsh","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1419,"Ethan Marsh","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1419,"Ethan Marsh","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1419,"Ethan Marsh","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1419,"Ethan Marsh","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1419,"Ethan Marsh","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1419,"Ethan Marsh","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1419,"Ethan Marsh","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1419,"Ethan Marsh","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1419,"Ethan Marsh","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1419,"Ethan Marsh","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1419,"Ethan Marsh","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1419,"Ethan Marsh","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1024,"Jax Roberts","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1024,"Jax Roberts","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1547,,552,,
+1024,"Jax Roberts","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1024,"Jax Roberts","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1024,"Jax Roberts","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1024,"Jax Roberts","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1024,"Jax Roberts","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1024,"Jax Roberts","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1024,"Jax Roberts","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1024,"Jax Roberts","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1024,"Jax Roberts","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1024,"Jax Roberts","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1024,"Jax Roberts","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1024,"Jax Roberts","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1024,"Jax Roberts","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1024,"Jax Roberts","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1024,"Jax Roberts","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1024,"Jax Roberts","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+756,"Josh van Nierop","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,"Valid",1656,,661,,
+756,"Josh van Nierop","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+756,"Josh van Nierop","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+756,"Josh van Nierop","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+756,"Josh van Nierop","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+756,"Josh van Nierop","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+756,"Josh van Nierop","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+756,"Josh van Nierop","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+756,"Josh van Nierop","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+756,"Josh van Nierop","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+756,"Josh van Nierop","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+756,"Josh van Nierop","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+756,"Josh van Nierop","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+756,"Josh van Nierop","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+756,"Josh van Nierop","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+756,"Josh van Nierop","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+756,"Josh van Nierop","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+756,"Josh van Nierop","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1423,"Mark Vowles","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1423,"Mark Vowles","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1423,"Mark Vowles","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1423,"Mark Vowles","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1423,"Mark Vowles","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,"Valid",1740,,745,,
+1423,"Mark Vowles","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1423,"Mark Vowles","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1423,"Mark Vowles","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1423,"Mark Vowles","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1423,"Mark Vowles","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1423,"Mark Vowles","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1423,"Mark Vowles","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1423,"Mark Vowles","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+1423,"Mark Vowles","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1423,"Mark Vowles","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1423,"Mark Vowles","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1423,"Mark Vowles","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1423,"Mark Vowles","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+935,"Sophie Ward","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+935,"Sophie Ward","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+935,"Sophie Ward","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+935,"Sophie Ward","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+935,"Sophie Ward","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+935,"Sophie Ward","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,"Valid",2079,,1084,,
+935,"Sophie Ward","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+935,"Sophie Ward","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+935,"Sophie Ward","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+935,"Sophie Ward","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+935,"Sophie Ward","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+935,"Sophie Ward","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+935,"Sophie Ward","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,,,,,,
+935,"Sophie Ward","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+935,"Sophie Ward","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+935,"Sophie Ward","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+935,"Sophie Ward","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+935,"Sophie Ward","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1200,"Jules Wilks","55","0",3,2026-04-07,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1200,"Jules Wilks","55","0",4,2026-04-14,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1200,"Jules Wilks","55","0",5,2026-04-21,"Tour of the Langtons 10mile TT","Tour",0,,,,,,,
+1200,"Jules Wilks","55","0",8,2026-05-19,"Thorpe Langton 10mile TT","Thorpe",0,,,,,,,
+1200,"Jules Wilks","55","0",10,2026-06-02,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1200,"Jules Wilks","55","0",11,2026-06-16,"Kibworth 10mile TT","Kibworth",0,,,,,,,
+1200,"Jules Wilks","55","0",13,2026-06-30,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1200,"Jules Wilks","55","0",14,2026-07-02,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1200,"Jules Wilks","55","0",15,2026-07-08,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
+1200,"Jules Wilks","55","0",16,2026-07-11,"Gilmorton 10mile Round Robin TT","Gilmorton",1,,,,,,,
+1200,"Jules Wilks","55","0",17,2026-07-14,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1200,"Jules Wilks","55","0",18,2026-07-21,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1200,"Jules Wilks","55","0",19,2026-07-25,"Gilmorton 10mile Round Robin TT","Gilmorton",0,,"Valid",1905,,910,,
+1200,"Jules Wilks","55","0",20,2026-07-28,"Wolvey 10mile Round Robin TT","Wolvey",0,,,,,,,
+1200,"Jules Wilks","55","0",21,2026-08-04,"Lubenham 10mile Round Robin TT","Lubenham",0,,,,,,,
+1200,"Jules Wilks","55","0",22,2026-08-13,"Lamport 10mile Round Robin TT","Lamport",0,,,,,,,
+1200,"Jules Wilks","55","0",23,2026-08-18,"Wymeswold 10mile Round Robin TT","Wymeswold",0,,,,,,,
+1200,"Jules Wilks","55","0",24,2026-08-26,"Caldecott 10mile Round Robin TT","Caldecott",0,,,,,,,
