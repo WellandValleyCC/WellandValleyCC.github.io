@@ -155,9 +155,15 @@ namespace ClubProcessor.Services
 
             Console.WriteLine($"[INFO] Parsed {incomingRows.Count} rows from {Path.GetFileName(csvPath)}");
 
-            foreach (var row in incomingRows.Where(r => string.IsNullOrWhiteSpace(r.Name)))
+            var namelessRows = incomingRows
+                .Where(r => string.IsNullOrWhiteSpace(r.Name))
+                .ToList();
+
+            if (namelessRows.Any())
             {
-                Console.WriteLine($"[WARN] Row with missing Name: NumberOrName={row.NumberOrName}, Time={row.ActualTime}");
+                throw new FormatException(
+                    $"Event {eventNumber} contains rows with missing Name. Examples: " +
+                    string.Join(", ", namelessRows.Take(5).Select(r => r.NumberOrName)));
             }
 
             foreach (var group in incomingRides.GroupBy(r => r.Name!))
