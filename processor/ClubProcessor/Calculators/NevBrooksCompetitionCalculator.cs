@@ -1,6 +1,7 @@
 ﻿using ClubCore.Models;
 using ClubCore.Models.Enums;
 using ClubCore.Models.Extensions;
+using ClubCore.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +62,7 @@ namespace ClubProcessor.Calculators
                 }
                 else
                 {
-                    r.NevBrooksSecondsGenerated = r.TotalSeconds - (r.CalendarEvent?.NevBrooksBenchmarkSeconds ?? 995.0);
+                    r.NevBrooksSecondsGenerated = r.TotalSeconds - (r.CalendarEvent?.NevBrooksBenchmarkSeconds ?? ClubConstants.DefaultNevBrooksBenchmarkSeconds);
                 }
 
                 // Apply previous handicap if available
